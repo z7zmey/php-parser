@@ -1,9 +1,9 @@
-// line php5/php5.y:2
+// line internal/parser/php5/php5.y:2
 package php5
 
 import __yyfmt__ "fmt"
 
-// line php5/php5.y:2
+// line internal/parser/php5/php5.y:2
 import (
 	"strconv"
 	"strings"
@@ -20,12 +20,12 @@ import (
 	"github.com/z7zmey/php-parser/pkg/node/stmt"
 )
 
-// line php5/php5.y:22
+// line internal/parser/php5/php5.y:22
 type yySymType struct {
-	yys                     int
-	node                    node.Node
-	token                   *scanner.Token
-	list                    []node.Node
+	yys   int
+	node  node.Node
+	token *scanner.token
+
 	simpleIndirectReference simpleIndirectReference
 
 	ClassExtends     *stmt.ClassExtends
@@ -346,12 +346,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-// line php5/php5.y:7198
-
-type simpleIndirectReference struct {
-	all  []*expr.Variable
-	last *expr.Variable
-}
+// line internal/parser/php5/php5.y:9577
 
 // line yacctab:1
 var yyExca = [...]int{
@@ -703,14 +698,14 @@ var yyAct = [...]int{
 	998, 602, 469, 260, 261, 915, 514, 917, 980, 481,
 	395, 324, 203, 39, 572, 1012, 531, 925, 202, 927,
 	928, 1013, 531, 531, 199, 572, 1016, 993, 260, 261,
-	920, 39, 136, 920, 260, 261, 1, 830, 748, 754,
-	448, 864, 944, 445, 609, 231, 948, 231, 589, 949,
-	531, 842, 590, 449, 591, 39, 232, 843, 232, 685,
-	841, 39, 255, 946, 840, 995, 965, 964, 903, 483,
-	896, 519, 839, 836, 566, 973, 1006, 1005, 725, 394,
-	519, 389, 164, 341, 698, 538, 929, 519, 519, 519,
-	519, 519, 290, 460, 161, 231, 157, 318, 531, 314,
-	127, 403, 575, 401, 991, 335, 232, 945, 1009, 343,
+	920, 39, 136, 920, 260, 261, 460, 290, 445, 609,
+	448, 748, 944, 685, 864, 231, 948, 231, 754, 949,
+	531, 842, 929, 449, 255, 39, 232, 843, 232, 589,
+	841, 39, 590, 946, 591, 341, 840, 995, 965, 964,
+	903, 519, 839, 896, 836, 973, 483, 566, 1006, 1005,
+	519, 725, 394, 389, 164, 161, 157, 519, 519, 519,
+	519, 519, 698, 538, 318, 231, 314, 127, 531, 1,
+	830, 403, 575, 401, 991, 335, 232, 945, 1009, 343,
 	939, 848, 849, 850, 847, 846, 845, 519, 528, 608,
 	997, 970, 969, 968, 967, 838, 169, 171, 170, 192,
 	837, 835, 40, 568, 15, 14, 823, 720, 802, 1015,
@@ -1618,40 +1613,40 @@ var yyPgo = [...]int{
 	1126, 4, 1125, 1124, 1123, 16, 1122, 1121, 1120, 1115,
 	48, 5, 1114, 1113, 1112, 1111, 1110, 2, 1109, 607,
 	1108, 18, 202, 1100, 1099, 1098, 12, 1097, 1095, 6,
-	19, 1093, 1092, 1091, 9, 50, 0, 1090, 1089, 1087,
-	117, 1086, 1084, 642, 1083, 1082, 62, 8, 1076, 1075,
-	1074, 1073, 14, 47, 1072, 1071, 1069, 1068, 1067, 1066,
-	3, 1064, 23, 1063, 1062, 1060, 35, 1059, 1058, 1057,
-	1056, 1055, 1054, 1052, 25, 1049, 1044, 1042, 24, 1038,
-	15, 17, 1034, 34, 1033, 1031, 1029, 1028, 177, 13,
+	19, 0, 1093, 1092, 1091, 9, 177, 13, 1090, 1089,
+	50, 1087, 1086, 1084, 117, 1083, 1082, 14, 1076, 1075,
+	1074, 1073, 1072, 1071, 1069, 1068, 3, 23, 35, 8,
+	47, 1067, 1066, 1064, 1063, 1062, 1060, 1059, 1058, 1057,
+	1056, 1055, 24, 15, 1054, 1052, 1049, 1044, 62, 1042,
+	34, 1038, 1034, 642, 25, 1033, 17, 1031, 1029, 1028,
 	1027, 1026,
 }
 var yyR1 = [...]int{
 
-	0, 151, 95, 95, 96, 96, 5, 5, 5, 5,
-	5, 5, 5, 5, 5, 5, 5, 5, 97, 97,
-	6, 6, 6, 6, 98, 98, 7, 7, 7, 7,
-	99, 99, 8, 8, 8, 8, 55, 55, 100, 100,
+	0, 99, 100, 100, 91, 91, 5, 5, 5, 5,
+	5, 5, 5, 5, 5, 5, 5, 5, 101, 101,
+	6, 6, 6, 6, 102, 102, 7, 7, 7, 7,
+	103, 103, 8, 8, 8, 8, 55, 55, 104, 104,
 	26, 26, 26, 26, 26, 27, 27, 28, 28, 28,
 	28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
 	28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
-	28, 28, 28, 28, 28, 117, 117, 60, 60, 118,
-	118, 119, 119, 61, 115, 115, 58, 53, 54, 149,
-	149, 150, 150, 62, 63, 63, 66, 66, 66, 66,
-	91, 91, 2, 93, 93, 92, 92, 126, 126, 90,
+	28, 28, 28, 28, 28, 113, 113, 60, 60, 114,
+	114, 115, 115, 61, 111, 111, 58, 53, 54, 97,
+	97, 98, 98, 62, 63, 63, 66, 66, 66, 66,
+	92, 92, 2, 94, 94, 93, 93, 118, 118, 90,
 	90, 89, 89, 89, 87, 87, 86, 86, 59, 59,
-	116, 116, 84, 84, 84, 84, 113, 113, 113, 4,
-	4, 88, 88, 109, 109, 110, 110, 56, 56, 57,
-	57, 120, 120, 121, 121, 65, 65, 64, 64, 64,
-	64, 82, 82, 82, 127, 127, 70, 70, 70, 70,
-	101, 101, 29, 29, 29, 102, 102, 102, 102, 122,
-	122, 67, 67, 67, 67, 69, 128, 128, 83, 83,
-	129, 129, 130, 130, 71, 71, 72, 131, 131, 75,
+	112, 112, 84, 84, 84, 84, 120, 120, 120, 4,
+	4, 88, 88, 105, 105, 106, 106, 56, 56, 57,
+	57, 116, 116, 121, 121, 65, 65, 64, 64, 64,
+	64, 82, 82, 82, 122, 122, 70, 70, 70, 70,
+	108, 108, 29, 29, 29, 109, 109, 109, 109, 117,
+	117, 67, 67, 67, 67, 69, 126, 126, 83, 83,
+	127, 127, 128, 128, 71, 71, 72, 129, 129, 75,
 	75, 74, 73, 73, 76, 76, 85, 85, 123, 123,
-	124, 124, 132, 132, 77, 77, 77, 77, 77, 77,
-	125, 125, 125, 125, 68, 68, 114, 114, 112, 112,
-	111, 111, 138, 138, 136, 136, 137, 137, 137, 139,
-	139, 44, 17, 17, 17, 17, 17, 17, 17, 17,
+	125, 125, 130, 130, 77, 77, 77, 77, 77, 77,
+	124, 124, 124, 124, 68, 68, 110, 110, 107, 107,
+	131, 131, 132, 132, 134, 134, 135, 135, 135, 136,
+	136, 44, 17, 17, 17, 17, 17, 17, 17, 17,
 	17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
 	17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
 	17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
@@ -1659,27 +1654,27 @@ var yyR1 = [...]int{
 	17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
 	17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
 	17, 17, 17, 17, 17, 17, 52, 52, 52, 52,
-	49, 49, 49, 49, 48, 48, 1, 94, 94, 108,
-	108, 108, 108, 25, 25, 25, 25, 25, 25, 25,
+	49, 49, 49, 49, 48, 48, 1, 95, 95, 139,
+	139, 139, 139, 25, 25, 25, 25, 25, 25, 25,
 	25, 13, 13, 13, 13, 47, 47, 47, 45, 45,
-	43, 43, 146, 146, 145, 51, 51, 51, 133, 133,
-	133, 81, 81, 9, 9, 9, 9, 9, 9, 9,
+	43, 43, 141, 141, 142, 51, 51, 51, 137, 137,
+	137, 81, 81, 9, 9, 9, 9, 9, 9, 9,
 	9, 9, 9, 9, 9, 10, 30, 79, 79, 79,
 	79, 79, 79, 79, 79, 79, 79, 80, 80, 80,
 	80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
 	80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
 	80, 80, 80, 80, 80, 80, 80, 80, 80, 80,
 	37, 37, 37, 37, 31, 31, 31, 31, 31, 31,
-	31, 134, 134, 3, 3, 135, 135, 135, 135, 16,
+	31, 144, 144, 3, 3, 145, 145, 145, 145, 16,
 	16, 50, 50, 18, 19, 20, 21, 21, 147, 147,
-	140, 142, 142, 78, 141, 141, 141, 42, 42, 46,
+	133, 148, 148, 78, 146, 146, 146, 42, 42, 46,
 	46, 14, 24, 24, 22, 22, 22, 23, 23, 23,
-	12, 12, 12, 11, 11, 15, 15, 143, 143, 144,
-	144, 144, 41, 41, 148, 148, 107, 107, 40, 40,
-	40, 106, 106, 105, 105, 105, 105, 105, 105, 105,
-	105, 103, 103, 103, 103, 35, 35, 35, 35, 35,
+	12, 12, 12, 11, 11, 15, 15, 140, 140, 149,
+	149, 149, 41, 41, 96, 96, 119, 119, 40, 40,
+	40, 138, 138, 150, 150, 150, 150, 150, 150, 150,
+	150, 143, 143, 143, 143, 35, 35, 35, 35, 35,
 	35, 35, 36, 36, 36, 39, 39, 39, 39, 39,
-	39, 39, 39, 104, 104, 38, 38, 32, 32, 33,
+	39, 39, 39, 151, 151, 38, 38, 32, 32, 33,
 	34,
 }
 var yyR2 = [...]int{
@@ -1740,7 +1735,7 @@ var yyR2 = [...]int{
 }
 var yyChk = [...]int{
 
-	-1000, -151, -95, -5, 2, -27, -53, -54, 51, 79,
+	-1000, -99, -100, -5, 2, -27, -53, -54, 51, 79,
 	44, -55, -28, 10, -62, -63, 38, 142, 7, 21,
 	20, 23, 30, 34, 35, 39, -52, 46, 98, 19,
 	14, -16, 48, 25, 27, 144, 40, 43, 36, -1,
@@ -1750,99 +1745,99 @@ var yyChk = [...]int{
 	112, 113, 6, 156, -31, -49, -48, 141, 96, -22,
 	91, 49, 50, 4, 5, 84, 85, 86, 11, -37,
 	-34, -9, 140, 74, 62, 18, 60, 148, -23, -24,
-	-25, -32, -96, 82, -13, 8, 9, 66, 67, 81,
-	63, 64, 65, 80, -12, -148, -46, -14, -42, -11,
-	157, 12, 146, -96, 142, 82, 10, -97, 37, 38,
-	-6, -96, 82, 144, 158, 145, 10, -100, -50, 146,
+	-25, -32, -91, 82, -13, 8, 9, 66, 67, 81,
+	63, 64, 65, 80, -12, -96, -46, -14, -42, -11,
+	157, 12, 146, -91, 142, 82, 10, -101, 37, 38,
+	-6, -91, 82, 144, 158, 145, 10, -104, -50, 146,
 	-50, -27, -1, 79, 146, -50, 144, -16, 97, 98,
-	144, -16, 144, -17, -21, -16, 144, -101, -29, 12,
-	157, -102, -1, 12, -114, -16, 144, 129, 130, 87,
+	144, -16, 144, -17, -21, -16, 144, -108, -29, 12,
+	157, -109, -1, 12, -110, -16, 144, 129, 130, 87,
 	89, 88, 159, 151, 161, 167, 153, 152, 162, 131,
 	163, 164, 132, 133, 134, 135, 136, 137, 165, 138,
 	166, 139, 90, 150, 146, 146, 146, 142, -16, 10,
-	-149, 151, 10, 10, -17, -21, -16, 52, 52, 160,
+	-97, 151, 10, 10, -17, -21, -16, 52, 52, 160,
 	117, 118, 119, 120, 121, 122, 123, 124, 125, 126,
-	127, 128, 146, -16, 104, 105, -20, -21, -96, 79,
+	127, 128, 146, -16, 104, 105, -20, -21, -91, 79,
 	82, -13, -14, 98, -20, -16, -16, -16, -16, -44,
 	-16, -52, -16, -16, -16, -16, -16, -16, -16, -51,
-	146, -50, -16, 148, 148, -133, 17, -103, -35, 12,
-	76, 77, -16, 57, -45, -13, -43, -96, 79, 82,
-	-23, -12, -148, -14, 146, 146, -16, -16, 146, -16,
-	-16, 148, -103, 17, 17, 75, -103, 148, 146, -106,
-	-105, -16, 151, 148, 148, 82, -82, 146, -96, 78,
+	146, -50, -16, 148, 148, -137, 17, -143, -35, 12,
+	76, 77, -16, 57, -45, -13, -43, -91, 79, 82,
+	-23, -12, -96, -14, 146, 146, -16, -16, 146, -16,
+	-16, 148, -143, 17, 17, 75, -143, 148, 146, -138,
+	-150, -16, 151, 148, 148, 82, -82, 146, -91, 78,
 	148, 142, -12, 157, 78, -82, 142, 147, 144, 142,
-	-95, -96, 144, 158, -98, -7, -96, 82, -99, -8,
-	-96, 82, 29, -96, 10, 160, -26, 143, 2, -27,
-	-53, -54, 51, -27, 145, -88, -27, 145, 21, -149,
-	-112, -111, -16, -84, 142, 145, 144, 144, 144, 144,
-	144, 158, -18, 142, -21, 144, 158, -149, 160, 144,
+	-100, -91, 144, 158, -102, -7, -91, 82, -103, -8,
+	-91, 82, 29, -91, 10, 160, -26, 143, 2, -27,
+	-53, -54, 51, -27, 145, -88, -27, 145, 21, -97,
+	-107, -131, -16, -84, 142, 145, 144, 144, 144, 144,
+	144, 158, -18, 142, -21, 144, 158, -97, 160, 144,
 	158, -16, -16, -16, -16, -16, -16, -16, -16, -16,
 	-16, -16, -16, -16, -16, -16, -16, -16, -16, -16,
-	-16, -16, -16, -16, -16, -16, -45, -16, 145, -115,
-	-58, -21, -21, -17, -116, 10, -100, 144, 144, 10,
-	146, -91, 55, -93, 55, 58, -16, 151, -16, -16,
+	-16, -16, -16, -16, -16, -16, -45, -16, 145, -111,
+	-58, -21, -21, -17, -112, 10, -104, 144, 144, 10,
+	146, -92, 55, -94, 55, 58, -16, 151, -16, -16,
 	-16, -16, -16, -16, -16, -16, -16, -16, -16, -16,
-	-107, -40, -21, 59, 82, -96, 78, 78, 147, 147,
+	-119, -40, -21, 59, 82, -91, 78, 78, 147, 147,
 	147, 147, -15, -16, -15, 141, -35, -35, 17, 148,
-	57, -16, 11, -21, -143, -144, -42, -41, -12, -148,
-	10, 142, -81, -82, 78, 82, -96, 57, -12, 78,
-	-104, -38, -21, -17, -21, -16, -16, -15, 140, 75,
-	75, -15, -106, 149, -3, 158, 58, -19, -21, -15,
-	-15, 10, 147, -127, -52, -70, -17, -21, 151, 83,
+	57, -16, 11, -21, -140, -149, -42, -41, -12, -96,
+	10, 142, -81, -82, 78, 82, -91, 57, -12, 78,
+	-151, -38, -21, -17, -21, -16, -16, -15, 140, 75,
+	75, -15, -138, 149, -3, 158, 58, -19, -21, -15,
+	-15, 10, 147, -122, -52, -70, -17, -21, 151, 83,
 	-82, -41, -42, 10, 52, -15, -16, -41, -42, 10,
-	-16, 144, -95, 143, -82, -6, 144, 158, 29, -96,
-	144, 158, 29, -96, 10, 29, 160, -30, -79, -9,
-	-33, -96, 79, 82, 60, 148, -10, 62, -80, 18,
-	74, -13, 154, 155, 153, 152, 146, 146, -109, -100,
-	-100, -50, 144, 158, -113, 144, -113, 144, -29, -16,
+	-16, 144, -100, 143, -82, -6, 144, 158, 29, -91,
+	144, 158, 29, -91, 10, 29, 160, -30, -79, -9,
+	-33, -91, 79, 82, 60, 148, -10, 62, -80, 18,
+	74, -13, 154, 155, 153, 152, 146, 146, -105, -104,
+	-104, -50, 144, 158, -120, 144, -120, 144, -29, -16,
 	12, 146, -30, -16, 145, -16, 147, 158, 29, 29,
-	147, 158, 160, 143, 146, -120, -121, -65, -64, 60,
-	61, -47, -96, 79, 82, -92, 56, -47, 142, -126,
-	-47, -17, -21, -21, 91, 147, 158, 146, -96, -139,
-	-137, -136, -138, 148, -140, 57, 149, 149, -36, 10,
-	13, 12, 10, 143, 143, 148, 143, -141, -78, -142,
-	-82, 148, 142, -12, -16, -42, -96, -143, -42, 147,
+	147, 158, 160, 143, 146, -116, -121, -65, -64, 60,
+	61, -47, -91, 79, 82, -93, 56, -47, 142, -118,
+	-47, -17, -21, -21, 91, 147, 158, 146, -91, -136,
+	-135, -134, -132, 148, -133, 57, 149, 149, -36, 10,
+	13, 12, 10, 143, 143, 148, 143, -146, -78, -148,
+	-82, 148, 142, -12, -16, -42, -91, -140, -42, 147,
 	158, 147, 147, 147, 149, 149, 147, -16, 151, -16,
 	151, 149, 149, 147, 158, 147, -19, -16, -82, -82,
 	149, 143, -82, -82, 143, 143, -7, 10, 29, -8,
 	10, 29, 10, -30, 148, 153, 152, 162, 131, 163,
 	164, 159, 151, 161, 132, 133, 167, 88, 89, 87,
 	130, 129, 134, 135, 136, 137, 165, 166, 138, 139,
-	150, 82, -96, 146, -134, -135, -79, 17, 78, -79,
-	-79, -79, -79, -79, 147, -56, 93, 94, -110, 22,
-	144, -112, -16, 143, 32, 33, -113, 31, -113, 143,
-	160, -120, -16, 144, -58, -89, -21, 151, 59, -89,
-	-59, -27, 145, 10, -30, -117, 41, -120, 147, 158,
-	-149, 82, -96, 142, -126, -122, 158, -45, 160, -40,
-	-107, 148, -138, -140, -15, -143, 149, -16, -147, 148,
-	148, -15, -16, 143, -146, -38, 58, -19, -19, -70,
+	150, 82, -91, 146, -144, -145, -79, 17, 78, -79,
+	-79, -79, -79, -79, 147, -56, 93, 94, -106, 22,
+	144, -107, -16, 143, 32, 33, -120, 31, -120, 143,
+	160, -116, -16, 144, -58, -89, -21, 151, 59, -89,
+	-59, -27, 145, 10, -30, -113, 41, -116, 147, 158,
+	-97, 82, -91, 142, -118, -117, 158, -45, 160, -40,
+	-119, 148, -132, -133, -15, -140, 149, -16, -147, 148,
+	148, -15, -16, 143, -141, -38, 58, -19, -19, -70,
 	10, 10, -79, -79, -79, -79, -79, -79, -79, -79,
 	-79, -79, -79, -79, -79, -79, -79, -79, -79, -79,
 	-79, -79, -79, -79, -79, -79, -79, -79, 145, -79,
-	-96, -134, 149, -3, 158, 58, 10, 52, 147, 144,
+	-91, -144, 149, -3, 158, 58, 10, 52, 147, 144,
 	-50, -27, -57, 93, 94, 144, 144, -16, -4, 145,
 	144, 143, 144, 31, -30, 147, -90, 58, -21, 146,
-	-90, -100, 160, -60, 42, 146, 147, -94, 44, -65,
-	-150, 83, -96, -122, 143, -67, -123, -68, -69, -124,
-	-132, 47, 38, 44, -77, 103, 102, 101, 98, 99,
-	100, -47, -81, -16, 147, -15, 149, -141, 149, -140,
-	-15, -15, 149, 143, -145, 57, -16, 151, 149, -79,
-	145, 147, -79, -79, -27, 95, -50, 145, -112, -4,
-	-100, 144, -94, 147, -89, -107, 147, 28, -30, 142,
-	-47, 142, 142, 146, 12, 143, -125, 12, 144, 158,
-	-1, -77, 10, -128, -47, 149, 143, 149, 149, -143,
-	-19, -79, 58, 144, 145, -100, 147, -100, 142, -86,
-	-27, 145, 147, -86, 144, -100, 12, -100, -100, -108,
-	12, 151, 160, 144, 158, 160, 10, -149, 160, -83,
-	158, 144, 142, -79, -100, -87, -27, 145, -100, -100,
+	-90, -104, 160, -60, 42, 146, 147, -95, 44, -65,
+	-98, 83, -91, -117, 143, -67, -123, -68, -69, -125,
+	-130, 47, 38, 44, -77, 103, 102, 101, 98, 99,
+	100, -47, -81, -16, 147, -15, 149, -146, 149, -133,
+	-15, -15, 149, 143, -142, 57, -16, 151, 149, -79,
+	145, 147, -79, -79, -27, 95, -50, 145, -107, -4,
+	-104, 144, -95, 147, -89, -119, 147, 28, -30, 142,
+	-47, 142, 142, 146, 12, 143, -124, 12, 144, 158,
+	-1, -77, 10, -126, -47, 149, 143, 149, 149, -140,
+	-19, -79, 58, 144, 145, -104, 147, -104, 142, -86,
+	-27, 145, 147, -86, 144, -104, 12, -104, -104, -139,
+	12, 151, 160, 144, 158, 160, 10, -97, 160, -83,
+	158, 144, 142, -79, -104, -87, -27, 145, -104, -104,
 	143, 147, 143, 143, 147, 158, 12, -30, 12, -30,
-	160, 10, -30, -47, -129, -130, -71, -72, -73, -74,
-	-75, -47, 10, -100, 143, 26, 142, 12, 151, 160,
+	160, 10, -30, -47, -127, -128, -71, -72, -73, -74,
+	-75, -47, 10, -104, 143, 26, 142, 12, 151, 160,
 	-30, 146, 143, -71, 144, 144, 45, 29, 78, 24,
-	144, -100, 12, -30, -120, -131, -47, -76, -77, 10,
-	144, 143, 147, 158, 10, -118, -119, -61, 41, -85,
-	144, 142, -47, -61, 146, -100, -47, 143, 12, 147,
-	142, -100, 143,
+	144, -104, 12, -30, -116, -129, -47, -76, -77, 10,
+	144, 143, 147, 158, 10, -114, -115, -61, 41, -85,
+	144, 142, -47, -61, 146, -104, -47, 143, 12, 147,
+	142, -104, 143,
 }
 var yyDef = [...]int{
 
@@ -2326,72 +2321,89 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:281
+		// line internal/parser/php5/php5.y:269
 		{
-			yylex.(*Parser).rootNode = node.NewRoot(yyDollar[1].list)
-			yylex.(*Parser).rootNode.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+			children := yylex.(*Parser).List.Pop()
+			nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeRoot,
+				},
+			})
+			yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+			yylex.(*Parser).Children(0, nodeID, ast.NodeGroupStmts, children...)
 
-			yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
+			yylex.(*Parser).Ast.RootNode = nodeID
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(nodeID, ast.TokenGroupEnd, yylex.(*Parser).CurrentToken.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 2:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:293
+		// line internal/parser/php5/php5.y:290
 		{
-			if inlineHtmlNode, ok := yyDollar[2].node.(*stmt.InlineHtml); ok && len(yyDollar[1].list) > 0 {
-				prevNode := lastNode(yyDollar[1].list)
-				yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
+			if yyDollar[2].node != 0 {
+				yylex.(*Parser).List.Add(yyDollar[2].node)
 			}
 
-			if yyDollar[2].node != nil {
-				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
-			}
+			// TODO
+			// if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+			//     prevNode := lastNode($1)
+			//     yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 3:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:306
+		// line internal/parser/php5/php5.y:304
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:315
+		// line internal/parser/php5/php5.y:313
 		{
-			namePart := name.NewNamePart(yyDollar[1].token.Value)
-			yyVAL.list = []node.Node{namePart}
+			nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameNamePart,
+				},
+			})
+			yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(nodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(nodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 5:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:328
+		// line internal/parser/php5/php5.y:330
 		{
-			namePart := name.NewNamePart(yyDollar[3].token.Value)
-			yyVAL.list = append(yyDollar[1].list, namePart)
+			prevNodeID := yylex.(*Parser).List.Last()
+			nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameNamePart,
+				},
+			})
+			yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+			yylex.(*Parser).List.Add(nodeID)
 
-			// save position
-			namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, yyDollar[3].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(nodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:345
+		// line internal/parser/php5/php5.y:350
 		{
 			// error
 			yyVAL.node = nil
@@ -2400,7 +2412,7 @@ yydefault:
 		}
 	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:352
+		// line internal/parser/php5/php5.y:357
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2408,7 +2420,7 @@ yydefault:
 		}
 	case 8:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:358
+		// line internal/parser/php5/php5.y:363
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2416,7 +2428,7 @@ yydefault:
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:364
+		// line internal/parser/php5/php5.y:369
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2424,500 +2436,810 @@ yydefault:
 		}
 	case 10:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:370
+		// line internal/parser/php5/php5.y:375
 		{
-			yyVAL.node = stmt.NewHaltCompiler()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtHaltCompiler,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.HaltCompiller, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OpenParenthesisToken, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.CloseParenthesisToken, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupHaltCompiller, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupOpenParenthesisToken, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCloseParenthesisToken, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 11:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:386
+		// line internal/parser/php5/php5.y:393
 		{
-			name := name.NewName(yyDollar[2].list)
-			yyVAL.node = stmt.NewNamespace(name, nil)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// Create Namespace Node
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtNamespace,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupNamespaceName, nameNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(children[0], nameNodeID)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 12:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:403
+		// line internal/parser/php5/php5.y:423
 		{
-			name := name.NewName(yyDollar[2].list)
-			yyVAL.node = stmt.NewNamespace(name, yyDollar[4].list)
+			childrenStmts := yylex.(*Parser).List.Pop()
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[5].token.FreeFloating)
+			// Create Namespace Node
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtNamespace,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[5].token}, nil))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupNamespaceName, nameNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, childrenStmts...)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 13:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:420
+		// line internal/parser/php5/php5.y:455
 		{
-			yyVAL.node = stmt.NewNamespace(nil, yyDollar[3].list)
+			children := yylex.(*Parser).List.Pop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtNamespace,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, children...)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Namespace, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupNamespace, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:434
+		// line internal/parser/php5/php5.y:473
 		{
-			yyVAL.node = stmt.NewUseList(nil, yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUseList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUses, children...)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.UseDeclarationList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 15:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:448
+		// line internal/parser/php5/php5.y:491
 		{
-			useType := node.NewIdentifier(yyDollar[2].token.Value)
-			yyVAL.node = stmt.NewUseList(useType, yyDollar[3].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			useType.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			// use type
+			useTypenodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(useTypeNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(useType, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.UseDeclarationList, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// use list
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUseList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUseType, useTypeNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupUses, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 16:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:465
+		// line internal/parser/php5/php5.y:520
 		{
-			useType := node.NewIdentifier(yyDollar[2].token.Value)
-			yyVAL.node = stmt.NewUseList(useType, yyDollar[3].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			useType.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			// use type
+			useTypenodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(useTypeNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(useType, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.UseDeclarationList, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// use list
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUseList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUseType, useTypeNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupUses, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 17:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:482
+		// line internal/parser/php5/php5.y:549
 		{
 			yyVAL.node = yyDollar[1].node
 
 			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 18:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:498
+		// line internal/parser/php5/php5.y:565
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:507
+		// line internal/parser/php5/php5.y:575
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:516
+		// line internal/parser/php5/php5.y:585
 		{
-			name := name.NewName(yyDollar[1].list)
-			yyVAL.node = stmt.NewUse(nil, name, nil)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
+			// Create Use Node
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 21:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:530
+		// line internal/parser/php5/php5.y:612
 		{
-			name := name.NewName(yyDollar[1].list)
-			alias := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewUse(nil, name, alias)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+			// Create Name Node
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[3].token.FreeFloating)
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+
+			// create Alias Node
+
+			aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			// Create Use Node
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{yyDollar[3].token}, nil))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, aliasNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 22:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:548
+		// line internal/parser/php5/php5.y:653
 		{
-			name := name.NewName(yyDollar[2].list)
-			yyVAL.node = stmt.NewUse(nil, name, nil)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
+			// Create Use Node
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSlash, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 23:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:564
+		// line internal/parser/php5/php5.y:682
 		{
-			name := name.NewName(yyDollar[2].list)
-			alias := node.NewIdentifier(yyDollar[4].token.Value)
-			yyVAL.node = stmt.NewUse(nil, name, alias)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[2].list, yyDollar[4].token))
+			// Create Name Node
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[4].token.FreeFloating)
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+
+			// create Alias Node
+
+			aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
+
+			// Create Use Node
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{yyDollar[4].token}, nil))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, aliasNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSlash, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 24:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:587
+		// line internal/parser/php5/php5.y:728
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:596
+		// line internal/parser/php5/php5.y:738
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:605
+		// line internal/parser/php5/php5.y:748
 		{
-			name := name.NewName(yyDollar[1].list)
-			yyVAL.node = stmt.NewUse(nil, name, nil)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
+			// Create Use Node
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 27:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:619
+		// line internal/parser/php5/php5.y:775
 		{
-			name := name.NewName(yyDollar[1].list)
-			alias := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewUse(nil, name, alias)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+			// Create Name Node
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[3].token.FreeFloating)
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+
+			// create Alias Node
+
+			aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			// Create Use Node
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{yyDollar[3].token}, nil))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, aliasNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 28:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:637
+		// line internal/parser/php5/php5.y:816
 		{
-			name := name.NewName(yyDollar[2].list)
-			yyVAL.node = stmt.NewUse(nil, name, nil)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
+			// Create Use Node
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSlash, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 29:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:653
+		// line internal/parser/php5/php5.y:845
 		{
-			name := name.NewName(yyDollar[2].list)
-			alias := node.NewIdentifier(yyDollar[4].token.Value)
-			yyVAL.node = stmt.NewUse(nil, name, alias)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[2].list, yyDollar[4].token))
+			// Create Name Node
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[4].token.FreeFloating)
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+
+			// create Alias Node
+
+			aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
+
+			// Create Use Node
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{yyDollar[4].token}, nil))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, aliasNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSlash, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 30:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:676
+		// line internal/parser/php5/php5.y:891
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:685
+		// line internal/parser/php5/php5.y:901
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:694
+		// line internal/parser/php5/php5.y:911
 		{
-			name := name.NewName(yyDollar[1].list)
-			yyVAL.node = stmt.NewUse(nil, name, nil)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
+			// Create Use Node
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 33:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:708
+		// line internal/parser/php5/php5.y:938
 		{
-			name := name.NewName(yyDollar[1].list)
-			alias := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewUse(nil, name, alias)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+			// Create Name Node
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[3].token.FreeFloating)
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+
+			// create Alias Node
+
+			aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			// Create Use Node
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{yyDollar[3].token}, nil))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, aliasNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 34:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:726
+		// line internal/parser/php5/php5.y:979
 		{
-			name := name.NewName(yyDollar[2].list)
-			yyVAL.node = stmt.NewUse(nil, name, nil)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
+			// Create Use Node
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSlash, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 35:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:742
+		// line internal/parser/php5/php5.y:1008
 		{
-			name := name.NewName(yyDollar[2].list)
-			alias := node.NewIdentifier(yyDollar[4].token.Value)
-			yyVAL.node = stmt.NewUse(nil, name, alias)
+			childrenNameParts := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[2].list, yyDollar[4].token))
+			// Create Name Node
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[4].token.FreeFloating)
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+
+			// create Alias Node
+
+			aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
+
+			// Create Use Node
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{yyDollar[4].token}, nil))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, aliasNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSlash, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 36:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:765
+		// line internal/parser/php5/php5.y:1054
 		{
-			name := node.NewIdentifier(yyDollar[3].token.Value)
-			constant := stmt.NewConstant(name, yyDollar[5].node, "")
-			constList := yyDollar[1].node.(*stmt.ConstList)
-			lastConst := lastNode(constList.Consts)
-			constList.Consts = append(constList.Consts, constant)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			constantnodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(constantNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, []graph.NodeID{yyDollar[5].node}))
+
+			prevNodeID := yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(prevNodeID, constantNodeID, ast.NodeGroupExpr, yyDollar[5].node)
+
 			yyVAL.node = yyDollar[1].node
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[5].node))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeNodeListPosition(yyDollar[1].node, constList.Consts))
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[5].node}, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConsts, constantNodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastConst, freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Name, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupName, yyDollar[4].token.HiddenTokens)
+			// yylex.(*Parser).AppendTokens($1, ast.TokenGroupEnd, $2.HiddenTokens) // TODO: attach to $1 last const
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 37:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:786
+		// line internal/parser/php5/php5.y:1085
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value)
-			constant := stmt.NewConstant(name, yyDollar[4].node, "")
-			constList := []node.Node{constant}
-			yyVAL.node = stmt.NewConstList(constList)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[4].node))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, constList))
+			constantnodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(constantNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, []graph.NodeID{yyDollar[4].node}))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Name, yyDollar[3].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(prevNodeID, constantNodeID, ast.NodeGroupExpr, yyDollar[4].node)
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtConstList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[4].node}))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConsts, constantNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupName, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 38:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:808
+		// line internal/parser/php5/php5.y:1122
 		{
-			if inlineHtmlNode, ok := yyDollar[2].node.(*stmt.InlineHtml); ok && len(yyDollar[1].list) > 0 {
-				prevNode := lastNode(yyDollar[1].list)
-				yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
-			}
+			// TODO
+			// if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+			//     prevNode := lastNode($1)
+			//     yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
+			// }
 
-			if yyDollar[2].node != nil {
-				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			if yyDollar[2].node != 0 {
+				yylex.(*Parser).List.Add(yyDollar[2].node)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 39:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:821
+		// line internal/parser/php5/php5.y:1136
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 40:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:831
+		// line internal/parser/php5/php5.y:1146
 		{
 			// error
 			yyVAL.node = nil
@@ -2926,7 +3248,7 @@ yydefault:
 		}
 	case 41:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:838
+		// line internal/parser/php5/php5.y:1153
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2934,7 +3256,7 @@ yydefault:
 		}
 	case 42:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:844
+		// line internal/parser/php5/php5.y:1159
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2942,7 +3264,7 @@ yydefault:
 		}
 	case 43:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:850
+		// line internal/parser/php5/php5.y:1165
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2950,25 +3272,27 @@ yydefault:
 		}
 	case 44:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:856
+		// line internal/parser/php5/php5.y:1171
 		{
-			yyVAL.node = stmt.NewHaltCompiler()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtHaltCompiler,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.HaltCompiller, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OpenParenthesisToken, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.CloseParenthesisToken, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupHaltCompiller, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupOpenParenthesisToken, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCloseParenthesisToken, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 45:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:876
+		// line internal/parser/php5/php5.y:1193
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2976,739 +3300,812 @@ yydefault:
 		}
 	case 46:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:882
+		// line internal/parser/php5/php5.y:1199
 		{
-			label := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.node = stmt.NewLabel(label)
+			LableNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			label.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtLabel,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Label, yyDollar[2].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLabelName, LableNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupLabel, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 47:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:900
+		// line internal/parser/php5/php5.y:1226
 		{
-			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStmtList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 48:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:913
+		// line internal/parser/php5/php5.y:1245
 		{
-			yyVAL.node = stmt.NewIf(yyDollar[2].node, yyDollar[3].node, yyDollar[4].list, yyDollar[5].node)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			if yyDollar[5].node != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
-			} else if len(yyDollar[4].list) > 0 {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[4].list))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtIf,
+				},
+			})
+
+			if yyDollar[5].node != 0 {
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[5].node}))
+			} else if len(children) > 0 {
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 			}
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.If, (*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken])-1])
-				delete((*yyDollar[2].node.GetFreeFloating()), freefloating.OpenParenthesisToken)
-			}
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, (*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken])-1])
-				delete((*yyDollar[2].node.GetFreeFloating()), freefloating.CloseParenthesisToken)
-			}
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[2].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmt, yyDollar[3].node)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupElseIf, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			// TODO handle parenthesis_expr tokens
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 49:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		// line php5/php5.y:937
+		// line internal/parser/php5/php5.y:1273
 		{
-			stmts := stmt.NewStmtList(yyDollar[4].list)
-			yyVAL.node = stmt.NewAltIf(yyDollar[2].node, stmts, yyDollar[5].list, yyDollar[6].node)
+			childrenElseIf := yylex.(*Parser).List.Pop()
+			childrenStmt := yylex.(*Parser).List.Pop()
 
-			// save position
-			stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[4].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
+			stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStmtList,
+				},
+			})
+			yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(childrenStmt, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.If, (*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken])-1])
-				delete((*yyDollar[2].node.GetFreeFloating()), freefloating.OpenParenthesisToken)
-			}
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, (*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken])-1])
-				delete((*yyDollar[2].node.GetFreeFloating()), freefloating.CloseParenthesisToken)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[7].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[8].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[8].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtAltIf,
+					Flag: ast.NodeFlagAltSyntax,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[8].token}, nil))
+
+			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, childrenStmt...)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[3].token)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupElseIf, childrenElseIf...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[3].token.HiddenTokens)
+			// TODO handle parenthesis_expr tokens
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 50:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:961
+		// line internal/parser/php5/php5.y:1305
 		{
-			switch n := yyDollar[3].node.(type) {
-			case *stmt.While:
-				n.Cond = yyDollar[2].node
-			case *stmt.AltWhile:
-				n.Cond = yyDollar[2].node
-			}
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtWhile,
+				},
+			})
 
-			yyVAL.node = yyDollar[3].node
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[2].node)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[3].node)
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.While, (*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken])-1])
-				delete((*yyDollar[2].node.GetFreeFloating()), freefloating.OpenParenthesisToken)
-			}
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, (*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken])-1])
-				delete((*yyDollar[2].node.GetFreeFloating()), freefloating.CloseParenthesisToken)
-			}
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			// TODO handle parenthesis_expr tokens
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 51:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:986
+		// line internal/parser/php5/php5.y:1323
 		{
-			yyVAL.node = stmt.NewDo(yyDollar[2].node, yyDollar[4].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtDo,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[5].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[2].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCond, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			if len((*yyDollar[4].node.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.While, (*yyDollar[4].node.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*yyDollar[4].node.GetFreeFloating())[freefloating.OpenParenthesisToken])-1])
-				delete((*yyDollar[4].node.GetFreeFloating()), freefloating.OpenParenthesisToken)
-			}
-			if len((*yyDollar[4].node.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, (*yyDollar[4].node.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*yyDollar[4].node.GetFreeFloating())[freefloating.CloseParenthesisToken])-1])
-				delete((*yyDollar[4].node.GetFreeFloating()), freefloating.CloseParenthesisToken)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[5].token})
+			// TODO handle parenthesis_expr tokens
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 52:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		// line php5/php5.y:1007
+		// line internal/parser/php5/php5.y:1344
 		{
-			switch n := yyDollar[9].node.(type) {
-			case *stmt.For:
-				n.Init = yyDollar[3].list
-				n.Cond = yyDollar[5].list
-				n.Loop = yyDollar[7].list
-			case *stmt.AltFor:
-				n.Init = yyDollar[3].list
-				n.Cond = yyDollar[5].list
-				n.Loop = yyDollar[7].list
-			}
+			prevNodeID := yylex.(*Parser).Children(0, yyDollar[9].node, ast.NodeGroupLoop, yylex.(*Parser).List.Pop()...)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyDollar[9].node, ast.NodeGroupCond, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(prevNodeID, yyDollar[9].node, ast.NodeGroupInit, yylex.(*Parser).List.Pop()...)
 
 			yyVAL.node = yyDollar[9].node
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[9].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.For, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.InitExpr, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.CondExpr, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.IncExpr, yyDollar[8].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupFor, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupInitExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCondExpr, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupIncExpr, yyDollar[8].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 53:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1034
+		// line internal/parser/php5/php5.y:1362
 		{
-			switch n := yyDollar[3].node.(type) {
-			case *stmt.Switch:
-				n.Cond = yyDollar[2].node
-			case *stmt.AltSwitch:
-				n.Cond = yyDollar[2].node
-			default:
-				panic("unexpected node type")
-			}
-
 			yyVAL.node = yyDollar[3].node
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[2].node)
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Switch, (*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken])-1])
-				delete((*yyDollar[2].node.GetFreeFloating()), freefloating.OpenParenthesisToken)
-			}
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, (*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken])-1])
-				delete((*yyDollar[2].node.GetFreeFloating()), freefloating.CloseParenthesisToken)
-			}
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			// TODO handle parenthesis_expr tokens
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 54:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1061
+		// line internal/parser/php5/php5.y:1375
 		{
-			yyVAL.node = stmt.NewBreak(nil)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtBreak,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 55:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1075
+		// line internal/parser/php5/php5.y:1391
 		{
-			yyVAL.node = stmt.NewBreak(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtBreak,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 56:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1089
+		// line internal/parser/php5/php5.y:1409
 		{
-			yyVAL.node = stmt.NewContinue(nil)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtContinue,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 57:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1103
+		// line internal/parser/php5/php5.y:1425
 		{
-			yyVAL.node = stmt.NewContinue(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtContinue,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 58:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1117
+		// line internal/parser/php5/php5.y:1443
 		{
-			yyVAL.node = stmt.NewReturn(nil)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtReturn,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 59:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1131
+		// line internal/parser/php5/php5.y:1459
 		{
-			yyVAL.node = stmt.NewReturn(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtReturn,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 60:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1145
+		// line internal/parser/php5/php5.y:1477
 		{
-			yyVAL.node = stmt.NewReturn(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtReturn,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 61:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1159
+		// line internal/parser/php5/php5.y:1495
 		{
-			yyVAL.node = stmt.NewExpression(yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtExpression,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 62:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1173
+		// line internal/parser/php5/php5.y:1513
 		{
-			yyVAL.node = stmt.NewGlobal(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtGlobal,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVars, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 63:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1187
+		// line internal/parser/php5/php5.y:1533
 		{
-			yyVAL.node = stmt.NewStatic(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStatic,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVars, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 64:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1201
+		// line internal/parser/php5/php5.y:1553
 		{
-			yyVAL.node = stmt.NewEcho(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtEcho,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Echo, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExprs, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEcho, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 65:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1216
+		// line internal/parser/php5/php5.y:1574
 		{
-			yyVAL.node = stmt.NewInlineHtml(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtInlineHtml,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 66:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1228
+		// line internal/parser/php5/php5.y:1588
 		{
-			yyVAL.node = stmt.NewExpression(yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtExpression,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 67:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:1242
+		// line internal/parser/php5/php5.y:1606
 		{
-			yyVAL.node = stmt.NewUnset(yyDollar[3].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtUnset,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[5].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Unset, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.CloseParenthesisToken, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVars, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupUnset, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCloseParenthesisToken, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[5].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 68:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		// line php5/php5.y:1258
+		// line internal/parser/php5/php5.y:1628
 		{
-			if yyDollar[6].node == nil {
-				switch n := yyDollar[8].node.(type) {
-				case *stmt.Foreach:
-					n.Expr = yyDollar[3].node
-					n.Variable = yyDollar[5].node
-				case *stmt.AltForeach:
-					n.Expr = yyDollar[3].node
-					n.Variable = yyDollar[5].node
-				}
+			yylex.(*Parser).Children(0, yyDollar[8].node, ast.NodeGroupExpr, yyDollar[3].node)
+			if yyDollar[6].node == 0 {
+				yylex.(*Parser).Children(0, yyDollar[8].node, ast.NodeGroupVar, yyDollar[5].node)
 			} else {
-				switch n := yyDollar[8].node.(type) {
-				case *stmt.Foreach:
-					n.Expr = yyDollar[3].node
-					n.Key = yyDollar[5].node
-					n.Variable = yyDollar[6].node
-				case *stmt.AltForeach:
-					n.Expr = yyDollar[3].node
-					n.Key = yyDollar[5].node
-					n.Variable = yyDollar[6].node
-				}
+				yylex.(*Parser).Children(0, yyDollar[8].node, ast.NodeGroupKey, yyDollar[5].node)
+				yylex.(*Parser).Children(0, yyDollar[8].node, ast.NodeGroupVar, yyDollar[6].node)
 			}
 
 			yyVAL.node = yyDollar[8].node
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[8].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[8].node))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Foreach, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
-			if yyDollar[6].node != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Key, (*yyDollar[6].node.GetFreeFloating())[freefloating.Key])
-				delete((*yyDollar[6].node.GetFreeFloating()), freefloating.Key)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[7].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupForeach, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[7].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 69:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		// line php5/php5.y:1298
+		// line internal/parser/php5/php5.y:1649
 		{
-			if yyDollar[6].node == nil {
-				switch n := yyDollar[8].node.(type) {
-				case *stmt.Foreach:
-					n.Expr = yyDollar[3].node
-					n.Variable = yyDollar[5].node
-				case *stmt.AltForeach:
-					n.Expr = yyDollar[3].node
-					n.Variable = yyDollar[5].node
-				}
+			yylex.(*Parser).Children(0, yyDollar[8].node, ast.NodeGroupExpr, yyDollar[3].node)
+			if yyDollar[6].node == 0 {
+				yylex.(*Parser).Children(0, yyDollar[8].node, ast.NodeGroupVar, yyDollar[5].node)
 			} else {
-				switch n := yyDollar[8].node.(type) {
-				case *stmt.Foreach:
-					n.Expr = yyDollar[3].node
-					n.Key = yyDollar[5].node
-					n.Variable = yyDollar[6].node
-				case *stmt.AltForeach:
-					n.Expr = yyDollar[3].node
-					n.Key = yyDollar[5].node
-					n.Variable = yyDollar[6].node
-				}
+				yylex.(*Parser).Children(0, yyDollar[8].node, ast.NodeGroupKey, yyDollar[5].node)
+				yylex.(*Parser).Children(0, yyDollar[8].node, ast.NodeGroupVar, yyDollar[6].node)
 			}
 
-			// save position
 			yyVAL.node = yyDollar[8].node
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[8].node}))
 
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[8].node))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Foreach, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
-			if yyDollar[6].node != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Key, (*yyDollar[6].node.GetFreeFloating())[freefloating.Key])
-				delete((*yyDollar[6].node.GetFreeFloating()), freefloating.Key)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[7].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupForeach, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[7].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 70:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:1338
+		// line internal/parser/php5/php5.y:1670
 		{
+			children := yylex.(*Parser).List.Pop()
+			yylex.(*Parser).Children(0, yyDollar[5].node, ast.NodeGroupConsts, children...)
+
 			yyVAL.node = yyDollar[5].node
-			yyVAL.node.(*stmt.Declare).Consts = yyDollar[3].list
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[5].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Declare, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ConstList, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupDeclare, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupConstList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 71:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1353
+		// line internal/parser/php5/php5.y:1685
 		{
-			yyVAL.node = stmt.NewNop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtNop,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 72:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		// line php5/php5.y:1366
+		// line internal/parser/php5/php5.y:1700
 		{
-			yyVAL.node = stmt.NewTry(yyDollar[3].list, yyDollar[5].list, yyDollar[6].node)
+			childrenCatches := yylex.(*Parser).List.Pop()
+			childrenStmts := yylex.(*Parser).List.Pop()
 
-			// save position
-			if yyDollar[6].node == nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[5].list))
+			var posID graph.PositionID
+			if yyDollar[6].node == 0 {
+				posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, childrenCatches)
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
+				posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[6].node})
 			}
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Try, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[4].token.FreeFloating)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtTry,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, posID)
+
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConsts, yyDollar[6].node)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCatches, childrenCatches...)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, childrenStmts...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupTry, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 73:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1384
+		// line internal/parser/php5/php5.y:1730
 		{
-			yyVAL.node = stmt.NewThrow(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtThrow,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 74:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1398
+		// line internal/parser/php5/php5.y:1748
 		{
-			label := node.NewIdentifier(yyDollar[2].token.Value)
-			yyVAL.node = stmt.NewGoto(label)
+			LableNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			label.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtGoto,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(label, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Label, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLabel, LableNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(LableNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupLabel, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 75:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:1418
+		// line internal/parser/php5/php5.y:1777
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 76:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		// line php5/php5.y:1424
+		// line internal/parser/php5/php5.y:1783
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[4].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			catchNode := stmt.NewCatch([]node.Node{yyDollar[3].node}, variable, yyDollar[7].list)
-			yyVAL.list = append([]node.Node{catchNode}, yyDollar[9].list...)
+			additionalCatches := yylex.(*Parser).List.Pop()
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			catchNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(catchNode, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(catchNode, freefloating.Catch, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(variable, freefloating.Start, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(catchNode, freefloating.Var, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(catchNode, freefloating.Cond, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(catchNode, freefloating.Stmts, yyDollar[8].token.FreeFloating)
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
+
+			catchNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtCatch,
+				},
+			})
+			yylex.(*Parser).SavePosition(catchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[8].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(0, catchNodeID, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(0, catchNodeID, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(0, catchNodeID, ast.NodeGroupTypes, yyDollar[3].node)
+
+			yylex.(*Parser).List.Add(catchNodeID)
+			for _, v := range additionalCatches {
+				yylex.(*Parser).List.Add(v)
+			}
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupCatch, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupVar, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupCond, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupStmts, yyDollar[8].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 77:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:1450
+		// line internal/parser/php5/php5.y:1831
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 78:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:1456
+		// line internal/parser/php5/php5.y:1837
 		{
-			yyVAL.node = stmt.NewFinally(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtFinally,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Finally, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupFinally, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 79:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1473
+		// line internal/parser/php5/php5.y:1858
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 80:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:1479
+		// line internal/parser/php5/php5.y:1862
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 81:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1488
+		// line internal/parser/php5/php5.y:1871
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 82:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1494
+		// line internal/parser/php5/php5.y:1878
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).List.Add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 83:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		// line php5/php5.y:1503
+		// line internal/parser/php5/php5.y:1887
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[4].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = stmt.NewCatch([]node.Node{yyDollar[3].node}, variable, yyDollar[7].list)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Catch, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(variable, freefloating.Start, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[8].token.FreeFloating)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtCatch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[8].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupTypes, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCatch, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[8].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 84:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1528
+		// line internal/parser/php5/php5.y:1928
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 85:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1534
+		// line internal/parser/php5/php5.y:1935
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 86:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1546
+		// line internal/parser/php5/php5.y:1948
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3716,7 +4113,7 @@ yydefault:
 		}
 	case 87:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1555
+		// line internal/parser/php5/php5.y:1957
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3724,7 +4121,7 @@ yydefault:
 		}
 	case 88:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1564
+		// line internal/parser/php5/php5.y:1966
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3732,278 +4129,343 @@ yydefault:
 		}
 	case 89:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:1573
+		// line internal/parser/php5/php5.y:1975
 		{
-			yyVAL.token = nil
+			yyVAL.token = 0
 		}
 	case 90:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1577
+		// line internal/parser/php5/php5.y:1979
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 91:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:1584
+		// line internal/parser/php5/php5.y:1986
 		{
-			yyVAL.token = nil
+			yyVAL.token = 0
 		}
 	case 92:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1588
+		// line internal/parser/php5/php5.y:1990
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 93:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		// line php5/php5.y:1595
+		// line internal/parser/php5/php5.y:1997
 		{
-			name := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewFunction(name, yyDollar[2].token != nil, yyDollar[5].list, nil, yyDollar[8].list, "")
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[9].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[2].token.FreeFloating)
-				yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[3].token.FreeFloating)
-			} else {
-				yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[3].token.FreeFloating)
+				flag = flag | ast.NodeFlagRef
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ParamList, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Params, yyDollar[7].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[9].token.FreeFloating)
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtFunction,
+					Flag: flag,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[9].token}, nil))
+
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupFunctionName, identifierNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			if yyDollar[2].token != nil {
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[2].token.HiddenTokens)
+			}
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupParamList, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupParams, yyDollar[7].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[9].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 94:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		// line php5/php5.y:1622
+		// line internal/parser/php5/php5.y:2040
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value)
-			switch n := yyDollar[1].node.(type) {
-			case *stmt.Class:
-				n.ClassName = name
-				n.Stmts = yyDollar[6].list
-				n.Extends = yyDollar[3].ClassExtends
-				n.Implements = yyDollar[4].ClassImplements
+			children := yylex.(*Parser).List.Pop()
 
-			case *stmt.Trait:
-				// TODO: is it possible that trait extend or implement
-				n.TraitName = name
-				n.Stmts = yyDollar[6].list
-			}
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
+
 			yyVAL.node = yyDollar[1].node
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[7].token))
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[7].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[7].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClassName, identifierNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExtends, yyDollar[3].ClassExtends)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupImplements, yyDollar[4].ClassImplements)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 95:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		// line php5/php5.y:1650
+		// line internal/parser/php5/php5.y:2067
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value)
-			yyVAL.node = stmt.NewInterface(name, yyDollar[3].InterfaceExtends, yyDollar[5].list, "")
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtInterface,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[6].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[6].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExtends, yyDollar[3].InterfaceExtends)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupInterfaceName, identifierNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 96:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1671
+		// line internal/parser/php5/php5.y:2099
 		{
-			yyVAL.node = stmt.NewClass(nil, nil, nil, nil, nil, nil, "")
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtClass,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 97:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1683
+		// line internal/parser/php5/php5.y:2113
 		{
-			classModifier := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.node = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
+			modifiernodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(modifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			classModifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtClass,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ModifierList, yyDollar[2].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupModifiers, modifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupModifierList, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 98:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1698
+		// line internal/parser/php5/php5.y:2137
 		{
-			yyVAL.node = stmt.NewTrait(nil, nil, "")
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtTrait,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 99:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1710
+		// line internal/parser/php5/php5.y:2151
 		{
-			classModifier := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.node = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
+			modifiernodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(modifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			classModifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtClass,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ModifierList, yyDollar[2].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupModifiers, modifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupModifierList, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 100:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:1728
+		// line internal/parser/php5/php5.y:2178
 		{
-			yyVAL.ClassExtends = nil
+			yyVAL.ClassExtends = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 101:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1734
+		// line internal/parser/php5/php5.y:2184
 		{
-			yyVAL.ClassExtends = stmt.NewClassExtends(yyDollar[2].node)
+			yyVAL.ClassExtends = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtClassExtends,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.ClassExtends, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.ClassExtends.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.ClassExtends, ast.NodeGroupClassName, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.ClassExtends, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.ClassExtends, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 102:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1749
+		// line internal/parser/php5/php5.y:2203
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 103:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:1756
+		// line internal/parser/php5/php5.y:2210
 		{
-			yyVAL.InterfaceExtends = nil
+			yyVAL.InterfaceExtends = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 104:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1762
+		// line internal/parser/php5/php5.y:2216
 		{
-			yyVAL.InterfaceExtends = stmt.NewInterfaceExtends(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.InterfaceExtends.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
+			yyVAL.InterfaceExtends = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtInterfaceExtends,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.InterfaceExtends, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.InterfaceExtends, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.InterfaceExtends, ast.NodeGroupInterfaceNames, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.InterfaceExtends, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 105:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:1777
+		// line internal/parser/php5/php5.y:2237
 		{
-			yyVAL.ClassImplements = nil
+			yyVAL.ClassImplements = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 106:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1783
+		// line internal/parser/php5/php5.y:2243
 		{
-			yyVAL.ClassImplements = stmt.NewClassImplements(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.ClassImplements.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
+			yyVAL.ClassImplements = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtClassImplements,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.ClassImplements, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.ClassImplements, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.ClassImplements, ast.NodeGroupInterfaceNames, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.ClassImplements, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 107:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1798
+		// line internal/parser/php5/php5.y:2264
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 108:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1804
+		// line internal/parser/php5/php5.y:2271
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 109:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:1816
+		// line internal/parser/php5/php5.y:2284
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 110:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1822
+		// line internal/parser/php5/php5.y:2290
 		{
 			yyVAL.node = yyDollar[2].node
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Key, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupKey, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 111:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1834
+		// line internal/parser/php5/php5.y:2302
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4011,607 +4473,882 @@ yydefault:
 		}
 	case 112:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:1840
+		// line internal/parser/php5/php5.y:2308
 		{
-			yyVAL.node = expr.NewReference(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprReference,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 113:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:1852
+		// line internal/parser/php5/php5.y:2324
 		{
-			yyVAL.node = expr.NewList(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.List, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArrayPairList, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 114:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1869
+		// line internal/parser/php5/php5.y:2345
 		{
-			yyVAL.node = stmt.NewFor(nil, nil, nil, yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtFor,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 115:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:1878
+		// line internal/parser/php5/php5.y:2358
 		{
-			stmtList := stmt.NewStmtList(yyDollar[2].list)
-			yyVAL.node = stmt.NewAltFor(nil, nil, nil, stmtList)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStmtList,
+				},
+			})
+			yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtAltFor,
+					Flag: ast.NodeFlagAltSyntax,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+
+			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 116:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1898
+		// line internal/parser/php5/php5.y:2391
 		{
-			yyVAL.node = stmt.NewForeach(nil, nil, nil, yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtForeach,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 117:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:1907
+		// line internal/parser/php5/php5.y:2404
 		{
-			stmtList := stmt.NewStmtList(yyDollar[2].list)
-			yyVAL.node = stmt.NewAltForeach(nil, nil, nil, stmtList)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStmtList,
+				},
+			})
+			yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtAltForeach,
+					Flag: ast.NodeFlagAltSyntax,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+
+			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 118:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:1928
+		// line internal/parser/php5/php5.y:2438
 		{
-			yyVAL.node = stmt.NewDeclare(nil, yyDollar[1].node, false)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtDeclare,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 119:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:1937
+		// line internal/parser/php5/php5.y:2451
 		{
-			stmtList := stmt.NewStmtList(yyDollar[2].list)
-			yyVAL.node = stmt.NewDeclare(nil, stmtList, true)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStmtList,
+				},
+			})
+			yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtDeclare,
+					Flag: ast.NodeFlagAltSyntax,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+
+			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 120:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1958
+		// line internal/parser/php5/php5.y:2485
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value)
-			constant := stmt.NewConstant(name, yyDollar[3].node, "")
-			yyVAL.list = []node.Node{constant}
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			constnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(constNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Name, yyDollar[2].token.FreeFloating)
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(constNodeID)
+
+			yylex.(*Parser).Children(0, constNodeID, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(0, constNodeID, ast.NodeGroupExpr, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(constNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(constNodeID, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 121:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:1974
+		// line internal/parser/php5/php5.y:2513
 		{
-			name := node.NewIdentifier(yyDollar[3].token.Value)
-			constant := stmt.NewConstant(name, yyDollar[5].node, "")
-			yyVAL.list = append(yyDollar[1].list, constant)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[5].node))
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Name, yyDollar[4].token.FreeFloating)
+			constnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(constNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, []graph.NodeID{yyDollar[5].node}))
+
+			yylex.(*Parser).List.Add(constNodeID)
+
+			yylex.(*Parser).Children(0, constNodeID, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(0, constNodeID, ast.NodeGroupExpr, yyDollar[5].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(constNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(constNodeID, ast.TokenGroupName, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 122:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:1995
+		// line internal/parser/php5/php5.y:2547
 		{
-			caseList := stmt.NewCaseList(yyDollar[2].list)
-			yyVAL.node = stmt.NewSwitch(nil, caseList)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			caseList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtCaseList,
+				},
+			})
+			yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, yyDollar[3].token.FreeFloating)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtSwitch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
+
+			yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 123:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:2010
+		// line internal/parser/php5/php5.y:2574
 		{
-			caseList := stmt.NewCaseList(yyDollar[3].list)
-			yyVAL.node = stmt.NewSwitch(nil, caseList)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			caseList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtCaseList,
+				},
+			})
+			yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, yyDollar[4].token.FreeFloating)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtSwitch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+
+			yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 124:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:2026
+		// line internal/parser/php5/php5.y:2603
 		{
-			caseList := stmt.NewCaseList(yyDollar[2].list)
-			yyVAL.node = stmt.NewAltSwitch(nil, caseList)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			caseList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtCaseList,
+				},
+			})
+			yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtAltSwitch,
+					Flag: ast.NodeFlagAltSyntax,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+
+			yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 125:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:2043
+		// line internal/parser/php5/php5.y:2633
 		{
+			children := yylex.(*Parser).List.Pop()
 
-			caseList := stmt.NewCaseList(yyDollar[3].list)
-			yyVAL.node = stmt.NewAltSwitch(nil, caseList)
+			caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtCaseList,
+				},
+			})
+			yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-			// save position
-			caseList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[3].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtAltSwitch,
+					Flag: ast.NodeFlagAltSyntax,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[5].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token))
+			yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[5].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 126:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2066
+		// line internal/parser/php5/php5.y:2669
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 127:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:2072
+		// line internal/parser/php5/php5.y:2675
 		{
-			_case := stmt.NewCase(yyDollar[3].node, yyDollar[5].list)
-			yyVAL.list = append(yyDollar[1].list, _case)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			_case.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[5].list))
+			caseNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtCase,
+				},
+			})
+			yylex.(*Parser).SavePosition(caseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, children))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(_case, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_case, freefloating.Expr, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_case, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			yylex.(*Parser).Children(0, caseNodeID, ast.NodeGroupStmts, children...)
+
+			yylex.(*Parser).List.Add(caseNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(caseNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(caseNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(caseNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 128:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:2087
+		// line internal/parser/php5/php5.y:2697
 		{
-			_default := stmt.NewDefault(yyDollar[4].list)
-			yyVAL.list = append(yyDollar[1].list, _default)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			_default.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[4].list))
+			defaultNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtDefault,
+				},
+			})
+			yylex.(*Parser).SavePosition(defaultNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, children))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(_default, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_default, freefloating.Default, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_default, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			yylex.(*Parser).Children(0, defaultNodeID, ast.NodeGroupStmts, children...)
+
+			yylex.(*Parser).List.Add(defaultNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(defaultNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(defaultNodeID, ast.TokenGroupDefault, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(defaultNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 129:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2106
+		// line internal/parser/php5/php5.y:2722
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 130:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2110
+		// line internal/parser/php5/php5.y:2726
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 131:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2118
+		// line internal/parser/php5/php5.y:2733
 		{
-			yyVAL.node = stmt.NewWhile(nil, yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtWhile,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 132:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:2127
+		// line internal/parser/php5/php5.y:2746
 		{
-			stmtList := stmt.NewStmtList(yyDollar[2].list)
-			yyVAL.node = stmt.NewAltWhile(nil, stmtList)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStmtList,
+				},
+			})
+			yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtAltWhile,
+					Flag: ast.NodeFlagAltSyntax,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+
+			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 133:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2149
+		// line internal/parser/php5/php5.y:2779
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 134:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:2155
+		// line internal/parser/php5/php5.y:2785
 		{
-			_elseIf := stmt.NewElseIf(yyDollar[3].node, yyDollar[4].node)
-			yyVAL.list = append(yyDollar[1].list, _elseIf)
+			elseIfNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtElseIf,
+				},
+			})
+			yylex.(*Parser).SavePosition(elseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, []graph.NodeID{yyDollar[4].node}))
 
-			// save position
-			_elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[4].node))
+			yylex.(*Parser).Children(0, elseIfNodeID, ast.NodeGroupCond, yyDollar[3].node)
+			yylex.(*Parser).Children(0, elseIfNodeID, ast.NodeGroupStmt, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, yyDollar[2].token.FreeFloating)
-			if len((*yyDollar[3].node.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, (*yyDollar[3].node.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*yyDollar[3].node.GetFreeFloating())[freefloating.OpenParenthesisToken])-1])
-				delete((*yyDollar[3].node.GetFreeFloating()), freefloating.OpenParenthesisToken)
-			}
-			if len((*yyDollar[3].node.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, (*yyDollar[3].node.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*yyDollar[3].node.GetFreeFloating())[freefloating.CloseParenthesisToken])-1])
-				delete((*yyDollar[3].node.GetFreeFloating()), freefloating.CloseParenthesisToken)
-			}
+			// save tokens
+			yylex.(*Parser).AppendTokens(elseIfNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			// TODO handle parenthesis_expr tokens
+
+			yylex.(*Parser).List.Add(elseIfNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 135:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2178
+		// line internal/parser/php5/php5.y:2809
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 136:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:2184
+		// line internal/parser/php5/php5.y:2815
 		{
-			stmts := stmt.NewStmtList(yyDollar[5].list)
-			_elseIf := stmt.NewAltElseIf(yyDollar[3].node, stmts)
-			yyVAL.list = append(yyDollar[1].list, _elseIf)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[5].list))
-			_elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[5].list))
+			stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStmtList,
+				},
+			})
+			yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, yyDollar[2].token.FreeFloating)
-			if len((*yyDollar[3].node.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, (*yyDollar[3].node.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*yyDollar[3].node.GetFreeFloating())[freefloating.OpenParenthesisToken])-1])
-				delete((*yyDollar[3].node.GetFreeFloating()), freefloating.OpenParenthesisToken)
-			}
-			if len((*yyDollar[3].node.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, (*yyDollar[3].node.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*yyDollar[3].node.GetFreeFloating())[freefloating.CloseParenthesisToken])-1])
-				delete((*yyDollar[3].node.GetFreeFloating()), freefloating.CloseParenthesisToken)
-			}
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Cond, yyDollar[4].token.FreeFloating)
+			AltElseIfNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtAltElseIf,
+				},
+			})
+			yylex.(*Parser).SavePosition(AltElseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, children))
+
+			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(0, AltElseIfNodeID, ast.NodeGroupCond, yyDollar[4].token)
+			yylex.(*Parser).Children(0, AltElseIfNodeID, ast.NodeGroupStmt, stmtListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(AltElseIfNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(AltElseIfNodeID, ast.TokenGroupCond, yyDollar[4].token.HiddenTokens)
+			// TODO handle parenthesis_expr tokens
+
+			yylex.(*Parser).List.Add(AltElseIfNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 137:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2210
+		// line internal/parser/php5/php5.y:2850
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 138:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2216
+		// line internal/parser/php5/php5.y:2856
 		{
-			yyVAL.node = stmt.NewElse(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtElse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 139:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2232
+		// line internal/parser/php5/php5.y:2876
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 140:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2238
+		// line internal/parser/php5/php5.y:2882
 		{
-			stmts := stmt.NewStmtList(yyDollar[3].list)
-			yyVAL.node = stmt.NewAltElse(stmts)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[3].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
+			stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStmtList,
+				},
+			})
+			yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Else, yyDollar[2].token.FreeFloating)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtAltElse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+
+			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupElse, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 141:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2257
+		// line internal/parser/php5/php5.y:2913
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 142:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2263
+		// line internal/parser/php5/php5.y:2917
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 143:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2272
+		// line internal/parser/php5/php5.y:2926
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 144:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2278
+		// line internal/parser/php5/php5.y:2933
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 145:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:2290
+		// line internal/parser/php5/php5.y:2946
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[4].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].token != nil, yyDollar[3].token != nil)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			if yyDollar[1].node != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
+
+			var posID graph.PositionID
+			if yyDollar[1].node != 0 {
+				posID = yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil)
 			} else if yyDollar[2].token != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[2].token, yyDollar[4].token))
+				posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token, yyDollar[4].token}, nil)
 			} else if yyDollar[3].token != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[3].token, yyDollar[4].token))
+				posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token, yyDollar[4].token}, nil)
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
+				posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil)
 			}
 
-			// save comments
-			if yyDollar[1].node != nil {
-				yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			}
+			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OptionalType, yyDollar[2].token.FreeFloating)
+				flag = flag | ast.NodeFlagRef
 			}
 			if yyDollar[3].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[3].token.FreeFloating)
+				flag = flag | ast.NodeFlagVariadic
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Variadic, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
 
-			// normalize
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeParameter,
+					Flag: flag,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, posID)
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarType, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVar, varNodeID)
+
+			// save tokens
+
+			tmp := [4][]scanner.Token{}
+			if yyDollar[2].token != nil {
+				tmp[1] = yyDollar[2].token.HiddenTokens
+			}
+			if yyDollar[3].token != nil {
+				tmp[2] = yyDollar[3].token.HiddenTokens
+			}
+			tmp[3] = yyDollar[4].token.HiddenTokens
+
 			if yyDollar[3].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, (*yyVAL.node.GetFreeFloating())[freefloating.Variadic])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.Variadic)
+				tmp[2] = tmp[3]
+				tmp[3] = nil
 			}
 			if yyDollar[2].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OptionalType, (*yyVAL.node.GetFreeFloating())[freefloating.Ampersand])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.Ampersand)
+				tmp[1] = tmp[2]
+				tmp[2] = nil
 			}
-			if yyDollar[1].node == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, (*yyVAL.node.GetFreeFloating())[freefloating.OptionalType])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.OptionalType)
+			if yyDollar[1].node == 0 {
+				tmp[0] = tmp[1]
+				tmp[1] = nil
+			}
+
+			if yyDollar[1].node != 0 {
+				yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			}
+			if tmp[0] != nil {
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, tmp[0])
+			}
+			if tmp[1] != nil {
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupOptionalType, tmp[1])
+			}
+			if tmp[2] != nil {
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, tmp[2])
+			}
+			if tmp[3] != nil {
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVariadic, tmp[3])
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 146:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		// line php5/php5.y:2335
+		// line internal/parser/php5/php5.y:3035
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[4].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].token != nil, yyDollar[3].token != nil)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			if yyDollar[1].node != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[6].node))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
+
+			var posID graph.PositionID
+			if yyDollar[1].node != 0 {
+				posID = yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[6].node}, nil, nil)
 			} else if yyDollar[2].token != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node))
+				posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, []graph.NodeID{yyDollar[6].node})
 			} else if yyDollar[3].token != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[6].node))
+				posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, []graph.NodeID{yyDollar[6].node})
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node))
+				posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, []graph.NodeID{yyDollar[6].node})
 			}
 
-			// save comments
-			if yyDollar[1].node != nil {
-				yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			}
+			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OptionalType, yyDollar[2].token.FreeFloating)
+				flag = flag | ast.NodeFlagRef
 			}
 			if yyDollar[3].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[3].token.FreeFloating)
+				flag = flag | ast.NodeFlagVariadic
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Variadic, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[5].token.FreeFloating)
 
-			// normalize
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeParameter,
+					Flag: flag,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, posID)
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarType, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDefaultValue, yyDollar[6].node)
+
+			// save tokens
+
+			tmp := [4][]scanner.Token{}
+			if yyDollar[2].token != nil {
+				tmp[1] = yyDollar[2].token.HiddenTokens
+			}
+			if yyDollar[3].token != nil {
+				tmp[2] = yyDollar[3].token.HiddenTokens
+			}
+			tmp[3] = yyDollar[4].token.HiddenTokens
+
 			if yyDollar[3].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, (*yyVAL.node.GetFreeFloating())[freefloating.Variadic])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.Variadic)
+				tmp[2] = tmp[3]
+				tmp[3] = nil
 			}
 			if yyDollar[2].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OptionalType, (*yyVAL.node.GetFreeFloating())[freefloating.Ampersand])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.Ampersand)
+				tmp[1] = tmp[2]
+				tmp[2] = nil
 			}
-			if yyDollar[1].node == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, (*yyVAL.node.GetFreeFloating())[freefloating.OptionalType])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.OptionalType)
+			if yyDollar[1].node == 0 {
+				tmp[0] = tmp[1]
+				tmp[1] = nil
 			}
+
+			if yyDollar[1].node != 0 {
+				yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			}
+			if tmp[0] != nil {
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, tmp[0])
+			}
+			if tmp[1] != nil {
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupOptionalType, tmp[1])
+			}
+			if tmp[2] != nil {
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, tmp[2])
+			}
+			if tmp[3] != nil {
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVariadic, tmp[3])
+			}
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[5].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 147:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2385
+		// line internal/parser/php5/php5.y:3130
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 148:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2391
+		// line internal/parser/php5/php5.y:3136
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 149:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2403
+		// line internal/parser/php5/php5.y:3150
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 150:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2415
+		// line internal/parser/php5/php5.y:3164
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4619,328 +5356,459 @@ yydefault:
 		}
 	case 151:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2425
+		// line internal/parser/php5/php5.y:3174
 		{
-			yyVAL.node = node.NewArgumentList(nil)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeArgumentList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArgumentList, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 152:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2438
+		// line internal/parser/php5/php5.y:3189
 		{
-			yyVAL.node = node.NewArgumentList(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeArgumentList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArgumentList, yyDollar[3].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupArguments, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 153:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2451
+		// line internal/parser/php5/php5.y:3208
 		{
-			arg := node.NewArgument(yyDollar[2].node, false, false)
-			yyVAL.node = node.NewArgumentList([]node.Node{arg})
+			argumentnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeArgument,
+				},
+			})
+			yylex.(*Parser).SavePosition(argumentNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[2].node}, nil, nil))
 
-			// save position
-			arg.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[2].node))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeArgumentList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArgumentList, yyDollar[3].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupArguments, argumentNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[2].node, argumentNodeID)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 154:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2470
+		// line internal/parser/php5/php5.y:3237
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 155:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2476
+		// line internal/parser/php5/php5.y:3244
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 156:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2488
+		// line internal/parser/php5/php5.y:3257
 		{
-			yyVAL.node = node.NewArgument(yyDollar[1].node, false, false)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeArgument,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 157:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2500
+		// line internal/parser/php5/php5.y:3273
 		{
-			yyVAL.node = node.NewArgument(yyDollar[1].node, false, false)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeArgument,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 158:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2512
+		// line internal/parser/php5/php5.y:3289
 		{
-			yyVAL.node = node.NewArgument(yyDollar[2].node, false, true)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeArgument,
+					Flag: ast.NodeFlagRef,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 159:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2524
+		// line internal/parser/php5/php5.y:3306
 		{
-			yyVAL.node = node.NewArgument(yyDollar[2].node, true, false)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeArgument,
+					Flag: ast.NodeFlagVariadic,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 160:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2539
+		// line internal/parser/php5/php5.y:3326
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 161:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2548
+		// line internal/parser/php5/php5.y:3336
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 162:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2558
+		// line internal/parser/php5/php5.y:3346
 		{
-			name := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			yyVAL.node = expr.NewVariable(name)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(yyVAL.node)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 163:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2573
+		// line internal/parser/php5/php5.y:3369
 		{
-			yyVAL.node = expr.NewVariable(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupDollar, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 164:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:2586
+		// line internal/parser/php5/php5.y:3385
 		{
-			yyVAL.node = expr.NewVariable(yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyDollar[3].node, freefloating.Start, append(yyDollar[2].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token), (*yyDollar[3].node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyDollar[3].node, freefloating.End, append((*yyDollar[3].node.GetFreeFloating())[freefloating.End], append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupDollar, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).PrependTokens(yyDollar[3].node, ast.TokenGroupStart, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).PrependTokens(yyDollar[3].node, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyDollar[3].node, ast.TokenGroupEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyDollar[3].node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 165:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2605
+		// line internal/parser/php5/php5.y:3410
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[3].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			staticVar := stmt.NewStaticVar(variable, nil)
-			yyVAL.list = append(yyDollar[1].list, staticVar)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			staticVarnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStaticVar,
+				},
+			})
+			yylex.(*Parser).SavePosition(staticVarNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(0, staticVarNodeID, ast.NodeGroupVar, varNodeID)
+
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(staticVarNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 166:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:2624
+		// line internal/parser/php5/php5.y:3445
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[3].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			staticVar := stmt.NewStaticVar(variable, yyDollar[5].node)
-			yyVAL.list = append(yyDollar[1].list, staticVar)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[5].node))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(staticVar, freefloating.Var, yyDollar[4].token.FreeFloating)
+			staticVarnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStaticVar,
+				},
+			})
+			yylex.(*Parser).SavePosition(staticVarNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, []graph.NodeID{yyDollar[5].node}))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).Children(0, staticVarNodeID, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(prevNodeID, staticVarNodeID, ast.NodeGroupExpr, yyDollar[5].node)
+
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(staticVarNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupVar, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 167:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2644
+		// line internal/parser/php5/php5.y:3482
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			staticVar := stmt.NewStaticVar(variable, nil)
-			yyVAL.list = []node.Node{staticVar}
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			staticVarnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStaticVar,
+				},
+			})
+			yylex.(*Parser).SavePosition(staticVarNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(0, staticVarNodeID, ast.NodeGroupVar, varNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(staticVarNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 168:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2662
+		// line internal/parser/php5/php5.y:3516
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			staticVar := stmt.NewStaticVar(variable, yyDollar[3].node)
-			yyVAL.list = []node.Node{staticVar}
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(staticVar, freefloating.Var, yyDollar[2].token.FreeFloating)
+			staticVarnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStaticVar,
+				},
+			})
+			yylex.(*Parser).SavePosition(staticVarNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).Children(0, staticVarNodeID, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(prevNodeID, staticVarNodeID, ast.NodeGroupExpr, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(staticVarNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 169:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2685
+		// line internal/parser/php5/php5.y:3556
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).List.Add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 170:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2691
+		// line internal/parser/php5/php5.y:3562
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 171:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2701
+		// line internal/parser/php5/php5.y:3572
 		{
-			yyVAL.node = stmt.NewPropertyList(yyDollar[1].list, yyDollar[2].list)
+			childrenProperties := yylex.(*Parser).List.Pop()
+			childrenModifiers := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtPropertyList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.PropertyList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperties, childrenProperties...)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(childrenModifiers[0], yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupPropertyList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 172:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2715
+		// line internal/parser/php5/php5.y:3594
 		{
 			yyVAL.node = yyDollar[1].node
 
 			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ConstList, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupConstList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 173:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2728
+		// line internal/parser/php5/php5.y:3607
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4948,207 +5816,267 @@ yydefault:
 		}
 	case 174:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		// line php5/php5.y:2734
+		// line internal/parser/php5/php5.y:3613
 		{
-			name := node.NewIdentifier(yyDollar[4].token.Value)
-			yyVAL.node = stmt.NewClassMethod(name, yyDollar[1].list, yyDollar[3].token != nil, yyDollar[6].list, nil, yyDollar[8].node, "")
+			childrenParams := yylex.(*Parser).List.Pop()
+			childrenModifiers := yylex.(*Parser).List.Pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			if yyDollar[1].list == nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[8].node))
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
+
+			var posID graph.PositionID
+			if len(childrenModifiers) == 0 {
+				posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, []graph.NodeID{yyDollar[8].node})
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListNodePosition(yyDollar[1].list, yyDollar[8].node))
+				posID = yylex.(*Parser).NewPosition(childrenModifiers, nil, []graph.NodeID{yyDollar[8].node})
 			}
 
-			// save comments
-			if len(yyDollar[1].list) > 0 {
-				yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ModifierList, yyDollar[2].token.FreeFloating)
+			var flag ast.NodeFlag
+			if yyDollar[3].token != nil {
+				flag = flag | ast.NodeFlagRef
+			}
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtClassMethod,
+					Flag: flag,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, posID)
+
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupMethodName, identifierNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[8].node)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParams, childrenParams...)
+
+			// save tokens
+			if len(childrenModifiers) > 0 {
+				yylex.(*Parser).MoveStartTokens(childrenModifiers[0], yyVAL.node)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupModifierList, yyDollar[2].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[2].token.FreeFloating)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
 			}
 			if yyDollar[3].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[4].token.FreeFloating)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[4].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[3].token.FreeFloating)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[4].token.FreeFloating)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[3].token.HiddenTokens)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, yyDollar[4].token.HiddenTokens)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ParameterList, yyDollar[7].token.FreeFloating)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupParameterList, yyDollar[7].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 175:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2768
+		// line internal/parser/php5/php5.y:3671
 		{
-			yyVAL.node = stmt.NewTraitUse(yyDollar[2].list, yyDollar[3].node)
+			childrenTraits := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtTraitUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupTraitAdaptationList, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupTraits, childrenTraits...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 176:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2783
+		// line internal/parser/php5/php5.y:3693
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 177:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2789
+		// line internal/parser/php5/php5.y:3700
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 178:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2801
+		// line internal/parser/php5/php5.y:3713
 		{
-			yyVAL.node = stmt.NewNop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtNop,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 179:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2813
+		// line internal/parser/php5/php5.y:3729
 		{
-			yyVAL.node = stmt.NewTraitAdaptationList(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
 
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtTraitAdaptationList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AdaptationList, yyDollar[3].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupAdaptations, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAdaptationList, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 180:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2828
+		// line internal/parser/php5/php5.y:3751
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 181:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2834
+		// line internal/parser/php5/php5.y:3757
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 182:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2843
+		// line internal/parser/php5/php5.y:3764
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 183:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2849
+		// line internal/parser/php5/php5.y:3771
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).List.Add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 184:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2858
+		// line internal/parser/php5/php5.y:3780
 		{
 			yyVAL.node = yyDollar[1].node
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.NameList, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupNameList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 185:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:2868
+		// line internal/parser/php5/php5.y:3790
 		{
 			yyVAL.node = yyDollar[1].node
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Alias, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAlias, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 186:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2881
+		// line internal/parser/php5/php5.y:3803
 		{
-			yyVAL.node = stmt.NewTraitUsePrecedence(yyDollar[1].node, yyDollar[3].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeNodeListPosition(yyDollar[1].node, yyDollar[3].list))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtTraitUsePrecedence,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, children))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ref, yyDollar[2].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupInsteadof, children...)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 187:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2897
+		// line internal/parser/php5/php5.y:3826
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 188:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2903
+		// line internal/parser/php5/php5.y:3833
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 189:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2915
+		// line internal/parser/php5/php5.y:3846
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.node = stmt.NewTraitMethodRef(nil, name)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtTraitMethodRef,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupMethod, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 190:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2929
+		// line internal/parser/php5/php5.y:3869
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5156,66 +6084,92 @@ yydefault:
 		}
 	case 191:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2938
+		// line internal/parser/php5/php5.y:3878
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewTraitMethodRef(yyDollar[1].node, target)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtTraitMethodRef,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(target, freefloating.Start, yyDollar[2].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupTrait, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupMethod, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 192:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:2957
+		// line internal/parser/php5/php5.y:3907
 		{
-			alias := node.NewIdentifier(yyDollar[4].token.Value)
-			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, alias)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtTraitUseAlias,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ref, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[4].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupModifier, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 193:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:2973
+		// line internal/parser/php5/php5.y:3934
 		{
-			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, nil)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtTraitUseAlias,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupModifier, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ref, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 194:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:2989
+		// line internal/parser/php5/php5.y:3955
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 195:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:2995
+		// line internal/parser/php5/php5.y:3961
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5223,1253 +6177,1657 @@ yydefault:
 		}
 	case 196:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3004
+		// line internal/parser/php5/php5.y:3970
 		{
-			yyVAL.node = stmt.NewNop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtNop,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 197:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3017
+		// line internal/parser/php5/php5.y:3985
 		{
-			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtStmtList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, children...)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 198:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3033
+		// line internal/parser/php5/php5.y:4007
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 199:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3039
+		// line internal/parser/php5/php5.y:4011
 		{
-			modifier := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.list = []node.Node{modifier}
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			modifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(identifierNodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(modifier, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 200:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:3055
+		// line internal/parser/php5/php5.y:4031
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 201:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3061
+		// line internal/parser/php5/php5.y:4037
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 202:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3070
+		// line internal/parser/php5/php5.y:4044
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 203:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3076
+		// line internal/parser/php5/php5.y:4051
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).List.Add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 204:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3085
+		// line internal/parser/php5/php5.y:4060
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 205:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3097
+		// line internal/parser/php5/php5.y:4074
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 206:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3109
+		// line internal/parser/php5/php5.y:4088
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 207:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3121
+		// line internal/parser/php5/php5.y:4102
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 208:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3133
+		// line internal/parser/php5/php5.y:4116
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 209:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3145
+		// line internal/parser/php5/php5.y:4130
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 210:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3160
+		// line internal/parser/php5/php5.y:4147
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[3].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			property := stmt.NewProperty(variable, nil, "")
-			yyVAL.list = append(yyDollar[1].list, property)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(property, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			propertynodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtProperty,
+				},
+			})
+			yylex.(*Parser).SavePosition(propertyNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(0, propertyNodeID, ast.NodeGroupVar, varNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(propertyNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 211:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:3179
+		// line internal/parser/php5/php5.y:4184
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[3].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			property := stmt.NewProperty(variable, yyDollar[5].node, "")
-			yyVAL.list = append(yyDollar[1].list, property)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[5].node))
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(property, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(property, freefloating.Var, yyDollar[4].token.FreeFloating)
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			propertynodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtProperty,
+				},
+			})
+			yylex.(*Parser).SavePosition(propertyNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, []graph.NodeID{yyDollar[5].node}))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).Children(0, propertyNodeID, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(prevNodeID, propertyNodeID, ast.NodeGroupExpr, yyDollar[5].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupVar, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+
+			yylex.(*Parser).List.Add(propertyNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 212:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3199
+		// line internal/parser/php5/php5.y:4222
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			property := stmt.NewProperty(variable, nil, "")
-			yyVAL.list = []node.Node{property}
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(property, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			propertynodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtProperty,
+				},
+			})
+			yylex.(*Parser).SavePosition(propertyNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(0, propertyNodeID, ast.NodeGroupVar, varNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(propertyNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 213:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3217
+		// line internal/parser/php5/php5.y:4256
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			property := stmt.NewProperty(variable, yyDollar[3].node, "")
-			yyVAL.list = []node.Node{property}
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(property, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(property, freefloating.Var, yyDollar[2].token.FreeFloating)
+			propertynodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtProperty,
+				},
+			})
+			yylex.(*Parser).SavePosition(propertyNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).Children(0, propertyNodeID, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(prevNodeID, propertyNodeID, ast.NodeGroupExpr, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(propertyNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 214:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:3239
+		// line internal/parser/php5/php5.y:4295
 		{
-			name := node.NewIdentifier(yyDollar[3].token.Value)
-			constant := stmt.NewConstant(name, yyDollar[5].node, "")
-			constList := yyDollar[1].node.(*stmt.ClassConstList)
-			lastConst := lastNode(constList.Consts)
-			constList.Consts = append(constList.Consts, constant)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			constantnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(constantNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, []graph.NodeID{yyDollar[5].node}))
+
 			yyVAL.node = yyDollar[1].node
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[5].node}, nil, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[5].node))
-			yyDollar[1].node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[5].node))
+			yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupExpr, yyDollar[5].node)
+			yylex.(*Parser).Children(0, yyDollar[1].node, ast.NodeGroupConsts, constantNodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastConst, freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Name, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupName, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 215:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:3260
+		// line internal/parser/php5/php5.y:4324
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value)
-			constant := stmt.NewConstant(name, yyDollar[4].node, "")
-			yyVAL.node = stmt.NewClassConstList(nil, []node.Node{constant})
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[4].node))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node))
+			constantnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(constantNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, []graph.NodeID{yyDollar[4].node}))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(constant, freefloating.Name, yyDollar[3].token.FreeFloating)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeStmtClassConstList,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[4].node}))
+
+			yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupExpr, yyDollar[4].node)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConsts, constantNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupName, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 216:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3281
+		// line internal/parser/php5/php5.y:4361
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 217:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3290
+		// line internal/parser/php5/php5.y:4371
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 218:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:3300
+		// line internal/parser/php5/php5.y:4381
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 219:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3306
+		// line internal/parser/php5/php5.y:4387
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 220:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3315
+		// line internal/parser/php5/php5.y:4394
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 221:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3324
+		// line internal/parser/php5/php5.y:4404
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 222:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3333
+		// line internal/parser/php5/php5.y:4414
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].list...)
+			children2 := yylex.(*Parser).List.Pop()
+			children1 := yylex.(*Parser).List.Pop()
+
+			yylex.(*Parser).List.Push()
+
+			for _, v := range children1 {
+				yylex.(*Parser).List.Add(v)
+			}
+			for _, v := range children2 {
+				yylex.(*Parser).List.Add(v)
+			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 223:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3339
+		// line internal/parser/php5/php5.y:4430
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 224:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:3348
+		// line internal/parser/php5/php5.y:4437
 		{
-			fetch := expr.NewArrayDimFetch(nil, yyDollar[3].node)
-			yyVAL.list = append(yyDollar[1].list, fetch)
+			fetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(fetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token, yyDollar[4].token}, nil))
 
-			// save position
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[3].node))
+			yylex.(*Parser).Children(prevNodeID, fetchNodeID, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
+
+			yylex.(*Parser).List.Add(fetchNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 225:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3362
+		// line internal/parser/php5/php5.y:4458
 		{
-			fetch := expr.NewArrayDimFetch(nil, yyDollar[2].node)
-			yyVAL.list = []node.Node{fetch}
+			fetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(fetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[2].node))
+			yylex.(*Parser).Children(prevNodeID, fetchNodeID, ast.NodeGroupDim, yyDollar[3].token)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append(yyDollar[1].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, yyDollar[2].node.HiddenTokens)
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, []scanner.Token{*yyDollar[2].node})
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(fetchNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 226:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3379
+		// line internal/parser/php5/php5.y:4483
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].list...)
+			children2 := yylex.(*Parser).List.Pop()
+			children1 := yylex.(*Parser).List.Pop()
+
+			yylex.(*Parser).List.Push()
+
+			for _, v := range children1 {
+				yylex.(*Parser).List.Add(v)
+			}
+			for _, v := range children2 {
+				yylex.(*Parser).List.Add(v)
+			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 227:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3385
+		// line internal/parser/php5/php5.y:4499
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 228:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3391
+		// line internal/parser/php5/php5.y:4503
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 229:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:3400
+		// line internal/parser/php5/php5.y:4510
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 230:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:3406
+		// line internal/parser/php5/php5.y:4516
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 231:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3415
+		// line internal/parser/php5/php5.y:4523
 		{
 
-			if yyDollar[3].node != nil {
-				yyVAL.node = expr.NewNew(yyDollar[2].node, yyDollar[3].node.(*node.ArgumentList))
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
-			} else {
-				yyVAL.node = expr.NewNew(yyDollar[2].node, nil)
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			lastNodeID := yyDollar[3].node
+			if lastNodeID == 0 {
+				lastNodeID = yyDollar[2].node
 			}
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprNew,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{lastNodeID}))
+
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[2].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 232:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		// line php5/php5.y:3434
+		// line internal/parser/php5/php5.y:4549
 		{
-			listNode := expr.NewList(yyDollar[3].list)
-			yyVAL.node = assign.NewAssign(listNode, yyDollar[6].node)
+			listNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprList,
+				},
+			})
+			yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignAssign,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[6].node}))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.List, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[5].token.FreeFloating)
+			yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, listNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[6].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[5].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 233:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3451
+		// line internal/parser/php5/php5.y:4577
 		{
-			yyVAL.node = assign.NewAssign(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignAssign,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 234:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:3464
+		// line internal/parser/php5/php5.y:4595
 		{
-			yyVAL.node = assign.NewReference(yyDollar[1].node, yyDollar[4].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignReference,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Equal, yyDollar[3].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEqual, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 235:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		// line php5/php5.y:3478
+		// line internal/parser/php5/php5.y:4614
 		{
-			var _new *expr.New
 
-			if yyDollar[6].node != nil {
-				_new = expr.NewNew(yyDollar[5].node, yyDollar[6].node.(*node.ArgumentList))
-			} else {
-				_new = expr.NewNew(yyDollar[5].node, nil)
+			lastNodeID := yyDollar[6].node
+			if lastNodeID == 0 {
+				lastNodeID = yyDollar[5].node
 			}
-			yyVAL.node = assign.NewReference(yyDollar[1].node, _new)
 
-			// save position
-			if yyDollar[6].node != nil {
-				_new.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node))
-			} else {
-				_new.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[4].token, yyDollar[5].node))
-			}
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, _new))
+			newnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprNew,
+				},
+			})
+			yylex.(*Parser).SavePosition(newNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, []graph.NodeID{lastNodeID}))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Equal, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_new, freefloating.Start, yyDollar[4].token.FreeFloating)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignReference,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, newNodeID}, nil, nil))
+
+			yylex.(*Parser).Children(0, newNodeID, ast.NodeGroupClass, yyDollar[5].node)
+			yylex.(*Parser).Children(0, newNodeID, ast.NodeGroupArgumentList, yyDollar[6].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, newNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEqual, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(newNodeID, ast.TokenGroupStart, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 236:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3505
+		// line internal/parser/php5/php5.y:4648
 		{
-			yyVAL.node = expr.NewClone(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprClone,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 237:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3517
+		// line internal/parser/php5/php5.y:4664
 		{
-			yyVAL.node = assign.NewPlus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignPlus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 238:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3529
+		// line internal/parser/php5/php5.y:4682
 		{
-			yyVAL.node = assign.NewMinus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignMinus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 239:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3542
+		// line internal/parser/php5/php5.y:4700
 		{
-			yyVAL.node = assign.NewMul(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignMul,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 240:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3555
+		// line internal/parser/php5/php5.y:4718
 		{
-			yyVAL.node = assign.NewPow(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignPow,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 241:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3568
+		// line internal/parser/php5/php5.y:4736
 		{
-			yyVAL.node = assign.NewDiv(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignDiv,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3581
+		// line internal/parser/php5/php5.y:4754
 		{
-			yyVAL.node = assign.NewConcat(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignConcat,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 243:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3594
+		// line internal/parser/php5/php5.y:4772
 		{
-			yyVAL.node = assign.NewMod(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignMod,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 244:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3607
+		// line internal/parser/php5/php5.y:4790
 		{
-			yyVAL.node = assign.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignBitwiseAnd,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 245:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3620
+		// line internal/parser/php5/php5.y:4808
 		{
-			yyVAL.node = assign.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignBitwiseOr,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 246:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3633
+		// line internal/parser/php5/php5.y:4826
 		{
-			yyVAL.node = assign.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignBitwiseXor,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 247:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3646
+		// line internal/parser/php5/php5.y:4844
 		{
-			yyVAL.node = assign.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignShiftLeft,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 248:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3659
+		// line internal/parser/php5/php5.y:4862
 		{
-			yyVAL.node = assign.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeAssignShiftRight,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 249:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3672
+		// line internal/parser/php5/php5.y:4880
 		{
-			yyVAL.node = expr.NewPostInc(yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprPostInc,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 250:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3685
+		// line internal/parser/php5/php5.y:4897
 		{
-			yyVAL.node = expr.NewPreInc(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprPreInc,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 251:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3697
+		// line internal/parser/php5/php5.y:4913
 		{
-			yyVAL.node = expr.NewPostDec(yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprPostDec,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 252:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3710
+		// line internal/parser/php5/php5.y:4930
 		{
-			yyVAL.node = expr.NewPreDec(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprPreDec,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 253:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3722
+		// line internal/parser/php5/php5.y:4946
 		{
-			yyVAL.node = binary.NewBooleanOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBooleanOr,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 254:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3735
+		// line internal/parser/php5/php5.y:4964
 		{
-			yyVAL.node = binary.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBooleanAnd,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3748
+		// line internal/parser/php5/php5.y:4982
 		{
-			yyVAL.node = binary.NewLogicalOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryLogicalOr,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 256:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3761
+		// line internal/parser/php5/php5.y:5000
 		{
-			yyVAL.node = binary.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryLogicalAnd,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3774
+		// line internal/parser/php5/php5.y:5018
 		{
-			yyVAL.node = binary.NewLogicalXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryLogicalXor,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 258:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3787
+		// line internal/parser/php5/php5.y:5036
 		{
-			yyVAL.node = binary.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBitwiseOr,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 259:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3800
+		// line internal/parser/php5/php5.y:5054
 		{
-			yyVAL.node = binary.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBitwiseAnd,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 260:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3813
+		// line internal/parser/php5/php5.y:5072
 		{
-			yyVAL.node = binary.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBitwiseXor,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 261:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3826
+		// line internal/parser/php5/php5.y:5090
 		{
-			yyVAL.node = binary.NewConcat(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryConcat,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 262:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3839
+		// line internal/parser/php5/php5.y:5108
 		{
-			yyVAL.node = binary.NewPlus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryPlus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 263:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3852
+		// line internal/parser/php5/php5.y:5126
 		{
-			yyVAL.node = binary.NewMinus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryMinus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 264:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3865
+		// line internal/parser/php5/php5.y:5144
 		{
-			yyVAL.node = binary.NewMul(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryMul,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 265:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3878
+		// line internal/parser/php5/php5.y:5162
 		{
-			yyVAL.node = binary.NewPow(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryPow,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 266:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3891
+		// line internal/parser/php5/php5.y:5180
 		{
-			yyVAL.node = binary.NewDiv(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryDiv,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 267:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3904
+		// line internal/parser/php5/php5.y:5198
 		{
-			yyVAL.node = binary.NewMod(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryMod,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 268:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3917
+		// line internal/parser/php5/php5.y:5216
 		{
-			yyVAL.node = binary.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryShiftLeft,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 269:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3930
+		// line internal/parser/php5/php5.y:5234
 		{
-			yyVAL.node = binary.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryShiftRight,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 270:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3943
+		// line internal/parser/php5/php5.y:5252
 		{
-			yyVAL.node = expr.NewUnaryPlus(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprUnaryPlus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 271:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3955
+		// line internal/parser/php5/php5.y:5268
 		{
-			yyVAL.node = expr.NewUnaryMinus(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprUnaryMinus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 272:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3967
+		// line internal/parser/php5/php5.y:5284
 		{
-			yyVAL.node = expr.NewBooleanNot(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprBooleanNot,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 273:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:3979
+		// line internal/parser/php5/php5.y:5300
 		{
-			yyVAL.node = expr.NewBitwiseNot(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprBitwiseNot,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 274:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:3991
+		// line internal/parser/php5/php5.y:5316
 		{
-			yyVAL.node = binary.NewIdentical(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryIdentical,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 275:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4004
+		// line internal/parser/php5/php5.y:5334
 		{
-			yyVAL.node = binary.NewNotIdentical(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryNotIdentical,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 276:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4017
+		// line internal/parser/php5/php5.y:5352
 		{
-			yyVAL.node = binary.NewEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryEqual,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 277:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4030
+		// line internal/parser/php5/php5.y:5370
 		{
-			yyVAL.node = binary.NewNotEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryNotEqual,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Equal, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEqual, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 278:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4044
+		// line internal/parser/php5/php5.y:5389
 		{
-			yyVAL.node = binary.NewSmaller(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinarySmaller,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 279:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4057
+		// line internal/parser/php5/php5.y:5407
 		{
-			yyVAL.node = binary.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinarySmallerOrEqual,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 280:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4070
+		// line internal/parser/php5/php5.y:5425
 		{
-			yyVAL.node = binary.NewGreater(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryGreater,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 281:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4083
+		// line internal/parser/php5/php5.y:5443
 		{
-			yyVAL.node = binary.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryGreaterOrEqual,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 282:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4096
+		// line internal/parser/php5/php5.y:5461
 		{
-			yyVAL.node = expr.NewInstanceOf(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprInstanceOf,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupClass, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 283:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4109
+		// line internal/parser/php5/php5.y:5479
 		{
 			yyVAL.node = yyDollar[1].node
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 
-			yylex.(*Parser).setFreeFloating(yyDollar[1].node, freefloating.Start, append((*yyDollar[1].node.GetFreeFloating())[freefloating.OpenParenthesisToken], (*yyDollar[1].node.GetFreeFloating())[freefloating.Start]...))
-			delete((*yyDollar[1].node.GetFreeFloating()), freefloating.OpenParenthesisToken)
-			yylex.(*Parser).setFreeFloating(yyDollar[1].node, freefloating.End, append((*yyDollar[1].node.GetFreeFloating())[freefloating.End], (*yyDollar[1].node.GetFreeFloating())[freefloating.CloseParenthesisToken]...))
-			delete((*yyDollar[1].node.GetFreeFloating()), freefloating.CloseParenthesisToken)
+			// TODO: handle parenthesis tokens
+			//yylex.(*Parser).setFreeFloating($1, freefloating.Start, append((*$1.GetFreeFloating())[freefloating.OpenParenthesisToken], (*$1.GetFreeFloating())[freefloating.Start]...)); delete((*$1.GetFreeFloating()), freefloating.OpenParenthesisToken)
+			//yylex.(*Parser).setFreeFloating($1, freefloating.End, append((*$1.GetFreeFloating())[freefloating.End], (*$1.GetFreeFloating())[freefloating.CloseParenthesisToken]...)); delete((*$1.GetFreeFloating()), freefloating.CloseParenthesisToken)
 		}
 	case 284:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4118
+		// line internal/parser/php5/php5.y:5489
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6477,73 +7835,74 @@ yydefault:
 		}
 	case 285:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4124
+		// line internal/parser/php5/php5.y:5495
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, append(yyDollar[1].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), (*yyVAL.node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append((*yyVAL.node.GetFreeFloating())[freefloating.End], append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
-			for _, n := range yyDollar[4].list {
-				switch nn := n.(type) {
-				case *expr.ArrayDimFetch:
-					nn.Variable = yyVAL.node
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
-
-				case *expr.PropertyFetch:
-					nn.Variable = yyVAL.node
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
-
-				case *expr.MethodCall:
-					nn.Variable = yyVAL.node
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
-				}
+			children := yylex.(*Parser).List.Pop()
+			for _, n := range children {
+				yylex.(*Parser).Children(0, n, ast.NodeGroupVar, yyVAL.node)
+				yylex.(*Parser).MoveStartTokens(yyVAL.node, n)
+				yyVAL.node = n
 
 				// save position
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, n))
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyVAL.node, n}, nil, nil))
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 286:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:4156
+		// line internal/parser/php5/php5.y:5517
 		{
-			yyVAL.node = expr.NewTernary(yyDollar[1].node, yyDollar[3].node, yyDollar[5].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprTernary,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[5].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[5].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupIfTrue, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupIfFalse, yyDollar[5].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.True, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupTrue, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 287:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4170
+		// line internal/parser/php5/php5.y:5537
 		{
-			yyVAL.node = expr.NewTernary(yyDollar[1].node, nil, yyDollar[4].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprTernary,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupIfFalse, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.True, yyDollar[3].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupTrue, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 288:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4184
+		// line internal/parser/php5/php5.y:5556
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6551,149 +7910,188 @@ yydefault:
 		}
 	case 289:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4190
+		// line internal/parser/php5/php5.y:5562
 		{
-			yyVAL.node = cast.NewInt(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeCastInt,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 290:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4203
+		// line internal/parser/php5/php5.y:5579
 		{
-			yyVAL.node = cast.NewDouble(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeCastDouble,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 291:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4216
+		// line internal/parser/php5/php5.y:5596
 		{
-			yyVAL.node = cast.NewString(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeCastString,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 292:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4229
+		// line internal/parser/php5/php5.y:5613
 		{
-			yyVAL.node = cast.NewArray(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeCastArray,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 293:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4242
+		// line internal/parser/php5/php5.y:5630
 		{
-			yyVAL.node = cast.NewObject(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeCastObject,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 294:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4255
+		// line internal/parser/php5/php5.y:5647
 		{
-			yyVAL.node = cast.NewBool(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeCastBool,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 295:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4268
+		// line internal/parser/php5/php5.y:5664
 		{
-			yyVAL.node = cast.NewUnset(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeCastUnset,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 296:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4281
+		// line internal/parser/php5/php5.y:5681
 		{
-			e := yyDollar[2].node.(*expr.Exit)
 			yyVAL.node = yyDollar[2].node
 
-			if strings.EqualFold(yyDollar[1].token.Value, "die") {
-				e.Die = true
+			var flag ast.NodeFlag
+			exitTknValue := yylex.(*Parser).Ast.FileData[yyDollar[1].token.StartPos:yyDollar[1].token.EndPos]
+			if bytes.EqualFold(exitTknValue, []byte("die")) {
+				flag = ast.NodeFlagAltSyntax
 			}
 
-			// save position
-			if yyDollar[2].node.GetPosition() == nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			if yyVAL.node == 0 {
+				yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+					SimpleNode: ast.SimpleNode{
+						Type: ast.NodeTypeExprExit,
+						Flag: flag,
+					},
+				})
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+				yylex.(*Parser).Ast.Nodes[yyVAL.node-1].Flag = flag
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 			}
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 297:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4302
+		// line internal/parser/php5/php5.y:5709
 		{
-			yyVAL.node = expr.NewErrorSuppress(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprErrorSuppress,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 298:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4314
+		// line internal/parser/php5/php5.y:5725
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6701,7 +8099,7 @@ yydefault:
 		}
 	case 299:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4320
+		// line internal/parser/php5/php5.y:5731
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6709,7 +8107,7 @@ yydefault:
 		}
 	case 300:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4326
+		// line internal/parser/php5/php5.y:5737
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6717,596 +8115,822 @@ yydefault:
 		}
 	case 301:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4332
+		// line internal/parser/php5/php5.y:5743
 		{
-			yyVAL.node = expr.NewShellExec(yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprShellExec,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 302:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4344
+		// line internal/parser/php5/php5.y:5759
 		{
-			yyVAL.node = expr.NewPrint(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprPrint,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 303:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4356
+		// line internal/parser/php5/php5.y:5775
 		{
-			yyVAL.node = expr.NewYield(nil, nil)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprYield,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 304:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		// line php5/php5.y:4368
+		// line internal/parser/php5/php5.y:5789
 		{
-			yyVAL.node = expr.NewClosure(yyDollar[4].list, yyDollar[6].ClosureUse, nil, yyDollar[8].list, false, yyDollar[2].token != nil, "")
+			var flag ast.NodeFlag
+			if yyDollar[2].token != nil {
+				flag = flag | ast.NodeFlagRef
+			}
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[9].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprClosure,
+					Flag: flag,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[9].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClosureUse, yyDollar[6].ClosureUse)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
+
+			// // save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 			if yyDollar[2].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[3].token.FreeFloating)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[3].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[2].token.FreeFloating)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[3].token.FreeFloating)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[2].token.HiddenTokens)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, yyDollar[3].token.HiddenTokens)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ParameterList, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.LexicalVars, yyDollar[7].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[9].token.FreeFloating)
-
-			// normalize
-			if yyDollar[6].ClosureUse == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Params, (*yyVAL.node.GetFreeFloating())[freefloating.LexicalVars])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.LexicalVars)
-			}
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupParameterList, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupReturnType, yyDollar[7].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[9].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 305:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		// line php5/php5.y:4394
+		// line internal/parser/php5/php5.y:5822
 		{
-			yyVAL.node = expr.NewClosure(yyDollar[5].list, yyDollar[7].ClosureUse, nil, yyDollar[9].list, true, yyDollar[3].token != nil, "")
+			flag := ast.NodeFlagStatic
+			if yyDollar[2].token != nil {
+				flag = flag | ast.NodeFlagRef
+			}
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[10].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprClosure,
+					Flag: flag,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[10].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Static, yyDollar[2].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClosureUse, yyDollar[7].ClosureUse)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
+
+			// // save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStatic, yyDollar[2].token.HiddenTokens)
 			if yyDollar[3].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[4].token.FreeFloating)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[4].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[3].token.FreeFloating)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[4].token.FreeFloating)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[3].token.HiddenTokens)
+				yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, yyDollar[4].token.HiddenTokens)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ParameterList, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.LexicalVars, yyDollar[8].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[10].token.FreeFloating)
-
-			// normalize
-			if yyDollar[7].ClosureUse == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Params, (*yyVAL.node.GetFreeFloating())[freefloating.LexicalVars])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.LexicalVars)
-			}
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupParameterList, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupReturnType, yyDollar[8].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[10].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 306:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4424
+		// line internal/parser/php5/php5.y:5859
 		{
-			yyVAL.node = expr.NewYield(nil, yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprYield,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVal, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 307:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4436
+		// line internal/parser/php5/php5.y:5875
 		{
-			yyVAL.node = expr.NewYield(nil, yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprYield,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVal, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 308:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4448
+		// line internal/parser/php5/php5.y:5891
 		{
-			yyVAL.node = expr.NewYield(yyDollar[2].node, yyDollar[4].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprYield,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[4].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupKey, yyDollar[2].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVal, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 309:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4461
+		// line internal/parser/php5/php5.y:5909
 		{
-			yyVAL.node = expr.NewYield(yyDollar[2].node, yyDollar[4].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprYield,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[4].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupKey, yyDollar[2].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVal, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 310:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4477
+		// line internal/parser/php5/php5.y:5930
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 311:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4491
+		// line internal/parser/php5/php5.y:5951
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 312:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4505
+		// line internal/parser/php5/php5.y:5972
 		{
-			str := scalar.NewString(yyDollar[1].token.Value)
-			yyVAL.node = expr.NewArrayDimFetch(str, yyDollar[3].node)
+			stringnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarString,
+				},
+			})
+			yylex.(*Parser).SavePosition(stringNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			str.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(str, yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, stringNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 313:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4521
+		// line internal/parser/php5/php5.y:6000
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 314:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4538
+		// line internal/parser/php5/php5.y:6024
 		{
-			yyVAL.node = expr.NewArray(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArray,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Array, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArrayPairList, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArray, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 315:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4552
+		// line internal/parser/php5/php5.y:6042
 		{
-			yyVAL.node = expr.NewShortArray(yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprShortArray,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArrayPairList, yyDollar[3].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 316:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4568
+		// line internal/parser/php5/php5.y:6062
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 317:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:4575
+		// line internal/parser/php5/php5.y:6069
 		{
-			yyVAL.ClosureUse = nil
+			yyVAL.ClosureUse = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 318:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4581
+		// line internal/parser/php5/php5.y:6075
 		{
-			yyVAL.ClosureUse = expr.NewClosureUse(yyDollar[3].list)
+			yyVAL.ClosureUse = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprClosureUse,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.ClosureUse, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.ClosureUse.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.ClosureUse, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, freefloating.Use, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, freefloating.LexicalVarList, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.ClosureUse, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.ClosureUse, ast.TokenGroupUse, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.ClosureUse, ast.TokenGroupLexicalVarList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 319:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4598
+		// line internal/parser/php5/php5.y:6096
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[3].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.list = append(yyDollar[1].list, variable)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
+			varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(variable, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+
+			yylex.(*Parser).List.Add(varNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 320:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4615
+		// line internal/parser/php5/php5.y:6121
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[4].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			reference := expr.NewReference(variable)
-			yyVAL.list = append(yyDollar[1].list, reference)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[3].token, yyDollar[4].token))
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(reference, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(variable, freefloating.Start, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[4].token}, nil))
+
+			varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprReference,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token, yyDollar[4].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVar, varNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[4].token.HiddenTokens)
+
+			yylex.(*Parser).List.Add(varNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 321:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4635
+		// line internal/parser/php5/php5.y:6158
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.list = []node.Node{variable}
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(variable, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(varNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 322:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4651
+		// line internal/parser/php5/php5.y:6184
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[2].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			reference := expr.NewReference(variable)
-			yyVAL.list = []node.Node{reference}
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(reference, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(variable, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprReference,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVar, varNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(varNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 323:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4673
+		// line internal/parser/php5/php5.y:6222
 		{
-			name := name.NewName(yyDollar[1].list)
-			yyVAL.node = expr.NewFunctionCall(name, yyDollar[2].node.(*node.ArgumentList))
+			nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(name, yyDollar[2].node))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprFunctionCall,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID, yyDollar[2].node}, nil, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupFunction, nameNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[2].node)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 324:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4687
+		// line internal/parser/php5/php5.y:6247
 		{
-			funcName := name.NewRelative(yyDollar[3].list)
-			yyVAL.node = expr.NewFunctionCall(funcName, yyDollar[4].node.(*node.ArgumentList))
+			children := yylex.(*Parser).List.Pop()
+			namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameRelative,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-			// save position
-			funcName.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(funcName, yyDollar[4].node))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprFunctionCall,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID, yyDollar[4].node}, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(funcName, freefloating.Namespace, yyDollar[2].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupFunction, nameNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupNamespace, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 325:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4702
+		// line internal/parser/php5/php5.y:6274
 		{
-			funcName := name.NewFullyQualified(yyDollar[2].list)
-			yyVAL.node = expr.NewFunctionCall(funcName, yyDollar[3].node.(*node.ArgumentList))
+			children := yylex.(*Parser).List.Pop()
+			namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameFullyQualified,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-			// save position
-			funcName.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(funcName, yyDollar[3].node))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprFunctionCall,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID, yyDollar[3].node}, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupFunction, nameNodeID)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 326:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4716
+		// line internal/parser/php5/php5.y:6300
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprStaticCall,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCall, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 327:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4729
+		// line internal/parser/php5/php5.y:6319
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprStaticCall,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCall, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 328:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4742
+		// line internal/parser/php5/php5.y:6338
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprStaticCall,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCall, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 329:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4755
+		// line internal/parser/php5/php5.y:6357
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprStaticCall,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCall, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 330:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4768
+		// line internal/parser/php5/php5.y:6376
 		{
-			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprFunctionCall,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[2].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupFunction, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 331:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4783
+		// line internal/parser/php5/php5.y:6396
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 332:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4795
+		// line internal/parser/php5/php5.y:6410
 		{
-			yyVAL.node = name.NewName(yyDollar[1].list)
+			children := yylex.(*Parser).List.Pop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(children, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, children...)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(children[0], yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 333:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4807
+		// line internal/parser/php5/php5.y:6426
 		{
-			yyVAL.node = name.NewRelative(yyDollar[3].list)
+			children := yylex.(*Parser).List.Pop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameRelative,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, children...)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Namespace, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupNamespace, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4820
+		// line internal/parser/php5/php5.y:6443
 		{
-			yyVAL.node = name.NewFullyQualified(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameFullyQualified,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, children...)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 335:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4835
+		// line internal/parser/php5/php5.y:6462
 		{
-			yyVAL.node = name.NewName(yyDollar[1].list)
+			children := yylex.(*Parser).List.Pop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(children, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, children...)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(children[0], yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 336:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:4847
+		// line internal/parser/php5/php5.y:6478
 		{
-			yyVAL.node = name.NewRelative(yyDollar[3].list)
+			children := yylex.(*Parser).List.Pop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameRelative,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, children...)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Namespace, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupNamespace, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 337:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4860
+		// line internal/parser/php5/php5.y:6495
 		{
-			yyVAL.node = name.NewFullyQualified(yyDollar[2].list)
+			children := yylex.(*Parser).List.Pop()
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameFullyQualified,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, children...)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 338:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4875
+		// line internal/parser/php5/php5.y:6514
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7314,7 +8938,7 @@ yydefault:
 		}
 	case 339:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4881
+		// line internal/parser/php5/php5.y:6520
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7322,50 +8946,41 @@ yydefault:
 		}
 	case 340:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:4890
+		// line internal/parser/php5/php5.y:6529
 		{
+			children2 := yylex.(*Parser).List.Pop()
+			children1 := yylex.(*Parser).List.Pop()
+
 			yyVAL.node = yyDollar[1].node
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyDollar[3].list[0], freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(children1[0], ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
 
-			for _, n := range yyDollar[3].list {
-				switch nn := n.(type) {
-				case *expr.ArrayDimFetch:
-					nn.Variable = yyVAL.node
-					yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
+			for _, n := range children1 {
+				yylex.(*Parser).Children(0, n, ast.NodeGroupVar, yyVAL.node)
+				yylex.(*Parser).MoveStartTokens(yyVAL.node, n)
 
-				case *expr.PropertyFetch:
-					nn.Variable = yyVAL.node
-					yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
-				}
+				// save position
+				yylex.(*Parser).SavePosition(n, yylex.(*Parser).NewPosition([]graph.NodeID{yyVAL.node, n}, nil, nil))
+
+				yyVAL.node = n
 			}
 
-			for _, n := range yyDollar[4].list {
-				switch nn := n.(type) {
-				case *expr.ArrayDimFetch:
-					nn.Variable = yyVAL.node
-					yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
+			for _, n := range children2 {
+				yylex.(*Parser).Children(0, n, ast.NodeGroupVar, yyVAL.node)
+				yylex.(*Parser).MoveStartTokens(yyVAL.node, n)
 
-				case *expr.PropertyFetch:
-					nn.Variable = yyVAL.node
-					yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
-				}
+				// save position
+				yylex.(*Parser).SavePosition(n, yylex.(*Parser).NewPosition([]graph.NodeID{yyVAL.node, n}, nil, nil))
+
+				yyVAL.node = n
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 341:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4931
+		// line internal/parser/php5/php5.y:6561
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7373,114 +8988,133 @@ yydefault:
 		}
 	case 342:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4941
+		// line internal/parser/php5/php5.y:6571
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].list...)
+			children2 := yylex.(*Parser).List.Pop()
+			children1 := yylex.(*Parser).List.Pop()
+
+			yylex.(*Parser).List.Push()
+
+			for _, v := range children1 {
+				yylex.(*Parser).List.Add(v)
+			}
+			for _, v := range children2 {
+				yylex.(*Parser).List.Add(v)
+			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 343:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:4947
+		// line internal/parser/php5/php5.y:6587
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 344:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4957
+		// line internal/parser/php5/php5.y:6597
 		{
-			yyVAL.list = yyDollar[2].list
+			children := yylex.(*Parser).List.Pop()
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyDollar[2].list[0], freefloating.Var, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(children[0], ast.TokenGroupVar, yyDollar[1].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			for _, v := range children {
+				yylex.(*Parser).List.Add(v)
+			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 345:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:4969
+		// line internal/parser/php5/php5.y:6614
 		{
-			yyVAL.node = expr.NewExit(nil)
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 346:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:4975
+		// line internal/parser/php5/php5.y:6620
 		{
-			yyVAL.node = expr.NewExit(nil)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprExit,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Exit, append(yyDollar[1].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExit, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExit, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 347:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:4988
+		// line internal/parser/php5/php5.y:6637
 		{
-			yyVAL.node = expr.NewExit(yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprExit,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yylex.(*Parser).currentToken}, nil))
 
-			// save position
-			if yylex.(*Parser).currentToken.Value == ")" {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yylex.(*Parser).currentToken))
-			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
-			}
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Exit, (*yyDollar[1].node.GetFreeFloating())[freefloating.OpenParenthesisToken])
-			delete((*yyDollar[1].node.GetFreeFloating()), freefloating.OpenParenthesisToken)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, (*yyDollar[1].node.GetFreeFloating())[freefloating.CloseParenthesisToken])
-			delete((*yyDollar[1].node.GetFreeFloating()), freefloating.CloseParenthesisToken)
+			// TODO handle parenthesis tokens
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Exit, (*$1.GetFreeFloating())[freefloating.OpenParenthesisToken]); delete((*$1.GetFreeFloating()), freefloating.OpenParenthesisToken)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$1.GetFreeFloating())[freefloating.CloseParenthesisToken]); delete((*$1.GetFreeFloating()), freefloating.CloseParenthesisToken)
 		}
 	case 348:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:5008
+		// line internal/parser/php5/php5.y:6658
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 349:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5014
+		// line internal/parser/php5/php5.y:6664
 		{
-			part := scalar.NewEncapsedStringPart(yyDollar[1].token.Value)
-			yyVAL.list = []node.Node{part}
-
-			// save position
-			part.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yylex.(*Parser).List.Push()
+			nodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
+				},
+			})
+			yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
+			yylex.(*Parser).List.Add(nodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 350:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5024
+		// line internal/parser/php5/php5.y:6677
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 351:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:5033
+		// line internal/parser/php5/php5.y:6684
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 352:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5039
+		// line internal/parser/php5/php5.y:6690
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7488,195 +9122,236 @@ yydefault:
 		}
 	case 353:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5048
+		// line internal/parser/php5/php5.y:6699
 		{
-			yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarLnumber,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 354:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5060
+		// line internal/parser/php5/php5.y:6713
 		{
-			yyVAL.node = scalar.NewDnumber(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarDnumber,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 355:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5072
+		// line internal/parser/php5/php5.y:6727
 		{
-			yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarString,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 356:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5084
+		// line internal/parser/php5/php5.y:6741
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarMagicConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 357:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5096
+		// line internal/parser/php5/php5.y:6755
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarMagicConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 358:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5108
+		// line internal/parser/php5/php5.y:6769
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarMagicConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 359:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5120
+		// line internal/parser/php5/php5.y:6783
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarMagicConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 360:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5132
+		// line internal/parser/php5/php5.y:6797
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarMagicConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 361:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5144
+		// line internal/parser/php5/php5.y:6811
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarMagicConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 362:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5156
+		// line internal/parser/php5/php5.y:6825
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarMagicConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 363:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5168
+		// line internal/parser/php5/php5.y:6839
 		{
-			encapsed := scalar.NewEncapsedStringPart(yyDollar[2].token.Value)
-			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, []node.Node{encapsed})
+			stringPartNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
+				},
+			})
+			yylex.(*Parser).SavePosition(stringPartNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarHeredoc,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, stringPartNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:5182
+		// line internal/parser/php5/php5.y:6862
 		{
-			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, nil)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarHeredoc,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 365:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5197
+		// line internal/parser/php5/php5.y:6879
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprClassConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(target, freefloating.Start, yyDollar[3].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 366:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5216
+		// line internal/parser/php5/php5.y:6908
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7684,7 +9359,7 @@ yydefault:
 		}
 	case 367:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5225
+		// line internal/parser/php5/php5.y:6917
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7692,7 +9367,7 @@ yydefault:
 		}
 	case 368:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5231
+		// line internal/parser/php5/php5.y:6923
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7700,87 +9375,125 @@ yydefault:
 		}
 	case 369:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5237
+		// line internal/parser/php5/php5.y:6929
 		{
-			name := name.NewName(yyDollar[1].list)
-			yyVAL.node = expr.NewConstFetch(name)
+			children := yylex.(*Parser).List.Pop()
+			namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConstant, nameNodeID)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(children[0], yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 370:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5251
+		// line internal/parser/php5/php5.y:6953
 		{
-			name := name.NewRelative(yyDollar[3].list)
-			yyVAL.node = expr.NewConstFetch(name)
+			children := yylex.(*Parser).List.Pop()
+			namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameRelative,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConstant, nameNodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Namespace, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupNamespace, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 371:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:5266
+		// line internal/parser/php5/php5.y:6978
 		{
-			name := name.NewFullyQualified(yyDollar[2].list)
-			yyVAL.node = expr.NewConstFetch(name)
+			children := yylex.(*Parser).List.Pop()
+			namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameFullyQualified,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConstant, nameNodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 372:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:5280
+		// line internal/parser/php5/php5.y:7002
 		{
-			yyVAL.node = expr.NewArray(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArray,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Array, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArrayPairList, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArray, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 373:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5294
+		// line internal/parser/php5/php5.y:7020
 		{
-			yyVAL.node = expr.NewShortArray(yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprShortArray,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArrayPairList, yyDollar[3].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 374:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5307
+		// line internal/parser/php5/php5.y:7037
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7788,21 +9501,23 @@ yydefault:
 		}
 	case 375:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5313
+		// line internal/parser/php5/php5.y:7043
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarMagicConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 376:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5325
+		// line internal/parser/php5/php5.y:7057
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7810,499 +9525,660 @@ yydefault:
 		}
 	case 377:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:5334
+		// line internal/parser/php5/php5.y:7066
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 378:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5348
+		// line internal/parser/php5/php5.y:7087
 		{
-			yyVAL.node = binary.NewPlus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryPlus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 379:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5361
+		// line internal/parser/php5/php5.y:7105
 		{
-			yyVAL.node = binary.NewMinus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryMinus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 380:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5374
+		// line internal/parser/php5/php5.y:7123
 		{
-			yyVAL.node = binary.NewMul(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryMul,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 381:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5387
+		// line internal/parser/php5/php5.y:7141
 		{
-			yyVAL.node = binary.NewPow(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryPow,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 382:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5400
+		// line internal/parser/php5/php5.y:7159
 		{
-			yyVAL.node = binary.NewDiv(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryDiv,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 383:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5413
+		// line internal/parser/php5/php5.y:7177
 		{
-			yyVAL.node = binary.NewMod(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryMod,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 384:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:5426
+		// line internal/parser/php5/php5.y:7195
 		{
-			yyVAL.node = expr.NewBooleanNot(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprBooleanNot,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 385:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:5438
+		// line internal/parser/php5/php5.y:7211
 		{
-			yyVAL.node = expr.NewBitwiseNot(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprBitwiseNot,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 386:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5450
+		// line internal/parser/php5/php5.y:7227
 		{
-			yyVAL.node = binary.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBitwiseOr,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 387:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5463
+		// line internal/parser/php5/php5.y:7245
 		{
-			yyVAL.node = binary.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBitwiseAnd,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 388:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5476
+		// line internal/parser/php5/php5.y:7263
 		{
-			yyVAL.node = binary.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBitwiseXor,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 389:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5489
+		// line internal/parser/php5/php5.y:7281
 		{
-			yyVAL.node = binary.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryShiftLeft,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 390:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5502
+		// line internal/parser/php5/php5.y:7299
 		{
-			yyVAL.node = binary.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryShiftRight,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 391:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5515
+		// line internal/parser/php5/php5.y:7317
 		{
-			yyVAL.node = binary.NewConcat(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryConcat,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 392:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5528
+		// line internal/parser/php5/php5.y:7335
 		{
-			yyVAL.node = binary.NewLogicalXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryLogicalXor,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 393:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5541
+		// line internal/parser/php5/php5.y:7353
 		{
-			yyVAL.node = binary.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryLogicalAnd,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 394:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5554
+		// line internal/parser/php5/php5.y:7371
 		{
-			yyVAL.node = binary.NewLogicalOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryLogicalOr,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 395:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5567
+		// line internal/parser/php5/php5.y:7389
 		{
-			yyVAL.node = binary.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBooleanAnd,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 396:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5580
+		// line internal/parser/php5/php5.y:7407
 		{
-			yyVAL.node = binary.NewBooleanOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryBooleanOr,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 397:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5593
+		// line internal/parser/php5/php5.y:7425
 		{
-			yyVAL.node = binary.NewIdentical(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryIdentical,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 398:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5606
+		// line internal/parser/php5/php5.y:7443
 		{
-			yyVAL.node = binary.NewNotIdentical(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryNotIdentical,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 399:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5619
+		// line internal/parser/php5/php5.y:7461
 		{
-			yyVAL.node = binary.NewEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryEqual,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 400:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5632
+		// line internal/parser/php5/php5.y:7479
 		{
-			yyVAL.node = binary.NewNotEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryNotEqual,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Equal, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEqual, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 401:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5646
+		// line internal/parser/php5/php5.y:7498
 		{
-			yyVAL.node = binary.NewSmaller(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinarySmaller,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 402:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5659
+		// line internal/parser/php5/php5.y:7516
 		{
-			yyVAL.node = binary.NewGreater(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryGreater,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 403:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5672
+		// line internal/parser/php5/php5.y:7534
 		{
-			yyVAL.node = binary.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinarySmallerOrEqual,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 404:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5685
+		// line internal/parser/php5/php5.y:7552
 		{
-			yyVAL.node = binary.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeBinaryGreaterOrEqual,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 405:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:5698
+		// line internal/parser/php5/php5.y:7570
 		{
-			yyVAL.node = expr.NewTernary(yyDollar[1].node, nil, yyDollar[4].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprTernary,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupIfFalse, yyDollar[4].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.True, yyDollar[3].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupTrue, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 406:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:5712
+		// line internal/parser/php5/php5.y:7589
 		{
-			yyVAL.node = expr.NewTernary(yyDollar[1].node, yyDollar[3].node, yyDollar[5].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprTernary,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[5].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[5].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupIfTrue, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupIfFalse, yyDollar[5].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.True, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupTrue, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 407:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:5726
+		// line internal/parser/php5/php5.y:7609
 		{
-			yyVAL.node = expr.NewUnaryPlus(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprUnaryPlus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 408:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:5738
+		// line internal/parser/php5/php5.y:7625
 		{
-			yyVAL.node = expr.NewUnaryMinus(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprUnaryMinus,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 409:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5750
+		// line internal/parser/php5/php5.y:7641
 		{
 			yyVAL.node = yyDollar[2].node
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, append(yyDollar[1].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), (*yyVAL.node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append((*yyVAL.node.GetFreeFloating())[freefloating.End], append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			// save tokens
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 410:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5763
+		// line internal/parser/php5/php5.y:7656
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8310,72 +10186,111 @@ yydefault:
 		}
 	case 411:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5769
+		// line internal/parser/php5/php5.y:7662
 		{
-			name := name.NewName(yyDollar[1].list)
-			yyVAL.node = expr.NewConstFetch(name)
+			children := yylex.(*Parser).List.Pop()
+			namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameName,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConstant, nameNodeID)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(children[0], yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 412:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5783
+		// line internal/parser/php5/php5.y:7686
 		{
-			name := name.NewRelative(yyDollar[3].list)
-			yyVAL.node = expr.NewConstFetch(name)
+			children := yylex.(*Parser).List.Pop()
+			namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameRelative,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConstant, nameNodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(name, freefloating.Namespace, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupNamespace, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 413:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:5798
+		// line internal/parser/php5/php5.y:7711
 		{
-			name := name.NewFullyQualified(yyDollar[2].list)
-			yyVAL.node = expr.NewConstFetch(name)
+			children := yylex.(*Parser).List.Pop()
+			namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeNameFullyQualified,
+				},
+			})
+			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
+			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConstant, nameNodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5815
+		// line internal/parser/php5/php5.y:7738
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.node = expr.NewVariable(name)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 415:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5829
+		// line internal/parser/php5/php5.y:7761
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8383,7 +10298,7 @@ yydefault:
 		}
 	case 416:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5835
+		// line internal/parser/php5/php5.y:7767
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8391,7 +10306,7 @@ yydefault:
 		}
 	case 417:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5841
+		// line internal/parser/php5/php5.y:7773
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8399,146 +10314,184 @@ yydefault:
 		}
 	case 418:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5847
+		// line internal/parser/php5/php5.y:7779
 		{
-			yyVAL.node = scalar.NewEncapsed(yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarEncapsed,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 419:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5859
+		// line internal/parser/php5/php5.y:7795
 		{
-			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarHeredoc,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 420:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5871
+		// line internal/parser/php5/php5.y:7811
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarMagicConstant,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 421:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:5886
+		// line internal/parser/php5/php5.y:7828
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 422:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:5892
+		// line internal/parser/php5/php5.y:7834
 		{
-			yyVAL.list = yyDollar[1].list
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save comments
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+				yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+				yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, []scanner.Token{*yyDollar[2].token})
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 423:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:5906
+		// line internal/parser/php5/php5.y:7848
 		{
 			yyVAL.token = nil
 		}
 	case 424:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5910
+		// line internal/parser/php5/php5.y:7852
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 425:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:5917
+		// line internal/parser/php5/php5.y:7859
 		{
-			arrayItem := expr.NewArrayItem(yyDollar[3].node, yyDollar[5].node)
-			yyVAL.list = append(yyDollar[1].list, arrayItem)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[3].node, yyDollar[5].node))
+			itemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(itemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[3].node, yyDollar[5].node}, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[3].node, arrayItem)
-			yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, itemNodeID, ast.NodeGroupKey, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, itemNodeID, ast.NodeGroupVal, yyDollar[5].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).MoveStartTokens(yyDollar[3].node, itemNodeID)
+			yylex.(*Parser).AppendTokens(itemNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+
+			yylex.(*Parser).List.Add(itemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 426:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5932
+		// line internal/parser/php5/php5.y:7882
 		{
-			arrayItem := expr.NewArrayItem(nil, yyDollar[3].node)
-			yyVAL.list = append(yyDollar[1].list, arrayItem)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[3].node))
+			itemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(itemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[3].node}, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[3].node, arrayItem)
+			yylex.(*Parser).Children(0, itemNodeID, ast.NodeGroupVal, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).MoveStartTokens(yyDollar[3].node, itemNodeID)
+
+			yylex.(*Parser).List.Add(itemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 427:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5946
+		// line internal/parser/php5/php5.y:7903
 		{
-			arrayItem := expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node)
-			yyVAL.list = []node.Node{arrayItem}
+			itemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(itemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, itemNodeID, ast.NodeGroupKey, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, itemNodeID, ast.NodeGroupVal, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, arrayItem)
-			yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, itemNodeID)
+			yylex.(*Parser).AppendTokens(itemNodeID, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(itemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 428:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5960
+		// line internal/parser/php5/php5.y:7924
 		{
-			arrayItem := expr.NewArrayItem(nil, yyDollar[1].node)
-			yyVAL.list = []node.Node{arrayItem}
+			itemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(itemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, itemNodeID, ast.NodeGroupVal, yyDollar[1].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, arrayItem)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, itemNodeID)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(itemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 429:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5976
+		// line internal/parser/php5/php5.y:7946
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8546,7 +10499,7 @@ yydefault:
 		}
 	case 430:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:5982
+		// line internal/parser/php5/php5.y:7952
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8554,43 +10507,37 @@ yydefault:
 		}
 	case 431:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:5991
+		// line internal/parser/php5/php5.y:7961
 		{
 			yyVAL.node = yyDollar[2].node
 
-			// save comments
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyDollar[2].node, freefloating.Start, append((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken], (*yyDollar[2].node.GetFreeFloating())[freefloating.Start]...))
-			}
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyDollar[2].node, freefloating.End, append((*yyDollar[2].node.GetFreeFloating())[freefloating.End], (*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken]...))
-			}
-			yylex.(*Parser).setFreeFloating(yyDollar[2].node, freefloating.OpenParenthesisToken, append(yyDollar[1].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
-			yylex.(*Parser).setFreeFloating(yyDollar[2].node, freefloating.CloseParenthesisToken, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// save tokens
+			// TODO: handle parenthesis tokens
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 432:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6007
+		// line internal/parser/php5/php5.y:7974
 		{
 			yyVAL.node = yyDollar[2].node
 
-			// save comments
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyDollar[2].node, freefloating.Start, append((*yyDollar[2].node.GetFreeFloating())[freefloating.OpenParenthesisToken], (*yyDollar[2].node.GetFreeFloating())[freefloating.Start]...))
-			}
-			if len((*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-				yylex.(*Parser).setFreeFloating(yyDollar[2].node, freefloating.End, append((*yyDollar[2].node.GetFreeFloating())[freefloating.End], (*yyDollar[2].node.GetFreeFloating())[freefloating.CloseParenthesisToken]...))
-			}
-			yylex.(*Parser).setFreeFloating(yyDollar[2].node, freefloating.OpenParenthesisToken, append(yyDollar[1].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
-			yylex.(*Parser).setFreeFloating(yyDollar[2].node, freefloating.CloseParenthesisToken, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// save tokens
+			// TODO: handle parenthesis tokens
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 433:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6027
+		// line internal/parser/php5/php5.y:7991
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8598,7 +10545,7 @@ yydefault:
 		}
 	case 434:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6037
+		// line internal/parser/php5/php5.y:8001
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8606,7 +10553,7 @@ yydefault:
 		}
 	case 435:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6046
+		// line internal/parser/php5/php5.y:8010
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8614,67 +10561,59 @@ yydefault:
 		}
 	case 436:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:6055
+		// line internal/parser/php5/php5.y:8019
 		{
+			children5 := yylex.(*Parser).List.Pop()
+			children4 := yylex.(*Parser).List.Pop()
+			children3 := yylex.(*Parser).List.Pop()
+
 			yyVAL.node = yyDollar[1].node
 
-			if yyDollar[4].list != nil {
-				yyDollar[4].list[0].(*expr.MethodCall).Method = yyDollar[3].list[len(yyDollar[3].list)-1].(*expr.PropertyFetch).Property
-				yyDollar[3].list = append(yyDollar[3].list[:len(yyDollar[3].list)-1], yyDollar[4].list...)
+			if len(children4) > 0 {
+
+				node := yylex.(*Parser).Ast.Nodes.Get(children3[len(children3)-1])
+
+				yylex.(*Parser).Ast.EachEdge(node.Edges, func(e graph.Edge) bool {
+					if e.Type != graph.EdgeTypeNode {
+						return false
+					}
+
+					yylex.(*Parser).Children(children4[0], n, ast.NodeGroupMethod, e.Target)
+
+					return true
+				})
+
+				children3 := append(children3[:len(children3)-1], children4...)
 			}
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyDollar[3].list[0], freefloating.Var, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(children3[0], ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
-			for _, n := range yyDollar[3].list {
-				switch nn := n.(type) {
-				case *expr.ArrayDimFetch:
-					nn.Variable = yyVAL.node
-					nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
+			for _, n := range children3 {
+				yylex.(*Parser).Children(0, n, ast.NodeGroupVar, yyVAL.node)
+				yylex.(*Parser).MoveStartTokens(yyVAL.node, n)
 
-				case *expr.PropertyFetch:
-					nn.Variable = yyVAL.node
-					nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
+				// save position
+				yylex.(*Parser).SavePosition(n, yylex.(*Parser).NewPosition([]graph.NodeID{yyVAL.node, n}, nil, nil))
 
-				case *expr.MethodCall:
-					nn.Variable = yyVAL.node
-					nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
-				}
+				yyVAL.node = n
 			}
 
-			for _, n := range yyDollar[5].list {
-				switch nn := n.(type) {
-				case *expr.ArrayDimFetch:
-					nn.Variable = yyVAL.node
-					nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
+			for _, n := range children5 {
+				yylex.(*Parser).Children(0, n, ast.NodeGroupVar, yyVAL.node)
+				yylex.(*Parser).MoveStartTokens(yyVAL.node, n)
 
-				case *expr.PropertyFetch:
-					nn.Variable = yyVAL.node
-					nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
+				// save position
+				yylex.(*Parser).SavePosition(n, yylex.(*Parser).NewPosition([]graph.NodeID{yyVAL.node, n}, nil, nil))
 
-				case *expr.MethodCall:
-					nn.Variable = yyVAL.node
-					nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
-					yyVAL.node = nn
-					yylex.(*Parser).MoveFreeFloating(nn.Variable, yyVAL.node)
-				}
+				yyVAL.node = n
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 437:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6113
+		// line internal/parser/php5/php5.y:8069
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8682,106 +10621,154 @@ yydefault:
 		}
 	case 438:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:6122
+		// line internal/parser/php5/php5.y:8078
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].list...)
+			children2 := yylex.(*Parser).List.Pop()
+			children1 := yylex.(*Parser).List.Pop()
+
+			yylex.(*Parser).List.Push()
+
+			for _, v := range children1 {
+				yylex.(*Parser).List.Add(v)
+			}
+			for _, v := range children2 {
+				yylex.(*Parser).List.Add(v)
+			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 439:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:6128
+		// line internal/parser/php5/php5.y:8094
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 440:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6138
+		// line internal/parser/php5/php5.y:8104
 		{
-			if yyDollar[3].list != nil {
-				yyDollar[3].list[0].(*expr.MethodCall).Method = yyDollar[2].list[len(yyDollar[2].list)-1].(*expr.PropertyFetch).Property
-				yyDollar[2].list = append(yyDollar[2].list[:len(yyDollar[2].list)-1], yyDollar[3].list...)
+			children3 := yylex.(*Parser).List.Pop()
+			children2 := yylex.(*Parser).List.Pop()
+
+			if len(children3) > 0 {
+
+				node := yylex.(*Parser).Ast.Nodes.Get(children2[len(children2)-1])
+
+				yylex.(*Parser).Ast.EachEdge(node.Edges, func(e graph.Edge) bool {
+					if e.Type != graph.EdgeTypeNode {
+						return false
+					}
+
+					yylex.(*Parser).Children(children3[0], n, ast.NodeGroupMethod, e.Target)
+
+					return true
+				})
+
+				children2 := append(children2[:len(children2)-1], children3...)
 			}
 
-			yyVAL.list = yyDollar[2].list
+			yylex.(*Parser).List.Push()
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyDollar[2].list[0], freefloating.Var, yyDollar[1].token.FreeFloating)
+			for _, v := range children2 {
+				yylex.(*Parser).List.Add(v)
+			}
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(children2[0], ast.TokenGroupVar, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 441:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6155
+		// line internal/parser/php5/php5.y:8140
 		{
-			fetch := expr.NewArrayDimFetch(nil, yyDollar[3].node)
-			yyVAL.list = append(yyDollar[1].list, fetch)
+			fetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(fetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token, yyDollar[4].token}, nil))
 
-			// save position
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[3].node))
+			yylex.(*Parser).Children(prevNodeID, fetchNodeID, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
+
+			yylex.(*Parser).List.Add(fetchNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 442:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6169
+		// line internal/parser/php5/php5.y:8161
 		{
-			fetch := expr.NewArrayDimFetch(nil, yyDollar[3].node)
-			yyVAL.list = []node.Node{yyDollar[1].node, fetch}
+			fetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(fetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token, yyDollar[4].token}, nil))
 
-			// save position
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[3].node))
+			yylex.(*Parser).Children(prevNodeID, fetchNodeID, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
+			yylex.(*Parser).List.Add(fetchNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 443:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6186
+		// line internal/parser/php5/php5.y:8187
 		{
-			yyVAL.node = expr.NewMethodCall(nil, nil, yyDollar[1].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprMethodCall,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 444:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6198
+		// line internal/parser/php5/php5.y:8203
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 445:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6204
+		// line internal/parser/php5/php5.y:8210
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 446:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:6210
+		// line internal/parser/php5/php5.y:8214
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 447:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6219
+		// line internal/parser/php5/php5.y:8223
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8789,51 +10776,64 @@ yydefault:
 		}
 	case 448:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:6225
+		// line internal/parser/php5/php5.y:8229
 		{
-			yyDollar[1].simpleIndirectReference.last.SetVarName(yyDollar[2].node)
+			children := yylex.(*Parser).List.Pop()
+			last := children[len(children)-1]
 
-			for _, n := range yyDollar[1].simpleIndirectReference.all {
-				n.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(n, yyDollar[2].node))
+			yylex.(*Parser).Children(0, last, ast.NodeGroupVarName, yyDollar[2].node)
+
+			for _, n := range children {
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{n, yyDollar[2].node}, nil, nil))
 			}
 
-			yyVAL.node = yyDollar[1].simpleIndirectReference.all[0]
+			yyVAL.node = children[0]
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 449:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6240
+		// line internal/parser/php5/php5.y:8247
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprStaticPropertyFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 450:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6253
+		// line internal/parser/php5/php5.y:8265
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprStaticPropertyFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 451:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6269
+		// line internal/parser/php5/php5.y:8286
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8841,39 +10841,53 @@ yydefault:
 		}
 	case 452:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6278
+		// line internal/parser/php5/php5.y:8295
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 453:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6292
+		// line internal/parser/php5/php5.y:8316
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 454:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6309
+		// line internal/parser/php5/php5.y:8340
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8881,7 +10895,7 @@ yydefault:
 		}
 	case 455:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6315
+		// line internal/parser/php5/php5.y:8346
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8889,7 +10903,7 @@ yydefault:
 		}
 	case 456:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6321
+		// line internal/parser/php5/php5.y:8352
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8897,7 +10911,7 @@ yydefault:
 		}
 	case 457:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6331
+		// line internal/parser/php5/php5.y:8362
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8905,21 +10919,24 @@ yydefault:
 		}
 	case 458:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:6337
+		// line internal/parser/php5/php5.y:8368
 		{
-			yyDollar[1].simpleIndirectReference.last.SetVarName(yyDollar[2].node)
+			children := yylex.(*Parser).List.Pop()
+			last := children[len(children)-1]
 
-			for _, n := range yyDollar[1].simpleIndirectReference.all {
-				n.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(n, yyDollar[2].node))
+			yylex.(*Parser).Children(0, last, ast.NodeGroupVarName, yyDollar[2].node)
+
+			for _, n := range children {
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{n, yyDollar[2].node}, nil, nil))
 			}
 
-			yyVAL.node = yyDollar[1].simpleIndirectReference.all[0]
+			yyVAL.node = children[0]
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 459:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6349
+		// line internal/parser/php5/php5.y:8383
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8927,39 +10944,53 @@ yydefault:
 		}
 	case 460:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6358
+		// line internal/parser/php5/php5.y:8392
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 461:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6372
+		// line internal/parser/php5/php5.y:8413
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 462:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6386
+		// line internal/parser/php5/php5.y:8434
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8967,49 +10998,63 @@ yydefault:
 		}
 	case 463:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6396
+		// line internal/parser/php5/php5.y:8444
 		{
-			name := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			yyVAL.node = expr.NewVariable(name)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(yyVAL.node)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 464:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6411
+		// line internal/parser/php5/php5.y:8467
 		{
-			yyVAL.node = expr.NewVariable(yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyDollar[3].node, freefloating.Start, append(yyDollar[2].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token), (*yyDollar[3].node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyDollar[3].node, freefloating.End, append((*yyDollar[3].node.GetFreeFloating())[freefloating.End], append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupDollar, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).PrependTokens(yyDollar[3].node, ast.TokenGroupStart, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).PrependTokens(yyDollar[3].node, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyDollar[3].node, ast.TokenGroupEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyDollar[3].node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 465:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:6429
+		// line internal/parser/php5/php5.y:8491
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 466:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6435
+		// line internal/parser/php5/php5.y:8497
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -9017,729 +11062,1007 @@ yydefault:
 		}
 	case 467:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6445
+		// line internal/parser/php5/php5.y:8507
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 468:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6451
+		// line internal/parser/php5/php5.y:8511
 		{
-			fetch := expr.NewPropertyFetch(nil, yyDollar[1].node)
-			yyVAL.list = []node.Node{fetch}
+			propertyFetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprStaticPropertyFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(propertyFetchNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, propertyFetchNodeID, ast.NodeGroupProperty, yyDollar[1].node)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(propertyFetchNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 469:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6464
+		// line internal/parser/php5/php5.y:8530
 		{
-			fetch := expr.NewArrayDimFetch(nil, yyDollar[3].node)
-			yyVAL.list = append(yyDollar[1].list, fetch)
+			ArrayDimFetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayDimFetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token, yyDollar[4].token}, nil))
 
-			// save position
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[3].node))
+			yylex.(*Parser).Children(prevNodeID, ArrayDimFetchNodeID, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
+
+			yylex.(*Parser).List.Add(ArrayDimFetchNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 470:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6478
+		// line internal/parser/php5/php5.y:8551
 		{
-			fetch := expr.NewArrayDimFetch(nil, yyDollar[3].node)
-			yyVAL.list = append(yyDollar[1].list, fetch)
+			ArrayDimFetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayDimFetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token, yyDollar[4].token}, nil))
 
-			// save position
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[3].node))
+			yylex.(*Parser).Children(prevNodeID, ArrayDimFetchNodeID, ast.NodeGroupDim, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
+
+			yylex.(*Parser).List.Add(ArrayDimFetchNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 471:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6492
+		// line internal/parser/php5/php5.y:8572
 		{
-			fetch := expr.NewPropertyFetch(nil, yyDollar[1].node)
-			yyVAL.list = []node.Node{fetch}
+			propertyFetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprStaticPropertyFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(propertyFetchNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, propertyFetchNodeID, ast.NodeGroupProperty, yyDollar[1].node)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(propertyFetchNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 472:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6505
+		// line internal/parser/php5/php5.y:8591
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 473:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6517
+		// line internal/parser/php5/php5.y:8605
 		{
 			yyVAL.node = yyDollar[2].node
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, append(yyDollar[1].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), (*yyVAL.node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append((*yyVAL.node.GetFreeFloating())[freefloating.End], append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			// save tokens
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 474:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6533
+		// line internal/parser/php5/php5.y:8620
 		{
-			n := expr.NewVariable(nil)
-			yyVAL.simpleIndirectReference = simpleIndirectReference{[]*expr.Variable{n}, n}
+			varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			n.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupDollar, []scanner.Token{*yyDollar[1].token})
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(n, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(n, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(varNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 475:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:6547
+		// line internal/parser/php5/php5.y:8638
 		{
-			n := expr.NewVariable(nil)
+			varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			yyDollar[1].simpleIndirectReference.last.SetVarName(n)
-			yyDollar[1].simpleIndirectReference.all = append(yyDollar[1].simpleIndirectReference.all, n)
-			yyDollar[1].simpleIndirectReference.last = n
-			yyVAL.simpleIndirectReference = yyDollar[1].simpleIndirectReference
+			yylex.(*Parser).Children(0, yylex.(*Parser).List.Last(), ast.NodeGroupVarName, varNodeID)
 
-			// save position
-			n.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
+			// save tokens
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[1].simpleIndirectReference.HiddenTokens)
+			yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupDollar, []scanner.Token{*yyDollar[1].simpleIndirectReference})
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(n, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(n, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			yylex.(*Parser).List.Add(varNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 476:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6568
+		// line internal/parser/php5/php5.y:8660
 		{
-			if len(yyDollar[1].list) == 0 {
-				yyDollar[1].list = []node.Node{expr.NewArrayItem(nil, nil)}
+			if yylex.(*Parser).List.Len() == 0 {
+				ArrayItemNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+					SimpleNode: ast.SimpleNode{
+						Type: ast.NodeTypeExprArrayItem,
+					},
+				})
+				yylex.(*Parser).List.Add(ArrayItemNodeID)
 			}
 
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).AppendTokens(yylex.(*Parser).List.Last(), ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			if yyDollar[3].node == 0 {
+				ArrayItemNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+					SimpleNode: ast.SimpleNode{
+						Type: ast.NodeTypeExprArrayItem,
+					},
+				})
+				yylex.(*Parser).List.Add(ArrayItemNodeID)
+			} else {
+				yylex.(*Parser).List.Add(yyDollar[3].node)
+			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 477:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6581
+		// line internal/parser/php5/php5.y:8686
 		{
-			if yyDollar[1].node.(*expr.ArrayItem).Key == nil && yyDollar[1].node.(*expr.ArrayItem).Val == nil {
-				yyVAL.list = []node.Node{}
-			} else {
-				yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			if yyDollar[1].node != 0 {
+				yylex.(*Parser).List.Add(yyDollar[1].node)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 478:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6595
+		// line internal/parser/php5/php5.y:8699
 		{
-			yyVAL.node = expr.NewArrayItem(nil, yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVal, yyDollar[1].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 479:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6607
+		// line internal/parser/php5/php5.y:8715
 		{
-			listNode := expr.NewList(yyDollar[3].list)
-			yyVAL.node = expr.NewArrayItem(nil, listNode)
+			listNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprList,
+				},
+			})
+			yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(listNode))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.List, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, yyDollar[4].token.FreeFloating)
+			yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVal, listNodeID)
+
+			// TODO: Cannot use list() as standalone expression
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 480:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:6623
+		// line internal/parser/php5/php5.y:8743
 		{
-			yyVAL.node = expr.NewArrayItem(nil, nil)
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 481:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line php5/php5.y:6633
+		// line internal/parser/php5/php5.y:8753
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).List.Push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 482:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:6639
+		// line internal/parser/php5/php5.y:8759
 		{
-			yyVAL.list = yyDollar[1].list
-
 			if yyDollar[2].token != nil {
-				yyVAL.list = append(yyDollar[1].list, expr.NewArrayItem(nil, nil))
-			}
+				// save tokens
+				yylex.(*Parser).AppendTokens(yylex.(*Parser).List.Last(), ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
-			// save comments
-			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+				// seve node
+				ArrayItemNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+					SimpleNode: ast.SimpleNode{
+						Type: ast.NodeTypeExprArrayItem,
+					},
+				})
+				yylex.(*Parser).List.Add(ArrayItemNodeID)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 483:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line php5/php5.y:6657
+		// line internal/parser/php5/php5.y:8779
 		{
-			arrayItem := expr.NewArrayItem(yyDollar[3].node, yyDollar[5].node)
-			yyVAL.list = append(yyDollar[1].list, arrayItem)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[3].node, yyDollar[5].node))
+			ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[3].node, yyDollar[5].node}, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[3].node, arrayItem)
-			yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupKey, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, ArrayItemNodeID, ast.NodeGroupVal, yyDollar[5].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).MoveStartTokens(yyDollar[3].node, ArrayItemNodeID)
+			yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+
+			yylex.(*Parser).List.Add(ArrayItemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 484:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6672
+		// line internal/parser/php5/php5.y:8802
 		{
-			arrayItem := expr.NewArrayItem(nil, yyDollar[3].node)
-			yyVAL.list = append(yyDollar[1].list, arrayItem)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[3].node))
+			ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[3].node}, nil, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[3].node, arrayItem)
+			yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupVal, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).MoveStartTokens(yyDollar[3].node, ArrayItemNodeID)
+
+			yylex.(*Parser).List.Add(ArrayItemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 485:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6686
+		// line internal/parser/php5/php5.y:8823
 		{
-			arrayItem := expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node)
-			yyVAL.list = []node.Node{arrayItem}
+			ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			// save position
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			prevNodeID := yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupKey, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, ArrayItemNodeID, ast.NodeGroupVal, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, arrayItem)
-			yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, ArrayItemNodeID)
+			yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(ArrayItemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 486:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6700
+		// line internal/parser/php5/php5.y:8844
 		{
-			arrayItem := expr.NewArrayItem(nil, yyDollar[1].node)
-			yyVAL.list = []node.Node{arrayItem}
+			ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			// save position
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupVal, yyDollar[1].node)
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, arrayItem)
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, ArrayItemNodeID)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(ArrayItemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 487:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		// line php5/php5.y:6713
+		// line internal/parser/php5/php5.y:8863
 		{
-			reference := expr.NewReference(yyDollar[6].node)
-			arrayItem := expr.NewArrayItem(yyDollar[3].node, reference)
-			yyVAL.list = append(yyDollar[1].list, arrayItem)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[5].token, yyDollar[6].node))
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[3].node, yyDollar[6].node))
+			refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprReference,
+				},
+			})
+			yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[5].token}, []graph.NodeID{yyDollar[6].node}))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[3].node, arrayItem)
-			yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(reference, freefloating.Start, yyDollar[5].token.FreeFloating)
+			ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[3].node, yyDollar[6].node}, nil, nil))
+
+			yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, yyDollar[6].node)
+			prevNodeID := yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupKey, yyDollar[3].node)
+			yylex.(*Parser).Children(prevNodeID, ArrayItemNodeID, ast.NodeGroupVal, refNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).MoveStartTokens(yyDollar[3].node, ArrayItemNodeID)
+			yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(refNodeID, ast.TokenGroupStart, yyDollar[5].token.HiddenTokens)
+
+			yylex.(*Parser).List.Add(ArrayItemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 488:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6731
+		// line internal/parser/php5/php5.y:8895
 		{
-			reference := expr.NewReference(yyDollar[4].node)
-			arrayItem := expr.NewArrayItem(nil, reference)
-			yyVAL.list = append(yyDollar[1].list, arrayItem)
+			prevNodeID := yylex.(*Parser).List.Last()
 
-			// save position
-			reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[4].node))
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[4].node))
+			refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprReference,
+				},
+			})
+			yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, []graph.NodeID{yyDollar[4].node}))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Start, yyDollar[3].token.FreeFloating)
+			ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, []graph.NodeID{yyDollar[4].node}))
+
+			yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, yyDollar[4].node)
+			yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupVal, refNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+
+			yylex.(*Parser).List.Add(ArrayItemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 489:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6747
+		// line internal/parser/php5/php5.y:8924
 		{
-			reference := expr.NewReference(yyDollar[4].node)
-			arrayItem := expr.NewArrayItem(yyDollar[1].node, reference)
-			yyVAL.list = []node.Node{arrayItem}
+			refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprReference,
+				},
+			})
+			yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, []graph.NodeID{yyDollar[4].node}))
 
-			// save position
-			reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[4].node))
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, arrayItem)
-			yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(reference, freefloating.Start, yyDollar[3].token.FreeFloating)
+			yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, yyDollar[4].node)
+			prevNodeID := yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupKey, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, ArrayItemNodeID, ast.NodeGroupVal, refNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, ArrayItemNodeID)
+			yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(refNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(ArrayItemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 490:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:6764
+		// line internal/parser/php5/php5.y:8954
 		{
-			reference := expr.NewReference(yyDollar[2].node)
-			arrayItem := expr.NewArrayItem(nil, reference)
-			yyVAL.list = []node.Node{arrayItem}
+			refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprReference,
+				},
+			})
+			yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
-			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayItem,
+				},
+			})
+			yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, yyDollar[2].node)
+			yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupVal, refNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(ArrayItemNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 491:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:6782
+		// line internal/parser/php5/php5.y:8984
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).List.Add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 492:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:6788
+		// line internal/parser/php5/php5.y:8990
 		{
-			encapsed := scalar.NewEncapsedStringPart(yyDollar[2].token.Value)
-			yyVAL.list = append(yyDollar[1].list, encapsed)
+			encapsNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
+				},
+			})
+			yylex.(*Parser).SavePosition(encapsNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
+			yylex.(*Parser).List.Add(encapsNodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(encapsNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 493:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6801
+		// line internal/parser/php5/php5.y:9006
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 494:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:6807
+		// line internal/parser/php5/php5.y:9013
 		{
-			encapsed := scalar.NewEncapsedStringPart(yyDollar[1].token.Value)
-			yyVAL.list = []node.Node{encapsed, yyDollar[2].node}
+			yylex.(*Parser).List.Push()
 
-			// save position
-			encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			encapsNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
+				},
+			})
+			yylex.(*Parser).SavePosition(encapsNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, yyDollar[1].token.FreeFloating)
+			yylex.(*Parser).List.Add(encapsNodeID)
+			yylex.(*Parser).List.Add(yyDollar[2].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(encapsNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 495:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6823
+		// line internal/parser/php5/php5.y:9035
 		{
-			name := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			yyVAL.node = expr.NewVariable(name)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(yyVAL.node)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 496:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6838
+		// line internal/parser/php5/php5.y:9058
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = expr.NewArrayDimFetch(variable, yyDollar[3].node)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 497:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6856
+		// line internal/parser/php5/php5.y:9093
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			fetch := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = expr.NewPropertyFetch(variable, fetch)
+			varNameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Start, yyDollar[3].token.FreeFloating)
+			propertyNameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(propertyNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
+
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprPropertyFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, varNameNodeID)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, propertyNameNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(propertyNameNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 498:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6876
+		// line internal/parser/php5/php5.y:9133
 		{
-			variable := expr.NewVariable(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yyVAL.node = variable
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, yyDollar[2].node)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 499:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6891
+		// line internal/parser/php5/php5.y:9151
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value)
-			variable := expr.NewVariable(name)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			yyVAL.node = variable
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 500:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		// line php5/php5.y:6908
+		// line internal/parser/php5/php5.y:9176
 		{
-			identifier := node.NewIdentifier(yyDollar[2].token.Value)
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = expr.NewArrayDimFetch(variable, yyDollar[4].node)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+			varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[5].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append(yyDollar[6].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token)...))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprArrayDimFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[6].token}, nil))
+
+			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[4].node)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[3].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[5].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[6].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 501:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:6927
+		// line internal/parser/php5/php5.y:9214
 		{
 			yyVAL.node = yyDollar[2].node
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 502:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6940
+		// line internal/parser/php5/php5.y:9228
 		{
-			yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeScalarString,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 503:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6952
+		// line internal/parser/php5/php5.y:9242
 		{
 			// TODO: add option to handle 64 bit integer
-			if _, err := strconv.Atoi(yyDollar[1].token.Value); err == nil {
-				yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value)
+			tknValue := yylex.(*Parser).Ast.FileData[yyDollar[1].token.StartPos:yyDollar[1].token.EndPos]
+			if _, err := strconv.Atoi(string(tknValue)); err == nil {
+				yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+					SimpleNode: ast.SimpleNode{
+						Type: ast.NodeTypeScalarLnumber,
+					},
+				})
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 			} else {
-				yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
+				yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+					SimpleNode: ast.SimpleNode{
+						Type: ast.NodeTypeScalarString,
+					},
+				})
+				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 			}
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 504:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:6969
+		// line internal/parser/php5/php5.y:9267
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			yyVAL.node = expr.NewVariable(identifier)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprVariable,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(yyVAL.node)
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 505:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:6987
+		// line internal/parser/php5/php5.y:9293
 		{
-			yyVAL.node = expr.NewIsset(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprIsset,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVars, yylex.(*Parser).List.Pop()...)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Isset, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupIsset, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 506:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:7001
+		// line internal/parser/php5/php5.y:9311
 		{
-			yyVAL.node = expr.NewEmpty(yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprEmpty,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Empty, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEmpty, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 507:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:7015
+		// line internal/parser/php5/php5.y:9329
 		{
-			yyVAL.node = expr.NewEmpty(yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprEmpty,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Empty, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEmpty, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 508:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:7029
+		// line internal/parser/php5/php5.y:9347
 		{
-			yyVAL.node = expr.NewInclude(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprInclude,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 509:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:7041
+		// line internal/parser/php5/php5.y:9363
 		{
-			yyVAL.node = expr.NewIncludeOnce(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprIncludeOnce,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 510:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line php5/php5.y:7053
+		// line internal/parser/php5/php5.y:9379
 		{
-			yyVAL.node = expr.NewEval(yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprEval,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Eval, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupEval, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 511:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:7067
+		// line internal/parser/php5/php5.y:9397
 		{
-			yyVAL.node = expr.NewRequire(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprRequire,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 512:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line php5/php5.y:7079
+		// line internal/parser/php5/php5.y:9413
 		{
-			yyVAL.node = expr.NewRequireOnce(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprRequireOnce,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 513:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:7094
+		// line internal/parser/php5/php5.y:9432
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).List.Push()
+			yylex.(*Parser).List.Add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 514:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:7100
+		// line internal/parser/php5/php5.y:9439
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).List.Last()
+			yylex.(*Parser).List.Add(yyDollar[3].node)
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// save tokens
+			yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 515:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:7112
+		// line internal/parser/php5/php5.y:9451
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -9747,7 +12070,7 @@ yydefault:
 		}
 	case 516:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line php5/php5.y:7118
+		// line internal/parser/php5/php5.y:9457
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -9755,73 +12078,113 @@ yydefault:
 		}
 	case 517:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:7127
+		// line internal/parser/php5/php5.y:9466
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprClassConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(target, freefloating.Start, yyDollar[3].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 518:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:7143
+		// line internal/parser/php5/php5.y:9492
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprClassConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(target, freefloating.Start, yyDollar[3].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 519:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:7162
+		// line internal/parser/php5/php5.y:9521
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprClassConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(target, freefloating.Start, yyDollar[3].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 520:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line php5/php5.y:7181
+		// line internal/parser/php5/php5.y:9550
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
+			identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeIdentifier,
+				},
+			})
+			yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save position
-			target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+				SimpleNode: ast.SimpleNode{
+					Type: ast.NodeTypeExprClassConstFetch,
+				},
+			})
+			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(target, freefloating.Start, yyDollar[3].token.FreeFloating)
+			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
+
+			// save tokens
+			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}

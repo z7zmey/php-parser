@@ -110,7 +110,14 @@ func processPath(pathList []string, fileCh chan<- *file) {
 }
 
 func parserWorker(fileCh <-chan *file, r chan<- result) {
-	parserWorker := parser.NewPHP7Parser()
+	var parserWorker parser.Parser
+
+	if *usePhp5 {
+		parserWorker = parser.NewPHP7Parser()
+	} else {
+		parserWorker = parser.NewPHP7Parser()
+	}
+
 	if *withTokens {
 		parserWorker = parserWorker.WithTokens()
 	}

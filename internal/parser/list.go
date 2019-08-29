@@ -26,6 +26,14 @@ func (s *stackedNodeList) Last() graph.NodeID {
 	return s.list[len(s.list)-1]
 }
 
+func (s *stackedNodeList) Len() int {
+	p := 0
+	if len(s.stack) > 0 {
+		p = s.stack[len(s.stack)-1]
+	}
+	return len(s.list[p:])
+}
+
 func (s *stackedNodeList) Pop() []graph.NodeID {
 	p := 0
 	if len(s.stack) > 0 {

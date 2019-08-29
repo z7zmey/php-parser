@@ -272,7 +272,7 @@ start:
         top_statement_list
             {
                 children := yylex.(*Parser).List.Pop()
-                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeRoot,
                     },
@@ -344,7 +344,7 @@ top_statement_list:
 namespace_name:
         T_STRING
             {
-                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameNamePart,
                     },
@@ -362,7 +362,7 @@ namespace_name:
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
                 prevNodeID := yylex.(*Parser).List.Last()
-                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameNamePart,
                     },
@@ -382,7 +382,7 @@ name:
         namespace_name
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameName,
                     },
@@ -398,7 +398,7 @@ name:
     | T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameRelative,
                     },
@@ -415,7 +415,7 @@ name:
     | T_NS_SEPARATOR namespace_name
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameFullyQualified,
                     },
@@ -470,7 +470,7 @@ top_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtHaltCompiler,
                     },
@@ -491,7 +491,7 @@ top_statement:
                 children := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameName,
                     },
@@ -500,7 +500,7 @@ top_statement:
                 yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
                 // Create Namespace Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtNamespace,
                     },
@@ -522,7 +522,7 @@ top_statement:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameName,
                     },
@@ -531,7 +531,7 @@ top_statement:
                 yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create Namespace Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtNamespace,
                     },
@@ -551,7 +551,7 @@ top_statement:
     |   T_NAMESPACE '{' top_statement_list '}'
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtNamespace,
                     },
@@ -595,7 +595,7 @@ top_statement:
     |   T_USE use_declarations ';'
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtUseList,
                     },
@@ -613,7 +613,7 @@ top_statement:
     |   T_USE use_type use_declarations ';'
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtUseList,
                     },
@@ -632,7 +632,7 @@ top_statement:
     |   T_CONST const_list ';'
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtConstList,
                     },
@@ -652,7 +652,7 @@ top_statement:
 use_type:
         T_FUNCTION
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -666,7 +666,7 @@ use_type:
             }
     |   T_CONST
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -687,7 +687,7 @@ group_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameName,
                     },
@@ -696,7 +696,7 @@ group_use_declaration:
                 yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtGroupUse,
                     },
@@ -725,7 +725,7 @@ group_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameName,
                     },
@@ -734,7 +734,7 @@ group_use_declaration:
                 yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtGroupUse,
                     },
@@ -767,7 +767,7 @@ mixed_group_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameName,
                     },
@@ -776,7 +776,7 @@ mixed_group_use_declaration:
                 yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtGroupUse,
                     },
@@ -805,7 +805,7 @@ mixed_group_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameName,
                     },
@@ -814,7 +814,7 @@ mixed_group_use_declaration:
                 yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtGroupUse,
                     },
@@ -935,7 +935,7 @@ unprefixed_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameName,
                     },
@@ -944,7 +944,7 @@ unprefixed_use_declaration:
                 yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create Use Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtUse,
                     },
@@ -962,7 +962,7 @@ unprefixed_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNameName,
                     },
@@ -971,7 +971,7 @@ unprefixed_use_declaration:
                 yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // create Alias Node
-                aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                aliasNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -979,7 +979,7 @@ unprefixed_use_declaration:
                 yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
                 // Create Use Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtUse,
                     },
@@ -1113,7 +1113,7 @@ inner_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtHaltCompiler,
                     },
@@ -1135,7 +1135,7 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStmtList,
                     },
@@ -1178,7 +1178,7 @@ statement:
             }
     |   T_DO statement T_WHILE '(' expr ')' ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtDo,
                     },
@@ -1232,7 +1232,7 @@ statement:
             }
     |   T_BREAK optional_expr ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtBreak,
                     },
@@ -1250,7 +1250,7 @@ statement:
             }
     |   T_CONTINUE optional_expr ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtContinue,
                     },
@@ -1268,7 +1268,7 @@ statement:
             }
     |   T_RETURN optional_expr ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtReturn,
                     },
@@ -1288,7 +1288,7 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtGlobal,
                     },
@@ -1308,7 +1308,7 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStatic,
                     },
@@ -1328,7 +1328,7 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtEcho,
                     },
@@ -1347,7 +1347,7 @@ statement:
             }
     |   T_INLINE_HTML
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtInlineHtml,
                     },
@@ -1361,15 +1361,14 @@ statement:
             }
     |   expr ';'
             {
-                tmp := $1
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtExpression,
                     },
                 })
                 yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, tmp)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $1)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -1382,7 +1381,7 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtUnset,
                     },
@@ -1458,7 +1457,7 @@ statement:
             }
     |   ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtNop,
                     },
@@ -1483,7 +1482,7 @@ statement:
                     posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$6})
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTry,
                     },
@@ -1503,7 +1502,7 @@ statement:
             }
     |   T_THROW expr ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtThrow,
                     },
@@ -1521,14 +1520,14 @@ statement:
             }
     |   T_GOTO T_STRING ';'
             {
-                LableNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                LableNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtGoto,
                     },
@@ -1547,14 +1546,14 @@ statement:
             }
     |   T_STRING ':'
             {
-                LableNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                LableNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtLabel,
                     },
@@ -1579,21 +1578,21 @@ catch_list:
             }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$5}, nil))
                 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$5}, nil))
                 
-                catchNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                catchNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtCatch,
                     },
@@ -1647,7 +1646,7 @@ finally_statement:
             }
     |   T_FINALLY '{' inner_statement_list '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtFinally,
                     },
@@ -1697,7 +1696,7 @@ unset_variable:
 function_declaration_statement:
         T_FUNCTION returns_ref T_STRING backup_doc_comment '(' parameter_list ')' return_type '{' inner_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -1709,7 +1708,7 @@ function_declaration_statement:
                     flag = flag | ast.NodeFlagRef
                 }
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtFunction,
                         Flag: flag,
@@ -1766,14 +1765,14 @@ class_declaration_statement:
                 childrenStmts := yylex.(*Parser).List.Pop()
                 childrenModifiers := yylex.(*Parser).List.Pop()
 
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtClass,
                     },
@@ -1797,14 +1796,14 @@ class_declaration_statement:
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtClass,
                     },
@@ -1845,7 +1844,7 @@ class_modifiers:
 class_modifier:
         T_ABSTRACT
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -1859,7 +1858,7 @@ class_modifier:
             }
     |   T_FINAL
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -1876,14 +1875,14 @@ class_modifier:
 trait_declaration_statement:
         T_TRAIT T_STRING backup_doc_comment '{' class_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTrait,
                     },
@@ -1906,14 +1905,14 @@ trait_declaration_statement:
 interface_declaration_statement:
         T_INTERFACE T_STRING interface_extends_list backup_doc_comment '{' class_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtInterface,
                     },
@@ -1943,7 +1942,7 @@ extends_from:
             }
     |   T_EXTENDS name
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtClassExtends,
                     },
@@ -1970,7 +1969,7 @@ interface_extends_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtInterfaceExtends,
                     },
@@ -1997,7 +1996,7 @@ implements_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtClassImplements,
                     },
@@ -2022,7 +2021,7 @@ foreach_variable:
             }
     |   '&' variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprReference,
                     },
@@ -2038,7 +2037,7 @@ foreach_variable:
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprList,
                     },
@@ -2056,7 +2055,7 @@ foreach_variable:
             }
     |   '[' array_pair_list ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprShortList,
                     },
@@ -2076,7 +2075,7 @@ foreach_variable:
 for_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtFor,
                     },
@@ -2091,14 +2090,14 @@ for_statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStmtList,
                     },
                 })
                 yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtAltFor,
                         Flag: ast.NodeFlagAltSyntax,
@@ -2122,7 +2121,7 @@ for_statement:
 foreach_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtForeach,
                     },
@@ -2137,14 +2136,14 @@ foreach_statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStmtList,
                     },
                 })
                 yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtAltForeach,
                         Flag: ast.NodeFlagAltSyntax,
@@ -2168,7 +2167,7 @@ foreach_statement:
 declare_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtDeclare,
                     },
@@ -2183,14 +2182,14 @@ declare_statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStmtList,
                     },
                 })
                 yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtDeclare,
                         Flag: ast.NodeFlagAltSyntax,
@@ -2216,14 +2215,14 @@ switch_case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtCaseList,
                     },
                 })
                 yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtSwitch,
                     },
@@ -2243,14 +2242,14 @@ switch_case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtCaseList,
                     },
                 })
                 yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtSwitch,
                     },
@@ -2272,14 +2271,14 @@ switch_case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtCaseList,
                     },
                 })
                 yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtAltSwitch,
                         Flag: ast.NodeFlagAltSyntax,
@@ -2302,14 +2301,14 @@ switch_case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtCaseList,
                     },
                 })
                 yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtAltSwitch,
                         Flag: ast.NodeFlagAltSyntax,
@@ -2343,7 +2342,7 @@ case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                caseNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtCase,
                     },
@@ -2365,7 +2364,7 @@ case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                defaultNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                defaultNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtDefault,
                     },
@@ -2399,7 +2398,7 @@ case_separator:
 while_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtWhile,
                     },
@@ -2414,14 +2413,14 @@ while_statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStmtList,
                     },
                 })
                 yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtAltWhile,
                         Flag: ast.NodeFlagAltSyntax,
@@ -2445,7 +2444,7 @@ while_statement:
 if_stmt_without_else:
         T_IF '(' expr ')' statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtIf,
                     },
@@ -2464,7 +2463,7 @@ if_stmt_without_else:
             }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             {
-                elseIfNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                elseIfNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtElseIf,
                     },
@@ -2496,7 +2495,7 @@ if_stmt:
             }
     |   if_stmt_without_else T_ELSE statement
             {
-                elseNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                elseNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtElse,
                     },
@@ -2519,14 +2518,14 @@ alt_if_stmt_without_else:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStmtList,
                     },
                 })
                 yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtAltIf,
                         Flag: ast.NodeFlagAltSyntax,
@@ -2550,14 +2549,14 @@ alt_if_stmt_without_else:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStmtList,
                     },
                 })
                 yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                AltElseIfNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                AltElseIfNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtAltElseIf,
                     },
@@ -2598,14 +2597,14 @@ alt_if_stmt:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStmtList,
                     },
                 })
                 yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                AltElseNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                AltElseNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtAltElse,
                     },
@@ -2666,14 +2665,14 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -2699,7 +2698,7 @@ parameter:
                     flag = flag | ast.NodeFlagVariadic
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeParameter,
                         Flag: flag,
@@ -2755,14 +2754,14 @@ parameter:
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -2788,7 +2787,7 @@ parameter:
                     flag = flag | ast.NodeFlagVariadic
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeParameter,
                         Flag: flag,
@@ -2870,7 +2869,7 @@ type_expr:
             }
     |   '?' type
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeNullable,
                     },
@@ -2889,7 +2888,7 @@ type_expr:
 type:
         T_ARRAY
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -2903,7 +2902,7 @@ type:
             }
     |   T_CALLABLE
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -2932,7 +2931,7 @@ return_type:
             }
     |   ':' type_expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtReturnType,
                     },
@@ -2951,7 +2950,7 @@ return_type:
 argument_list:
         '(' ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeArgumentList,
                     },
@@ -2968,7 +2967,7 @@ argument_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeArgumentList,
                     },
@@ -3012,7 +3011,7 @@ non_empty_argument_list:
 argument:
         expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeArgument,
                     },
@@ -3028,7 +3027,7 @@ argument:
             }
     |   T_ELLIPSIS expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeArgument,
                         Flag: ast.NodeFlagVariadic,
@@ -3097,21 +3096,21 @@ static_var_list:
 static_var:
         T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStaticVar,
                     },
@@ -3128,21 +3127,21 @@ static_var:
             }
     |   T_VARIABLE '=' expr
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStaticVar,
                     },
@@ -3182,7 +3181,7 @@ class_statement:
                 childrenProperties := yylex.(*Parser).List.Pop()
                 childrenModifiers := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtPropertyList,
                     },
@@ -3204,7 +3203,7 @@ class_statement:
                 childrenConstants := yylex.(*Parser).List.Pop()
                 childrenModifiers := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtClassConstList,
                     },
@@ -3230,7 +3229,7 @@ class_statement:
             {
                 childrenTraits := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitUse,
                     },
@@ -3250,7 +3249,7 @@ class_statement:
                 childrenParams := yylex.(*Parser).List.Pop()
                 childrenModifiers := yylex.(*Parser).List.Pop()
 
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -3269,7 +3268,7 @@ class_statement:
                     flag = flag | ast.NodeFlagRef
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtClassMethod,
                         Flag: flag,
@@ -3326,7 +3325,7 @@ name_list:
 trait_adaptations:
         ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtNop,
                     },
@@ -3342,7 +3341,7 @@ trait_adaptations:
             }
     |   '{' '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitAdaptationList,
                     },
@@ -3359,7 +3358,7 @@ trait_adaptations:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitAdaptationList,
                     },
@@ -3420,7 +3419,7 @@ trait_precedence:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitUsePrecedence,
                     },
@@ -3441,14 +3440,14 @@ trait_precedence:
 trait_alias:
         trait_method_reference T_AS T_STRING
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitUseAlias,
                     },
@@ -3467,14 +3466,14 @@ trait_alias:
             }
     |   trait_method_reference T_AS reserved_non_modifiers
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitUseAlias,
                     },
@@ -3493,14 +3492,14 @@ trait_alias:
             }
     |   trait_method_reference T_AS member_modifier identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitUseAlias,
                     },
@@ -3520,7 +3519,7 @@ trait_alias:
             }
     |   trait_method_reference T_AS member_modifier
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitUseAlias,
                     },
@@ -3541,14 +3540,14 @@ trait_alias:
 trait_method_reference:
         identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitMethodRef,
                     },
@@ -3573,14 +3572,14 @@ trait_method_reference:
 absolute_trait_method_reference:
         name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtTraitMethodRef,
                     },
@@ -3602,7 +3601,7 @@ absolute_trait_method_reference:
 method_body:
         ';' /* abstract method */ 
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtNop,
                     },
@@ -3619,7 +3618,7 @@ method_body:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtStmtList,
                     },
@@ -3643,7 +3642,7 @@ variable_modifiers:
             }
     |   T_VAR
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -3692,7 +3691,7 @@ non_empty_member_modifiers:
 member_modifier:
         T_PUBLIC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -3706,7 +3705,7 @@ member_modifier:
             }
     |   T_PROTECTED
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -3720,7 +3719,7 @@ member_modifier:
             }
     |   T_PRIVATE
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -3734,7 +3733,7 @@ member_modifier:
             }
     |   T_STATIC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -3748,7 +3747,7 @@ member_modifier:
             }
     |   T_ABSTRACT
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -3762,7 +3761,7 @@ member_modifier:
             }
     |   T_FINAL
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -3799,21 +3798,21 @@ property_list:
 property:
         T_VARIABLE backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtProperty,
                     },
@@ -3830,21 +3829,21 @@ property:
             }
     |   T_VARIABLE '=' expr backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtProperty,
                     },
@@ -3886,14 +3885,14 @@ class_const_list:
 class_const_decl:
         identifier '=' expr backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtConstant,
                     },
@@ -3914,14 +3913,14 @@ class_const_decl:
 const_decl:
         T_STRING '=' expr backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtConstant,
                     },
@@ -4004,7 +4003,7 @@ non_empty_for_exprs:
 anonymous_class:
         T_CLASS ctor_arguments extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeStmtClass,
                     },
@@ -4033,7 +4032,7 @@ new_expr:
                     lastNodeID = $2
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprNew,
                     },
@@ -4050,7 +4049,7 @@ new_expr:
             }
     |   T_NEW anonymous_class
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprNew,
                     },
@@ -4069,14 +4068,14 @@ new_expr:
 expr_without_variable:
         T_LIST '(' array_pair_list ')' '=' expr
             {
-                listNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                listNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprList,
                     },
                 })
                 yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignAssign,
                     },
@@ -4097,14 +4096,14 @@ expr_without_variable:
             }
     |   '[' array_pair_list ']' '=' expr
             {
-                listNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                listNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprShortList,
                     },
                 })
                 yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignAssign,
                     },
@@ -4124,7 +4123,7 @@ expr_without_variable:
             }
     |   variable '=' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignAssign,
                     },
@@ -4142,7 +4141,7 @@ expr_without_variable:
             }
     |   variable '=' '&' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignReference,
                     },
@@ -4161,7 +4160,7 @@ expr_without_variable:
             }
     |   T_CLONE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprClone,
                     },
@@ -4177,7 +4176,7 @@ expr_without_variable:
             }
     |   variable T_PLUS_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignPlus,
                     },
@@ -4195,7 +4194,7 @@ expr_without_variable:
             }
     |   variable T_MINUS_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignMinus,
                     },
@@ -4213,7 +4212,7 @@ expr_without_variable:
             }
     |   variable T_MUL_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignMul,
                     },
@@ -4231,7 +4230,7 @@ expr_without_variable:
             }
     |   variable T_POW_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignPow,
                     },
@@ -4249,7 +4248,7 @@ expr_without_variable:
             }
     |   variable T_DIV_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignDiv,
                     },
@@ -4267,7 +4266,7 @@ expr_without_variable:
             }
     |   variable T_CONCAT_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignConcat,
                     },
@@ -4285,7 +4284,7 @@ expr_without_variable:
             }
     |   variable T_MOD_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignMod,
                     },
@@ -4303,7 +4302,7 @@ expr_without_variable:
             }
     |   variable T_AND_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignBitwiseAnd,
                     },
@@ -4321,7 +4320,7 @@ expr_without_variable:
             }
     |   variable T_OR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignBitwiseOr,
                     },
@@ -4339,7 +4338,7 @@ expr_without_variable:
             }
     |   variable T_XOR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignBitwiseXor,
                     },
@@ -4357,7 +4356,7 @@ expr_without_variable:
             }
     |   variable T_SL_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignShiftLeft,
                     },
@@ -4375,7 +4374,7 @@ expr_without_variable:
             }
     |   variable T_SR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeAssignShiftRight,
                     },
@@ -4393,7 +4392,7 @@ expr_without_variable:
             }
     |   variable T_INC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprPostInc,
                     },
@@ -4410,7 +4409,7 @@ expr_without_variable:
             }
     |   T_INC variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprPreInc,
                     },
@@ -4426,7 +4425,7 @@ expr_without_variable:
             }
     |   variable T_DEC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprPostDec,
                     },
@@ -4443,7 +4442,7 @@ expr_without_variable:
             }
     |   T_DEC variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprPreDec,
                     },
@@ -4459,7 +4458,7 @@ expr_without_variable:
             }
     |   expr T_BOOLEAN_OR expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryBooleanOr,
                     },
@@ -4477,7 +4476,7 @@ expr_without_variable:
             }
     |   expr T_BOOLEAN_AND expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryBooleanAnd,
                     },
@@ -4495,7 +4494,7 @@ expr_without_variable:
             }
     |   expr T_LOGICAL_OR expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryLogicalOr,
                     },
@@ -4513,7 +4512,7 @@ expr_without_variable:
             }
     |   expr T_LOGICAL_AND expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryLogicalAnd,
                     },
@@ -4531,7 +4530,7 @@ expr_without_variable:
             }
     |   expr T_LOGICAL_XOR expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryLogicalXor,
                     },
@@ -4549,7 +4548,7 @@ expr_without_variable:
             }
     |   expr '|' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryBitwiseOr,
                     },
@@ -4567,7 +4566,7 @@ expr_without_variable:
             }
     |   expr '&' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryBitwiseAnd,
                     },
@@ -4585,7 +4584,7 @@ expr_without_variable:
             }
     |   expr '^' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryBitwiseXor,
                     },
@@ -4603,7 +4602,7 @@ expr_without_variable:
             }
     |   expr '.' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryConcat,
                     },
@@ -4621,7 +4620,7 @@ expr_without_variable:
             }
     |   expr '+' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryPlus,
                     },
@@ -4639,7 +4638,7 @@ expr_without_variable:
             }
     |   expr '-' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryMinus,
                     },
@@ -4657,7 +4656,7 @@ expr_without_variable:
             }
     |   expr '*' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryMul,
                     },
@@ -4675,7 +4674,7 @@ expr_without_variable:
             }
     |   expr T_POW expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryPow,
                     },
@@ -4693,7 +4692,7 @@ expr_without_variable:
             }
     |   expr '/' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryDiv,
                     },
@@ -4711,7 +4710,7 @@ expr_without_variable:
             }
     |   expr '%' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryMod,
                     },
@@ -4729,7 +4728,7 @@ expr_without_variable:
             }
     |   expr T_SL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryShiftLeft,
                     },
@@ -4747,7 +4746,7 @@ expr_without_variable:
             }
     |   expr T_SR expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryShiftRight,
                     },
@@ -4765,7 +4764,7 @@ expr_without_variable:
             }
     |   '+' expr %prec T_INC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprUnaryPlus,
                     },
@@ -4781,7 +4780,7 @@ expr_without_variable:
             }
     |   '-' expr %prec T_INC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprUnaryMinus,
                     },
@@ -4797,7 +4796,7 @@ expr_without_variable:
             }
     |   '!' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprBooleanNot,
                     },
@@ -4813,7 +4812,7 @@ expr_without_variable:
             }
     |   '~' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprBitwiseNot,
                     },
@@ -4829,7 +4828,7 @@ expr_without_variable:
             }
     |   expr T_IS_IDENTICAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryIdentical,
                     },
@@ -4847,7 +4846,7 @@ expr_without_variable:
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryNotIdentical,
                     },
@@ -4865,7 +4864,7 @@ expr_without_variable:
             }
     |   expr T_IS_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryEqual,
                     },
@@ -4883,7 +4882,7 @@ expr_without_variable:
             }
     |   expr T_IS_NOT_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryNotEqual,
                     },
@@ -4902,7 +4901,7 @@ expr_without_variable:
             }
     |   expr '<' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinarySmaller,
                     },
@@ -4920,7 +4919,7 @@ expr_without_variable:
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinarySmallerOrEqual,
                     },
@@ -4938,7 +4937,7 @@ expr_without_variable:
             }
     |   expr '>' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryGreater,
                     },
@@ -4956,7 +4955,7 @@ expr_without_variable:
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryGreaterOrEqual,
                     },
@@ -4974,7 +4973,7 @@ expr_without_variable:
             }
     |   expr T_SPACESHIP expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinarySpaceship,
                     },
@@ -4992,7 +4991,7 @@ expr_without_variable:
             }
     |   expr T_INSTANCEOF class_name_reference
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprInstanceOf,
                     },
@@ -5028,7 +5027,7 @@ expr_without_variable:
             }
     |   expr '?' expr ':' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprTernary,
                     },
@@ -5048,7 +5047,7 @@ expr_without_variable:
             }
     |   expr '?' ':' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprTernary,
                     },
@@ -5067,7 +5066,7 @@ expr_without_variable:
             }
     |   expr T_COALESCE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeBinaryCoalesce,
                     },
@@ -5091,7 +5090,7 @@ expr_without_variable:
             }
     |   T_INT_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeCastInt,
                     },
@@ -5108,7 +5107,7 @@ expr_without_variable:
             }
     |   T_DOUBLE_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeCastDouble,
                     },
@@ -5125,7 +5124,7 @@ expr_without_variable:
             }
     |   T_STRING_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeCastString,
                     },
@@ -5142,7 +5141,7 @@ expr_without_variable:
             }
     |   T_ARRAY_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeCastArray,
                     },
@@ -5159,7 +5158,7 @@ expr_without_variable:
             }
     |   T_OBJECT_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeCastObject,
                     },
@@ -5176,7 +5175,7 @@ expr_without_variable:
             }
     |   T_BOOL_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeCastBool,
                     },
@@ -5193,7 +5192,7 @@ expr_without_variable:
             }
     |   T_UNSET_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeCastUnset,
                     },
@@ -5219,7 +5218,7 @@ expr_without_variable:
                 }
 
                 if $$ == 0 {
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                         SimpleNode: ast.SimpleNode{
                             Type: ast.NodeTypeExprExit,
                             Flag: flag,
@@ -5238,7 +5237,7 @@ expr_without_variable:
             }
     |   '@' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprErrorSuppress,
                     },
@@ -5260,7 +5259,7 @@ expr_without_variable:
             }
     |   '`' backticks_expr '`'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprShellExec,
                     },
@@ -5276,7 +5275,7 @@ expr_without_variable:
             }
     |   T_PRINT expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprPrint,
                     },
@@ -5292,7 +5291,7 @@ expr_without_variable:
             }
     |   T_YIELD
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprYield,
                     },
@@ -5306,7 +5305,7 @@ expr_without_variable:
             }
     |   T_YIELD expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprYield,
                     },
@@ -5322,7 +5321,7 @@ expr_without_variable:
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprYield,
                     },
@@ -5340,7 +5339,7 @@ expr_without_variable:
             }
     |   T_YIELD_FROM expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprYieldFrom,
                     },
@@ -5361,7 +5360,7 @@ expr_without_variable:
                     flag = flag | ast.NodeFlagRef
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprClosure,
                         Flag: flag,
@@ -5395,7 +5394,7 @@ expr_without_variable:
                     flag = flag | ast.NodeFlagRef
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprClosure,
                         Flag: flag,
@@ -5447,7 +5446,7 @@ lexical_vars:
             }
     |   T_USE '(' lexical_var_list ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprClosureUse,
                     },
@@ -5488,14 +5487,14 @@ lexical_var_list:
 lexical_var:
     T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -5511,21 +5510,21 @@ lexical_var:
             }
     |   '&' T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprReference,
                     },
@@ -5546,7 +5545,7 @@ lexical_var:
 function_call:
         name argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprFunctionCall,
                     },
@@ -5563,7 +5562,7 @@ function_call:
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprStaticCall,
                     },
@@ -5582,7 +5581,7 @@ function_call:
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprStaticCall,
                     },
@@ -5601,7 +5600,7 @@ function_call:
             }
     |   callable_expr argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprFunctionCall,
                     },
@@ -5621,7 +5620,7 @@ function_call:
 class_name:
         T_STATIC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -5665,7 +5664,7 @@ exit_expr:
             }
     |   '(' optional_expr ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprExit,
                     },
@@ -5694,7 +5693,7 @@ backticks_expr:
     |   T_ENCAPSED_AND_WHITESPACE
             {
                 yylex.(*Parser).List.Push()
-                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                nodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarEncapsedStringPart,
                     },
@@ -5728,7 +5727,7 @@ ctor_arguments:
 dereferencable_scalar:
     T_ARRAY '(' array_pair_list ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArray,
                     },
@@ -5746,7 +5745,7 @@ dereferencable_scalar:
             }
     |   '[' array_pair_list ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprShortArray,
                     },
@@ -5763,7 +5762,7 @@ dereferencable_scalar:
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarString,
                     },
@@ -5780,7 +5779,7 @@ dereferencable_scalar:
 scalar:
         T_LNUMBER
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarLnumber,
                     },
@@ -5794,7 +5793,7 @@ scalar:
             }
     |   T_DNUMBER
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarDnumber,
                     },
@@ -5808,7 +5807,7 @@ scalar:
             }
     |   T_LINE
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarMagicConstant,
                     },
@@ -5822,7 +5821,7 @@ scalar:
             }
     |   T_FILE
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarMagicConstant,
                     },
@@ -5836,7 +5835,7 @@ scalar:
             }
     |   T_DIR
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarMagicConstant,
                     },
@@ -5850,7 +5849,7 @@ scalar:
             }
     |   T_TRAIT_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarMagicConstant,
                     },
@@ -5864,7 +5863,7 @@ scalar:
             }
     |   T_METHOD_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarMagicConstant,
                     },
@@ -5878,7 +5877,7 @@ scalar:
             }
     |   T_FUNC_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarMagicConstant,
                     },
@@ -5892,7 +5891,7 @@ scalar:
             }
     |   T_NS_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarMagicConstant,
                     },
@@ -5906,7 +5905,7 @@ scalar:
             }
     |   T_CLASS_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarMagicConstant,
                     },
@@ -5920,14 +5919,14 @@ scalar:
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
-                stringPartNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                stringPartNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarEncapsedStringPart,
                     },
                 })
                 yylex.(*Parser).SavePosition(stringPartNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarHeredoc,
                     },
@@ -5943,7 +5942,7 @@ scalar:
             }
     |   T_START_HEREDOC T_END_HEREDOC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarHeredoc,
                     },
@@ -5957,7 +5956,7 @@ scalar:
             }
     |   '"' encaps_list '"'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarEncapsed,
                     },
@@ -5973,7 +5972,7 @@ scalar:
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarHeredoc,
                     },
@@ -6004,7 +6003,7 @@ scalar:
 constant:
         name
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprConstFetch,
                     },
@@ -6020,14 +6019,14 @@ constant:
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprClassConstFetch,
                     },
@@ -6046,14 +6045,14 @@ constant:
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprClassConstFetch,
                     },
@@ -6174,7 +6173,7 @@ callable_variable:
             }
     |   dereferencable '[' optional_expr ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayDimFetch,
                     },
@@ -6195,7 +6194,7 @@ callable_variable:
             }
     |   constant '[' optional_expr ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayDimFetch,
                     },
@@ -6216,7 +6215,7 @@ callable_variable:
             }
     |   dereferencable '{' expr '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayDimFetch,
                     },
@@ -6237,7 +6236,7 @@ callable_variable:
             }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprMethodCall,
                     },
@@ -6277,7 +6276,7 @@ variable:
             }
     |   dereferencable T_OBJECT_OPERATOR property_name
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprPropertyFetch,
                     },
@@ -6298,14 +6297,14 @@ variable:
 simple_variable:
         T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -6321,7 +6320,7 @@ simple_variable:
             }
     |   '$' '{' expr '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -6342,7 +6341,7 @@ simple_variable:
             }
     |   '$' simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -6361,7 +6360,7 @@ simple_variable:
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprStaticPropertyFetch,
                     },
@@ -6379,7 +6378,7 @@ static_member:
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprStaticPropertyFetch,
                     },
@@ -6406,7 +6405,7 @@ new_variable:
             }
     |   new_variable '[' optional_expr ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayDimFetch,
                     },
@@ -6427,7 +6426,7 @@ new_variable:
             }
     |   new_variable '{' expr '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayDimFetch,
                     },
@@ -6448,7 +6447,7 @@ new_variable:
             }
     |   new_variable T_OBJECT_OPERATOR property_name
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprPropertyFetch,
                     },
@@ -6466,7 +6465,7 @@ new_variable:
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprStaticPropertyFetch,
                     },
@@ -6484,7 +6483,7 @@ new_variable:
             }
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprStaticPropertyFetch,
                     },
@@ -6505,7 +6504,7 @@ new_variable:
 member_name:
         identifier
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -6540,7 +6539,7 @@ member_name:
 property_name:
         T_STRING
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
@@ -6582,7 +6581,7 @@ array_pair_list:
 possible_array_pair:
         /* empty */
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayItem,
                     },
@@ -6621,7 +6620,7 @@ non_empty_array_pair_list:
 array_pair:
         expr T_DOUBLE_ARROW expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayItem,
                     },
@@ -6639,7 +6638,7 @@ array_pair:
             }
     |   expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayItem,
                     },
@@ -6655,14 +6654,14 @@ array_pair:
             }
     |   expr T_DOUBLE_ARROW '&' variable
             {
-                refNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprReference,
                     },
                 })
                 yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$4}))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayItem,
                     },
@@ -6682,14 +6681,14 @@ array_pair:
             }
     |   '&' variable
             {
-                refNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprReference,
                     },
                 })
                 yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayItem,
                     },
@@ -6706,14 +6705,14 @@ array_pair:
             }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
-                listNodeID :=  yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                listNodeID :=  yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprList,
                     },
                 })
                 yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3, $6}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayItem,
                     },
@@ -6737,14 +6736,14 @@ array_pair:
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                listNodeID :=  yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                listNodeID :=  yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprList,
                     },
                 })
                 yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayItem,
                     },
@@ -6774,7 +6773,7 @@ encaps_list:
             }
     |   encaps_list T_ENCAPSED_AND_WHITESPACE
             {
-                encapsNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                encapsNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarEncapsedStringPart,
                     },
@@ -6799,7 +6798,7 @@ encaps_list:
             {
                 yylex.(*Parser).List.Push()
                 
-                encapsNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                encapsNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarEncapsedStringPart,
                     },
@@ -6819,14 +6818,14 @@ encaps_list:
 encaps_var:
         T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -6842,21 +6841,21 @@ encaps_var:
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayDimFetch,
                     },
@@ -6877,28 +6876,28 @@ encaps_var:
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
-                varNameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                propertyNameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                propertyNameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(propertyNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprPropertyFetch,
                     },
@@ -6917,7 +6916,7 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -6935,14 +6934,14 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -6960,21 +6959,21 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
                 })
                 yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprArrayDimFetch,
                     },
@@ -7012,7 +7011,7 @@ encaps_var:
 encaps_var_offset:
         T_STRING
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeScalarString,
                     },
@@ -7029,14 +7028,14 @@ encaps_var_offset:
                 // TODO: add option to handle 64 bit integer
                 tknValue := yylex.(*Parser).Ast.FileData[$1.StartPos:$1.EndPos]
                 if _, err := strconv.Atoi(string(tknValue)); err == nil {
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                         SimpleNode: ast.SimpleNode{
                             Type: ast.NodeTypeScalarLnumber,
                         },
                     })
                     yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 } else {
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                         SimpleNode: ast.SimpleNode{
                             Type: ast.NodeTypeScalarString,
                         },
@@ -7053,14 +7052,14 @@ encaps_var_offset:
             {
                 tknValue := yylex.(*Parser).Ast.FileData[$2.StartPos:$2.EndPos]
                 if _, err := strconv.Atoi(string(tknValue)); err == nil {
-                    lnumberNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    lnumberNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                         SimpleNode: ast.SimpleNode{
                             Type: ast.NodeTypeScalarLnumber,
                         },
                     })
                     yylex.(*Parser).SavePosition(lnumberNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                     
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                         SimpleNode: ast.SimpleNode{
                             Type: ast.NodeTypeExprUnaryMinus,
                         },
@@ -7069,7 +7068,7 @@ encaps_var_offset:
 
                     yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, lnumberNodeID)
                 } else {
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                         SimpleNode: ast.SimpleNode{
                             Type: ast.NodeTypeScalarString,
                         },
@@ -7084,14 +7083,14 @@ encaps_var_offset:
             }
     |   T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeIdentifier,
                     },
                 })
                 yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprVariable,
                     },
@@ -7110,7 +7109,7 @@ encaps_var_offset:
 internal_functions_in_yacc:
         T_ISSET '(' isset_variables possible_comma ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprIsset,
                     },
@@ -7132,7 +7131,7 @@ internal_functions_in_yacc:
             }
     |   T_EMPTY '(' expr ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprEmpty,
                     },
@@ -7150,7 +7149,7 @@ internal_functions_in_yacc:
             }
     |   T_INCLUDE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprInclude,
                     },
@@ -7166,7 +7165,7 @@ internal_functions_in_yacc:
             }
     |   T_INCLUDE_ONCE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprIncludeOnce,
                     },
@@ -7182,7 +7181,7 @@ internal_functions_in_yacc:
             }
     |   T_EVAL '(' expr ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprEval,
                     },
@@ -7200,7 +7199,7 @@ internal_functions_in_yacc:
             }
     |   T_REQUIRE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprRequire,
                     },
@@ -7216,7 +7215,7 @@ internal_functions_in_yacc:
             }
     |   T_REQUIRE_ONCE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
                     SimpleNode: ast.SimpleNode{
                         Type: ast.NodeTypeExprRequireOnce,
                     },

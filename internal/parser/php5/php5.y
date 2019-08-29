@@ -21,8 +21,8 @@ import (
 
 %union{
     node                    node.Node
-    token                   *scanner.Token
-    list                    []node.Node
+    token                   *scanner.token
+
     simpleIndirectReference simpleIndirectReference
 
     ClassExtends            *stmt.ClassExtends
@@ -252,24 +252,12 @@ import (
 %type <node> method_body
 %type <node> foreach_statement for_statement while_statement
 %type <node> foreach_variable foreach_optional_arg
+%type <node> namespace_name
 
 %type <ClassExtends> extends_from
 %type <ClassImplements> implements_list
 %type <InterfaceExtends> interface_extends_list
 %type <ClosureUse> lexical_vars
-
-%type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
-%type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
-%type <list> array_pair_list assignment_list lexical_var_list elseif_list new_elseif_list non_empty_for_expr
-%type <list> for_expr case_list echo_expr_list unset_variables declare_list catch_statement additional_catches
-%type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
-%type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration
-%type <list> interface_list non_empty_function_call_parameter_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
-%type <list> trait_reference_list non_empty_member_modifiers backticks_expr static_array_pair_list non_empty_static_array_pair_list
-
-%type <list> chaining_dereference chaining_instance_call chaining_method_or_property instance_call variable_property
-%type <list> method_or_not array_method_dereference object_property object_dim_list dynamic_class_name_variable_property
-%type <list> dynamic_class_name_variable_properties variable_properties
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <token> is_reference is_variadic
@@ -279,10 +267,19 @@ import (
 start:
         top_statement_list
             {
-                yylex.(*Parser).rootNode = node.NewRoot($1)
-                yylex.(*Parser).rootNode.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                children := yylex.(*Parser).List.Pop()
+                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeRoot,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                yylex.(*Parser).Children(0, nodeID, ast.NodeGroupStmts, children...)
 
-                yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
+                yylex.(*Parser).Ast.RootNode = nodeID
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(nodeID, ast.TokenGroupEnd, yylex.(*Parser).CurrentToken.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -291,20 +288,21 @@ start:
 top_statement_list:
         top_statement_list top_statement
             {
-                if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
-                    prevNode := lastNode($1)
-                    yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
+                if $2 != 0 {
+                    yylex.(*Parser).List.Add($2)
                 }
 
-                if $2 != nil {
-                    $$ = append($1, $2)
-                }
+                // TODO
+                // if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+                //     prevNode := lastNode($1)
+                //     yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
+                // }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
-                $$ = []node.Node{}
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -313,28 +311,35 @@ top_statement_list:
 namespace_name:
         T_STRING
             {
-                namePart := name.NewNamePart($1.Value)
-                $$ = []node.Node{namePart}
+                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameNamePart,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(nodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(nodeID, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
-                namePart := name.NewNamePart($3.Value)
-                $$ = append($1, namePart)
+                prevNodeID := yylex.(*Parser).List.Last()
+                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameNamePart,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                yylex.(*Parser).List.Add(nodeID)
 
-                // save position
-                namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, $3.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(nodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -368,113 +373,175 @@ top_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = stmt.NewHaltCompiler()
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtHaltCompiler,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.HaltCompiller, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.OpenParenthesisToken, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.CloseParenthesisToken, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupHaltCompiller, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupOpenParenthesisToken, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE namespace_name ';'
             {
-                name := name.NewName($2)
-                $$ = stmt.NewNamespace(name, nil)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                // Create Name Node
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
-                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                // Create Namespace Node
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtNamespace,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupNamespaceName, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(children[0], nameNodeID)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
             {
-                name := name.NewName($2)
-                $$ = stmt.NewNamespace(name, $4)
+                childrenStmts := yylex.(*Parser).List.Pop()
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
+                // Create Name Node
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
-                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $5.FreeFloating)
+                // Create Namespace Node
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtNamespace,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupNamespaceName, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, childrenStmts...)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $5.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE '{' top_statement_list '}'
             {
-                $$ = stmt.NewNamespace(nil, $3)
+                children := yylex.(*Parser).List.Pop()
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtNamespace,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, children...)
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupNamespace, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE use_declarations ';'
             {
-                $$ = stmt.NewUseList(nil, $2)
+                children := yylex.(*Parser).List.Pop()
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUseList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupUses, children...)
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUseDeclarationList, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE T_FUNCTION use_function_declarations ';'
             {
-                useType := node.NewIdentifier($2.Value)
-                $$ = stmt.NewUseList(useType, $3)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                useType.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                // use type
+                useTypenodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(useTypeNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(useType, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
+                // use list
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUseList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUseType, useTypeNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupUses, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUseDeclarationList, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE T_CONST use_const_declarations ';'
             {
-                useType := node.NewIdentifier($2.Value)
-                $$ = stmt.NewUseList(useType, $3)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                useType.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                // use type
+                useTypenodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(useTypeNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(useType, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
+                // use list
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUseList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUseType, useTypeNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupUses, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUseDeclarationList, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -483,11 +550,11 @@ top_statement:
                 $$ = $1
 
                 // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -496,16 +563,18 @@ top_statement:
 use_declarations:
         use_declarations ',' use_declaration
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   use_declaration
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -514,69 +583,141 @@ use_declarations:
 use_declaration:
         namespace_name
             {
-                name := name.NewName($1)
-                $$ = stmt.NewUse(nil, name, nil)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                // Create Name Node
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                // Create Use Node
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_AS T_STRING
             {
-                name := name.NewName($1)
-                alias := node.NewIdentifier($3.Value)
-                $$ = stmt.NewUse(nil, name, alias)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
+                // Create Name Node
+                
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating(name, freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $3.FreeFloating)
+                // create Alias Node
+                
+                aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+
+                // Create Use Node
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$3}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, aliasNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                name := name.NewName($2)
-                $$ = stmt.NewUse(nil, name, nil)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                // Create Name Node
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                // Create Use Node
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, []scanner.Token{*$1})
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name T_AS T_STRING
             {
-                name := name.NewName($2)
-                alias := node.NewIdentifier($4.Value)
-                $$ = stmt.NewUse(nil, name, alias)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
+                // Create Name Node
+                
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
-                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $4.FreeFloating)
+                // create Alias Node
+                
+                aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+
+                // Create Use Node
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$4}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, aliasNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, []scanner.Token{*$1})
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -585,16 +726,18 @@ use_declaration:
 use_function_declarations:
         use_function_declarations ',' use_function_declaration
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   use_function_declaration
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -603,69 +746,141 @@ use_function_declarations:
 use_function_declaration:
         namespace_name
             {
-                name := name.NewName($1)
-                $$ = stmt.NewUse(nil, name, nil)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                // Create Name Node
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                // Create Use Node
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_AS T_STRING
             {
-                name := name.NewName($1)
-                alias := node.NewIdentifier($3.Value)
-                $$ = stmt.NewUse(nil, name, alias)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
+                // Create Name Node
+                
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating(name, freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $3.FreeFloating)
+                // create Alias Node
+                
+                aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+
+                // Create Use Node
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$3}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, aliasNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                name := name.NewName($2)
-                $$ = stmt.NewUse(nil, name, nil)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                // Create Name Node
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                // Create Use Node
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, []scanner.Token{*$1})
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name T_AS T_STRING
             {
-                name := name.NewName($2)
-                alias := node.NewIdentifier($4.Value)
-                $$ = stmt.NewUse(nil, name, alias)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
+                // Create Name Node
+                
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
-                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $4.FreeFloating)
+                // create Alias Node
+                
+                aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+
+                // Create Use Node
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$4}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, aliasNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, []scanner.Token{*$1})
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -674,16 +889,18 @@ use_function_declaration:
 use_const_declarations:
         use_const_declarations ',' use_const_declaration
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   use_const_declaration
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -692,69 +909,141 @@ use_const_declarations:
 use_const_declaration:
         namespace_name
             {
-                name := name.NewName($1)
-                $$ = stmt.NewUse(nil, name, nil)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                // Create Name Node
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                // Create Use Node
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_AS T_STRING
             {
-                name := name.NewName($1)
-                alias := node.NewIdentifier($3.Value)
-                $$ = stmt.NewUse(nil, name, alias)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
+                // Create Name Node
+                
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating(name, freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $3.FreeFloating)
+                // create Alias Node
+                
+                aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+
+                // Create Use Node
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$3}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, aliasNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                name := name.NewName($2)
-                $$ = stmt.NewUse(nil, name, nil)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                // Create Name Node
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                // Create Use Node
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, []scanner.Token{*$1})
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name T_AS T_STRING
             {
-                name := name.NewName($2)
-                alias := node.NewIdentifier($4.Value)
-                $$ = stmt.NewUse(nil, name, alias)
+                childrenNameParts := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
+                // Create Name Node
+                
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
-                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $4.FreeFloating)
+                // create Alias Node
+                
+                aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+
+                // Create Use Node
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$4}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, aliasNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, []scanner.Token{*$1})
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -763,41 +1052,66 @@ use_const_declaration:
 constant_declaration:
         constant_declaration ',' T_STRING '=' static_scalar
             {
-                name := node.NewIdentifier($3.Value)
-                constant := stmt.NewConstant(name, $5, "")
-                constList := $1.(*stmt.ConstList)
-                lastConst := lastNode(constList.Consts)
-                constList.Consts = append(constList.Consts, constant)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                
+                constantnodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition(constantNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$5}))
+
+                prevNodeID := yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupConstantName, identifierNodeID)
+                yylex.(*Parser).Children(prevNodeID, constantNodeID, ast.NodeGroupExpr, $5)
+
                 $$ = $1
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, constList.Consts))
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $5}, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConsts, constantNodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastConst, freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupName, $4.HiddenTokens)
+                // yylex.(*Parser).AppendTokens($1, ast.TokenGroupEnd, $2.HiddenTokens) // TODO: attach to $1 last const
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CONST T_STRING '=' static_scalar
             {
-                name := node.NewIdentifier($2.Value)
-                constant := stmt.NewConstant(name, $4, "")
-                constList := []node.Node{constant}
-                $$ = stmt.NewConstList(constList)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                
+                constantnodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition(constantNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$4}))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, constList))
+                prevNodeID := yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupConstantName, identifierNodeID)
+                yylex.(*Parser).Children(prevNodeID, constantNodeID, ast.NodeGroupExpr, $4)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $3.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtConstList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$4}))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConsts, constantNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupName, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -806,20 +1120,21 @@ constant_declaration:
 inner_statement_list:
         inner_statement_list inner_statement
             {
-                if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
-                    prevNode := lastNode($1)
-                    yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
-                }
+                // TODO
+                // if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+                //     prevNode := lastNode($1)
+                //     yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
+                // }
 
-                if $2 != nil {
-                    $$ = append($1, $2)
+                if $2 != 0 {
+                    yylex.(*Parser).List.Add($2)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
-                $$ = []node.Node{} 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -854,17 +1169,19 @@ inner_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = stmt.NewHaltCompiler()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtHaltCompiler,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.HaltCompiller, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.OpenParenthesisToken, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.CloseParenthesisToken, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupHaltCompiller, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupOpenParenthesisToken, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -880,16 +1197,25 @@ statement:
             }
     |   T_STRING ':'
             {
-                label := node.NewIdentifier($1.Value)
-                $$ = stmt.NewLabel(label)
+                LableNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                label.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtLabel,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Label, $2.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupLabelName, LableNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupLabel, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -898,516 +1224,549 @@ statement:
 unticked_statement:
         '{' inner_statement_list '}'
             {
-                $$ = stmt.NewStmtList($2)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStmtList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, children...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_IF parenthesis_expr statement elseif_list else_single
             {
-                $$ = stmt.NewIf($2, $3, $4, $5)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                if $5 != nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
-                } else if len($4) > 0 {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $4))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtIf,
+                    },
+                })
+
+                if $5 != 0 {
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
+                } else if len(children) > 0 {
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
                 } else {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
                 }
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.If, (*$2.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.OpenParenthesisToken)
-                }
-                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.CloseParenthesisToken)
-                }
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $2)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmt, $3)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupElseIf, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                // TODO handle parenthesis_expr tokens
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_IF parenthesis_expr ':' inner_statement_list new_elseif_list new_else_single T_ENDIF ';'
             {
-                stmts := stmt.NewStmtList($4)
-                $$ = stmt.NewAltIf($2, stmts, $5, $6)
+                childrenElseIf := yylex.(*Parser).List.Pop()
+                childrenStmt := yylex.(*Parser).List.Pop()
 
-                // save position
-                stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStmtList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(childrenStmt, nil, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.If, (*$2.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.OpenParenthesisToken)
-                }
-                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.CloseParenthesisToken)
-                }
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $7.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $8.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($8))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtAltIf,
+                        Flag: ast.NodeFlagAltSyntax,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $8}, nil))
+
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, childrenStmt...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmt, stmtListNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupElseIf, childrenElseIf...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $3.HiddenTokens)
+                // TODO handle parenthesis_expr tokens
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_WHILE parenthesis_expr while_statement
             {
-                switch n := $3.(type) {
-                case *stmt.While :
-                    n.Cond = $2
-                case *stmt.AltWhile :
-                    n.Cond = $2
-                }
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtWhile,
+                    },
+                })
 
-                $$ = $3
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $3)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.While, (*$2.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.OpenParenthesisToken)
-                }
-                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.CloseParenthesisToken)
-                }
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                // TODO handle parenthesis_expr tokens
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DO statement T_WHILE parenthesis_expr ';'
             {
-                $$ = stmt.NewDo($2, $4)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtDo,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
+                
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $2)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCond, $4)
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
-                if len((*$4.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.While, (*$4.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$4.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$4.GetFreeFloating()), freefloating.OpenParenthesisToken)
-                }
-                if len((*$4.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$4.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$4.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$4.GetFreeFloating()), freefloating.CloseParenthesisToken)
-                }
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $5.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($5))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $5.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$5})
+                // TODO handle parenthesis_expr tokens
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FOR '(' for_expr ';' for_expr ';' for_expr ')' for_statement
             {
-                switch n := $9.(type) {
-                case *stmt.For :
-                    n.Init = $3
-                    n.Cond = $5
-                    n.Loop = $7
-                case *stmt.AltFor :
-                    n.Init = $3
-                    n.Cond = $5
-                    n.Loop = $7
-                }
+                prevNodeID := yylex.(*Parser).Children(0, $9, ast.NodeGroupLoop, yylex.(*Parser).List.Pop()...)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $9, ast.NodeGroupCond, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(prevNodeID, $9, ast.NodeGroupInit, yylex.(*Parser).List.Pop()...)
 
                 $$ = $9
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$9}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.For, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.InitExpr, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.CondExpr, $6.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.IncExpr, $8.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupFor, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupInitExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCondExpr, $6.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupIncExpr, $8.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_SWITCH parenthesis_expr switch_case_list
             {
-                switch n := $3.(type) {
-                case *stmt.Switch:
-                    n.Cond = $2
-                case *stmt.AltSwitch:
-                    n.Cond = $2
-                default:
-                    panic("unexpected node type")
-                }
-
                 $$ = $3
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $2)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Switch, (*$2.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.OpenParenthesisToken)
-                }
-                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.CloseParenthesisToken)
-                }
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                // TODO handle parenthesis_expr tokens
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_BREAK ';'
             {
-                $$ = stmt.NewBreak(nil)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtBreak,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_BREAK expr ';'
             {
-                $$ = stmt.NewBreak($2)
-
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtBreak,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CONTINUE ';'
             {
-                $$ = stmt.NewContinue(nil)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtContinue,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CONTINUE expr ';'
             {
-                $$ = stmt.NewContinue($2)
-
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtContinue,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_RETURN ';'
             {
-                $$ = stmt.NewReturn(nil)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtReturn,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_RETURN expr_without_variable ';'
             {
-                $$ = stmt.NewReturn($2)
-
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtReturn,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_RETURN variable ';'
             {
-                $$ = stmt.NewReturn($2)
-
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtReturn,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   yield_expr ';'
             {
-                $$ = stmt.NewExpression($1)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtExpression,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $1)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_GLOBAL global_var_list ';'
             {
-                $$ = stmt.NewGlobal($2)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtGlobal,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVars, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STATIC static_var_list ';'
             {
-                $$ = stmt.NewStatic($2)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStatic,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVars, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ECHO echo_expr_list ';'
             {
-                $$ = stmt.NewEcho($2)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtEcho,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Echo, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExprs, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEcho, []scanner.Token{*$1})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_INLINE_HTML
             {
-                $$ = stmt.NewInlineHtml($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtInlineHtml,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr ';'
             {
-                $$ = stmt.NewExpression($1)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtExpression,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $1)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_UNSET '(' unset_variables ')' ';'
             {
-                $$ = stmt.NewUnset($3)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtUnset,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Unset, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.CloseParenthesisToken, $5.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($5))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVars, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUnset, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $5.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$5})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
-                if $6 == nil {
-                    switch n := $8.(type) {
-                    case *stmt.Foreach :
-                        n.Expr = $3
-                        n.Variable = $5
-                    case *stmt.AltForeach :
-                        n.Expr = $3
-                        n.Variable = $5
-                    }
+                yylex.(*Parser).Children(0, $8, ast.NodeGroupExpr, $3)
+                if $6 == 0 {
+                    yylex.(*Parser).Children(0, $8, ast.NodeGroupVar, $5)
                 } else {
-                    switch n := $8.(type) {
-                    case *stmt.Foreach :
-                        n.Expr = $3
-                        n.Key = $5
-                        n.Variable = $6
-                    case *stmt.AltForeach :
-                        n.Expr = $3
-                        n.Key = $5
-                        n.Variable = $6
-                    }
+                    yylex.(*Parser).Children(0, $8, ast.NodeGroupKey, $5)
+                    yylex.(*Parser).Children(0, $8, ast.NodeGroupVar, $6)
                 }
-                
-                $$ = $8
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Foreach, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
-                if $6 != nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Key, (*$6.GetFreeFloating())[freefloating.Key]); delete((*$6.GetFreeFloating()), freefloating.Key)
-                }
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $7.FreeFloating)
+                $$ = $8
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$8}))
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupForeach, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $7.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
-                if $6 == nil {
-                    switch n := $8.(type) {
-                    case *stmt.Foreach :
-                        n.Expr = $3
-                        n.Variable = $5
-                    case *stmt.AltForeach :
-                        n.Expr = $3
-                        n.Variable = $5
-                    }
+                yylex.(*Parser).Children(0, $8, ast.NodeGroupExpr, $3)
+                if $6 == 0 {
+                    yylex.(*Parser).Children(0, $8, ast.NodeGroupVar, $5)
                 } else {
-                    switch n := $8.(type) {
-                    case *stmt.Foreach :
-                        n.Expr = $3
-                        n.Key = $5
-                        n.Variable = $6
-                    case *stmt.AltForeach :
-                        n.Expr = $3
-                        n.Key = $5
-                        n.Variable = $6
-                    }
+                    yylex.(*Parser).Children(0, $8, ast.NodeGroupKey, $5)
+                    yylex.(*Parser).Children(0, $8, ast.NodeGroupVar, $6)
                 }
-                
-                // save position
+
                 $$ = $8
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$8}))
 
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Foreach, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
-                if $6 != nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Key, (*$6.GetFreeFloating())[freefloating.Key]); delete((*$6.GetFreeFloating()), freefloating.Key)
-                }
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $7.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupForeach, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $7.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DECLARE '(' declare_list ')' declare_statement
             {
+                children := yylex.(*Parser).List.Pop()
+                yylex.(*Parser).Children(0, $5, ast.NodeGroupConsts, children...)
+
                 $$ = $5
-                $$.(*stmt.Declare).Consts = $3
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Declare, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ConstList, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupDeclare, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupConstList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ';'
             {
-                $$ = stmt.NewNop()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtNop,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement
             {
-                $$ = stmt.NewTry($3, $5, $6)
+                childrenCatches := yylex.(*Parser).List.Pop()
+                childrenStmts := yylex.(*Parser).List.Pop()
 
-                // save position
-                if $6 == nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $5))
+                var posID graph.PositionID
+                if $6 == 0 {
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, childrenCatches)
                 } else {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$6})
                 }
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Try, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $4.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtTry,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, posID)
+
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupConsts, $6)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCatches, childrenCatches...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, childrenStmts...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupTry, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_THROW expr ';'
             {
-                $$ = stmt.NewThrow($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtThrow,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_GOTO T_STRING ';'
             {
-                label := node.NewIdentifier($2.Value)
-                $$ = stmt.NewGoto(label)
+                LableNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                // save position
-                label.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtGoto,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(label, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Label, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupLabel, LableNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(LableNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupLabel, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1416,30 +1775,52 @@ unticked_statement:
 catch_statement:
         /* empty */
             {
-                $$ = []node.Node{} 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}' additional_catches
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($4.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                catchNode := stmt.NewCatch([]node.Node{$3}, variable, $7)
-                $$ = append([]node.Node{catchNode}, $9...)
+                additionalCatches := yylex.(*Parser).List.Pop()
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                catchNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                
+                catchNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtCatch,
+                    },
+                })
+                yylex.(*Parser).SavePosition(catchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $8}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Catch, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $4.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
-                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Var, $5.FreeFloating)
-                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Cond, $6.FreeFloating)
-                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Stmts, $8.FreeFloating)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, catchNodeID, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(0, catchNodeID, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, catchNodeID, ast.NodeGroupTypes, $3)
+
+                yylex.(*Parser).List.Add(catchNodeID)
+                for _, v := range(additionalCatches) {
+                    yylex.(*Parser).List.Add(v)
+                }
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupCatch, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupVar, $5.HiddenTokens)
+                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupCond, $6.HiddenTokens)
+                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupStmts, $8.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1448,21 +1829,25 @@ catch_statement:
 finally_statement:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FINALLY '{' inner_statement_list '}'
             {
-                $$ = stmt.NewFinally($3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtFinally,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Finally, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupFinally, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1471,13 +1856,11 @@ finally_statement:
 additional_catches:
         non_empty_additional_catches
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
-                $$ = []node.Node{} 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1486,13 +1869,14 @@ additional_catches:
 non_empty_additional_catches:
         additional_catch
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_additional_catches additional_catch
             {
-                $$ = append($1, $2) 
+                yylex.(*Parser).List.Add($2)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1501,23 +1885,39 @@ non_empty_additional_catches:
 additional_catch:
         T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}'
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($4.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                $$ = stmt.NewCatch([]node.Node{$3}, variable, $7)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtCatch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $8}, nil))
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupTypes, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Catch, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $4.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $5.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $6.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $8.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCatch, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $5.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $6.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $8.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1526,16 +1926,18 @@ additional_catch:
 unset_variables:
         unset_variable
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   unset_variables ',' unset_variable
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1571,7 +1973,7 @@ class_declaration_statement:
 is_reference:
         /* empty */
             {
-                $$ = nil
+                $$ = 0
             }
     |   '&'
             {
@@ -1582,7 +1984,7 @@ is_reference:
 is_variadic:
         /* empty */
             {
-                $$ = nil
+                $$ = 0
             }
     |   T_ELLIPSIS
             {
@@ -1593,25 +1995,41 @@ is_variadic:
 unticked_function_declaration_statement:
         function is_reference T_STRING '(' parameter_list ')' '{' inner_statement_list '}'
             {
-                name := node.NewIdentifier($3.Value)
-                $$ = stmt.NewFunction(name, $2 != nil, $5, nil, $8, "")
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                var flag ast.NodeFlag
                 if $2 != nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $2.FreeFloating)
-                    yylex.(*Parser).setFreeFloating(name, freefloating.Start, $3.FreeFloating)
-                } else {
-                    yylex.(*Parser).setFreeFloating(name, freefloating.Start, $3.FreeFloating)
+                    flag = flag | ast.NodeFlagRef
                 }
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ParamList, $6.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Params, $7.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $9.FreeFloating)
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtFunction,
+                        Flag: flag,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $9}, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupFunctionName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
+
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                if $2 != nil {
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $2.HiddenTokens)
+                } 
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupParamList, $6.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupParams, $7.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $9.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1620,46 +2038,56 @@ unticked_function_declaration_statement:
 unticked_class_declaration_statement:
         class_entry_type T_STRING extends_from implements_list '{' class_statement_list '}'
             {
-                name := node.NewIdentifier($2.Value)
-                switch n := $1.(type) {
-                    case *stmt.Class :
-                        n.ClassName = name
-                        n.Stmts = $6
-                        n.Extends = $3
-                        n.Implements = $4
+                children := yylex.(*Parser).List.Pop()
 
-                    case *stmt.Trait :
-                        // TODO: is it possible that trait extend or implement
-                        n.TraitName = name
-                        n.Stmts = $6
-                }
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+
                 $$ = $1
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $7))
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$7}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(name, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $5.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $7.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupClassName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExtends, $3)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupImplements, $4)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $5.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   interface_entry T_STRING interface_extends_list '{' class_statement_list '}'
             {
-                name := node.NewIdentifier($2.Value)
-                $$ = stmt.NewInterface(name, $3, $5, "")
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtInterface,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExtends, $3)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupInterfaceName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(name, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $6.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1669,55 +2097,77 @@ unticked_class_declaration_statement:
 class_entry_type:
         T_CLASS
             {
-                $$ = stmt.NewClass(nil, nil, nil, nil, nil, nil, "")
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtClass,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ABSTRACT T_CLASS
             {
-                classModifier := node.NewIdentifier($1.Value)
-                $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
+                modifiernodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(modifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtClass,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$1, $2}, nil))
 
-                // save position
-                classModifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupModifiers, modifierNodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ModifierList, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupModifierList, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_TRAIT
             {
-                $$ = stmt.NewTrait(nil, nil, "")
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtTrait,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FINAL T_CLASS
             {
-                classModifier := node.NewIdentifier($1.Value)
-                $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
+                modifiernodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(modifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtClass,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$1, $2}, nil))
 
-                // save position
-                classModifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupModifiers, modifierNodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ModifierList, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupModifierList, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1726,19 +2176,23 @@ class_entry_type:
 extends_from:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EXTENDS fully_qualified_class_name
             {
-                $$ = stmt.NewClassExtends($2);
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtClassExtends,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupClassName, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1754,19 +2208,25 @@ interface_entry:
 interface_extends_list:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EXTENDS interface_list
             {
-                $$ = stmt.NewInterfaceExtends($2);
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtInterfaceExtends,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupInterfaceNames, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1775,19 +2235,25 @@ interface_extends_list:
 implements_list:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_IMPLEMENTS interface_list
             {
-                $$ = stmt.NewClassImplements($2);
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtClassImplements,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupInterfaceNames, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1796,16 +2262,18 @@ implements_list:
 interface_list:
         fully_qualified_class_name
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   interface_list ',' fully_qualified_class_name
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1814,7 +2282,7 @@ interface_list:
 foreach_optional_arg:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1822,8 +2290,8 @@ foreach_optional_arg:
             {
                 $$ = $2
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Key, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupKey, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1838,27 +2306,35 @@ foreach_variable:
             }
     |   '&' variable
             {
-                $$ = expr.NewReference($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprReference,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_LIST '(' assignment_list ')'
             {
-                $$ = expr.NewList($3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.List, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupList, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArrayPairList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1867,27 +2343,44 @@ foreach_variable:
 for_statement:
         statement
             {
-                $$ = stmt.NewFor(nil, nil, nil, $1)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtFor,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDFOR ';'
             {
-                stmtList := stmt.NewStmtList($2)
-                $$ = stmt.NewAltFor(nil, nil, nil, stmtList)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStmtList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtAltFor,
+                        Flag: ast.NodeFlagAltSyntax,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, stmtListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1896,27 +2389,44 @@ for_statement:
 foreach_statement:
         statement
             {
-                $$ = stmt.NewForeach(nil, nil, nil, $1)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtForeach,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
-                stmtList := stmt.NewStmtList($2)
-                $$ = stmt.NewAltForeach(nil, nil, nil, stmtList)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStmtList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtAltForeach,
+                        Flag: ast.NodeFlagAltSyntax,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, stmtListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1926,27 +2436,44 @@ foreach_statement:
 declare_statement:
         statement
             {
-                $$ = stmt.NewDeclare(nil, $1, false)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtDeclare,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
-                stmtList := stmt.NewStmtList($2)
-                $$ = stmt.NewDeclare(nil, stmtList, true)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStmtList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtDeclare,
+                        Flag: ast.NodeFlagAltSyntax,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, stmtListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1956,34 +2483,59 @@ declare_statement:
 declare_list:
         T_STRING '=' static_scalar
             {
-                name := node.NewIdentifier($1.Value)
-                constant := stmt.NewConstant(name, $3, "")
-                $$ = []node.Node{constant}
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                
+                constnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition(constNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(constNodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $2.FreeFloating)
+                yylex.(*Parser).Children(0, constNodeID, ast.NodeGroupConstantName, identifierNodeID)
+                yylex.(*Parser).Children(0, constNodeID, ast.NodeGroupExpr, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(constNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(constNodeID, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   declare_list ',' T_STRING '=' static_scalar
             {
-                name := node.NewIdentifier($3.Value)
-                constant := stmt.NewConstant(name, $5, "")
-                $$ = append($1, constant)
+                prevNodeID := yylex.(*Parser).List.Last()
+                
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                
+                constnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition(constNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$5}))
+                
+                yylex.(*Parser).List.Add(constNodeID)
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
+                yylex.(*Parser).Children(0, constNodeID, ast.NodeGroupConstantName, identifierNodeID)
+                yylex.(*Parser).Children(0, constNodeID, ast.NodeGroupExpr, $5)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(constNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(constNodeID, ast.TokenGroupName, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1993,68 +2545,119 @@ declare_list:
 switch_case_list:
         '{' case_list '}'
             {
-                caseList := stmt.NewCaseList($2)
-                $$ = stmt.NewSwitch(nil, caseList)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                caseList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtCaseList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $3.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtSwitch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+
+                yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCaseList, caseListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' ';' case_list '}'
             {
-                caseList := stmt.NewCaseList($3)
-                $$ = stmt.NewSwitch(nil, caseList)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                caseList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtCaseList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $4.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtSwitch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+
+                yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCaseList, caseListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' case_list T_ENDSWITCH ';'
             {
-                caseList := stmt.NewCaseList($2)
-                $$ = stmt.NewAltSwitch(nil, caseList)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                caseList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtCaseList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtAltSwitch,
+                        Flag: ast.NodeFlagAltSyntax,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+
+                yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCaseList, caseListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' ';' case_list T_ENDSWITCH ';'
             {
+                children := yylex.(*Parser).List.Pop()
 
-                caseList := stmt.NewCaseList($3)
-                $$ = stmt.NewAltSwitch(nil, caseList)
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtCaseList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                // save position
-                caseList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtAltSwitch,
+                        Flag: ast.NodeFlagAltSyntax,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $5.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($5))
+                yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCaseList, caseListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $5.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$5})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2064,42 +2667,55 @@ switch_case_list:
 case_list:
         /* empty */
             {
-                $$ = []node.Node{} 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                _case := stmt.NewCase($3, $5)
-                $$ = append($1, _case)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                _case.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
+                caseNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtCase,
+                    },
+                })
+                yylex.(*Parser).SavePosition(caseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(_case, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(_case, freefloating.Expr, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating(_case, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken($4))
+                yylex.(*Parser).Children(0, caseNodeID, ast.NodeGroupStmts, children...)
+
+                yylex.(*Parser).List.Add(caseNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(caseNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(caseNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens(caseNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                _default := stmt.NewDefault($4)
-                $$ = append($1, _default)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                _default.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $4))
+                defaultNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtDefault,
+                    },
+                })
+                yylex.(*Parser).SavePosition(defaultNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(_default, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(_default, freefloating.Default, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating(_default, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).Children(0, defaultNodeID, ast.NodeGroupStmts, children...)
+
+                yylex.(*Parser).List.Add(defaultNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(defaultNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(defaultNodeID, ast.TokenGroupDefault, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(defaultNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
-
 
 case_separator:
         ':'
@@ -2112,61 +2728,76 @@ case_separator:
             }
 ;
 
-
 while_statement:
         statement
             {
-                $$ = stmt.NewWhile(nil, $1)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtWhile,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
-                stmtList := stmt.NewStmtList($2)
-                $$ = stmt.NewAltWhile(nil, stmtList)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStmtList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtAltWhile,
+                        Flag: ast.NodeFlagAltSyntax,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, stmtListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
-
-
 elseif_list:
         /* empty */
             {
-                $$ = nil 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   elseif_list T_ELSEIF parenthesis_expr statement
             {
-                _elseIf := stmt.NewElseIf($3, $4)
-                $$ = append($1, _elseIf)
+                elseIfNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtElseIf,
+                    },
+                })
+                yylex.(*Parser).SavePosition(elseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$4}))
 
-                // save position
-                _elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4))
+                yylex.(*Parser).Children(0, elseIfNodeID, ast.NodeGroupCond, $3)
+                yylex.(*Parser).Children(0, elseIfNodeID, ast.NodeGroupStmt, $4)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, $2.FreeFloating)
-                if len((*$3.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, (*$3.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$3.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$3.GetFreeFloating()), freefloating.OpenParenthesisToken)
-                }
-                if len((*$3.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, (*$3.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$3.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$3.GetFreeFloating()), freefloating.CloseParenthesisToken)
-                }
+                // save tokens
+                yylex.(*Parser).AppendTokens(elseIfNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                // TODO handle parenthesis_expr tokens
+
+                yylex.(*Parser).List.Add(elseIfNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2176,29 +2807,38 @@ elseif_list:
 new_elseif_list:
         /* empty */
             {
-                $$ = nil 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   new_elseif_list T_ELSEIF parenthesis_expr ':' inner_statement_list
             {
-                stmts := stmt.NewStmtList($5)
-                _elseIf := stmt.NewAltElseIf($3, stmts)
-                $$ = append($1, _elseIf)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($5))
-                _elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStmtList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, $2.FreeFloating)
-                if len((*$3.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, (*$3.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$3.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$3.GetFreeFloating()), freefloating.OpenParenthesisToken)
-                }
-                if len((*$3.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, (*$3.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$3.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$3.GetFreeFloating()), freefloating.CloseParenthesisToken)
-                }
-                yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Cond, $4.FreeFloating)
+                AltElseIfNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtAltElseIf,
+                    },
+                })
+                yylex.(*Parser).SavePosition(AltElseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
+
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, AltElseIfNodeID, ast.NodeGroupCond, $4)
+                yylex.(*Parser).Children(0, AltElseIfNodeID, ast.NodeGroupStmt, stmtListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(AltElseIfNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(AltElseIfNodeID, ast.TokenGroupCond, $4.HiddenTokens)
+                // TODO handle parenthesis_expr tokens
+
+                yylex.(*Parser).List.Add(AltElseIfNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2208,19 +2848,23 @@ new_elseif_list:
 else_single:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ELSE statement
             {
-                $$ = stmt.NewElse($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtElse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2230,22 +2874,34 @@ else_single:
 new_else_single:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ELSE ':' inner_statement_list
             {
-                stmts := stmt.NewStmtList($3)
-                $$ = stmt.NewAltElse(stmts)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Else, $2.FreeFloating)
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStmtList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtAltElse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, stmtListNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupElse, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2255,13 +2911,11 @@ new_else_single:
 parameter_list:
         non_empty_parameter_list
             {
-                $$ = $1; 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
-                $$ = nil 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2270,16 +2924,18 @@ parameter_list:
 non_empty_parameter_list:
         parameter
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_parameter_list ',' parameter
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2288,92 +2944,181 @@ non_empty_parameter_list:
 parameter:
         optional_class_type is_reference is_variadic T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($4.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                $$ = node.NewParameter($1, variable, nil, $2 != nil, $3 != nil)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                if $1 != nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+
+                var posID graph.PositionID
+                if $1 != 0 {
+                    posID = yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil)
                 } else if $2 != nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($2, $4))
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil)
                 } else if $3 != nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($3, $4))
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3, $4}, nil)
                 } else {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil)
                 }
 
-                // save comments
-                if $1 != nil {
-                    yylex.(*Parser).MoveFreeFloating($1, $$)
-                }
+                var flag ast.NodeFlag
                 if $2 != nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, $2.FreeFloating)
+                    flag = flag | ast.NodeFlagRef
                 }
                 if $3 != nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
+                    flag = flag | ast.NodeFlagVariadic
                 }
-                yylex.(*Parser).setFreeFloating($$, freefloating.Variadic, $4.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
 
-                // normalize
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeParameter,
+                        Flag: flag,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, posID)
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVarType, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVar, varNodeID)
+
+                // save tokens
+
+                tmp := [4][]scanner.Token{}
+                if $2 != nil {
+                    tmp[1] = $2.HiddenTokens
+                }
+                if $3 != nil {
+                    tmp[2] = $3.HiddenTokens
+                }
+                tmp[3] = $4.HiddenTokens
+
                 if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, (*$$.GetFreeFloating())[freefloating.Variadic]); delete((*$$.GetFreeFloating()), freefloating.Variadic)
+                    tmp[2] = tmp[3]
+                    tmp[3] = nil
                 }
                 if $2 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, (*$$.GetFreeFloating())[freefloating.Ampersand]); delete((*$$.GetFreeFloating()), freefloating.Ampersand)
+                    tmp[1] = tmp[2]
+                    tmp[2] = nil
                 }
-                if $1 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Start, (*$$.GetFreeFloating())[freefloating.OptionalType]); delete((*$$.GetFreeFloating()), freefloating.OptionalType)
+                if $1 == 0 {
+                    tmp[0] = tmp[1]
+                    tmp[1] = nil
+                }
+
+                if $1 != 0 {
+                    yylex.(*Parser).MoveStartTokens($1, $$)
+                }
+                if tmp[0] != nil {
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, tmp[0])
+                }
+                if tmp[1] != nil {
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupOptionalType, tmp[1])
+                }
+                if tmp[2] != nil {
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, tmp[2])
+                }
+                if tmp[3] != nil {
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVariadic, tmp[3])
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   optional_class_type is_reference is_variadic T_VARIABLE '=' static_scalar
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($4.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                $$ = node.NewParameter($1, variable, $6, $2 != nil, $3 != nil)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                if $1 != nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+
+                var posID graph.PositionID
+                if $1 != 0 {
+                    posID = yylex.(*Parser).NewPosition([]graph.NodeID{$1, $6}, nil, nil)
                 } else if $2 != nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $6))
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$6})
                 } else if $3 != nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $6))
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$6})
                 } else {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $6))
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, []graph.NodeID{$6})
                 }
 
-                // save comments
-                if $1 != nil {
-                    yylex.(*Parser).MoveFreeFloating($1, $$)
-                }
+                var flag ast.NodeFlag
                 if $2 != nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, $2.FreeFloating)
+                    flag = flag | ast.NodeFlagRef
                 }
                 if $3 != nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
+                    flag = flag | ast.NodeFlagVariadic
                 }
-                yylex.(*Parser).setFreeFloating($$, freefloating.Variadic, $4.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $5.FreeFloating)
 
-                // normalize
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeParameter,
+                        Flag: flag,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, posID)
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVarType, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDefaultValue, $6)
+
+                // save tokens
+
+                tmp := [4][]scanner.Token{}
+                if $2 != nil {
+                    tmp[1] = $2.HiddenTokens
+                }
+                if $3 != nil {
+                    tmp[2] = $3.HiddenTokens
+                }
+                tmp[3] = $4.HiddenTokens
+
                 if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, (*$$.GetFreeFloating())[freefloating.Variadic]); delete((*$$.GetFreeFloating()), freefloating.Variadic)
+                    tmp[2] = tmp[3]
+                    tmp[3] = nil
                 }
                 if $2 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, (*$$.GetFreeFloating())[freefloating.Ampersand]); delete((*$$.GetFreeFloating()), freefloating.Ampersand)
+                    tmp[1] = tmp[2]
+                    tmp[2] = nil
                 }
-                if $1 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Start, (*$$.GetFreeFloating())[freefloating.OptionalType]); delete((*$$.GetFreeFloating()), freefloating.OptionalType)
+                if $1 == 0 {
+                    tmp[0] = tmp[1]
+                    tmp[1] = nil
                 }
+
+                if $1 != 0 {
+                    yylex.(*Parser).MoveStartTokens($1, $$)
+                }
+                if tmp[0] != nil {
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, tmp[0])
+                }
+                if tmp[1] != nil {
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupOptionalType, tmp[1])
+                }
+                if tmp[2] != nil {
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, tmp[2])
+                }
+                if tmp[3] != nil {
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVariadic, tmp[3])
+                }
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $5.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2383,31 +3128,35 @@ parameter:
 optional_class_type:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ARRAY
             {
-                $$ = node.NewIdentifier($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CALLABLE
             {
-                $$ = node.NewIdentifier($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2423,42 +3172,60 @@ optional_class_type:
 function_call_parameter_list:
         '(' ')'
             {
-                $$ = node.NewArgumentList(nil)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeArgumentList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ArgumentList, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArgumentList, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' non_empty_function_call_parameter_list ')'
             {
-                $$ = node.NewArgumentList($2)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeArgumentList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ArgumentList, $3.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupArguments, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArgumentList, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' yield_expr ')'
             {
-                arg := node.NewArgument($2, false, false)
-                $$ = node.NewArgumentList([]node.Node{arg})
+                argumentnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeArgument,
+                    },
+                })
+                yylex.(*Parser).SavePosition(argumentNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{$2}, nil, nil))
 
-                // save position
-                arg.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeArgumentList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ArgumentList, $3.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupArguments, argumentNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($2, argumentNodeID)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArgumentList, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2468,16 +3235,18 @@ function_call_parameter_list:
 non_empty_function_call_parameter_list:
         function_call_parameter
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_function_call_parameter_list ',' function_call_parameter
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2486,49 +3255,67 @@ non_empty_function_call_parameter_list:
 function_call_parameter:
         expr_without_variable
             {
-                $$ = node.NewArgument($1, false, false)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeArgument,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $1)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable
             {
-                $$ = node.NewArgument($1, false, false)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeArgument,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $1)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '&' w_variable
             {
-                $$ = node.NewArgument($2, false, true)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeArgument,
+                        Flag: ast.NodeFlagRef,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ELLIPSIS expr
             {
-                $$ = node.NewArgument($2, true, false)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeArgument,
+                        Flag: ast.NodeFlagVariadic,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2537,63 +3324,81 @@ function_call_parameter:
 global_var_list:
         global_var_list ',' global_var
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   global_var
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-;
 
 
 global_var:
         T_VARIABLE
             {
-                name := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                $$ = expr.NewVariable(name)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).addDollarToken($$)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '$' r_variable
             {
-                $$ = expr.NewVariable($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupDollar, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '$' '{' expr '}'
             {
-                $$ = expr.NewVariable($3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).setFreeFloating($3, freefloating.Start, append($2.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($2), (*$3.GetFreeFloating())[freefloating.Start]...)...))
-                yylex.(*Parser).setFreeFloating($3, freefloating.End, append((*$3.GetFreeFloating())[freefloating.End], append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...)...))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupDollar, []scanner.Token{*$1})
+                yylex.(*Parser).PrependTokens($3, ast.TokenGroupStart, []scanner.Token{*$2})
+                yylex.(*Parser).PrependTokens($3, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($3, ast.TokenGroupEnd, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($3, ast.TokenGroupEnd, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2603,77 +3408,143 @@ global_var:
 static_var_list:
         static_var_list ',' T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($3.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                staticVar := stmt.NewStaticVar(variable, nil)
-                $$ = append($1, staticVar)
-                
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, $3.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+
+                staticVarnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStaticVar,
+                    },
+                })
+                yylex.(*Parser).SavePosition(staticVarNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, staticVarNodeID, ast.NodeGroupVar, varNodeID)
+
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add(staticVarNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_var_list ',' T_VARIABLE '=' static_scalar
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($3.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                staticVar := stmt.NewStaticVar(variable, $5)
-                $$ = append($1, staticVar)
-                
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, $3.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
-                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Var, $4.FreeFloating)
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+
+                staticVarnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStaticVar,
+                    },
+                })
+                yylex.(*Parser).SavePosition(staticVarNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$5}))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, staticVarNodeID, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, staticVarNodeID, ast.NodeGroupExpr, $5)
+
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add(staticVarNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupVar, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                staticVar := stmt.NewStaticVar(variable, nil)
-                $$ = []node.Node{staticVar}
-                
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                staticVarnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStaticVar,
+                    },
+                })
+                yylex.(*Parser).SavePosition(staticVarNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, staticVarNodeID, ast.NodeGroupVar, varNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(staticVarNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE '=' static_scalar
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                staticVar := stmt.NewStaticVar(variable, $3)
-                $$ = []node.Node{staticVar}
-                
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
-                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Var, $2.FreeFloating)
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                staticVarnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStaticVar,
+                    },
+                })
+                yylex.(*Parser).SavePosition(staticVarNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, staticVarNodeID, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, staticVarNodeID, ast.NodeGroupExpr, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(staticVarNodeID, ast.TokenGroupVar, $2.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(staticVarNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2683,13 +3554,13 @@ static_var_list:
 class_statement_list:
         class_statement_list class_statement
             {
-                $$ = append($1, $2) 
+                yylex.(*Parser).List.Add($2)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
-                $$ = []node.Node{} 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2699,15 +3570,23 @@ class_statement_list:
 class_statement:
         variable_modifiers class_variable_declaration ';'
             {
-                $$ = stmt.NewPropertyList($1, $2)
+                childrenProperties := yylex.(*Parser).List.Pop()
+                childrenModifiers := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtPropertyList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.PropertyList, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupModifiers, childrenModifiers...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperties, childrenProperties...)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(childrenModifiers[0], $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupPropertyList, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2716,11 +3595,11 @@ class_statement:
                 $$ = $1
 
                 // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.ConstList, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupConstList, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2732,32 +3611,56 @@ class_statement:
             }
     |   method_modifiers function is_reference T_STRING '(' parameter_list ')' method_body
             {
-                name := node.NewIdentifier($4.Value)
-                $$ = stmt.NewClassMethod(name, $1, $3 != nil, $6, nil, $8, "")
+                childrenParams := yylex.(*Parser).List.Pop()
+                childrenModifiers := yylex.(*Parser).List.Pop()
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                if $1 == nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $8))
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+
+                var posID graph.PositionID
+                if len(childrenModifiers) == 0 {
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$8})
                 } else {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListNodePosition($1, $8))
+                    posID = yylex.(*Parser).NewPosition(childrenModifiers, nil, []graph.NodeID{$8})
                 }
 
-                // save comments
-                if len($1) > 0 {
-                    yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                    yylex.(*Parser).setFreeFloating($$, freefloating.ModifierList, $2.FreeFloating)
+                var flag ast.NodeFlag
+                if $3 != nil {
+                    flag = flag | ast.NodeFlagRef
+                }
+
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtClassMethod,
+                        Flag: flag,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, posID)
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupMethodName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $8)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupModifiers, childrenModifiers...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParams, childrenParams...)
+
+                // save tokens
+                if len(childrenModifiers) > 0 {
+                    yylex.(*Parser).MoveStartTokens(childrenModifiers[0], $$)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupModifierList, $2.HiddenTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Start, $2.FreeFloating)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $2.HiddenTokens)
                 }
                 if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $4.FreeFloating)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $4.HiddenTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $4.FreeFloating)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $3.HiddenTokens)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, $4.HiddenTokens)
                 }
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $5.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $7.FreeFloating)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $5.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupParameterList, $7.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2766,13 +3669,20 @@ class_statement:
 trait_use_statement:
         T_USE trait_list trait_adaptations
             {
-                $$ = stmt.NewTraitUse($2, $3)
+                childrenTraits := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtTraitUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
+
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupTraitAdaptationList, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupTraits, childrenTraits...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2781,16 +3691,18 @@ trait_use_statement:
 trait_list:
         fully_qualified_class_name
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_list ',' fully_qualified_class_name
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2799,25 +3711,36 @@ trait_list:
 trait_adaptations:
         ';'
             {
-                $$ = stmt.NewNop()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtNop,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$1})
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' trait_adaptation_list '}'
             {
-                $$ = stmt.NewTraitAdaptationList($2)
+                children := yylex.(*Parser).List.Pop()
 
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtTraitAdaptationList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.AdaptationList, $3.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupAdaptations, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAdaptationList, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2826,14 +3749,12 @@ trait_adaptations:
 trait_adaptation_list:
         /* empty */
             {
-                $$ = nil 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_trait_adaptation_list
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -2841,13 +3762,14 @@ trait_adaptation_list:
 non_empty_trait_adaptation_list:
         trait_adaptation_statement
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_trait_adaptation_list trait_adaptation_statement
             {
-                $$ = append($1, $2) 
+                yylex.(*Parser).List.Add($2)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2858,9 +3780,9 @@ trait_adaptation_statement:
             {
                 $$ = $1;
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.NameList, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupNameList, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2868,9 +3790,9 @@ trait_adaptation_statement:
             {
                 $$ = $1;
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Alias, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAlias, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2879,14 +3801,21 @@ trait_adaptation_statement:
 trait_precedence:
         trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list
             {
-                $$ = stmt.NewTraitUsePrecedence($1, $3)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtTraitUsePrecedence,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, nil, children))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupRef, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupInsteadof, children...)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2895,16 +3824,18 @@ trait_precedence:
 trait_reference_list:
         fully_qualified_class_name
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_reference_list ',' fully_qualified_class_name
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2913,15 +3844,24 @@ trait_reference_list:
 trait_method_reference:
         T_STRING
             {
-                name := node.NewIdentifier($1.Value)
-                $$ = stmt.NewTraitMethodRef(nil, name)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtTraitMethodRef,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupMethod, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2936,17 +3876,27 @@ trait_method_reference:
 trait_method_reference_fully_qualified:
         fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
-                target := node.NewIdentifier($3.Value)
-                $$ = stmt.NewTraitMethodRef($1, target)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save position
-                target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtTraitMethodRef,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupTrait, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupMethod, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2955,30 +3905,46 @@ trait_method_reference_fully_qualified:
 trait_alias:
         trait_method_reference T_AS trait_modifiers T_STRING
             {
-                alias := node.NewIdentifier($4.Value)
-                $$ = stmt.NewTraitUseAlias($1, $3, alias)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                // save position
-                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtTraitUseAlias,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $4.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupRef, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupModifier, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_method_reference T_AS member_modifier
             {
-                $$ = stmt.NewTraitUseAlias($1, $3, nil)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtTraitUseAlias,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupRef, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupModifier, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2987,7 +3953,7 @@ trait_alias:
 trait_modifiers:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3002,27 +3968,35 @@ trait_modifiers:
 method_body:
         ';' /* abstract method */ 
             {
-                $$ = stmt.NewNop()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtNop,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' inner_statement_list '}'
             {
-                $$ = stmt.NewStmtList($2)
+                children := yylex.(*Parser).List.Pop()
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtStmtList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, children...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3031,20 +4005,22 @@ method_body:
 variable_modifiers:
         non_empty_member_modifiers
             {
-                $$ = $1; 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VAR
             {
-                modifier := node.NewIdentifier($1.Value)
-                $$ = []node.Node{modifier}
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                modifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(identifierNodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(modifier, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3053,14 +4029,12 @@ variable_modifiers:
 method_modifiers:
         /* empty */
             {
-                $$ = nil 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_member_modifiers
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -3068,13 +4042,14 @@ method_modifiers:
 non_empty_member_modifiers:
         member_modifier
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_member_modifiers member_modifier
             {
-                $$ = append($1, $2) 
+                yylex.(*Parser).List.Add($2)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3083,73 +4058,85 @@ non_empty_member_modifiers:
 member_modifier:
         T_PUBLIC
             {
-                $$ = node.NewIdentifier($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_PROTECTED
             {
-                $$ = node.NewIdentifier($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_PRIVATE
             {
-                $$ = node.NewIdentifier($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STATIC
             {
-                $$ = node.NewIdentifier($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ABSTRACT
             {
-                $$ = node.NewIdentifier($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FINAL
             {
-                $$ = node.NewIdentifier($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3158,77 +4145,146 @@ member_modifier:
 class_variable_declaration:
         class_variable_declaration ',' T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($3.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                property := stmt.NewProperty(variable, nil, "")
-                $$ = append($1, property)
-                
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                prevNodeID := yylex.(*Parser).List.Last()
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(property, freefloating.Start, $3.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                
+                propertynodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtProperty,
+                    },
+                })
+                yylex.(*Parser).SavePosition(propertyNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, propertyNodeID, ast.NodeGroupVar, varNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(propertyNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_variable_declaration ',' T_VARIABLE '=' static_scalar
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($3.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                property := stmt.NewProperty(variable, $5, "")
-                $$ = append($1, property)
+                prevNodeID := yylex.(*Parser).List.Last()
+
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
                 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(property, freefloating.Start, $3.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
-                yylex.(*Parser).setFreeFloating(property, freefloating.Var, $4.FreeFloating)
+                propertynodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtProperty,
+                    },
+                })
+                yylex.(*Parser).SavePosition(propertyNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$5}))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, propertyNodeID, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, propertyNodeID, ast.NodeGroupExpr, $5)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupVar, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+
+                yylex.(*Parser).List.Add(propertyNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                property := stmt.NewProperty(variable, nil, "")
-                $$ = []node.Node{property}
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(property, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
+                propertynodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtProperty,
+                    },
+                })
+                yylex.(*Parser).SavePosition(propertyNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, propertyNodeID, ast.NodeGroupVar, varNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(propertyNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE '=' static_scalar
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                property := stmt.NewProperty(variable, $3, "")
-                $$ = []node.Node{property}
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(property, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
-                yylex.(*Parser).setFreeFloating(property, freefloating.Var, $2.FreeFloating)
+                propertynodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtProperty,
+                    },
+                })
+                yylex.(*Parser).SavePosition(propertyNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, propertyNodeID, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, propertyNodeID, ast.NodeGroupExpr, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(propertyNodeID, ast.TokenGroupVar, $2.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(propertyNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3237,40 +4293,64 @@ class_variable_declaration:
 class_constant_declaration:
         class_constant_declaration ',' T_STRING '=' static_scalar
             {
-                name := node.NewIdentifier($3.Value)
-                constant := stmt.NewConstant(name, $5, "")
-                constList := $1.(*stmt.ClassConstList)
-                lastConst := lastNode(constList.Consts)
-                constList.Consts = append(constList.Consts, constant)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                
+                constantnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition(constantNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$5}))
+
                 $$ = $1
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $5}, nil, nil))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
-                $1.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
+                yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupConstantName, identifierNodeID)
+                yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupExpr, $5)
+                yylex.(*Parser).Children(0, $1, ast.NodeGroupConsts, constantNodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastConst, freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupName, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CONST T_STRING '=' static_scalar
             {
-                name := node.NewIdentifier($2.Value)
-                constant := stmt.NewConstant(name, $4, "")
-                $$ = stmt.NewClassConstList(nil, []node.Node{constant})
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                
+                constantnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition(constantNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$4}))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeStmtClassConstList,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$4}))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $3.FreeFloating)
+                yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupConstantName, identifierNodeID)
+                yylex.(*Parser).Children(0, constantNodeID, ast.NodeGroupExpr, $4)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConsts, constantNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(constantNodeID, ast.TokenGroupName, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3279,33 +4359,32 @@ class_constant_declaration:
 echo_expr_list:
         echo_expr_list ',' expr
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-;
 
 
 for_expr:
         /* empty */
             {
-                $$ = nil 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_for_expr
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -3313,16 +4392,18 @@ for_expr:
 non_empty_for_expr:
         non_empty_for_expr ',' expr
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3331,14 +4412,22 @@ non_empty_for_expr:
 chaining_method_or_property:
         chaining_method_or_property variable_property
             {
-                $$ = append($1, $2...) 
+                children2 := yylex.(*Parser).List.Pop()
+                children1 := yylex.(*Parser).List.Pop()
+                
+                yylex.(*Parser).List.Push()
+
+                for _, v := range(children1) {
+                    yylex.(*Parser).List.Add(v)
+                }
+                for _, v := range(children2) {
+                    yylex.(*Parser).List.Add(v)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_property
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -3346,29 +4435,44 @@ chaining_method_or_property:
 chaining_dereference:
         chaining_dereference '[' dim_offset ']'
             {
-                fetch := expr.NewArrayDimFetch(nil, $3)
-                $$ = append($1, fetch)
-                
-                // save position
-                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
+                fetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition(fetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                yylex.(*Parser).Children(prevNodeID, fetchNodeID, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, []scanner.Token{*$4})
+
+                yylex.(*Parser).List.Add(fetchNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '[' dim_offset ']'
             {
-                fetch := expr.NewArrayDimFetch(nil, $2)
-                $$ = []node.Node{fetch}
-                
-                // save position
-                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
+                fetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition(fetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+
+                yylex.(*Parser).Children(prevNodeID, fetchNodeID, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, []scanner.Token{*$1})
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, []scanner.Token{*$2})
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(fetchNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3377,20 +4481,26 @@ chaining_dereference:
 chaining_instance_call:
         chaining_dereference chaining_method_or_property
             {
-                $$ = append($1, $2...) 
+                children2 := yylex.(*Parser).List.Pop()
+                children1 := yylex.(*Parser).List.Pop()
+                
+                yylex.(*Parser).List.Push()
+
+                for _, v := range(children1) {
+                    yylex.(*Parser).List.Add(v)
+                }
+                for _, v := range(children2) {
+                    yylex.(*Parser).List.Add(v)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   chaining_dereference
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   chaining_method_or_property
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -3398,14 +4508,12 @@ chaining_instance_call:
 instance_call:
         /* empty */
             {
-                $$ = nil 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   chaining_instance_call
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -3414,16 +4522,23 @@ new_expr:
         T_NEW class_name_reference ctor_arguments
             {
 
-                if $3 != nil {
-                    $$ = expr.NewNew($2, $3.(*node.ArgumentList))
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
-                } else {
-                    $$ = expr.NewNew($2, nil)
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                lastNodeID := $3
+                if lastNodeID == 0 {
+                    lastNodeID = $2
                 }
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprNew,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{lastNodeID}))
+
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $2)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3432,676 +4547,931 @@ new_expr:
 expr_without_variable:
         T_LIST '(' assignment_list ')' '=' expr
             {
-                listNode := expr.NewList($3)
-                $$ = assign.NewAssign(listNode, $6)
+                listNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignAssign,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$6}))
 
-                // save position
-                listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
+                yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, listNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $6)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(listNode, freefloating.List, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $5.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupList, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $5.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable '=' expr
             {
-                $$ = assign.NewAssign($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignAssign,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable '=' '&' variable
             {
-                $$ = assign.NewReference($1, $4)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignReference,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $4)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Equal, $3.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEqual, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable '=' '&' T_NEW class_name_reference ctor_arguments
             {
-                var _new *expr.New
 
-                if $6 != nil {
-                    _new = expr.NewNew($5, $6.(*node.ArgumentList))
-                } else {
-                    _new = expr.NewNew($5, nil)
+                lastNodeID := $6
+                if lastNodeID == 0 {
+                    lastNodeID = $5
                 }
-                $$ = assign.NewReference($1, _new)
 
-                // save position
-                if $6 != nil {
-                    _new.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $6))
-                } else {
-                    _new.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $5))
-                }
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, _new))
+                newnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprNew,
+                    },
+                })
+                yylex.(*Parser).SavePosition(newNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, []graph.NodeID{lastNodeID}))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Equal, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating(_new, freefloating.Start, $4.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignReference,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, newNodeID}, nil, nil))
+
+                yylex.(*Parser).Children(0, newNodeID, ast.NodeGroupClass, $5)
+                yylex.(*Parser).Children(0, newNodeID, ast.NodeGroupArgumentList, $6)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, newNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEqual, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(newNodeID, ast.TokenGroupStart, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CLONE expr
             {
-                $$ = expr.NewClone($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprClone,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_PLUS_EQUAL expr
             {
-                $$ = assign.NewPlus($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignPlus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_MINUS_EQUAL expr
             {
-                $$ = assign.NewMinus($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignMinus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_MUL_EQUAL expr
             {
-                $$ = assign.NewMul($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignMul,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_POW_EQUAL expr
             {
-                $$ = assign.NewPow($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignPow,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_DIV_EQUAL expr
             {
-                $$ = assign.NewDiv($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignDiv,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_CONCAT_EQUAL expr
             {
-                $$ = assign.NewConcat($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignConcat,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_MOD_EQUAL expr
             {
-                $$ = assign.NewMod($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignMod,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_AND_EQUAL expr
             {
-                $$ = assign.NewBitwiseAnd($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignBitwiseAnd,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_OR_EQUAL expr
             {
-                $$ = assign.NewBitwiseOr($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignBitwiseOr,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_XOR_EQUAL expr
             {
-                $$ = assign.NewBitwiseXor($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignBitwiseXor,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_SL_EQUAL expr
             {
-                $$ = assign.NewShiftLeft($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignShiftLeft,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_SR_EQUAL expr
             {
-                $$ = assign.NewShiftRight($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeAssignShiftRight,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   rw_variable T_INC
             {
-                $$ = expr.NewPostInc($1)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprPostInc,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_INC rw_variable
             {
-                $$ = expr.NewPreInc($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprPreInc,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   rw_variable T_DEC
             {
-                $$ = expr.NewPostDec($1)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprPostDec,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DEC rw_variable
             {
-                $$ = expr.NewPreDec($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprPreDec,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_BOOLEAN_OR expr
             {
-                $$ = binary.NewBooleanOr($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBooleanOr,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_BOOLEAN_AND expr
             {
-                $$ = binary.NewBooleanAnd($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBooleanAnd,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_LOGICAL_OR expr
             {
-                $$ = binary.NewLogicalOr($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryLogicalOr,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_LOGICAL_AND expr
             {
-                $$ = binary.NewLogicalAnd($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryLogicalAnd,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_LOGICAL_XOR expr
             {
-                $$ = binary.NewLogicalXor($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryLogicalXor,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '|' expr
             {
-                $$ = binary.NewBitwiseOr($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBitwiseOr,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '&' expr
             {
-                $$ = binary.NewBitwiseAnd($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBitwiseAnd,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '^' expr
             {
-                $$ = binary.NewBitwiseXor($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBitwiseXor,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '.' expr
             {
-                $$ = binary.NewConcat($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryConcat,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '+' expr
             {
-                $$ = binary.NewPlus($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryPlus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '-' expr
             {
-                $$ = binary.NewMinus($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryMinus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '*' expr
             {
-                $$ = binary.NewMul($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryMul,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_POW expr
             {
-                $$ = binary.NewPow($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryPow,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '/' expr
             {
-                $$ = binary.NewDiv($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryDiv,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '%' expr
             {
-                $$ = binary.NewMod($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryMod,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_SL expr
             {
-                $$ = binary.NewShiftLeft($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryShiftLeft,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_SR expr
             {
-                $$ = binary.NewShiftRight($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryShiftRight,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '+' expr %prec T_INC
             {
-                $$ = expr.NewUnaryPlus($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprUnaryPlus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '-' expr %prec T_INC
             {
-                $$ = expr.NewUnaryMinus($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprUnaryMinus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '!' expr
             {
-                $$ = expr.NewBooleanNot($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprBooleanNot,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '~' expr
             {
-                $$ = expr.NewBitwiseNot($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprBitwiseNot,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_IDENTICAL expr
             {
-                $$ = binary.NewIdentical($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryIdentical,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
-                $$ = binary.NewNotIdentical($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryNotIdentical,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_EQUAL expr
             {
-                $$ = binary.NewEqual($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryEqual,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_NOT_EQUAL expr
             {
-                $$ = binary.NewNotEqual($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryNotEqual,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Equal, yylex.(*Parser).GetFreeFloatingToken($2))
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEqual, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '<' expr
             {
-                $$ = binary.NewSmaller($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinarySmaller,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
-                $$ = binary.NewSmallerOrEqual($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinarySmallerOrEqual,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '>' expr
             {
-                $$ = binary.NewGreater($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryGreater,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
-                $$ = binary.NewGreaterOrEqual($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryGreaterOrEqual,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_INSTANCEOF class_name_reference
             {
-                $$ = expr.NewInstanceOf($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprInstanceOf,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupClass, $3)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4111,8 +5481,9 @@ expr_without_variable:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 
-                yylex.(*Parser).setFreeFloating($1, freefloating.Start, append((*$1.GetFreeFloating())[freefloating.OpenParenthesisToken], (*$1.GetFreeFloating())[freefloating.Start]...)); delete((*$1.GetFreeFloating()), freefloating.OpenParenthesisToken)
-                yylex.(*Parser).setFreeFloating($1, freefloating.End, append((*$1.GetFreeFloating())[freefloating.End], (*$1.GetFreeFloating())[freefloating.CloseParenthesisToken]...)); delete((*$1.GetFreeFloating()), freefloating.CloseParenthesisToken)
+                // TODO: handle parenthesis tokens
+                //yylex.(*Parser).setFreeFloating($1, freefloating.Start, append((*$1.GetFreeFloating())[freefloating.OpenParenthesisToken], (*$1.GetFreeFloating())[freefloating.Start]...)); delete((*$1.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                //yylex.(*Parser).setFreeFloating($1, freefloating.End, append((*$1.GetFreeFloating())[freefloating.End], (*$1.GetFreeFloating())[freefloating.CloseParenthesisToken]...)); delete((*$1.GetFreeFloating()), freefloating.CloseParenthesisToken)
             }
     |   new_expr
             {
@@ -4125,58 +5496,59 @@ expr_without_variable:
                 $$ = $2
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
-                for _, n := range($4) {
-                    switch nn := n.(type) {
-                        case *expr.ArrayDimFetch:
-                            nn.Variable = $$
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                        
-                        case *expr.PropertyFetch:
-                            nn.Variable = $$
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                        
-                        case *expr.MethodCall:
-                            nn.Variable = $$
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                    }
+                children := yylex.(*Parser).List.Pop()
+                for _, n := range(children) {
+                    yylex.(*Parser).Children(0, n, ast.NodeGroupVar, $$)
+                    yylex.(*Parser).MoveStartTokens($$, n)
+                    $$ = n
 
                     // save position
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, n))
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$$, n}, nil, nil))
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '?' expr ':' expr
             {
-                $$ = expr.NewTernary($1, $3, $5)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprTernary,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $5}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupIfTrue, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupIfFalse, $5)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.True, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupTrue, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '?' ':' expr
             {
-                $$ = expr.NewTernary($1, nil, $4)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprTernary,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupIfFalse, $4)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.True, $3.FreeFloating)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupTrue, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4188,131 +5560,170 @@ expr_without_variable:
             }
     |   T_INT_CAST expr
             {
-                $$ = cast.NewInt($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeCastInt,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DOUBLE_CAST expr
             {
-                $$ = cast.NewDouble($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeCastDouble,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STRING_CAST expr
             {
-                $$ = cast.NewString($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeCastString,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ARRAY_CAST expr
             {
-                $$ = cast.NewArray($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeCastArray,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_OBJECT_CAST expr
             {
-                $$ = cast.NewObject($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeCastObject,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_BOOL_CAST expr
             {
-                $$ = cast.NewBool($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeCastBool,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_UNSET_CAST expr
             {
-                $$ = cast.NewUnset($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeCastUnset,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EXIT exit_expr
             {
-                e := $2.(*expr.Exit)
                 $$ = $2
 
-                if (strings.EqualFold($1.Value, "die")) {
-                    e.Die = true
+                var flag ast.NodeFlag
+                exitTknValue := yylex.(*Parser).Ast.FileData[$1.StartPos:$1.EndPos]
+                if bytes.EqualFold(exitTknValue, []byte("die")) {
+                    flag = ast.NodeFlagAltSyntax
                 }
 
-                // save position
-                if $2.GetPosition() == nil {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                if $$ == 0 {
+                    $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                        SimpleNode: ast.SimpleNode{
+                            Type: ast.NodeTypeExprExit,
+                            Flag: flag,
+                        },
+                    })
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 } else {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                    yylex.(*Parser).Ast.Nodes[$$-1].Flag = flag
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
                 }
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '@' expr
             {
-                $$ = expr.NewErrorSuppress($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprErrorSuppress,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   scalar
             {
-                $$ = $1 
+                $$ = $1
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4330,90 +5741,114 @@ expr_without_variable:
             }
     |   '`' backticks_expr '`'
             {
-                $$ = expr.NewShellExec($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprShellExec,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_PRINT expr
             {
-                $$ = expr.NewPrint($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprPrint,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_YIELD
             {
-                $$ = expr.NewYield(nil, nil)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprYield,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($4, $6, nil, $8, false, $2 != nil, "")
+                var flag ast.NodeFlag
+                if $2 != nil {
+                    flag = flag | ast.NodeFlagRef
+                }
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprClosure,
+                        Flag: flag,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $9}, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupClosureUse, $6)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
                 if $2 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $3.HiddenTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $2.FreeFloating)
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $2.HiddenTokens)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, $3.HiddenTokens)
                 }
-                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $5.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, $7.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $9.FreeFloating)
-
-                // normalize
-                if $6 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.LexicalVars]); delete((*$$.GetFreeFloating()), freefloating.LexicalVars)
-                }
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupParameterList, $5.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupReturnType, $7.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $9.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STATIC function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($5, $7, nil, $9, true, $3 != nil, "")
+                flag := ast.NodeFlagStatic
+                if $2 != nil {
+                    flag = flag | ast.NodeFlagRef
+                }
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $10))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprClosure,
+                        Flag: flag,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $10}, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupClosureUse, $7)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Static, $2.FreeFloating)
+                // // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStatic, $2.HiddenTokens)
                 if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $4.FreeFloating)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $4.HiddenTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $4.FreeFloating)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $3.HiddenTokens)
+                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, $4.HiddenTokens)
                 }
-                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $6.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, $8.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $10.FreeFloating)
-
-                // normalize
-                if $7 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.LexicalVars]); delete((*$$.GetFreeFloating()), freefloating.LexicalVars)
-                }
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupParameterList, $6.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupReturnType, $8.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $10.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4422,51 +5857,69 @@ expr_without_variable:
 yield_expr:
         T_YIELD expr_without_variable
             {
-                $$ = expr.NewYield(nil, $2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprYield,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVal, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_YIELD variable
             {
-                $$ = expr.NewYield(nil, $2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprYield,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVal, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr_without_variable
             {
-                $$ = expr.NewYield($2, $4)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprYield,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$4}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupKey, $2)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVal, $4)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_YIELD expr T_DOUBLE_ARROW variable
             {
-                $$ = expr.NewYield($2, $4)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprYield,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$4}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupKey, $2)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVal, $4)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4475,59 +5928,92 @@ yield_expr:
 combined_scalar_offset:
         combined_scalar '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   combined_scalar_offset '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CONSTANT_ENCAPSED_STRING '[' dim_offset ']'
             {
-                str := scalar.NewString($1.Value)
-                $$ = expr.NewArrayDimFetch(str, $3)
+                stringnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarString,
+                    },
+                })
+                yylex.(*Parser).SavePosition(stringNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                str.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(str, $4))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, stringNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   general_constant '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4536,28 +6022,36 @@ combined_scalar_offset:
 combined_scalar:
         T_ARRAY '(' array_pair_list ')'
             {
-                $$ = expr.NewArray($3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArray,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Array, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArray, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArrayPairList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '[' array_pair_list ']'
             {
-                $$ = expr.NewShortArray($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprShortArray,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $3.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArrayPairList, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4573,21 +6067,25 @@ function:
 lexical_vars:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE '(' lexical_var_list ')'
             {
-                $$ = expr.NewClosureUse($3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprClosureUse,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Use, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVarList, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUse, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupLexicalVarList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4596,73 +6094,124 @@ lexical_vars:
 lexical_var_list:
         lexical_var_list ',' T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($3.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                $$ = append($1, variable)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $3.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+
+                yylex.(*Parser).List.Add(varNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   lexical_var_list ',' '&' T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($4.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                reference := expr.NewReference(variable)
-                $$ = append($1, reference)
+                prevNodeID := yylex.(*Parser).List.Last()
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($3, $4))
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(reference, freefloating.Start, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $4.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+
+                varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprReference,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3, $4}, nil))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVar, varNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $4.HiddenTokens)
+
+                yylex.(*Parser).List.Add(varNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                $$ = []node.Node{variable}
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(varNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '&' T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($2.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                reference := expr.NewReference(variable)
-                $$ = []node.Node{reference}
-                
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(reference, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).addDollarToken(variable)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+
+                varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprReference,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVar, varNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(varNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4671,108 +6220,172 @@ lexical_var_list:
 function_call:
         namespace_name function_call_parameter_list
             {
-                name := name.NewName($1)
-                $$ = expr.NewFunctionCall(name, $2.(*node.ArgumentList))
-                
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(name, $2))
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprFunctionCall,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID, $2}, nil, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupFunction, nameNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupArgumentList, $2)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name function_call_parameter_list
             {
-                funcName := name.NewRelative($3)
-                $$ = expr.NewFunctionCall(funcName, $4.(*node.ArgumentList))
-                
-                // save position
-                funcName.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(funcName, $4))
+                children := yylex.(*Parser).List.Pop()
+                namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameRelative,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(funcName, freefloating.Namespace, $2.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprFunctionCall,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID, $4}, nil, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupFunction, nameNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupArgumentList, $4)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupNamespace, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name function_call_parameter_list
             {
-                funcName := name.NewFullyQualified($2)
-                $$ = expr.NewFunctionCall(funcName, $3.(*node.ArgumentList))
-                
-                // save position
-                funcName.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(funcName, $3))
+                children := yylex.(*Parser).List.Pop()
+                namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameFullyQualified,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprFunctionCall,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID, $3}, nil, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupFunction, nameNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupArgumentList, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.(*node.ArgumentList))
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprStaticCall,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
+
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCall, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $4)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.(*node.ArgumentList))
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprStaticCall,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
+
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCall, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $4)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.(*node.ArgumentList))
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprStaticCall,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
+
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCall, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $4)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.(*node.ArgumentList))
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprStaticCall,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
+
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCall, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $4)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_without_objects function_call_parameter_list
             {
-                $$ = expr.NewFunctionCall($1, $2.(*node.ArgumentList))
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $2))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprFunctionCall,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $2}, nil, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupFunction, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $2)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4781,50 +6394,64 @@ function_call:
 class_name:
         T_STATIC
             {
-                $$ = node.NewIdentifier($1.Value)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name 
             {
-                $$ = name.NewName($1)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                children := yylex.(*Parser).List.Pop()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(children, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, children...)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(children[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewRelative($3)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
+                children := yylex.(*Parser).List.Pop()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameRelative,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupNamespace, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewFullyQualified($2)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                children := yylex.(*Parser).List.Pop()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameFullyQualified,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4833,38 +6460,50 @@ class_name:
 fully_qualified_class_name:
         namespace_name
             {
-                $$ = name.NewName($1)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                children := yylex.(*Parser).List.Pop()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(children, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, children...)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(children[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewRelative($3)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
+                children := yylex.(*Parser).List.Pop()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameRelative,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupNamespace, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewFullyQualified($2)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                children := yylex.(*Parser).List.Pop()
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameFullyQualified,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, children...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4873,13 +6512,13 @@ fully_qualified_class_name:
 class_name_reference:
         class_name
             {
-                $$ = $1 
+                $$ = $1
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   dynamic_class_name_reference
             {
-                $$ = $1 
+                $$ = $1
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4888,41 +6527,32 @@ class_name_reference:
 dynamic_class_name_reference:
         base_variable T_OBJECT_OPERATOR object_property dynamic_class_name_variable_properties
             {
+                children2 := yylex.(*Parser).List.Pop()
+                children1 := yylex.(*Parser).List.Pop()
+
                 $$ = $1
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($3[0], freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(children1[0], ast.TokenGroupStart, $2.HiddenTokens)
 
-                for _, n := range($3) {
-                    switch nn := n.(type) {
-                        case *expr.ArrayDimFetch:
-                            nn.Variable = $$
-                            $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                        
-                        case *expr.PropertyFetch:
-                            nn.Variable = $$
-                            $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                    }
+                for _, n := range(children1) {
+                    yylex.(*Parser).Children(0, n, ast.NodeGroupVar, $$)
+                    yylex.(*Parser).MoveStartTokens($$, n)
+
+                    // save position
+                    yylex.(*Parser).SavePosition(n, yylex.(*Parser).NewPosition([]graph.NodeID{$$, n}, nil, nil))
+
+                    $$ = n
                 }
 
-                for _, n := range($4) {
-                    switch nn := n.(type) {
-                        case *expr.ArrayDimFetch:
-                            nn.Variable = $$
-                            $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                        
-                        case *expr.PropertyFetch:
-                            nn.Variable = $$
-                            $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                    }
+                for _, n := range(children2) {
+                    yylex.(*Parser).Children(0, n, ast.NodeGroupVar, $$)
+                    yylex.(*Parser).MoveStartTokens($$, n)
+
+                    // save position
+                    yylex.(*Parser).SavePosition(n, yylex.(*Parser).NewPosition([]graph.NodeID{$$, n}, nil, nil))
+
+                    $$ = n
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4939,13 +6569,23 @@ dynamic_class_name_reference:
 dynamic_class_name_variable_properties:
         dynamic_class_name_variable_properties dynamic_class_name_variable_property
             {
-                $$ = append($1, $2...) 
+                children2 := yylex.(*Parser).List.Pop()
+                children1 := yylex.(*Parser).List.Pop()
+                
+                yylex.(*Parser).List.Push()
+
+                for _, v := range(children1) {
+                    yylex.(*Parser).List.Add(v)
+                }
+                for _, v := range(children2) {
+                    yylex.(*Parser).List.Add(v)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
-                $$ = []node.Node{} 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4955,10 +6595,15 @@ dynamic_class_name_variable_properties:
 dynamic_class_name_variable_property:
         T_OBJECT_OPERATOR object_property
             {
-                $$ = $2
+                children := yylex.(*Parser).List.Pop()
                 
-                // save comments
-                yylex.(*Parser).setFreeFloating($2[0], freefloating.Var, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(children[0], ast.TokenGroupVar, $1.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                for _, v := range(children) {
+                    yylex.(*Parser).List.Add(v)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4967,63 +6612,69 @@ dynamic_class_name_variable_property:
 exit_expr:
         /* empty */
             {
-                $$ = expr.NewExit(nil);
+                $$ = 0
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' ')'
             {
-                $$ = expr.NewExit(nil);
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprExit,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Exit, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExit, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExit, []scanner.Token{*$1})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   parenthesis_expr
             {
-                $$ = expr.NewExit($1);
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprExit,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yylex.(*Parser).currentToken}, nil))
 
-                // save position
-                if yylex.(*Parser).currentToken.Value == ")" {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yylex.(*Parser).currentToken))
-                } else {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
-                }
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Exit, (*$1.GetFreeFloating())[freefloating.OpenParenthesisToken]); delete((*$1.GetFreeFloating()), freefloating.OpenParenthesisToken)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$1.GetFreeFloating())[freefloating.CloseParenthesisToken]); delete((*$1.GetFreeFloating()), freefloating.CloseParenthesisToken)
+                // TODO handle parenthesis tokens
+                // yylex.(*Parser).setFreeFloating($$, freefloating.Exit, (*$1.GetFreeFloating())[freefloating.OpenParenthesisToken]); delete((*$1.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                // yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$1.GetFreeFloating())[freefloating.CloseParenthesisToken]); delete((*$1.GetFreeFloating()), freefloating.CloseParenthesisToken)
             }
 ;
 
 backticks_expr:
         /* empty */
             {
-                $$ = []node.Node{} 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ENCAPSED_AND_WHITESPACE
             {
-                part := scalar.NewEncapsedStringPart($1.Value)
-                $$ = []node.Node{part}
-
-                // save position
-                part.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).List.Push()
+                nodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarEncapsedStringPart,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).List.Add(nodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   encaps_list
             {
-                $$ = $1; 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -5031,13 +6682,13 @@ backticks_expr:
 ctor_arguments:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   function_call_parameter_list
             {
-                $$ = $1 
+                $$ = $1
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5046,147 +6697,178 @@ ctor_arguments:
 common_scalar:
         T_LNUMBER
             {
-                $$ = scalar.NewLnumber($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarLnumber,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DNUMBER
             {
-                $$ = scalar.NewDnumber($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarDnumber,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
-                $$ = scalar.NewString($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarString,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_LINE
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarMagicConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FILE
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarMagicConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DIR
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarMagicConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_TRAIT_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarMagicConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_METHOD_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarMagicConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FUNC_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarMagicConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarMagicConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
-                encapsed := scalar.NewEncapsedStringPart($2.Value)
-                $$ = scalar.NewHeredoc($1.Value, []node.Node{encapsed})
+                stringPartNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarEncapsedStringPart,
+                    },
+                })
+                yylex.(*Parser).SavePosition(stringPartNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                // save position
-                encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarHeredoc,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, stringPartNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_START_HEREDOC T_END_HEREDOC
             {
-                $$ = scalar.NewHeredoc($1.Value, nil)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarHeredoc,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5195,17 +6877,27 @@ common_scalar:
 static_class_constant:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
-                target := node.NewIdentifier($3.Value)
-                $$ = expr.NewClassConstFetch($1, target)
-                
-                // save position
-                target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprClassConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
+
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupConstantName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5235,71 +6927,109 @@ static_scalar_value:
             }
     |   namespace_name
             {
-                name := name.NewName($1)
-                $$ = expr.NewConstFetch(name)
+                children := yylex.(*Parser).List.Pop()
+                namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConstant, nameNodeID)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(children[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                name := name.NewRelative($3)
-                $$ = expr.NewConstFetch(name)
-                
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
+                children := yylex.(*Parser).List.Pop()
+                namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameRelative,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConstant, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupNamespace, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                name := name.NewFullyQualified($2)
-                $$ = expr.NewConstFetch(name)
+                children := yylex.(*Parser).List.Pop()
+                namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameFullyQualified,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConstant, nameNodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ARRAY '(' static_array_pair_list ')'
             {
-                $$ = expr.NewArray($3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArray,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Array, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $4.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArray, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArrayPairList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '[' static_array_pair_list ']'
             {
-                $$ = expr.NewShortArray($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprShortArray,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $3.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArrayPairList, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5311,13 +7041,15 @@ static_scalar_value:
             }
     |   T_CLASS_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarMagicConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5332,427 +7064,588 @@ static_scalar_value:
 static_operation:
         static_scalar_value '[' static_scalar_value ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '+' static_scalar_value
             {
-                $$ = binary.NewPlus($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryPlus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '-' static_scalar_value
             {
-                $$ = binary.NewMinus($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryMinus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '*' static_scalar_value
             {
-                $$ = binary.NewMul($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryMul,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_POW static_scalar_value
             {
-                $$ = binary.NewPow($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryPow,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '/' static_scalar_value
             {
-                $$ = binary.NewDiv($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryDiv,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '%' static_scalar_value
             {
-                $$ = binary.NewMod($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryMod,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '!' static_scalar_value
             {
-                $$ = expr.NewBooleanNot($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprBooleanNot,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '~' static_scalar_value
             {
-                $$ = expr.NewBitwiseNot($2)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprBitwiseNot,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '|' static_scalar_value
             {
-                $$ = binary.NewBitwiseOr($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBitwiseOr,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '&' static_scalar_value
             {
-                $$ = binary.NewBitwiseAnd($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBitwiseAnd,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '^' static_scalar_value
             {
-                $$ = binary.NewBitwiseXor($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBitwiseXor,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_SL static_scalar_value
             {
-                $$ = binary.NewShiftLeft($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryShiftLeft,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_SR static_scalar_value
             {
-                $$ = binary.NewShiftRight($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryShiftRight,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '.' static_scalar_value
             {
-                $$ = binary.NewConcat($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryConcat,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_LOGICAL_XOR static_scalar_value
             {
-                $$ = binary.NewLogicalXor($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryLogicalXor,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_LOGICAL_AND static_scalar_value
             {
-                $$ = binary.NewLogicalAnd($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryLogicalAnd,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_LOGICAL_OR static_scalar_value
             {
-                $$ = binary.NewLogicalOr($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryLogicalOr,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_BOOLEAN_AND static_scalar_value
             {
-                $$ = binary.NewBooleanAnd($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBooleanAnd,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_BOOLEAN_OR static_scalar_value
             {
-                $$ = binary.NewBooleanOr($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryBooleanOr,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_IS_IDENTICAL static_scalar_value
             {
-                $$ = binary.NewIdentical($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryIdentical,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_IS_NOT_IDENTICAL static_scalar_value
             {
-                $$ = binary.NewNotIdentical($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryNotIdentical,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_IS_EQUAL static_scalar_value
             {
-                $$ = binary.NewEqual($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryEqual,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_IS_NOT_EQUAL static_scalar_value
             {
-                $$ = binary.NewNotEqual($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryNotEqual,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Equal, yylex.(*Parser).GetFreeFloatingToken($2))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEqual, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '<' static_scalar_value
             {
-                $$ = binary.NewSmaller($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinarySmaller,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '>' static_scalar_value
             {
-                $$ = binary.NewGreater($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryGreater,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_IS_SMALLER_OR_EQUAL static_scalar_value
             {
-                $$ = binary.NewSmallerOrEqual($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinarySmallerOrEqual,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_IS_GREATER_OR_EQUAL static_scalar_value
             {
-                $$ = binary.NewGreaterOrEqual($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeBinaryGreaterOrEqual,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '?' ':' static_scalar_value
             {
-                $$ = expr.NewTernary($1, nil, $4)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprTernary,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.True, $3.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupIfFalse, $4)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupTrue, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value '?' static_scalar_value ':' static_scalar_value
             {
-                $$ = expr.NewTernary($1, $3, $5)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprTernary,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $5}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.True, $4.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupIfTrue, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupIfFalse, $5)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupTrue, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '+' static_scalar_value
             {
-                $$ = expr.NewUnaryPlus($2)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprUnaryPlus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '-' static_scalar_value
             {
-                $$ = expr.NewUnaryMinus($2)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprUnaryMinus,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' static_scalar_value ')'
             {
-                $$ = $2
+                $$ = $2;
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
+                // save tokens
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5767,44 +7660,74 @@ general_constant:
             }
     |   namespace_name
             {
-                name := name.NewName($1)
-                $$ = expr.NewConstFetch(name)
+                children := yylex.(*Parser).List.Pop()
+                namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameName,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConstant, nameNodeID)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens(children[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                name := name.NewRelative($3)
-                $$ = expr.NewConstFetch(name)
-                
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(name, freefloating.Namespace, $2.FreeFloating)
+                children := yylex.(*Parser).List.Pop()
+                namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameRelative,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
+
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConstant, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupNamespace, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                name := name.NewFullyQualified($2)
-                $$ = expr.NewConstFetch(name)
-                
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
+                children := yylex.(*Parser).List.Pop()
+                namenodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeNameFullyQualified,
+                    },
+                })
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{nameNodeID}, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConstant, nameNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5813,15 +7736,24 @@ general_constant:
 scalar:
         T_STRING_VARNAME
             {
-                name := node.NewIdentifier($1.Value)
-                $$ = expr.NewVariable(name)
-                
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5845,37 +7777,47 @@ scalar:
             }
     |   '"' encaps_list '"'
             {
-                $$ = scalar.NewEncapsed($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarEncapsed,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
-                 $$ = scalar.NewHeredoc($1.Value, $2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarHeredoc,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CLASS_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarMagicConstant,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5884,17 +7826,17 @@ scalar:
 static_array_pair_list:
         /* empty */
             {
-                $$ = nil 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_static_array_pair_list possible_comma
             {
-                $$ = $1
+                prevNodeID := yylex.(*Parser).List.Last()
 
-                // save comments
                 if $2 != nil {
-                    yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                    yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                    yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, []scanner.Token{*$2})
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -5915,57 +7857,85 @@ possible_comma:
 non_empty_static_array_pair_list:
         non_empty_static_array_pair_list ',' static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
-                arrayItem := expr.NewArrayItem($3, $5)
-                $$ = append($1, arrayItem)
-                
-                // save position
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($3, $5))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
-                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $4.FreeFloating)
+                prevNodeID := yylex.(*Parser).List.Last()
+
+                itemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(itemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{$3, $5}, nil, nil))
+
+                prevNodeID := yylex.(*Parser).Children(0, itemNodeID, ast.NodeGroupKey, $3)
+                yylex.(*Parser).Children(prevNodeID, itemNodeID, ast.NodeGroupVal, $5)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).MoveStartTokens($3, itemNodeID)
+                yylex.(*Parser).AppendTokens(itemNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+
+                yylex.(*Parser).List.Add(itemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_static_array_pair_list ',' static_scalar_value
             {
-                arrayItem := expr.NewArrayItem(nil, $3)
-                $$ = append($1, arrayItem)
-                
-                // save position
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
+                prevNodeID := yylex.(*Parser).List.Last()
+
+                itemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(itemNodeID, yylex.(*Parser).NewPosition( []graph.NodeID{$3}, nil, nil))
+
+                yylex.(*Parser).Children(0, itemNodeID, ast.NodeGroupVal, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).MoveStartTokens($3, itemNodeID)
+
+                yylex.(*Parser).List.Add(itemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
-                arrayItem := expr.NewArrayItem($1, $3)
-                $$ = []node.Node{arrayItem}
+                itemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(itemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
-                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, itemNodeID, ast.NodeGroupKey, $1)
+                yylex.(*Parser).Children(prevNodeID, itemNodeID, ast.NodeGroupVal, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, itemNodeID)
+                yylex.(*Parser).AppendTokens(itemNodeID, ast.TokenGroupExpr, $2.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(itemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_scalar_value
             {
-                arrayItem := expr.NewArrayItem(nil, $1)
-                $$ = []node.Node{arrayItem}
-                
-                // save position
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                itemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(itemNodeID, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
+                yylex.(*Parser).Children(0, itemNodeID, ast.NodeGroupVal, $1)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, itemNodeID)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(itemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5989,33 +7959,27 @@ expr:
 parenthesis_expr:
         '(' expr ')'
             {
-                $$ = $2
+                $$ = $2;
 
-                // save comments
-                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($2, freefloating.Start, append((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken], (*$2.GetFreeFloating())[freefloating.Start]...))
-                }
-                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($2, freefloating.End, append((*$2.GetFreeFloating())[freefloating.End], (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]...))
-                }
-                yylex.(*Parser).setFreeFloating($2, freefloating.OpenParenthesisToken, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
-                yylex.(*Parser).setFreeFloating($2, freefloating.CloseParenthesisToken, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
+                // save tokens
+                // TODO: handle parenthesis tokens
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' yield_expr ')'
             {
-                $$ = $2
+                $$ = $2;
 
-                // save comments
-                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($2, freefloating.Start, append((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken], (*$2.GetFreeFloating())[freefloating.Start]...))
-                }
-                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($2, freefloating.End, append((*$2.GetFreeFloating())[freefloating.End], (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]...))
-                }
-                yylex.(*Parser).setFreeFloating($2, freefloating.OpenParenthesisToken, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
-                yylex.(*Parser).setFreeFloating($2, freefloating.CloseParenthesisToken, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
+                // save tokens
+                // TODO: handle parenthesis tokens
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6053,58 +8017,50 @@ rw_variable:
 variable:
         base_variable_with_function_calls T_OBJECT_OPERATOR object_property method_or_not variable_properties
             {
+                children5 := yylex.(*Parser).List.Pop()
+                children4 := yylex.(*Parser).List.Pop()
+                children3 := yylex.(*Parser).List.Pop()
+
                 $$ = $1
 
-                if $4 != nil {
-                    $4[0].(*expr.MethodCall).Method = $3[len($3)-1].(*expr.PropertyFetch).Property
-                    $3 = append($3[:len($3)-1], $4...)
+                if len(children4) > 0 {
+
+                    node := yylex.(*Parser).Ast.Nodes.Get(children3[len(children3)-1])
+
+                    yylex.(*Parser).Ast.EachEdge(node.Edges, func(e graph.Edge) bool {
+                        if e.Type != graph.EdgeTypeNode {
+                            return false
+                        }
+
+                        yylex.(*Parser).Children(children4[0], n, ast.NodeGroupMethod, e.Target)
+
+                        return true
+                    })
+
+                    children3 := append(children3[:len(children3)-1], children4...)
                 }
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($3[0], freefloating.Var, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(children3[0], ast.TokenGroupVar, $2.HiddenTokens)
 
-                for _, n := range($3) {
-                    switch nn := n.(type) {
-                        case *expr.ArrayDimFetch:
-                            nn.Variable = $$
-                            nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                        
-                        case *expr.PropertyFetch:
-                            nn.Variable = $$
-                            nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                        
-                        case *expr.MethodCall:
-                            nn.Variable = $$
-                            nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                    }
+                for _, n := range(children3) {
+                    yylex.(*Parser).Children(0, n, ast.NodeGroupVar, $$)
+                    yylex.(*Parser).MoveStartTokens($$, n)
+
+                    // save position
+                    yylex.(*Parser).SavePosition(n, yylex.(*Parser).NewPosition([]graph.NodeID{$$, n}, nil, nil))
+
+                    $$ = n
                 }
 
-                for _, n := range($5) {
-                    switch nn := n.(type) {
-                        case *expr.ArrayDimFetch:
-                            nn.Variable = $$
-                            nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                        
-                        case *expr.PropertyFetch:
-                            nn.Variable = $$
-                            nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                        
-                        case *expr.MethodCall:
-                            nn.Variable = $$
-                            nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
-                            $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
-                    }
+                for _, n := range(children5) {
+                    yylex.(*Parser).Children(0, n, ast.NodeGroupVar, $$)
+                    yylex.(*Parser).MoveStartTokens($$, n)
+
+                    // save position
+                    yylex.(*Parser).SavePosition(n, yylex.(*Parser).NewPosition([]graph.NodeID{$$, n}, nil, nil))
+
+                    $$ = n
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6120,13 +8076,23 @@ variable:
 variable_properties:
         variable_properties variable_property
             {
-                $$ = append($1, $2...) 
+                children2 := yylex.(*Parser).List.Pop()
+                children1 := yylex.(*Parser).List.Pop()
+                
+                yylex.(*Parser).List.Push()
+
+                for _, v := range(children1) {
+                    yylex.(*Parser).List.Add(v)
+                }
+                for _, v := range(children2) {
+                    yylex.(*Parser).List.Add(v)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
-                $$ = []node.Node{} 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6136,15 +8102,34 @@ variable_properties:
 variable_property:
         T_OBJECT_OPERATOR object_property method_or_not
             {
-                if $3 != nil {
-                    $3[0].(*expr.MethodCall).Method = $2[len($2)-1].(*expr.PropertyFetch).Property
-                    $2 = append($2[:len($2)-1], $3...)
+                children3 := yylex.(*Parser).List.Pop()
+                children2 := yylex.(*Parser).List.Pop()
+
+                if len(children3) > 0 {
+
+                    node := yylex.(*Parser).Ast.Nodes.Get(children2[len(children2)-1])
+
+                    yylex.(*Parser).Ast.EachEdge(node.Edges, func(e graph.Edge) bool {
+                        if e.Type != graph.EdgeTypeNode {
+                            return false
+                        }
+
+                        yylex.(*Parser).Children(children3[0], n, ast.NodeGroupMethod, e.Target)
+
+                        return true
+                    })
+
+                    children2 := append(children2[:len(children2)-1], children3...)
                 }
 
-                $$ = $2
+                yylex.(*Parser).List.Push()
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($2[0], freefloating.Var, $1.FreeFloating)
+                for _, v := range(children2) {
+                    yylex.(*Parser).List.Add(v)
+                }
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(children2[0], ast.TokenGroupVar, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6153,29 +8138,45 @@ variable_property:
 array_method_dereference:
         array_method_dereference '[' dim_offset ']'
             {
-                fetch := expr.NewArrayDimFetch(nil, $3)
-                $$ = append($1, fetch)
+                fetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition(fetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil))
 
-                // save position
-                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
+                yylex.(*Parser).Children(prevNodeID, fetchNodeID, ast.NodeGroupDim, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                // save tokens
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, []scanner.Token{*$4})
+
+                yylex.(*Parser).List.Add(fetchNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   method '[' dim_offset ']'
             {
-                fetch := expr.NewArrayDimFetch(nil, $3)
-                $$ = []node.Node{$1, fetch}
+                fetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition(fetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil))
 
-                // save position
-                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
+                yylex.(*Parser).Children(prevNodeID, fetchNodeID, ast.NodeGroupDim, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                // save tokens
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens(fetchNodeID, ast.TokenGroupExpr, []scanner.Token{*$4})
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Add(fetchNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6184,10 +8185,14 @@ array_method_dereference:
 method:
         function_call_parameter_list
             {
-                $$ = expr.NewMethodCall(nil, nil, $1.(*node.ArgumentList))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprMethodCall,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupArgumentList, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6196,19 +8201,18 @@ method:
 method_or_not:
         method
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   array_method_dereference
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
-                $$ = nil 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6217,19 +8221,22 @@ method_or_not:
 variable_without_objects:
         reference_variable
             {
-                $$ = $1 
+                $$ = $1
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   simple_indirect_reference reference_variable
             {
-                $1.last.SetVarName($2)
+                children := yylex.(*Parser).List.Pop()
+                last := children[len(children)-1]
 
-                for _, n := range($1.all) {
-                    n.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(n, $2))
+                yylex.(*Parser).Children(0, last, ast.NodeGroupVarName, $2)
+
+                for _, n := range(children) {
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{n, $2}, nil, nil))
                 }
 
-                $$ = $1.all[0]
+                $$ = children[0]
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6238,27 +8245,37 @@ variable_without_objects:
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
-                $$ = expr.NewStaticPropertyFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprStaticPropertyFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
-                $$ = expr.NewStaticPropertyFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprStaticPropertyFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6276,29 +8293,43 @@ variable_class_name:
 array_function_dereference:
         array_function_dereference '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   function_call '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6335,13 +8366,16 @@ base_variable:
             }
     |   simple_indirect_reference reference_variable
             {
-                $1.last.SetVarName($2)
+                children := yylex.(*Parser).List.Pop()
+                last := children[len(children)-1]
 
-                for _, n := range($1.all) {
-                    n.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(n, $2))
+                yylex.(*Parser).Children(0, last, ast.NodeGroupVarName, $2)
+
+                for _, n := range(children) {
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{n, $2}, nil, nil))
                 }
 
-                $$ = $1.all[0]
+                $$ = children[0]
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6356,29 +8390,43 @@ base_variable:
 reference_variable:
         reference_variable '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   reference_variable '{' expr '}'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6394,31 +8442,45 @@ reference_variable:
 compound_variable:
         T_VARIABLE
             {
-                name := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                $$ = expr.NewVariable(name)
-                
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).addDollarToken($$)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '$' '{' expr '}'
             {
-                $$ = expr.NewVariable($3)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).setFreeFloating($3, freefloating.Start, append($2.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($2), (*$3.GetFreeFloating())[freefloating.Start]...)...))
-                yylex.(*Parser).setFreeFloating($3, freefloating.End, append((*$3.GetFreeFloating())[freefloating.End], append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...)...))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupDollar, []scanner.Token{*$1})
+                yylex.(*Parser).PrependTokens($3, ast.TokenGroupStart, []scanner.Token{*$2})
+                yylex.(*Parser).PrependTokens($3, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($3, ast.TokenGroupEnd, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($3, ast.TokenGroupEnd, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6427,7 +8489,7 @@ compound_variable:
 dim_offset:
         /* empty */
             {
-                $$ = nil 
+                $$ = 0 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6443,17 +8505,21 @@ dim_offset:
 object_property:
         object_dim_list 
             {
-                $$ = $1 
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_without_objects
             {
-                fetch := expr.NewPropertyFetch(nil, $1)
-                $$ = []node.Node{fetch}
+                propertyFetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprStaticPropertyFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition(propertyFetchNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, nil, nil))
 
-                // save position
-                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).Children(0, propertyFetchNodeID, ast.NodeGroupProperty, $1)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(propertyFetchNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6462,39 +8528,59 @@ object_property:
 object_dim_list:
         object_dim_list '[' dim_offset ']'
             {
-                fetch := expr.NewArrayDimFetch(nil, $3)
-                $$ = append($1, fetch)
-                
-                // save position
-                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
+                ArrayDimFetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayDimFetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                yylex.(*Parser).Children(prevNodeID, ArrayDimFetchNodeID, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupExpr, []scanner.Token{*$4})
+
+                yylex.(*Parser).List.Add(ArrayDimFetchNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   object_dim_list '{' expr '}'
             {
-                fetch := expr.NewArrayDimFetch(nil, $3)
-                $$ = append($1, fetch)
-                
-                // save position
-                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
+                ArrayDimFetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayDimFetchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                yylex.(*Parser).Children(prevNodeID, ArrayDimFetchNodeID, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens(ArrayDimFetchNodeID, ast.TokenGroupExpr, []scanner.Token{*$4})
+
+                yylex.(*Parser).List.Add(ArrayDimFetchNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_name
             {
-                fetch := expr.NewPropertyFetch(nil, $1)
-                $$ = []node.Node{fetch}
-                
-                // save position
-                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                propertyFetchnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprStaticPropertyFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition(propertyFetchNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, nil, nil))
+
+                yylex.(*Parser).Children(0, propertyFetchNodeID, ast.NodeGroupProperty, $1)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(propertyFetchNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6503,26 +8589,27 @@ object_dim_list:
 variable_name:
         T_STRING
             {
-                $$ = node.NewIdentifier($1.Value)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' expr '}'
             {
-                $$ = $2
+                $$ = $2;
                 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
+                // save tokens
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6531,33 +8618,38 @@ variable_name:
 simple_indirect_reference:
         '$'
             {
-                n := expr.NewVariable(nil)
-                $$ = simpleIndirectReference{[]*expr.Variable{n}, n}
-                
-                // save position
-                n.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(n, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(n, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
+                varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupDollar, []scanner.Token{*$1})
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(varNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   simple_indirect_reference '$'
             {
-                n := expr.NewVariable(nil)
+                varnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $1.last.SetVarName(n)
-                $1.all = append($1.all, n)
-                $1.last = n
-                $$ = $1
-                
-                // save position
-                n.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(n, freefloating.Start, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(n, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($2))
+                yylex.(*Parser).Children(0, yylex.(*Parser).List.Last(), ast.NodeGroupVarName, varNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupDollar, []scanner.Token{*$1})
+
+                yylex.(*Parser).List.Add(varNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6566,23 +8658,35 @@ simple_indirect_reference:
 assignment_list:
         assignment_list ',' assignment_list_element
             {
-                if len($1) == 0 {
-                    $1 = []node.Node{expr.NewArrayItem(nil, nil)}
+                if yylex.(*Parser).List.Len() == 0 {
+                    ArrayItemNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                        SimpleNode: ast.SimpleNode{
+                            Type: ast.NodeTypeExprArrayItem,
+                        },
+                    })
+                    yylex.(*Parser).List.Add(ArrayItemNodeID)
                 }
 
-                $$ = append($1, $3)
+                yylex.(*Parser).AppendTokens(yylex.(*Parser).List.Last(), ast.TokenGroupEnd, $2.HiddenTokens)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                if $3 == 0 {
+                    ArrayItemNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                        SimpleNode: ast.SimpleNode{
+                            Type: ast.NodeTypeExprArrayItem,
+                        },
+                    })
+                    yylex.(*Parser).List.Add(ArrayItemNodeID)
+                } else {
+                    yylex.(*Parser).List.Add($3)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   assignment_list_element
             {
-                if $1.(*expr.ArrayItem).Key == nil && $1.(*expr.ArrayItem).Val == nil {
-                    $$ = []node.Node{}
-                } else {
-                    $$ = []node.Node{$1}
+                yylex.(*Parser).List.Push()
+                if $1 != 0 {
+                    yylex.(*Parser).List.Add($1)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6593,35 +8697,51 @@ assignment_list:
 assignment_list_element:
         variable
             {
-                $$ = expr.NewArrayItem(nil, $1)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVal, $1)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_LIST '(' assignment_list ')'
             {
-                listNode := expr.NewList($3)
-                $$ = expr.NewArrayItem(nil, listNode)
+                listNodeID :=  yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprList,
+                    },
+                })
+                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
                 
-                // save position
-                listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(listNode))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating(listNode, freefloating.List, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, $4.FreeFloating)
+                yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVal, listNodeID)
+
+                // TODO: Cannot use list() as standalone expression
+                
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupList, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
-                $$ = expr.NewArrayItem(nil, nil) 
+                $$ = 0
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6631,21 +8751,23 @@ assignment_list_element:
 array_pair_list:
         /* empty */
             {
-                $$ = []node.Node{} 
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_array_pair_list possible_comma
             {
-                $$ = $1
-
                 if $2 != nil {
-                    $$ = append($1, expr.NewArrayItem(nil, nil))
-                }
+                    // save tokens
+                    yylex.(*Parser).AppendTokens(yylex.(*Parser).List.Last(), ast.TokenGroupEnd, $2.HiddenTokens)
 
-                // save comments
-                if $2 != nil {
-                    yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                    // seve node
+                    ArrayItemNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                        SimpleNode: ast.SimpleNode{
+                            Type: ast.NodeTypeExprArrayItem,
+                        },
+                    })
+                    yylex.(*Parser).List.Add(ArrayItemNodeID)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6655,123 +8777,203 @@ array_pair_list:
 non_empty_array_pair_list:
         non_empty_array_pair_list ',' expr T_DOUBLE_ARROW expr
             {
-                arrayItem := expr.NewArrayItem($3, $5)
-                $$ = append($1, arrayItem)
+                prevNodeID := yylex.(*Parser).List.Last()
 
-                // save position
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($3, $5))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
-                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $4.FreeFloating)
+                ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{$3, $5}, nil, nil))
+
+                prevNodeID := yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupKey, $3)
+                yylex.(*Parser).Children(prevNodeID, ArrayItemNodeID, ast.NodeGroupVal, $5)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).MoveStartTokens($3, ArrayItemNodeID)
+                yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+
+                yylex.(*Parser).List.Add(ArrayItemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_array_pair_list ',' expr
             {
-                arrayItem := expr.NewArrayItem(nil, $3)
-                $$ = append($1, arrayItem)
-                
-                // save position
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
+                prevNodeID := yylex.(*Parser).List.Last()
+
+                ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition( []graph.NodeID{$3}, nil, nil))
+
+                yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupVal, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).MoveStartTokens($3, ArrayItemNodeID)
+
+                yylex.(*Parser).List.Add(ArrayItemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_DOUBLE_ARROW expr
             {
-                arrayItem := expr.NewArrayItem($1, $3)
-                $$ = []node.Node{arrayItem}
+                ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                // save position
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
-                
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
-                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $2.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupKey, $1)
+                yylex.(*Parser).Children(prevNodeID, ArrayItemNodeID, ast.NodeGroupVal, $3)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, ArrayItemNodeID)
+                yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupExpr, $2.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(ArrayItemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr
             {
-                arrayItem := expr.NewArrayItem(nil, $1)
-                $$ = []node.Node{arrayItem}
+                ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                // save position
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupVal, $1)
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, ArrayItemNodeID)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(ArrayItemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_array_pair_list ',' expr T_DOUBLE_ARROW '&' w_variable
             {
-                reference := expr.NewReference($6)
-                arrayItem := expr.NewArrayItem($3, reference)
-                $$ = append($1, arrayItem)
+                prevNodeID := yylex.(*Parser).List.Last()
+
+                refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprReference,
+                    },
+                })
+                yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$5}, []graph.NodeID{$6}))
                 
-                // save position
-                reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($5, $6))
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($3, $6))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
-                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $4.FreeFloating)
-                yylex.(*Parser).setFreeFloating(reference, freefloating.Start, $5.FreeFloating)
+                ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{$3, $6}, nil, nil))
+
+                yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, $6)
+                prevNodeID := yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupKey, $3)
+                yylex.(*Parser).Children(prevNodeID, ArrayItemNodeID, ast.NodeGroupVal, refNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).MoveStartTokens($3, ArrayItemNodeID)
+                yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens(refNodeID, ast.TokenGroupStart, $5.HiddenTokens)
+
+                yylex.(*Parser).List.Add(ArrayItemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_array_pair_list ',' '&' w_variable
             {
-                reference := expr.NewReference($4)
-                arrayItem := expr.NewArrayItem(nil, reference)
-                $$ = append($1, arrayItem)
+                prevNodeID := yylex.(*Parser).List.Last()
+
+                refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprReference,
+                    },
+                })
+                yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$4}))
                 
-                // save position
-                reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $4))
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $4))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Start, $3.FreeFloating)
+                ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$4}))
+
+                yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, $4)
+                yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupVal, refNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+
+                yylex.(*Parser).List.Add(ArrayItemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_DOUBLE_ARROW '&' w_variable
             {
-                reference := expr.NewReference($4)
-                arrayItem := expr.NewArrayItem($1, reference)
-                $$ = []node.Node{arrayItem}
+                refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprReference,
+                    },
+                })
+                yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$4}))
                 
-                // save position
-                reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $4))
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
-                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(reference, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, $4)
+                prevNodeID := yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupKey, $1)
+                yylex.(*Parser).Children(prevNodeID, ArrayItemNodeID, ast.NodeGroupVal, refNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, ArrayItemNodeID)
+                yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(refNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(ArrayItemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '&' w_variable
             {
-                reference := expr.NewReference($2)
-                arrayItem := expr.NewArrayItem(nil, reference)
-                $$ = []node.Node{arrayItem}
+                refNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprReference,
+                    },
+                })
+                yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
                 
-                // save position
-                reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Start, $1.FreeFloating)
+                ArrayItemnodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayItem,
+                    },
+                })
+                yylex.(*Parser).SavePosition(ArrayItemNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
+
+                yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, $2)
+                yylex.(*Parser).Children(0, ArrayItemNodeID, ast.NodeGroupVal, refNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens(ArrayItemNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(ArrayItemNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6780,39 +8982,49 @@ non_empty_array_pair_list:
 encaps_list:
         encaps_list encaps_var
             {
-                $$ = append($1, $2) 
+                yylex.(*Parser).List.Add($2)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   encaps_list T_ENCAPSED_AND_WHITESPACE
             {
-                encapsed := scalar.NewEncapsedStringPart($2.Value)
-                $$ = append($1, encapsed)
+                encapsNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarEncapsedStringPart,
+                    },
+                })
+                yylex.(*Parser).SavePosition(encapsNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                // save position
-                encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).List.Add(encapsNodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(encapsNodeID, ast.TokenGroupStart, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   encaps_var
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ENCAPSED_AND_WHITESPACE encaps_var
             {
-                encapsed := scalar.NewEncapsedStringPart($1.Value)
-                $$ = []node.Node{encapsed, $2}
+                yylex.(*Parser).List.Push()
+                
+                encapsNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarEncapsedStringPart,
+                    },
+                })
+                yylex.(*Parser).SavePosition(encapsNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).List.Add(encapsNodeID)
+                yylex.(*Parser).List.Add($2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(encapsNodeID, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6821,105 +9033,180 @@ encaps_list:
 encaps_var:
         T_VARIABLE
             {
-                name := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                $$ = expr.NewVariable(name)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).addDollarToken($$)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                $$ = expr.NewArrayDimFetch(variable, $3)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save comments
-                yylex.(*Parser).addDollarToken(variable)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                variable := expr.NewVariable(identifier)
-                fetch := node.NewIdentifier($3.Value)
-                $$ = expr.NewPropertyFetch(variable, fetch)
+                varNameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save comments
-                yylex.(*Parser).addDollarToken(variable)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(fetch, freefloating.Start, $3.FreeFloating)
+                propertyNameNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(propertyNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprPropertyFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, varNameNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, propertyNameNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(propertyNameNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
-                variable := expr.NewVariable($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                $$ = variable
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, $2)
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).setFreeFloating($$, freefloating.End, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}'
             {
-                name := node.NewIdentifier($2.Value)
-                variable := expr.NewVariable(name)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $$ = variable
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save position
-                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).setFreeFloating($$, freefloating.End, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
-                identifier := node.NewIdentifier($2.Value)
-                variable := expr.NewVariable(identifier)
-                $$ = expr.NewArrayDimFetch(variable, $4)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
+                varNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprArrayDimFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($5.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($5)...))
-                yylex.(*Parser).setFreeFloating($$, freefloating.End, append($6.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($6)...))
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $4)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$3})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $5.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$5})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $6.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$6})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6927,9 +9214,10 @@ encaps_var:
             {
                 $$ = $2;
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
-                yylex.(*Parser).setFreeFloating($$, freefloating.End, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6938,45 +9226,63 @@ encaps_var:
 encaps_var_offset:
         T_STRING
             {
-                $$ = scalar.NewString($1.Value)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeScalarString,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NUM_STRING
             {
                 // TODO: add option to handle 64 bit integer
-                if _, err := strconv.Atoi($1.Value); err == nil {
-                    $$ = scalar.NewLnumber($1.Value)
+                tknValue := yylex.(*Parser).Ast.FileData[$1.StartPos:$1.EndPos]
+                if _, err := strconv.Atoi(string(tknValue)); err == nil {
+                    $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                        SimpleNode: ast.SimpleNode{
+                            Type: ast.NodeTypeScalarLnumber,
+                        },
+                    })
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 } else {
-                    $$ = scalar.NewString($1.Value)
+                    $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                        SimpleNode: ast.SimpleNode{
+                            Type: ast.NodeTypeScalarString,
+                        },
+                    })
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 }
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
-                $$ = expr.NewVariable(identifier)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save position
-                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprVariable,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).addDollarToken($$)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6985,105 +9291,137 @@ encaps_var_offset:
 internal_functions_in_yacc:
         T_ISSET '(' isset_variables ')'
             {
-                $$ = expr.NewIsset($3)
-                
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Isset, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $4.FreeFloating)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprIsset,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVars, yylex.(*Parser).List.Pop()...)
+
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupIsset, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EMPTY '(' variable ')'
             {
-                $$ = expr.NewEmpty($3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprEmpty,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Empty, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEmpty, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EMPTY '(' expr ')'
             {
-                $$ = expr.NewEmpty($3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprEmpty,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Empty, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEmpty, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_INCLUDE expr
             {
-                $$ = expr.NewInclude($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprInclude,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_INCLUDE_ONCE expr
             {
-                $$ = expr.NewIncludeOnce($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprIncludeOnce,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EVAL '(' expr ')'
             {
-                $$ = expr.NewEval($3)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprEval,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Eval, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEval, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_REQUIRE expr
             {
-                $$ = expr.NewRequire($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprRequire,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_REQUIRE_ONCE expr
             {
-                $$ = expr.NewRequireOnce($2)
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprRequireOnce,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7092,20 +9430,21 @@ internal_functions_in_yacc:
 isset_variables:
         isset_variable
             {
-                $$ = []node.Node{$1} 
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   isset_variables ',' isset_variable
             {
-                $$ = append($1, $3)
+                prevNodeID := yylex.(*Parser).List.Last()
+                yylex.(*Parser).List.Add($3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                // save tokens
+                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-;
 
 isset_variable:
         variable
@@ -7125,33 +9464,53 @@ isset_variable:
 class_constant:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
-                target := node.NewIdentifier($3.Value)
-                $$ = expr.NewClassConstFetch($1, target)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save position
-                target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprClassConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupConstantName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
-                target := node.NewIdentifier($3.Value)
-                $$ = expr.NewClassConstFetch($1, target)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save position
-                target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprClassConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupConstantName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7160,17 +9519,27 @@ class_constant:
 static_class_name_scalar:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
             {
-                target := node.NewIdentifier($3.Value)
-                $$ = expr.NewClassConstFetch($1, target)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save position
-                target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprClassConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupConstantName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7179,25 +9548,30 @@ static_class_name_scalar:
 class_name_scalar:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
             {
-                target := node.NewIdentifier($3.Value)
-                $$ = expr.NewClassConstFetch($1, target)
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeIdentifier,
+                    },
+                })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                // save position
-                target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                $$ = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
+                    SimpleNode: ast.SimpleNode{
+                        Type: ast.NodeTypeExprClassConstFetch,
+                    },
+                })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
-                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupConstantName, identifierNodeID)
+
+                // save tokens
+                yylex.(*Parser).MoveStartTokens($1, $$)
+                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 %%
-
-type simpleIndirectReference struct {
-	all  []*expr.Variable
-	last *expr.Variable
-}
