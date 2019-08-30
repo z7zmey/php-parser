@@ -154,7 +154,7 @@ func (p *AbstractParser) NewPosition(startNodeIDlist []graph.NodeID, tokenList [
 	return p.Ast.Positions.Create(pos)
 }
 
-func (p *AbstractParser) Children(prevNodeID graph.NodeID, parentNodeID graph.NodeID, nodeGroup ast.NodeGroup, children ...graph.NodeID) graph.NodeID {
+func (p *AbstractParser) Children(parentNodeID graph.NodeID, nodeGroup ast.NodeGroup, children ...graph.NodeID) graph.NodeID {
 	for _, childNodeID := range children {
 		if childNodeID == 0 {
 			continue

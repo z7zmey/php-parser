@@ -2109,7 +2109,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(children, nil, nil))
-			yylex.(*Parser).Children(0, nodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(nodeID, ast.NodeGroupStmts, children...)
 
 			yylex.(*Parser).Ast.RootNode = nodeID
 
@@ -2647,7 +2647,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(children, nil, nil))
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParts, children...)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(children[0], yyVAL.node)
@@ -2665,7 +2665,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParts, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -2684,7 +2684,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParts, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -2773,7 +2773,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
-			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
+			yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, children...)
 
 			// Create Namespace Node
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
@@ -2782,7 +2782,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupNamespaceName, nameNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupNamespaceName, nameNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(children[0], nameNodeID)
@@ -2806,7 +2806,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+			yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
 			// Create Namespace Node
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
@@ -2815,8 +2815,8 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[5].token}, nil))
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupNamespaceName, nameNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, childrenStmts...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupNamespaceName, nameNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, childrenStmts...)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -2837,7 +2837,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -2865,7 +2865,7 @@ yydefault:
 		// line internal/parser/php7/php7.y:582
 		{
 			yylex.(*Parser).SavePosition(yyDollar[2].node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
-			yylex.(*Parser).Children(0, yyDollar[3].node, ast.NodeGroupUseType, yyDollar[2].node)
+			yylex.(*Parser).Children(yyDollar[3].node, ast.NodeGroupUseType, yyDollar[2].node)
 
 			yyVAL.node = yyDollar[3].node
 
@@ -2887,7 +2887,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUses, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupUses, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -2907,8 +2907,8 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUseType, yyDollar[2].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupUses, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupUseType, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupUses, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -2928,7 +2928,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConsts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupConsts, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -2983,7 +2983,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+			yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
 			// Create GroupUse Node
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
@@ -2992,8 +2992,8 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{yyDollar[6].token}, nil))
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupPrefix, nameNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupUseList, childrenUseDeclarations...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupPrefix, nameNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupUseList, childrenUseDeclarations...)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -3023,7 +3023,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+			yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
 			// Create GroupUse Node
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
@@ -3032,8 +3032,8 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[7].token}, nil))
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupPrefix, nameNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupUseList, childrenUseDeclarations...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupPrefix, nameNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupUseList, childrenUseDeclarations...)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -3064,7 +3064,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+			yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
 			// Create GroupUse Node
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
@@ -3073,8 +3073,8 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{yyDollar[6].token}, nil))
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupPrefix, nameNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupUseList, childrenUseDeclarations...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupPrefix, nameNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupUseList, childrenUseDeclarations...)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -3104,7 +3104,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+			yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
 			// Create GroupUse Node
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
@@ -3113,8 +3113,8 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[7].token}, nil))
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupPrefix, nameNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupUseList, childrenUseDeclarations...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupPrefix, nameNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupUseList, childrenUseDeclarations...)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -3219,7 +3219,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		// line internal/parser/php7/php7.y:923
 		{
-			yylex.(*Parser).Children(0, yyDollar[2].node, ast.NodeGroupUseType, yyDollar[1].node)
+			yylex.(*Parser).Children(yyDollar[2].node, ast.NodeGroupUseType, yyDollar[1].node)
 
 			yyVAL.node = yyDollar[2].node
 
@@ -3238,7 +3238,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+			yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
 			// Create Use Node
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
@@ -3247,7 +3247,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupUse, nameNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -3267,7 +3267,7 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-			yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+			yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
 			// create Alias Node
 			aliasNodeID := yylex.(*Parser).Ast.Nodes.Put(graph.Node{
@@ -3284,8 +3284,8 @@ yydefault:
 				},
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{yyDollar[3].token}, nil))
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupUse, nameNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, aliasNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupUse, nameNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupAlias, aliasNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -3455,7 +3455,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3485,7 +3485,7 @@ yydefault:
 		{
 			yyVAL.node = yyDollar[5].node
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCond, yyDollar[3].node)
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[5].node}))
 
 			// save tokens
@@ -3506,8 +3506,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[7].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[2].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCond, yyDollar[5].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCond, yyDollar[5].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3523,9 +3523,9 @@ yydefault:
 		yyDollar = yyS[yypt-9 : yypt+1]
 		// line internal/parser/php7/php7.y:1202
 		{
-			prevNodeID := yylex.(*Parser).Children(0, yyDollar[9].node, ast.NodeGroupLoop, yylex.(*Parser).List.Pop()...)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyDollar[9].node, ast.NodeGroupCond, yylex.(*Parser).List.Pop()...)
-			yylex.(*Parser).Children(prevNodeID, yyDollar[9].node, ast.NodeGroupInit, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyDollar[9].node, ast.NodeGroupLoop, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyDollar[9].node, ast.NodeGroupCond, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyDollar[9].node, ast.NodeGroupInit, yylex.(*Parser).List.Pop()...)
 
 			yyVAL.node = yyDollar[9].node
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[9].node}))
@@ -3545,7 +3545,7 @@ yydefault:
 		{
 			yyVAL.node = yyDollar[5].node
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCond, yyDollar[3].node)
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[5].node}))
 
 			// save tokens
@@ -3566,7 +3566,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3586,7 +3586,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3606,7 +3606,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3628,7 +3628,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVars, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVars, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3650,7 +3650,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVars, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVars, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3672,7 +3672,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExprs, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExprs, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3709,7 +3709,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[2].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -3731,7 +3731,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[6].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVars, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVars, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3752,8 +3752,8 @@ yydefault:
 		yyDollar = yyS[yypt-7 : yypt+1]
 		// line internal/parser/php7/php7.y:1409
 		{
-			prevNodeID := yylex.(*Parser).Children(0, yyDollar[7].node, ast.NodeGroupExpr, yyDollar[3].node)
-			yylex.(*Parser).Children(prevNodeID, yyDollar[7].node, ast.NodeGroupVar, yyDollar[5].node)
+			yylex.(*Parser).Children(yyDollar[7].node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyDollar[7].node, ast.NodeGroupVar, yyDollar[5].node)
 
 			yyVAL.node = yyDollar[7].node
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[7].node}))
@@ -3770,9 +3770,9 @@ yydefault:
 		yyDollar = yyS[yypt-9 : yypt+1]
 		// line internal/parser/php7/php7.y:1426
 		{
-			prevNodeID := yylex.(*Parser).Children(0, yyDollar[9].node, ast.NodeGroupExpr, yyDollar[3].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyDollar[9].node, ast.NodeGroupKey, yyDollar[5].node)
-			yylex.(*Parser).Children(prevNodeID, yyDollar[9].node, ast.NodeGroupVar, yyDollar[7].node)
+			yylex.(*Parser).Children(yyDollar[9].node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyDollar[9].node, ast.NodeGroupKey, yyDollar[5].node)
+			yylex.(*Parser).Children(yyDollar[9].node, ast.NodeGroupVar, yyDollar[7].node)
 
 			yyVAL.node = yyDollar[9].node
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[9].node}))
@@ -3791,7 +3791,7 @@ yydefault:
 		// line internal/parser/php7/php7.y:1444
 		{
 			children := yylex.(*Parser).List.Pop()
-			yylex.(*Parser).Children(0, yyDollar[5].node, ast.NodeGroupConsts, children...)
+			yylex.(*Parser).Children(yyDollar[5].node, ast.NodeGroupConsts, children...)
 
 			yyVAL.node = yyDollar[5].node
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[5].node}))
@@ -3841,9 +3841,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, posID)
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConsts, yyDollar[6].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCatches, childrenCatches...)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, childrenStmts...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupConsts, yyDollar[6].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCatches, childrenCatches...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, childrenStmts...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3863,7 +3863,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3890,7 +3890,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLabel, LableNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLabel, LableNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(LableNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
@@ -3918,7 +3918,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLabelName, LableNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLabelName, LableNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -3959,10 +3959,10 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(catchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token, yyDollar[9].token}, nil))
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).Children(0, catchNodeID, ast.NodeGroupVar, varNodeID)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, catchNodeID, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-			yylex.(*Parser).Children(prevNodeID, catchNodeID, ast.NodeGroupTypes, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(catchNodeID, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(catchNodeID, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(catchNodeID, ast.NodeGroupTypes, yylex.(*Parser).List.Pop()...)
 
 			yylex.(*Parser).List.Add(catchNodeID)
 
@@ -4016,7 +4016,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4078,10 +4078,10 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[11].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupFunctionName, identifierNodeID)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupReturnType, yyDollar[8].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupFunctionName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupReturnType, yyDollar[8].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4141,11 +4141,11 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{yyDollar[9].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupImplements, yyDollar[5].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExtends, yyDollar[4].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupClassName, identifierNodeID)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, childrenStmts...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupImplements, yyDollar[5].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExtends, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClassName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, childrenStmts...)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(childrenModifiers[0], yyVAL.node)
@@ -4174,10 +4174,10 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[8].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupImplements, yyDollar[4].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExtends, yyDollar[3].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupClassName, identifierNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupImplements, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExtends, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClassName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
@@ -4254,8 +4254,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[6].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupTraitName, identifierNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupTraitName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
@@ -4283,9 +4283,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[7].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExtends, yyDollar[3].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupInterfaceName, identifierNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExtends, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupInterfaceName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
@@ -4314,7 +4314,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClassName, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClassName, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4342,7 +4342,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupInterfaceNames, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupInterfaceNames, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4370,7 +4370,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupInterfaceNames, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupInterfaceNames, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4396,7 +4396,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4414,7 +4414,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4434,7 +4434,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
 			// save tokensc
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4453,7 +4453,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4478,8 +4478,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+			yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
@@ -4500,7 +4500,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4525,8 +4525,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+			yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
@@ -4547,7 +4547,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4572,8 +4572,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+			yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
@@ -4603,8 +4603,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
+			yylex.(*Parser).Children(caseListNodeID, ast.NodeGroupCases, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4632,8 +4632,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
+			yylex.(*Parser).Children(caseListNodeID, ast.NodeGroupCases, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4664,8 +4664,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
+			yylex.(*Parser).Children(caseListNodeID, ast.NodeGroupCases, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[3].token.HiddenTokens)
@@ -4696,8 +4696,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[5].token}, nil))
 
-			yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
+			yylex.(*Parser).Children(caseListNodeID, ast.NodeGroupCases, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCaseList, caseListNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, yyDollar[2].token.HiddenTokens)
@@ -4730,7 +4730,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(caseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, children))
 
-			yylex.(*Parser).Children(0, caseNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(caseNodeID, ast.NodeGroupStmts, children...)
 
 			yylex.(*Parser).List.Add(caseNodeID)
 
@@ -4754,7 +4754,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(defaultNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, children))
 
-			yylex.(*Parser).Children(0, defaultNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(defaultNodeID, ast.NodeGroupStmts, children...)
 
 			yylex.(*Parser).List.Add(defaultNodeID)
 
@@ -4788,7 +4788,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4813,8 +4813,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+			yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
@@ -4835,8 +4835,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[5].node}))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[3].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmt, yyDollar[5].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCond, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, yyDollar[5].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4856,9 +4856,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(elseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, []graph.NodeID{yyDollar[6].node}))
 
-			prevNodeID := yylex.(*Parser).Children(0, elseIfNodeID, ast.NodeGroupCond, yyDollar[4].node)
-			yylex.(*Parser).Children(prevNodeID, elseIfNodeID, ast.NodeGroupStmt, yyDollar[6].node)
-			yylex.(*Parser).Children(0, yyDollar[1].node, ast.NodeGroupElseIf, elseIfNodeID)
+			yylex.(*Parser).Children(elseIfNodeID, ast.NodeGroupCond, yyDollar[4].node)
+			yylex.(*Parser).Children(elseIfNodeID, ast.NodeGroupStmt, yyDollar[6].node)
+			yylex.(*Parser).Children(yyDollar[1].node, ast.NodeGroupElseIf, elseIfNodeID)
 
 			yyVAL.node = yyDollar[1].node
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[6].node}, nil, nil))
@@ -4890,8 +4890,8 @@ yydefault:
 			yylex.(*Parser).SavePosition(elseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, []graph.NodeID{yyDollar[3].node}))
 			yylex.(*Parser).SavePosition(yyDollar[1].node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			yylex.(*Parser).Children(0, elseNodeID, ast.NodeGroupStmt, yyDollar[3].node)
-			yylex.(*Parser).Children(0, yyDollar[1].node, ast.NodeGroupElse, elseNodeID)
+			yylex.(*Parser).Children(elseNodeID, ast.NodeGroupStmt, yyDollar[3].node)
+			yylex.(*Parser).Children(yyDollar[1].node, ast.NodeGroupElse, elseNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(elseNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
@@ -4919,9 +4919,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, children))
 
-			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[3].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
+			yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCond, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, stmtListNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -4951,10 +4951,10 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(AltElseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, children))
 
-			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
-			prevNodeID := yylex.(*Parser).Children(0, AltElseIfNodeID, ast.NodeGroupCond, yyDollar[4].node)
-			yylex.(*Parser).Children(prevNodeID, AltElseIfNodeID, ast.NodeGroupStmt, stmtListNodeID)
-			yylex.(*Parser).Children(0, yyDollar[1].node, ast.NodeGroupElseIf, AltElseIfNodeID)
+			yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(AltElseIfNodeID, ast.NodeGroupCond, yyDollar[4].node)
+			yylex.(*Parser).Children(AltElseIfNodeID, ast.NodeGroupStmt, stmtListNodeID)
+			yylex.(*Parser).Children(yyDollar[1].node, ast.NodeGroupElseIf, AltElseIfNodeID)
 
 			yyVAL.node = yyDollar[1].node
 
@@ -5000,9 +5000,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(AltElseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[2].token}, children))
 
-			yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
-			yylex.(*Parser).Children(0, AltElseNodeID, ast.NodeGroupStmt, stmtListNodeID)
-			yylex.(*Parser).Children(0, yyDollar[1].node, ast.NodeGroupElse, AltElseNodeID)
+			yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(AltElseNodeID, ast.NodeGroupStmt, stmtListNodeID)
+			yylex.(*Parser).Children(yyDollar[1].node, ast.NodeGroupElse, AltElseNodeID)
 
 			yyVAL.node = yyDollar[1].node
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[6].token}, nil))
@@ -5096,9 +5096,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, posID)
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarType, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarType, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
 
 			// save tokens
 
@@ -5187,10 +5187,10 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, posID)
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarType, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVar, varNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDefaultValue, yyDollar[6].node)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarType, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupDefaultValue, yyDollar[6].node)
 
 			// save tokens
 
@@ -5270,7 +5270,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -5336,7 +5336,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -5373,7 +5373,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupArguments, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupArguments, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -5417,7 +5417,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -5436,7 +5436,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -5518,8 +5518,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -5551,9 +5551,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -5591,8 +5591,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{yyDollar[3].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperties, childrenProperties...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupProperties, childrenProperties...)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(childrenModifiers[0], yyVAL.node)
@@ -5615,8 +5615,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{yyDollar[2].token, yyDollar[4].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupConsts, childrenConstants...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupConsts, childrenConstants...)
 
 			// save tokens
 			if len(childrenModifiers) > 0 {
@@ -5643,8 +5643,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupTraitAdaptationList, yyDollar[3].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupTraits, childrenTraits...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupTraitAdaptationList, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupTraits, childrenTraits...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -5685,11 +5685,11 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, posID)
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupMethodName, identifierNodeID)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupReturnType, yyDollar[9].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmt, yyDollar[10].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupParams, childrenParams...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupMethodName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupReturnType, yyDollar[9].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmt, yyDollar[10].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupModifiers, childrenModifiers...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParams, childrenParams...)
 
 			// save tokens
 			if len(childrenModifiers) > 0 {
@@ -5777,7 +5777,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupAdaptations, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupAdaptations, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -5839,8 +5839,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, children))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupInsteadof, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupInsteadof, children...)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -5866,8 +5866,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupAlias, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -5894,8 +5894,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupAlias, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -5922,9 +5922,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupModifier, yyDollar[3].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupAlias, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupModifier, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupAlias, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -5944,8 +5944,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupModifier, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRef, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupModifier, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -5971,7 +5971,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupMethod, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupMethod, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6004,8 +6004,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupTrait, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupMethod, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupTrait, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupMethod, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6044,7 +6044,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, children...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, children...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6250,8 +6250,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6283,9 +6283,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6332,8 +6332,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6359,8 +6359,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[3].node}))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6443,10 +6443,10 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[8].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExtends, yyDollar[3].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupImplements, yyDollar[4].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExtends, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupImplements, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupArgumentList, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6471,8 +6471,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{lastNodeID}))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[2].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupArgumentList, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6490,7 +6490,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6515,9 +6515,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[6].node}))
 
-			yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, listNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[6].node)
+			yylex.(*Parser).Children(listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, listNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[6].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupList, yyDollar[2].token.HiddenTokens)
@@ -6545,9 +6545,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[5].node}))
 
-			yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, listNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[5].node)
+			yylex.(*Parser).Children(listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, listNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[5].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[3].token.HiddenTokens)
@@ -6567,8 +6567,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6587,8 +6587,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[4].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6608,7 +6608,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6626,8 +6626,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6646,8 +6646,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6666,8 +6666,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6686,8 +6686,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6706,8 +6706,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6726,8 +6726,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6746,8 +6746,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6766,8 +6766,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6786,8 +6786,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6806,8 +6806,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6826,8 +6826,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6846,8 +6846,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6866,7 +6866,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[2].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6885,7 +6885,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6903,7 +6903,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[2].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6922,7 +6922,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -6940,8 +6940,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6960,8 +6960,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -6980,8 +6980,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7000,8 +7000,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7020,8 +7020,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7040,8 +7040,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7060,8 +7060,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7080,8 +7080,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7100,8 +7100,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7120,8 +7120,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7140,8 +7140,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7160,8 +7160,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7180,8 +7180,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7200,8 +7200,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7220,8 +7220,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7240,8 +7240,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7260,8 +7260,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7280,7 +7280,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7298,7 +7298,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7316,7 +7316,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7334,7 +7334,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7352,8 +7352,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7372,8 +7372,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7392,8 +7392,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7412,8 +7412,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7433,8 +7433,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7453,8 +7453,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7473,8 +7473,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7493,8 +7493,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7513,8 +7513,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7533,8 +7533,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupClass, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7575,9 +7575,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[5].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupIfTrue, yyDollar[3].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupIfFalse, yyDollar[5].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCond, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupIfTrue, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupIfFalse, yyDollar[5].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7597,8 +7597,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupCond, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupIfFalse, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCond, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupIfFalse, yyDollar[4].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7618,8 +7618,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupLeft, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupRight, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -7646,7 +7646,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7665,7 +7665,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7684,7 +7684,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7703,7 +7703,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7722,7 +7722,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7741,7 +7741,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7760,7 +7760,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7809,7 +7809,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7835,7 +7835,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7853,7 +7853,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7887,7 +7887,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVal, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVal, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7905,8 +7905,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[4].node}))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupKey, yyDollar[2].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVal, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupKey, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVal, yyDollar[4].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7925,7 +7925,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7949,10 +7949,10 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[11].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClosureUse, yyDollar[7].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupReturnType, yyDollar[8].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClosureUse, yyDollar[7].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupReturnType, yyDollar[8].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
 
 			// // save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -7985,10 +7985,10 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[12].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClosureUse, yyDollar[8].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupReturnType, yyDollar[9].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClosureUse, yyDollar[8].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupReturnType, yyDollar[9].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
 
 			// // save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8036,7 +8036,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8084,7 +8084,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8116,8 +8116,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8136,8 +8136,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[2].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupFunction, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupFunction, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupArgumentList, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8155,9 +8155,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCall, yyDollar[3].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCall, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8176,9 +8176,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupCall, yyDollar[3].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupCall, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8197,8 +8197,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[2].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupFunction, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupFunction, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupArgumentList, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8264,7 +8264,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupExit, yyDollar[1].token.HiddenTokens)
@@ -8330,7 +8330,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8350,7 +8350,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8552,7 +8552,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, stringPartNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParts, stringPartNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8586,7 +8586,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8604,7 +8604,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8638,7 +8638,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupConstant, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupConstant, yyDollar[1].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8663,8 +8663,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8691,8 +8691,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupConstantName, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8820,8 +8820,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8843,8 +8843,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8866,8 +8866,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8889,9 +8889,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupMethod, yyDollar[3].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupMethod, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupArgumentList, yyDollar[4].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8934,8 +8934,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -8961,7 +8961,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -8979,7 +8979,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarName, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9002,7 +9002,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarName, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupDollar, []scanner.Token{*yyDollar[1].token})
@@ -9020,8 +9020,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9040,8 +9040,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9068,8 +9068,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9091,8 +9091,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[4].token}, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9114,8 +9114,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9134,8 +9134,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9154,8 +9154,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupClass, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupProperty, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9297,8 +9297,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[3].node}, nil, nil))
 
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupKey, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVal, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupKey, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVal, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9317,7 +9317,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, nil, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVal, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVal, yyDollar[1].node)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9342,9 +9342,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node, yyDollar[4].node}, nil, nil))
 
-			yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, yyDollar[4].node)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupKey, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVal, refNodeID)
+			yylex.(*Parser).Children(refNodeID, ast.NodeGroupVar, yyDollar[4].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupKey, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVal, refNodeID)
 
 			// save tokens
 			yylex.(*Parser).MoveStartTokens(yyDollar[1].node, yyVAL.node)
@@ -9371,8 +9371,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, yyDollar[2].node)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVal, refNodeID)
+			yylex.(*Parser).Children(refNodeID, ast.NodeGroupVar, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVal, refNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9397,9 +9397,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[6].token}, nil))
 
-			yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupKey, yyDollar[1].node)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupVal, listNodeID)
+			yylex.(*Parser).Children(listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupKey, yyDollar[1].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVal, listNodeID)
 
 			// TODO: Cannot use list() as standalone expression
 
@@ -9430,8 +9430,8 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVal, listNodeID)
+			yylex.(*Parser).Children(listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVal, listNodeID)
 
 			// TODO: Cannot use list() as standalone expression
 
@@ -9516,7 +9516,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9548,9 +9548,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupDim, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
@@ -9592,9 +9592,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, varNameNodeID)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupProperty, propertyNameNodeID)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, varNameNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupProperty, propertyNameNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
@@ -9613,7 +9613,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarName, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
@@ -9640,7 +9640,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[3].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
@@ -9674,9 +9674,9 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[6].token}, nil))
 
-			yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVar, varNodeID)
-			yylex.(*Parser).Children(prevNodeID, yyVAL.node, ast.NodeGroupDim, yyDollar[4].node)
+			yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVar, varNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupDim, yyDollar[4].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
@@ -9765,7 +9765,7 @@ yydefault:
 				})
 				yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[2].token}, nil))
 
-				yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, lnumberNodeID)
+				yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, lnumberNodeID)
 			} else {
 				yyVAL.node = yylex.(*Parser).Ast.Nodes.Put(graph.Node{
 					SimpleNode: ast.SimpleNode{
@@ -9798,7 +9798,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVarName, identifierNodeID)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9816,7 +9816,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[5].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupVars, yylex.(*Parser).List.Pop()...)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupVars, yylex.(*Parser).List.Pop()...)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9840,7 +9840,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9860,7 +9860,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9878,7 +9878,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9896,7 +9896,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token, yyDollar[4].token}, nil))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[3].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9916,7 +9916,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
@@ -9934,7 +9934,7 @@ yydefault:
 			})
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition(nil, []*scanner.Token{yyDollar[1].token}, []graph.NodeID{yyDollar[2].node}))
 
-			yylex.(*Parser).Children(0, yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
+			yylex.(*Parser).Children(yyVAL.node, ast.NodeGroupExpr, yyDollar[2].node)
 
 			// save tokens
 			yylex.(*Parser).AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
