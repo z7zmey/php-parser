@@ -1,4 +1,4 @@
-package graph
+package ast
 
 import "github.com/z7zmey/php-parser/pkg/ast"
 

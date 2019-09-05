@@ -1,170 +1,185 @@
 package graph
 
-import (
-	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/traverser"
-)
-
 type Graph struct {
-	FileData  []byte
-	Positions PositionStorage
-	Nodes     NodeStorage
-	Edges     EdgeStorage
-	Tokens    TokenStorage
-	RootNode  NodeID
-
-	queue []queueItem
+	// todo: edges and nodes pool
+	nodes []Node
+	edges []Edge
 }
 
-type queueItem struct {
-	id    NodeID
-	depth int
+type LinkPosFunc func(id NodeID) EdgeID
+
+func (g *Graph) Append(id NodeID) EdgeID {
+	return g.nodes[int(id)-1].AdjList.Last
 }
 
-func (g *Graph) Reset() {
-	g.FileData = g.FileData[:0]
-	g.Nodes = g.Nodes[:0]
-	g.Edges = g.Edges[:0]
-	g.Positions = g.Positions[:0]
-	g.Tokens = g.Tokens[:0]
-	g.RootNode = 0
+func (g *Graph) Prepend(id NodeID) EdgeID {
+	return 0
 }
 
-func (g *Graph) Link(nodeID NodeID, edgeType EdgeType, target uint32) {
-	edge := Edge{
-		Type:   edgeType,
-		Target: target,
+func (g *Graph) NewNode(id uint, t uint) NodeID {
+	g.nodes = append(g.nodes, Node{ID: id, Type: t})
+	return NodeID(len(g.nodes))
+}
+
+func (g *Graph) GetNode(nodeID NodeID) Node {
+	return g.nodes[nodeID-1]
+}
+
+func (g *Graph) Link(from NodeID, to NodeID, pos LinkPosFunc) EdgeID {
+	if pos == nil {
+		pos = g.Append
 	}
 
-	edgeID := g.Edges.Put(edge)
+	e := Edge{
+		From: from,
+		To:   to,
+	}
+	g.edges = append(g.edges, e)
+	curID := EdgeID(len(g.edges))
+	curEdge := &g.edges[curID-1]
 
-	nodeEdges := &g.Nodes[nodeID-1].Edges
-
-	if nodeEdges.First == 0 {
-		nodeEdges.First = edgeID
-		nodeEdges.Last = edgeID
+	prevID := pos(from)
+	if prevID == 0 {
+		nextID := g.nodes[from-1].AdjList.First
+		if nextID != 0 {
+			nextEdge := &g.edges[nextID-1]
+			nextEdge.Prev = curID
+			curEdge.Next = nextID
+		}
 	} else {
-		g.Edges[nodeEdges.Last-1].next = edgeID
-		nodeEdges.Last = edgeID
-	}
-}
-
-func (g *Graph) AppendEdges(src EdgeList, edges EdgeList) EdgeList {
-	if edges.First == 0 {
-		return src
-	}
-
-	if src.First == 0 {
-		return edges
-	}
-
-	g.Edges[src.Last-1].next = edges.First
-	src.Last = edges.Last
-
-	return src
-}
-
-func (g *Graph) RemoveEdges(nodeID NodeID, f EdgeFilter) EdgeList {
-	nodeEdges := &g.Nodes[nodeID-1].Edges
-
-	var removedEdges EdgeList
-	var prevEdgeID EdgeID
-
-	edgeID := nodeEdges.First
-	for edgeID != 0 {
-		edge := &g.Edges[edgeID-1]
-
-		if f(*edge) {
-			if prevEdgeID == 0 {
-				nodeEdges.First = edge.next
-			} else {
-				g.Edges[prevEdgeID-1].next = edge.next
-			}
-
-			removedEdges = g.AppendEdges(removedEdges, EdgeList{edgeID, edgeID})
-		} else {
-			prevEdgeID = edgeID
+		prevEdge := &g.edges[prevID-1]
+		nextID := prevEdge.Next
+		if nextID != 0 {
+			nextEdge := &g.edges[nextID-1]
+			nextEdge.Prev = curID
+			curEdge.Next = nextID
 		}
 
-		edgeID = edge.next
+		prevEdge.Next = curID
+		curEdge.Prev = prevID
 	}
 
-	return removedEdges
-}
-
-func (g *Graph) EachEdge(edges EdgeList, callback func(e Edge) bool) {
-	edgeID := edges.First
-	for edgeID != 0 {
-		edge := g.Edges[edgeID-1]
-
-		if callback(edge) {
-			return
-		}
-
-		edgeID = edge.next
+	if curEdge.Prev == 0 {
+		g.nodes[from-1].AdjList.First = curID
 	}
+
+	if curEdge.Next == 0 {
+		g.nodes[from-1].AdjList.Last = curID
+	}
+
+	return curID
 }
 
-func (g *Graph) Traverse(v traverser.Visitor) {
-	g.queue = g.queue[:0]
-	g.queue = append(g.queue, queueItem{
-		id:    g.RootNode,
-		depth: 0,
-	})
+func (g *Graph) Unlink(id EdgeID) {
+	curEdge := &g.edges[id-1]
+	prevEdgeID := curEdge.Prev
+	nextEdgeID := curEdge.Next
 
+	node := &g.nodes[curEdge.From-1]
+
+	if prevEdgeID == 0 {
+		node.AdjList.First = curEdge.Next
+	} else {
+		prevEdge := &g.edges[prevEdgeID-1]
+		prevEdge.Next = curEdge.Next
+	}
+
+	if nextEdgeID == 0 {
+		node.AdjList.Last = curEdge.Prev
+	} else {
+		nextEdge := &g.edges[nextEdgeID-1]
+		nextEdge.Prev = curEdge.Prev
+	}
+
+	curEdge.Next = 0
+	curEdge.Prev = 0
+}
+
+func (g *Graph) Foreach(r NodeID, f func(Edge, Node) bool) {
+	edgeID := g.nodes[r-1].AdjList.First
 	for {
-		if len(g.queue) == 0 {
+		if edgeID == 0 {
 			break
 		}
 
-		item := g.queue[len(g.queue)-1]
-		g.queue = g.queue[:len(g.queue)-1]
-
-		graphNode := g.Nodes.Get(item.id)
-		depth := item.depth
-
-		visitChild := v.VisitNode(graphNode.SimpleNode, depth)
-
-		g.EachEdge(graphNode.Edges, func(e Edge) bool {
-			if e.Type == EdgeTypeToken {
-				tokenID := TokenID(e.Target)
-
-				token := g.Tokens.Get(tokenID)
-				tokenPos := g.Positions.Get(token.Pos)
-
-				astToken := ast.Token{
-					Type:  token.Type,
-					Group: token.Group,
-					Value: string(g.FileData[tokenPos.PS:tokenPos.PE]),
-				}
-
-				visitChild = v.VisitToken(astToken, depth)
-			}
-
-			if e.Type == EdgeTypeToken {
-				posID := PositionID(e.Target)
-
-				visitChild = v.VisitPosition(g.Positions.Get(posID), depth)
-			}
-
-			return false
-		})
-
-		if visitChild {
-			depth++
-			g.EachEdge(graphNode.Edges, func(e Edge) bool {
-				if e.Type != EdgeTypeNode {
-					return false
-				}
-
-				g.queue = append(g.queue, queueItem{
-					id:    NodeID(e.Target),
-					depth: depth,
-				})
-
-				return false
-			})
+		edge := g.edges[edgeID-1]
+		node := g.nodes[edge.To-1]
+		if !f(edge, node) {
+			return
 		}
 
+		edgeID = g.edges[edgeID-1].Next
+	}
+}
+
+func (g *Graph) TraverseBFS(r NodeID, f func(Node, int) bool) {
+	if f == nil {
+		return
+	}
+
+	q := Queue{}
+	q.Enqueue(r, 0)
+	visited := make(map[NodeID]bool)
+	for {
+		if q.IsEmpty() {
+			break
+		}
+		nodeID, depth := q.Dequeue()
+		node := g.nodes[nodeID-1]
+		visited[nodeID] = true
+
+		if !f(node, depth) {
+			continue
+		}
+
+		edgeID := node.AdjList.First
+		for {
+			if edgeID == 0 {
+				break
+			}
+			n := g.edges[edgeID-1].To
+			if !visited[n] {
+				q.Enqueue(n, depth+1)
+				visited[n] = true
+			}
+
+			edgeID = g.edges[edgeID-1].Next
+		}
+	}
+}
+
+func (g *Graph) TraverseDFS(r NodeID, f func(Node, int) bool) {
+	if f == nil {
+		return
+	}
+
+	s := Stack{}
+	s.Push(r, 0)
+	visited := make(map[NodeID]bool)
+	for {
+		if s.IsEmpty() {
+			break
+		}
+		nodeID, depth := s.Pop()
+		node := g.nodes[nodeID-1]
+
+		visited[nodeID] = true
+		if !f(node, depth) {
+			continue
+		}
+
+		edgeID := node.AdjList.Last
+		for {
+			if edgeID == 0 {
+				break
+			}
+			n := g.edges[edgeID-1].To
+			if !visited[n] {
+				s.Push(n, depth+1)
+				visited[n] = true
+			}
+
+			edgeID = g.edges[edgeID-1].Prev
+		}
 	}
 }

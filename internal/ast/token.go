@@ -1,4 +1,4 @@
-package graph
+package ast
 
 import (
 	"encoding/json"

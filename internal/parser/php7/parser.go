@@ -1,9 +1,9 @@
 package php7
 
 import (
-	"github.com/z7zmey/php-parser/internal/graph"
 	"github.com/z7zmey/php-parser/internal/parser"
 	"github.com/z7zmey/php-parser/internal/scanner"
+	"github.com/z7zmey/php-parser/internal/stxtree"
 )
 
 func (lval *yySymType) Token(t *scanner.Token) {
@@ -33,7 +33,7 @@ func (p *Parser) Lex(lval *yySymType) int {
 }
 
 // Parse the php7 Parser entrypoint
-func (p *Parser) Parse(src []byte, a *graph.Graph) int {
+func (p *Parser) Parse(src []byte, a *stxtree.Graph) int {
 	p.AbstractParser.Reset(src, a)
 	return p.yyParserImpl.Parse(p)
 }

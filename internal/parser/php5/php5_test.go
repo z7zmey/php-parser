@@ -5,7 +5,8 @@ import (
 
 	"gotest.tools/assert"
 
-	"github.com/z7zmey/php-parser/php5"
+	"github.com/z7zmey/php-parser/internal/parser/php5"
+	"github.com/z7zmey/php-parser/internal/stxtree"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/node"
 	"github.com/z7zmey/php-parser/pkg/node/expr"
@@ -18401,9 +18402,9 @@ func TestPhp5(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
-	php5parser.Parse()
-	actual := php5parser.GetRootNode()
+	php5parser := php5.NewParser()
+	php5parser.Parse([]byte(src), &stxtree.Graph{})
+	actual := php5parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -18516,9 +18517,9 @@ func TestPhp5Strings(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
-	php5parser.Parse()
-	actual := php5parser.GetRootNode()
+	php5parser := php5.NewParser()
+	php5parser.Parse([]byte(src), &stxtree.Graph{})
+	actual := php5parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -18706,9 +18707,9 @@ CAD;
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
-	php5parser.Parse()
-	actual := php5parser.GetRootNode()
+	php5parser := php5.NewParser()
+	php5parser.Parse([]byte(src), &stxtree.Graph{})
+	actual := php5parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -18726,8 +18727,8 @@ func TestPhp5ControlCharsErrors(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
-	php5parser.Parse()
-	actual := php5parser.GetErrors()
+	php5parser := php5.NewParser()
+	php5parser.Parse([]byte(src), &stxtree.Graph{})
+	actual := php5parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }

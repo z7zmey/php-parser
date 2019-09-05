@@ -26,8 +26,8 @@ cover:
 	go test ./... --cover
 
 bench:
-	go test -benchmem -bench=. ./parser/php5
-	go test -benchmem -bench=. ./parser/php7
+	go test -benchmem -run=^$$ -bench=. ./internal/parser/php5
+	go test -benchmem -run=^$$ -bench=. ./internal/parser/php7
 
 compile: ./internal/parser/php5/php5.go ./internal/parser/php7/php7.go ./internal/scanner/scanner.go replace fmt
 	rm -f y.output

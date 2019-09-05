@@ -32,13 +32,13 @@ func (v *Linker) VisitNode(n ast.SimpleNode, depth int) bool {
 }
 
 func (v *Linker) VisitPosition(p ast.Position, depth int) bool {
-	v.stack[depth].Position = p
+	v.stack[depth-1].Position = p
 
 	return true
 }
 
 func (v *Linker) VisitToken(t ast.Token, depth int) bool {
-	v.stack[depth].Tokens[t.Group] = append(v.stack[depth].Tokens[t.Group], t)
+	v.stack[depth-1].Tokens[t.Group] = append(v.stack[depth].Tokens[t.Group], t)
 
 	return true
 }

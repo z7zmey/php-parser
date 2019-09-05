@@ -113,7 +113,7 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 	var parserWorker parser.Parser
 
 	if *usePhp5 {
-		parserWorker = parser.NewPHP7Parser()
+		parserWorker = parser.NewPHP5Parser()
 	} else {
 		parserWorker = parser.NewPHP7Parser()
 	}
