@@ -304,7 +304,7 @@ const (
 	NodeGroupElse
 )
 
-func (et NodeGroup) Is(ect EdgeClassType) bool {
+func (et NodeGroup) Is(ect NodeGroupFlag) bool {
 	return uint8(et)&uint8(ect) == uint8(ect)
 }
 
