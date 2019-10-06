@@ -91,20 +91,21 @@ const (
 )
 
 type Token struct {
-	Type  scanner.TokenType
-	Group TokenGroup
-	Value string
-}
-
-type token struct {
-	Type  string `json:"type"`
-	Value string `json:"value"`
+	Type     scanner.TokenType
+	Group    TokenGroup
+	Position Position
+	Value    string
 }
 
 func (t Token) MarshalJSON() ([]byte, error) {
-	out := token{
-		Type:  t.Type.String(),
-		Value: t.Value,
+	out := struct {
+		Type     string   `json:"type"`
+		Value    string   `json:"value"`
+		Position Position `json:"position"`
+	}{
+		Type:     t.Type.String(),
+		Value:    t.Value,
+		Position: t.Position,
 	}
 
 	return json.Marshal(out)

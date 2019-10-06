@@ -30,6 +30,7 @@ func (lex *Lexer) Lex(lval Lval) int {
     token.HiddenTokens = token.HiddenTokens[:0]
     eof := lex.pe
     var tok TokenType
+    lex.prepareToken(token, tok)
 
     lblStart := 0
     lblEnd   := 0
@@ -105,7 +106,7 @@ func (lex *Lexer) Lex(lval Lval) int {
         main := |*
             any_line+ -- '<?' => {
                 lex.ungetStr("<")
-                lval.Token(lex.prepareToken(token, tok))
+                lex.prepareToken(token, tok)
                 tok = T_INLINE_HTML;
                 fbreak;
             };
@@ -120,7 +121,7 @@ func (lex *Lexer) Lex(lval Lval) int {
             };
             '<?='i => {
                 tok = T_ECHO;
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
                 fnext php;
                 fbreak;
             };
@@ -128,10 +129,10 @@ func (lex *Lexer) Lex(lval Lval) int {
 
         php := |*
             whitespace_line*                   => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
-            '?>' newline?                      => {tok = TokenType(int(';')); lval.Token(lex.prepareToken(token, tok)); fnext main; fbreak;};
-            ';' whitespace_line* '?>' newline? => {tok = TokenType(int(';')); lval.Token(lex.prepareToken(token, tok)); fnext main; fbreak;};
+            '?>' newline?                      => {tok = TokenType(int(';')); lex.prepareToken(token, tok); fnext main; fbreak;};
+            ';' whitespace_line* '?>' newline? => {tok = TokenType(int(';')); lex.prepareToken(token, tok); fnext main; fbreak;};
 
-            (dnum | exponent_dnum)          => {tok = T_DNUMBER; lval.Token(lex.prepareToken(token, tok)); fbreak;};
+            (dnum | exponent_dnum)          => {tok = T_DNUMBER; lex.prepareToken(token, tok); fbreak;};
             bnum => {
                 firstNum := 2
                 for i := lex.ts + 2; i < lex.te; i++ {
@@ -141,15 +142,15 @@ func (lex *Lexer) Lex(lval Lval) int {
                 }
 
                 if lex.te - lex.ts - firstNum < 64 {
-                    tok = T_LNUMBER; lval.Token(lex.prepareToken(token, tok)); fbreak;
+                    tok = T_LNUMBER; lex.prepareToken(token, tok); fbreak;
                 }
-                tok = T_DNUMBER; lval.Token(lex.prepareToken(token, tok)); fbreak;
+                tok = T_DNUMBER; lex.prepareToken(token, tok); fbreak;
             };
             lnum => {
                 if lex.te - lex.ts < 20 {
-                    tok = T_LNUMBER; lval.Token(lex.prepareToken(token, tok)); fbreak;
+                    tok = T_LNUMBER; lex.prepareToken(token, tok); fbreak;
                 }
-                tok = T_DNUMBER; lval.Token(lex.prepareToken(token, tok)); fbreak;
+                tok = T_DNUMBER; lex.prepareToken(token, tok); fbreak;
             };
             hnum => {
                 firstNum := lex.ts + 2
@@ -161,125 +162,125 @@ func (lex *Lexer) Lex(lval Lval) int {
 
                 length := lex.te - firstNum
                 if length < 16 || (length == 16 && lex.data[firstNum] <= '7') {
-                    tok = T_LNUMBER; lval.Token(lex.prepareToken(token, tok)); fbreak;
+                    tok = T_LNUMBER; lex.prepareToken(token, tok); fbreak;
                 } 
-                tok = T_DNUMBER; lval.Token(lex.prepareToken(token, tok)); fbreak;
+                tok = T_DNUMBER; lex.prepareToken(token, tok); fbreak;
             };
 
-            'abstract'i                       => {tok = T_ABSTRACT; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'array'i                          => {tok = T_ARRAY; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'as'i                             => {tok = T_AS; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'break'i                          => {tok = T_BREAK; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'callable'i                       => {tok = T_CALLABLE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'case'i                           => {tok = T_CASE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'catch'i                          => {tok = T_CATCH; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'class'i                          => {tok = T_CLASS; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'clone'i                          => {tok = T_CLONE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'const'i                          => {tok = T_CONST; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'continue'i                       => {tok = T_CONTINUE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'declare'i                        => {tok = T_DECLARE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'default'i                        => {tok = T_DEFAULT; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'do'i                             => {tok = T_DO; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'echo'i                           => {tok = T_ECHO; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'else'i                           => {tok = T_ELSE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'elseif'i                         => {tok = T_ELSEIF; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'empty'i                          => {tok = T_EMPTY; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'enddeclare'i                     => {tok = T_ENDDECLARE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'endfor'i                         => {tok = T_ENDFOR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'endforeach'i                     => {tok = T_ENDFOREACH; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'endif'i                          => {tok = T_ENDIF; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'endswitch'i                      => {tok = T_ENDSWITCH; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'endwhile'i                       => {tok = T_ENDWHILE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'eval'i                           => {tok = T_EVAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'exit'i | 'die'i                  => {tok = T_EXIT; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'extends'i                        => {tok = T_EXTENDS; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'final'i                          => {tok = T_FINAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'finally'i                        => {tok = T_FINALLY; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'for'i                            => {tok = T_FOR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'foreach'i                        => {tok = T_FOREACH; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'function'i | 'cfunction'i        => {tok = T_FUNCTION; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'global'i                         => {tok = T_GLOBAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'goto'i                           => {tok = T_GOTO; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'if'i                             => {tok = T_IF; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'isset'i                          => {tok = T_ISSET; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'implements'i                     => {tok = T_IMPLEMENTS; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'instanceof'i                     => {tok = T_INSTANCEOF; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'insteadof'i                      => {tok = T_INSTEADOF; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'interface'i                      => {tok = T_INTERFACE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'list'i                           => {tok = T_LIST; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'namespace'i                      => {tok = T_NAMESPACE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'private'i                        => {tok = T_PRIVATE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'public'i                         => {tok = T_PUBLIC; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'print'i                          => {tok = T_PRINT; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'protected'i                      => {tok = T_PROTECTED; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'return'i                         => {tok = T_RETURN; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'static'i                         => {tok = T_STATIC; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'switch'i                         => {tok = T_SWITCH; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'throw'i                          => {tok = T_THROW; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'trait'i                          => {tok = T_TRAIT; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'try'i                            => {tok = T_TRY; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'unset'i                          => {tok = T_UNSET; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'use'i                            => {tok = T_USE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'var'i                            => {tok = T_VAR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'while'i                          => {tok = T_WHILE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'yield'i whitespace_line+ 'from'i => {tok = T_YIELD_FROM; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'yield'i                          => {tok = T_YIELD; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'include'i                        => {tok = T_INCLUDE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'include_once'i                   => {tok = T_INCLUDE_ONCE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'require'i                        => {tok = T_REQUIRE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'require_once'i                   => {tok = T_REQUIRE_ONCE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '__CLASS__'i                      => {tok = T_CLASS_C; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '__DIR__'i                        => {tok = T_DIR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '__FILE__'i                       => {tok = T_FILE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '__FUNCTION__'i                   => {tok = T_FUNC_C; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '__LINE__'i                       => {tok = T_LINE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '__NAMESPACE__'i                  => {tok = T_NS_C; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '__METHOD__'i                     => {tok = T_METHOD_C; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '__TRAIT__'i                      => {tok = T_TRAIT_C; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '__halt_compiler'i                => {tok = T_HALT_COMPILER; lval.Token(lex.prepareToken(token, tok)); fnext halt_compiller_open_parenthesis; fbreak;};
-            'new'i                            => {tok = T_NEW; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'and'i                            => {tok = T_LOGICAL_AND; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'or'i                             => {tok = T_LOGICAL_OR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            'xor'i                            => {tok = T_LOGICAL_XOR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '\\'                              => {tok = T_NS_SEPARATOR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '...'                             => {tok = T_ELLIPSIS; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '::'                              => {tok = T_PAAMAYIM_NEKUDOTAYIM; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '&&'                              => {tok = T_BOOLEAN_AND; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '||'                              => {tok = T_BOOLEAN_OR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '&='                              => {tok = T_AND_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '|='                              => {tok = T_OR_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '.='                              => {tok = T_CONCAT_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '*='                              => {tok = T_MUL_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '**='                             => {tok = T_POW_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '/='                              => {tok = T_DIV_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '+='                              => {tok = T_PLUS_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '-='                              => {tok = T_MINUS_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '^='                              => {tok = T_XOR_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '%='                              => {tok = T_MOD_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '--'                              => {tok = T_DEC; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '++'                              => {tok = T_INC; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '=>'                              => {tok = T_DOUBLE_ARROW; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '<=>'                             => {tok = T_SPACESHIP; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '!=' | '<>'                       => {tok = T_IS_NOT_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '!=='                             => {tok = T_IS_NOT_IDENTICAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '=='                              => {tok = T_IS_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '==='                             => {tok = T_IS_IDENTICAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '<<='                             => {tok = T_SL_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '>>='                             => {tok = T_SR_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '>='                              => {tok = T_IS_GREATER_OR_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '<='                              => {tok = T_IS_SMALLER_OR_EQUAL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '**'                              => {tok = T_POW; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '<<'                              => {tok = T_SL; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '>>'                              => {tok = T_SR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '??'                              => {tok = T_COALESCE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
+            'abstract'i                       => {tok = T_ABSTRACT; lex.prepareToken(token, tok); fbreak;};
+            'array'i                          => {tok = T_ARRAY; lex.prepareToken(token, tok); fbreak;};
+            'as'i                             => {tok = T_AS; lex.prepareToken(token, tok); fbreak;};
+            'break'i                          => {tok = T_BREAK; lex.prepareToken(token, tok); fbreak;};
+            'callable'i                       => {tok = T_CALLABLE; lex.prepareToken(token, tok); fbreak;};
+            'case'i                           => {tok = T_CASE; lex.prepareToken(token, tok); fbreak;};
+            'catch'i                          => {tok = T_CATCH; lex.prepareToken(token, tok); fbreak;};
+            'class'i                          => {tok = T_CLASS; lex.prepareToken(token, tok); fbreak;};
+            'clone'i                          => {tok = T_CLONE; lex.prepareToken(token, tok); fbreak;};
+            'const'i                          => {tok = T_CONST; lex.prepareToken(token, tok); fbreak;};
+            'continue'i                       => {tok = T_CONTINUE; lex.prepareToken(token, tok); fbreak;};
+            'declare'i                        => {tok = T_DECLARE; lex.prepareToken(token, tok); fbreak;};
+            'default'i                        => {tok = T_DEFAULT; lex.prepareToken(token, tok); fbreak;};
+            'do'i                             => {tok = T_DO; lex.prepareToken(token, tok); fbreak;};
+            'echo'i                           => {tok = T_ECHO; lex.prepareToken(token, tok); fbreak;};
+            'else'i                           => {tok = T_ELSE; lex.prepareToken(token, tok); fbreak;};
+            'elseif'i                         => {tok = T_ELSEIF; lex.prepareToken(token, tok); fbreak;};
+            'empty'i                          => {tok = T_EMPTY; lex.prepareToken(token, tok); fbreak;};
+            'enddeclare'i                     => {tok = T_ENDDECLARE; lex.prepareToken(token, tok); fbreak;};
+            'endfor'i                         => {tok = T_ENDFOR; lex.prepareToken(token, tok); fbreak;};
+            'endforeach'i                     => {tok = T_ENDFOREACH; lex.prepareToken(token, tok); fbreak;};
+            'endif'i                          => {tok = T_ENDIF; lex.prepareToken(token, tok); fbreak;};
+            'endswitch'i                      => {tok = T_ENDSWITCH; lex.prepareToken(token, tok); fbreak;};
+            'endwhile'i                       => {tok = T_ENDWHILE; lex.prepareToken(token, tok); fbreak;};
+            'eval'i                           => {tok = T_EVAL; lex.prepareToken(token, tok); fbreak;};
+            'exit'i | 'die'i                  => {tok = T_EXIT; lex.prepareToken(token, tok); fbreak;};
+            'extends'i                        => {tok = T_EXTENDS; lex.prepareToken(token, tok); fbreak;};
+            'final'i                          => {tok = T_FINAL; lex.prepareToken(token, tok); fbreak;};
+            'finally'i                        => {tok = T_FINALLY; lex.prepareToken(token, tok); fbreak;};
+            'for'i                            => {tok = T_FOR; lex.prepareToken(token, tok); fbreak;};
+            'foreach'i                        => {tok = T_FOREACH; lex.prepareToken(token, tok); fbreak;};
+            'function'i | 'cfunction'i        => {tok = T_FUNCTION; lex.prepareToken(token, tok); fbreak;};
+            'global'i                         => {tok = T_GLOBAL; lex.prepareToken(token, tok); fbreak;};
+            'goto'i                           => {tok = T_GOTO; lex.prepareToken(token, tok); fbreak;};
+            'if'i                             => {tok = T_IF; lex.prepareToken(token, tok); fbreak;};
+            'isset'i                          => {tok = T_ISSET; lex.prepareToken(token, tok); fbreak;};
+            'implements'i                     => {tok = T_IMPLEMENTS; lex.prepareToken(token, tok); fbreak;};
+            'instanceof'i                     => {tok = T_INSTANCEOF; lex.prepareToken(token, tok); fbreak;};
+            'insteadof'i                      => {tok = T_INSTEADOF; lex.prepareToken(token, tok); fbreak;};
+            'interface'i                      => {tok = T_INTERFACE; lex.prepareToken(token, tok); fbreak;};
+            'list'i                           => {tok = T_LIST; lex.prepareToken(token, tok); fbreak;};
+            'namespace'i                      => {tok = T_NAMESPACE; lex.prepareToken(token, tok); fbreak;};
+            'private'i                        => {tok = T_PRIVATE; lex.prepareToken(token, tok); fbreak;};
+            'public'i                         => {tok = T_PUBLIC; lex.prepareToken(token, tok); fbreak;};
+            'print'i                          => {tok = T_PRINT; lex.prepareToken(token, tok); fbreak;};
+            'protected'i                      => {tok = T_PROTECTED; lex.prepareToken(token, tok); fbreak;};
+            'return'i                         => {tok = T_RETURN; lex.prepareToken(token, tok); fbreak;};
+            'static'i                         => {tok = T_STATIC; lex.prepareToken(token, tok); fbreak;};
+            'switch'i                         => {tok = T_SWITCH; lex.prepareToken(token, tok); fbreak;};
+            'throw'i                          => {tok = T_THROW; lex.prepareToken(token, tok); fbreak;};
+            'trait'i                          => {tok = T_TRAIT; lex.prepareToken(token, tok); fbreak;};
+            'try'i                            => {tok = T_TRY; lex.prepareToken(token, tok); fbreak;};
+            'unset'i                          => {tok = T_UNSET; lex.prepareToken(token, tok); fbreak;};
+            'use'i                            => {tok = T_USE; lex.prepareToken(token, tok); fbreak;};
+            'var'i                            => {tok = T_VAR; lex.prepareToken(token, tok); fbreak;};
+            'while'i                          => {tok = T_WHILE; lex.prepareToken(token, tok); fbreak;};
+            'yield'i whitespace_line+ 'from'i => {tok = T_YIELD_FROM; lex.prepareToken(token, tok); fbreak;};
+            'yield'i                          => {tok = T_YIELD; lex.prepareToken(token, tok); fbreak;};
+            'include'i                        => {tok = T_INCLUDE; lex.prepareToken(token, tok); fbreak;};
+            'include_once'i                   => {tok = T_INCLUDE_ONCE; lex.prepareToken(token, tok); fbreak;};
+            'require'i                        => {tok = T_REQUIRE; lex.prepareToken(token, tok); fbreak;};
+            'require_once'i                   => {tok = T_REQUIRE_ONCE; lex.prepareToken(token, tok); fbreak;};
+            '__CLASS__'i                      => {tok = T_CLASS_C; lex.prepareToken(token, tok); fbreak;};
+            '__DIR__'i                        => {tok = T_DIR; lex.prepareToken(token, tok); fbreak;};
+            '__FILE__'i                       => {tok = T_FILE; lex.prepareToken(token, tok); fbreak;};
+            '__FUNCTION__'i                   => {tok = T_FUNC_C; lex.prepareToken(token, tok); fbreak;};
+            '__LINE__'i                       => {tok = T_LINE; lex.prepareToken(token, tok); fbreak;};
+            '__NAMESPACE__'i                  => {tok = T_NS_C; lex.prepareToken(token, tok); fbreak;};
+            '__METHOD__'i                     => {tok = T_METHOD_C; lex.prepareToken(token, tok); fbreak;};
+            '__TRAIT__'i                      => {tok = T_TRAIT_C; lex.prepareToken(token, tok); fbreak;};
+            '__halt_compiler'i                => {tok = T_HALT_COMPILER; lex.prepareToken(token, tok); fnext halt_compiller_open_parenthesis; fbreak;};
+            'new'i                            => {tok = T_NEW; lex.prepareToken(token, tok); fbreak;};
+            'and'i                            => {tok = T_LOGICAL_AND; lex.prepareToken(token, tok); fbreak;};
+            'or'i                             => {tok = T_LOGICAL_OR; lex.prepareToken(token, tok); fbreak;};
+            'xor'i                            => {tok = T_LOGICAL_XOR; lex.prepareToken(token, tok); fbreak;};
+            '\\'                              => {tok = T_NS_SEPARATOR; lex.prepareToken(token, tok); fbreak;};
+            '...'                             => {tok = T_ELLIPSIS; lex.prepareToken(token, tok); fbreak;};
+            '::'                              => {tok = T_PAAMAYIM_NEKUDOTAYIM; lex.prepareToken(token, tok); fbreak;};
+            '&&'                              => {tok = T_BOOLEAN_AND; lex.prepareToken(token, tok); fbreak;};
+            '||'                              => {tok = T_BOOLEAN_OR; lex.prepareToken(token, tok); fbreak;};
+            '&='                              => {tok = T_AND_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '|='                              => {tok = T_OR_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '.='                              => {tok = T_CONCAT_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '*='                              => {tok = T_MUL_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '**='                             => {tok = T_POW_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '/='                              => {tok = T_DIV_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '+='                              => {tok = T_PLUS_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '-='                              => {tok = T_MINUS_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '^='                              => {tok = T_XOR_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '%='                              => {tok = T_MOD_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '--'                              => {tok = T_DEC; lex.prepareToken(token, tok); fbreak;};
+            '++'                              => {tok = T_INC; lex.prepareToken(token, tok); fbreak;};
+            '=>'                              => {tok = T_DOUBLE_ARROW; lex.prepareToken(token, tok); fbreak;};
+            '<=>'                             => {tok = T_SPACESHIP; lex.prepareToken(token, tok); fbreak;};
+            '!=' | '<>'                       => {tok = T_IS_NOT_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '!=='                             => {tok = T_IS_NOT_IDENTICAL; lex.prepareToken(token, tok); fbreak;};
+            '=='                              => {tok = T_IS_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '==='                             => {tok = T_IS_IDENTICAL; lex.prepareToken(token, tok); fbreak;};
+            '<<='                             => {tok = T_SL_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '>>='                             => {tok = T_SR_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '>='                              => {tok = T_IS_GREATER_OR_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '<='                              => {tok = T_IS_SMALLER_OR_EQUAL; lex.prepareToken(token, tok); fbreak;};
+            '**'                              => {tok = T_POW; lex.prepareToken(token, tok); fbreak;};
+            '<<'                              => {tok = T_SL; lex.prepareToken(token, tok); fbreak;};
+            '>>'                              => {tok = T_SR; lex.prepareToken(token, tok); fbreak;};
+            '??'                              => {tok = T_COALESCE; lex.prepareToken(token, tok); fbreak;};
 
-            '(' whitespace* 'array'i whitespace* ')'                     => {tok = T_ARRAY_CAST; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '(' whitespace* ('bool'i|'boolean'i) whitespace* ')'         => {tok = T_BOOL_CAST; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '(' whitespace* ('real'i|'double'i|'float'i) whitespace* ')' => {tok = T_DOUBLE_CAST; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '(' whitespace* ('int'i|'integer'i) whitespace* ')'          => {tok = T_INT_CAST; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '(' whitespace* 'object'i whitespace* ')'                    => {tok = T_OBJECT_CAST; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '(' whitespace* ('string'i|'binary'i) whitespace* ')'        => {tok = T_STRING_CAST; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '(' whitespace* 'unset'i whitespace* ')'                     => {tok = T_UNSET_CAST; lval.Token(lex.prepareToken(token, tok)); fbreak;};
+            '(' whitespace* 'array'i whitespace* ')'                     => {tok = T_ARRAY_CAST; lex.prepareToken(token, tok); fbreak;};
+            '(' whitespace* ('bool'i|'boolean'i) whitespace* ')'         => {tok = T_BOOL_CAST; lex.prepareToken(token, tok); fbreak;};
+            '(' whitespace* ('real'i|'double'i|'float'i) whitespace* ')' => {tok = T_DOUBLE_CAST; lex.prepareToken(token, tok); fbreak;};
+            '(' whitespace* ('int'i|'integer'i) whitespace* ')'          => {tok = T_INT_CAST; lex.prepareToken(token, tok); fbreak;};
+            '(' whitespace* 'object'i whitespace* ')'                    => {tok = T_OBJECT_CAST; lex.prepareToken(token, tok); fbreak;};
+            '(' whitespace* ('string'i|'binary'i) whitespace* ')'        => {tok = T_STRING_CAST; lex.prepareToken(token, tok); fbreak;};
+            '(' whitespace* 'unset'i whitespace* ')'                     => {tok = T_UNSET_CAST; lex.prepareToken(token, tok); fbreak;};
 
             ('#' | '//') any_line* when is_not_comment_end => {
                 lex.ungetStr("?>")
@@ -298,27 +299,27 @@ func (lex *Lexer) Lex(lval Lval) int {
                 // rune, _ := utf8.DecodeRune(lex.data[lex.ts:lex.te]);
                 // tok = TokenType(Rune2Class(rune));
                 tok = TokenType(int(lex.data[lex.ts]));
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
                 fbreak;
             };
 
-            "{"          => { tok = TokenType(int('{')); lval.Token(lex.prepareToken(token, tok)); lex.call(ftargs, fentry(php)); goto _out; };
-            "}"          => { tok = TokenType(int('}')); lval.Token(lex.prepareToken(token, tok)); lex.ret(1); goto _out;};
-            "$" varname  => { tok = T_VARIABLE; lval.Token(lex.prepareToken(token, tok)); fbreak; };
-            varname      => { tok = T_STRING; lval.Token(lex.prepareToken(token, tok));   fbreak; };
+            "{"          => { tok = TokenType(int('{')); lex.prepareToken(token, tok); lex.call(ftargs, fentry(php)); goto _out; };
+            "}"          => { tok = TokenType(int('}')); lex.prepareToken(token, tok); lex.ret(1); goto _out;};
+            "$" varname  => { tok = T_VARIABLE; lex.prepareToken(token, tok); fbreak; };
+            varname      => { tok = T_STRING; lex.prepareToken(token, tok);   fbreak; };
 
-            "->"         => { tok = T_OBJECT_OPERATOR; lval.Token(lex.prepareToken(token, tok)); fnext property; fbreak; };
+            "->"         => { tok = T_OBJECT_OPERATOR; lex.prepareToken(token, tok); fnext property; fbreak; };
 
             constant_string => {
                 tok = T_CONSTANT_ENCAPSED_STRING;
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
                 fbreak;
             };
 
             "b"i? "<<<" [ \t]* ( heredoc_label | ("'" heredoc_label "'") | ('"' heredoc_label '"') ) newline  => {
                 lex.heredocLabel = lex.data[lblStart:lblEnd]
                 tok = T_START_HEREDOC;
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
 
                 if lex.isHeredocEnd(lex.p+1) {
                     fnext heredoc_end;
@@ -329,8 +330,8 @@ func (lex *Lexer) Lex(lval Lval) int {
                 }
                 fbreak;
             };
-            "`" => {tok = TokenType(int('`')); lval.Token(lex.prepareToken(token, tok)); fnext backqote; fbreak;};
-            '"' => {tok = TokenType(int('"')); lval.Token(lex.prepareToken(token, tok)); fnext template_string; fbreak;};
+            "`" => {tok = TokenType(int('`')); lex.prepareToken(token, tok); fnext backqote; fbreak;};
+            '"' => {tok = TokenType(int('"')); lex.prepareToken(token, tok); fnext template_string; fbreak;};
 
             any_line => {
                 c := lex.data[lex.p]
@@ -340,27 +341,27 @@ func (lex *Lexer) Lex(lval Lval) int {
 
         property := |*
             whitespace_line* => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
-            "->"             => {tok = T_OBJECT_OPERATOR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            varname          => {tok = T_STRING; lval.Token(lex.prepareToken(token, tok)); fnext php; fbreak;};
+            "->"             => {tok = T_OBJECT_OPERATOR; lex.prepareToken(token, tok); fbreak;};
+            varname          => {tok = T_STRING; lex.prepareToken(token, tok); fnext php; fbreak;};
             any              => {lex.ungetCnt(1); fgoto php;};
         *|;
 
         nowdoc := |*
             any_line* when is_not_heredoc_end => {
                 tok = T_ENCAPSED_AND_WHITESPACE;
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
                 fnext heredoc_end;
                 fbreak;
             };
         *|;
         
         heredoc := |*
-            "{$" => {lex.ungetCnt(1); tok = T_CURLY_OPEN; lval.Token(lex.prepareToken(token, tok)); lex.call(ftargs, fentry(php)); goto _out;};
-            "${" => {tok = T_DOLLAR_OPEN_CURLY_BRACES; lval.Token(lex.prepareToken(token, tok)); lex.call(ftargs, fentry(string_var_name)); goto _out;};
+            "{$" => {lex.ungetCnt(1); tok = T_CURLY_OPEN; lex.prepareToken(token, tok); lex.call(ftargs, fentry(php)); goto _out;};
+            "${" => {tok = T_DOLLAR_OPEN_CURLY_BRACES; lex.prepareToken(token, tok); lex.call(ftargs, fentry(string_var_name)); goto _out;};
             "$"  => {lex.ungetCnt(1); fcall string_var;};
             any_line* when is_not_heredoc_end_or_var => {
                 tok = T_ENCAPSED_AND_WHITESPACE;
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
 
                 if lex.data[lex.p+1] != '$' && lex.data[lex.p+1] != '{' {
                     fnext heredoc_end;
@@ -370,25 +371,25 @@ func (lex *Lexer) Lex(lval Lval) int {
         *|;
         
         backqote := |*
-            "{$" => {lex.ungetCnt(1); tok = T_CURLY_OPEN; lval.Token(lex.prepareToken(token, tok)); lex.call(ftargs, fentry(php)); goto _out;};
-            "${" => {tok = T_DOLLAR_OPEN_CURLY_BRACES; lval.Token(lex.prepareToken(token, tok)); lex.call(ftargs, fentry(string_var_name)); goto _out;};
+            "{$" => {lex.ungetCnt(1); tok = T_CURLY_OPEN; lex.prepareToken(token, tok); lex.call(ftargs, fentry(php)); goto _out;};
+            "${" => {tok = T_DOLLAR_OPEN_CURLY_BRACES; lex.prepareToken(token, tok); lex.call(ftargs, fentry(string_var_name)); goto _out;};
             "$"  => {lex.ungetCnt(1); fcall string_var;};
-            '`'  => {tok = TokenType(int('`')); lval.Token(lex.prepareToken(token, tok)); fnext php; fbreak;};
+            '`'  => {tok = TokenType(int('`')); lex.prepareToken(token, tok); fnext php; fbreak;};
             any_line* when is_not_backqoute_end_or_var => {
                 tok = T_ENCAPSED_AND_WHITESPACE;
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
                 fbreak;
             };
         *|;
         
         template_string := |*
-            "{$" => {lex.ungetCnt(1); tok = T_CURLY_OPEN; lval.Token(lex.prepareToken(token, tok)); lex.call(ftargs, fentry(php)); goto _out;};
-            "${" => {tok = T_DOLLAR_OPEN_CURLY_BRACES; lval.Token(lex.prepareToken(token, tok)); lex.call(ftargs, fentry(string_var_name)); goto _out;};
+            "{$" => {lex.ungetCnt(1); tok = T_CURLY_OPEN; lex.prepareToken(token, tok); lex.call(ftargs, fentry(php)); goto _out;};
+            "${" => {tok = T_DOLLAR_OPEN_CURLY_BRACES; lex.prepareToken(token, tok); lex.call(ftargs, fentry(string_var_name)); goto _out;};
             "$"  => {lex.ungetCnt(1); fcall string_var;};
-            '"'  => {tok = TokenType(int('"')); lval.Token(lex.prepareToken(token, tok)); fnext php; fbreak;};
+            '"'  => {tok = TokenType(int('"')); lex.prepareToken(token, tok); fnext php; fbreak;};
             any_line* when is_not_string_end_or_var => {
                 tok = T_ENCAPSED_AND_WHITESPACE;
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
                 fbreak;
             };
         *|;
@@ -396,33 +397,33 @@ func (lex *Lexer) Lex(lval Lval) int {
         heredoc_end := |*
             varname -- ";" => {
                 tok = T_END_HEREDOC;
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
                 fnext php;
                 fbreak;
             };
             varname => {
                 tok = T_END_HEREDOC;
-                lval.Token(lex.prepareToken(token, tok));
+                lex.prepareToken(token, tok);
                 fnext php;
                 fbreak;
             };
         *|;
         
         string_var := |*
-            '$' varname        => {tok = T_VARIABLE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '->' varname_first => {lex.ungetCnt(1); tok = T_OBJECT_OPERATOR; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            varname            => {tok = T_STRING; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '['                => {tok = TokenType(int('[')); lval.Token(lex.prepareToken(token, tok)); lex.call(ftargs, fentry(string_var_index)); goto _out;};
+            '$' varname        => {tok = T_VARIABLE; lex.prepareToken(token, tok); fbreak;};
+            '->' varname_first => {lex.ungetCnt(1); tok = T_OBJECT_OPERATOR; lex.prepareToken(token, tok); fbreak;};
+            varname            => {tok = T_STRING; lex.prepareToken(token, tok); fbreak;};
+            '['                => {tok = TokenType(int('[')); lex.prepareToken(token, tok); lex.call(ftargs, fentry(string_var_index)); goto _out;};
             any                => {lex.ungetCnt(1); fret;};
         *|;
         
         string_var_index := |*
-            lnum | hnum | bnum       => {tok = T_NUM_STRING; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            '$' varname              => {tok = T_VARIABLE; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            varname                  => {tok = T_STRING; lval.Token(lex.prepareToken(token, tok)); fbreak;};
-            whitespace_line | [\\'#] => {tok = T_ENCAPSED_AND_WHITESPACE; lval.Token(lex.prepareToken(token, tok)); lex.ret(2); goto _out;};
-            operators > (svi, 1)     => {lval.Token(lex.prepareToken(token, tok)); tok = TokenType(int(lex.data[lex.ts])); fbreak;};
-            ']'       > (svi, 2)     => {tok = TokenType(int(']')); lval.Token(lex.prepareToken(token, tok)); lex.ret(2); goto _out;};
+            lnum | hnum | bnum       => {tok = T_NUM_STRING; lex.prepareToken(token, tok); fbreak;};
+            '$' varname              => {tok = T_VARIABLE; lex.prepareToken(token, tok); fbreak;};
+            varname                  => {tok = T_STRING; lex.prepareToken(token, tok); fbreak;};
+            whitespace_line | [\\'#] => {tok = T_ENCAPSED_AND_WHITESPACE; lex.prepareToken(token, tok); lex.ret(2); goto _out;};
+            operators > (svi, 1)     => {lex.prepareToken(token, tok); tok = TokenType(int(lex.data[lex.ts])); fbreak;};
+            ']'       > (svi, 2)     => {tok = TokenType(int(']')); lex.prepareToken(token, tok); lex.ret(2); goto _out;};
             any_line => {
                 c := lex.data[lex.p]
                 lex.Error(fmt.Sprintf("WARNING: Unexpected character in input: '%c' (ASCII=%d)", c, c));
@@ -430,25 +431,25 @@ func (lex *Lexer) Lex(lval Lval) int {
         *|;
 
         string_var_name := |*
-            varname ("[" | "}") => {lex.ungetCnt(1); tok = T_STRING_VARNAME; lval.Token(lex.prepareToken(token, tok)); fnext php; fbreak;};
+            varname ("[" | "}") => {lex.ungetCnt(1); tok = T_STRING_VARNAME; lex.prepareToken(token, tok); fnext php; fbreak;};
             any                 => {lex.ungetCnt(1); fnext php;};
         *|;
 
         halt_compiller_open_parenthesis := |*
             whitespace_line* => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
-            "("              => {tok = TokenType(int('(')); lval.Token(lex.prepareToken(token, tok)); fnext halt_compiller_close_parenthesis; fbreak;};
+            "("              => {tok = TokenType(int('(')); lex.prepareToken(token, tok); fnext halt_compiller_close_parenthesis; fbreak;};
             any              => {lex.ungetCnt(1); fnext php;};
         *|;
 
         halt_compiller_close_parenthesis := |*
             whitespace_line* => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
-            ")"              => {tok = TokenType(int(')')); lval.Token(lex.prepareToken(token, tok)); fnext halt_compiller_close_semicolon; fbreak;};
+            ")"              => {tok = TokenType(int(')')); lex.prepareToken(token, tok); fnext halt_compiller_close_semicolon; fbreak;};
             any              => {lex.ungetCnt(1); fnext php;};
         *|;
 
         halt_compiller_close_semicolon := |*
             whitespace_line* => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
-            ";"              => {tok = TokenType(int(';')); lval.Token(lex.prepareToken(token, tok)); fnext halt_compiller_end; fbreak;};
+            ";"              => {tok = TokenType(int(';')); lex.prepareToken(token, tok); fnext halt_compiller_end; fbreak;};
             any              => {lex.ungetCnt(1); fnext php;};
         *|;
 
@@ -458,6 +459,8 @@ func (lex *Lexer) Lex(lval Lval) int {
 
         write exec;
     }%%
+
+    lval.Token(token)
 
     return int(tok);
 }

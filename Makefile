@@ -10,6 +10,7 @@ replace:
 	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/parser/php5/php5.go
 	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/parser/php7/php7.go
 	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/parser/php5/php5.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/scanner/scanner.go
 
 build:
 	go generate ./...

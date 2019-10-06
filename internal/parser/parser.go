@@ -1,27 +1,31 @@
 package parser
 
 import (
-	"github.com/z7zmey/php-parser/internal/graph"
+	"github.com/z7zmey/php-parser/internal/parser/nodestack"
 	"github.com/z7zmey/php-parser/internal/scanner"
-	"github.com/z7zmey/php-parser/internal/stxtree"
+	"github.com/z7zmey/php-parser/internal/tree"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
 )
 
 type Parser interface {
-	Parse([]byte, *stxtree.Graph) int
+	Parse([]byte, *tree.Tree) int
 	GetErrors() []*errors.Error
 	WithTokens() Parser
 }
 
 type AbstractParser struct {
+	FileData     []byte
 	Lexer        scanner.Scanner
 	CurrentToken *scanner.Token
-	List         stackedNodeList
-	Ast          *stxtree.Graph
+	List         nodestack.NodeStack
+	Ast          *tree.Tree
 
 	WithTokens bool
+
+	tokenBuf []ast.Token
+	nodeBuf  []ast.Node
 }
 
 func (p *AbstractParser) Error(msg string) {
@@ -40,56 +44,38 @@ func (p *AbstractParser) GetErrors() []*errors.Error {
 	return p.Lexer.GetErrors()
 }
 
-func (p *AbstractParser) Reset(src []byte, a *stxtree.Graph) {
+func (p *AbstractParser) Reset(src []byte, a *tree.Tree) {
 	p.Lexer.Reset(src)
 	p.List.Reset()
 
-	a.FileData = src
-
+	a.Reset()
 	p.Ast = a
+	p.FileData = src
 	p.Lexer.SetErrors(nil)
 }
 
-func (p *AbstractParser) getPosID(n graph.NodeID) graph.NodeID {
-	if n == 0 {
-		return 0
-	}
-
-	var posID graph.NodeID
-	p.Ast.Foreach(n, func(edge graph.Edge, node graph.Node) bool {
-		if node.Type == stxtree.NodeTypePosition {
-			posID = edge.To
-			return false
-		}
-
-		return true
-	})
-
-	return posID
+func (p *AbstractParser) getPos(n ast.Node) ast.Position {
+	return n.Position
 }
 
-func (p *AbstractParser) getListStartPosID(l []graph.NodeID) graph.NodeID {
-	if len(l) > 0 {
-		if l[0] == 0 {
-			return 0
-		}
+func (p *AbstractParser) getListStartPos(l []ast.Node) ast.Position {
+	var pos ast.Position
 
-		return p.getPosID(l[0])
+	if len(l) > 0 {
+		pos = l[0].Position
 	}
 
-	return 0
+	return pos
 }
 
-func (p *AbstractParser) getListEndPosID(l []graph.NodeID) graph.NodeID {
-	if len(l) > 0 {
-		if l[len(l)-1] == 0 {
-			return 0
-		}
+func (p *AbstractParser) getListEndPos(l []ast.Node) ast.Position {
+	var pos ast.Position
 
-		return p.getPosID(l[len(l)-1])
+	if len(l) > 0 {
+		pos = l[len(l)-1].Position
 	}
 
-	return 0
+	return pos
 }
 
 func (p *AbstractParser) getStartToken(l []*scanner.Token) *scanner.Token {
@@ -108,125 +94,78 @@ func (p *AbstractParser) getEndToken(l []*scanner.Token) *scanner.Token {
 	return nil
 }
 
-func (p *AbstractParser) NewPosition(startNodeIDlist []graph.NodeID, tokenList []*scanner.Token, endNodeIdList []graph.NodeID) graph.NodeID {
+func (p *AbstractParser) NewPosition(startNodeIDlist []ast.Node, tokenList []*scanner.Token, endNodeIdList []ast.Node) ast.Position {
 	var pos ast.Position
 
 	// Get start pos
 
-	sPosID := p.getListStartPosID(startNodeIDlist)
-	sTok := p.getStartToken(tokenList)
-
-	if sPosID != 0 {
-		sPos := p.Ast.GetPosition(sPosID)
+	if len(startNodeIDlist) > 0 {
+		sPos := p.getListStartPos(startNodeIDlist)
+		pos.PS = sPos.PS
+		pos.LS = sPos.LS
+	} else if len(tokenList) > 0 {
+		sTok := p.getStartToken(tokenList)
+		pos.PS = sTok.StartPos
+		pos.LS = sTok.StartLine
+	} else if len(endNodeIdList) > 0 {
+		sPos := p.getListStartPos(endNodeIdList)
 		pos.PS = sPos.PS
 		pos.LS = sPos.LS
 	}
 
-	if sPosID == 0 && sTok != nil {
-		pos.PS = sTok.StartPos
-		pos.LS = sTok.StartLine
-	}
-
 	// get end pos
 
-	ePosID := p.getListEndPosID(endNodeIdList)
-	eTok := p.getEndToken(tokenList)
-	esPosID := p.getListEndPosID(endNodeIdList)
-
-	if ePosID != 0 {
-		ePos := p.Ast.GetPosition(ePosID)
+	if len(endNodeIdList) > 0 {
+		ePos := p.getListEndPos(endNodeIdList)
+		pos.PE = ePos.PE
+		pos.LE = ePos.LE
+	} else if len(tokenList) > 0 {
+		eTok := p.getEndToken(tokenList)
+		pos.PE = eTok.EndPos
+		pos.LE = eTok.EndLine
+	} else {
+		ePos := p.getListEndPos(startNodeIDlist)
 		pos.PE = ePos.PE
 		pos.LE = ePos.LE
 	}
 
-	if ePosID == 0 && eTok != nil {
-		pos.PE = sTok.EndPos
-		pos.LE = sTok.EndLine
-	}
-
-	if ePosID == 0 && eTok != nil && esPosID != 0 {
-		ePos := p.Ast.GetPosition(esPosID)
-		pos.PE = ePos.PE
-		pos.LE = ePos.LE
-	}
-
-	return p.Ast.NewPosition(pos)
+	return pos
 }
 
-func (p *AbstractParser) Children(parentNodeID graph.NodeID, nodeGroup ast.NodeGroup, children ...graph.NodeID) {
-	for _, childNodeID := range children {
-		if childNodeID == 0 {
-			continue
+func (p *AbstractParser) PopTokens() []ast.Token {
+	res := p.tokenBuf
+	p.tokenBuf = p.tokenBuf[:0]
+	return res
+}
+
+func (p *AbstractParser) Nodes(nn ...ast.Node) []ast.Node {
+	for _, v := range nn {
+		p.nodeBuf = append(p.nodeBuf, v)
+	}
+	res := p.nodeBuf
+	p.nodeBuf = p.nodeBuf[:0]
+	return res
+}
+
+func (p *AbstractParser) PushTokens(group ast.TokenGroup, tokens []scanner.Token) {
+	for _, v := range tokens {
+		pos := ast.Position{
+			PS: v.StartPos,
+			PE: v.EndPos,
+			LS: v.StartLine,
+			LE: v.EndLine,
+		}
+		token := ast.Token{
+			Type:     v.Type,
+			Group:    group,
+			Position: pos,
 		}
 
-		p.Ast.GetNode(childNodeID).Group = nodeGroup
-		p.Ast.Link(parentNodeID, childNodeID, nil)
+		p.tokenBuf = append(p.tokenBuf, token)
 	}
 }
 
-func (p *AbstractParser) SavePosition(nodeID graph.NodeID, posID graph.NodeID) {
-	p.Ast.Link(nodeID, posID, nil)
-}
-
-func (p *AbstractParser) AppendTokens(nodeID graph.NodeID, group ast.TokenGroup, tokens []scanner.Token) {
-	if !p.WithTokens {
-		return
-	}
-
-	for _, token := range tokens {
-		tokenID := p.convertToken(token, group)
-		p.Ast.Link(nodeID, tokenID, p.Ast.Append)
-	}
-}
-
-func (p *AbstractParser) PrependTokens(nodeID graph.NodeID, group ast.TokenGroup, tokens []scanner.Token) {
-	if !p.WithTokens {
-		return
-	}
-
-	for i := len(tokens) - 1; i >= 0; i-- {
-		tokenID := p.convertToken(tokens[i], group)
-		p.Ast.Link(nodeID, tokenID, p.Ast.Prepend)
-	}
-}
-
-func (p *AbstractParser) MoveStartTokens(src graph.NodeID, dst graph.NodeID) {
-	if !p.WithTokens {
-		return
-	}
-
-	// TODO: refactor or remove
-	// list := p.Ast.RemoveEdges(src, func(e graph.Edge) bool {
-	// 	if e.Type != graph.EdgeTypeToken {
-	// 		return false
-	// 	}
-
-	// 	token := p.Ast.Tokens.Get(graph.TokenID(e.Target))
-
-	// 	if token.Group != ast.TokenGroupStart {
-	// 		return false
-	// 	}
-
-	// 	return true
-	// })
-
-	// node := &p.Ast.Nodes[dst-1]
-	// node.Edges = p.Ast.AppendEdges(list, node.Edges)
-}
-
-func (p *AbstractParser) convertToken(token scanner.Token, group ast.TokenGroup) graph.NodeID {
-	pos := ast.Position{
-		PS: token.StartPos,
-		PE: token.EndPos,
-		LS: token.StartLine,
-	}
-	posID := p.Ast.NewPosition(pos)
-	tokenID := p.Ast.NewToken(ast.Token{
-		Type:  token.Type,
-		Group: group,
-	})
-
-	p.Ast.Link(tokenID, posID, p.Ast.Append)
-
-	return tokenID
+func (p *AbstractParser) PrependToken(token *scanner.Token) {
+	p.PushTokens(ast.TokenGroupStart, token.HiddenTokens)
+	p.PushTokens(ast.TokenGroupStart, []scanner.Token{*token})
 }

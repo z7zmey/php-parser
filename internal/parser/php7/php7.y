@@ -6,15 +6,13 @@ import (
     "strconv"
 
     "github.com/z7zmey/php-parser/pkg/ast"
-    "github.com/z7zmey/php-parser/internal/graph"
-    "github.com/z7zmey/php-parser/internal/stxtree"
     "github.com/z7zmey/php-parser/internal/scanner"
 )
 
 %}
 
 %union{
-    node  graph.NodeID
+    node  ast.Node
     token *scanner.Token
 }
 
@@ -226,44 +224,31 @@ import (
 %type <token> possible_comma
 %type <token> case_separator
 
-%type <node> top_statement name statement function_declaration_statement
-%type <node> class_declaration_statement trait_declaration_statement
-%type <node> interface_declaration_statement
-%type <node> group_use_declaration inline_use_declaration
+%type <node> name
+%type <node> top_statement statement inner_statement
+%type <node> function_declaration_statement
+%type <node> return_type type_expr type
+%type <node> parameter optional_type
+%type <node> class_declaration_statement trait_declaration_statement interface_declaration_statement
+%type <node> extends_from interface_extends_list implements_list
+%type <node> class_modifier class_statement member_modifier property class_const_decl method_body
+%type <node> trait_adaptations trait_adaptation trait_precedence trait_alias trait_method_reference absolute_trait_method_reference
+%type <node> group_use_declaration inline_use_declaration use_type
 %type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
-%type <node> const_decl inner_statement
-%type <node> expr optional_expr
-%type <node> declare_statement finally_statement unset_variable variable
-%type <node> parameter optional_type argument expr_without_variable global_var
-%type <node> static_var class_statement trait_adaptation trait_precedence trait_alias
-%type <node> absolute_trait_method_reference trait_method_reference property echo_expr
-%type <node> new_expr anonymous_class class_name class_name_reference simple_variable
-%type <node> internal_functions_in_yacc
-%type <node> exit_expr scalar lexical_var function_call member_name property_name
-%type <node> variable_class_name dereferencable_scalar constant dereferencable
-%type <node> callable_expr callable_variable static_member new_variable
-%type <node> encaps_var encaps_var_offset
-%type <node> if_stmt
-%type <node> alt_if_stmt
-%type <node> if_stmt_without_else
-%type <node> class_const_decl
-%type <node> alt_if_stmt_without_else
+%type <node> const_decl
+%type <node> expr expr_without_variable optional_expr exit_expr lexical_vars lexical_var
+%type <node> internal_functions_in_yacc isset_variable
+%type <node> new_expr class_name_reference new_variable ctor_arguments anonymous_class
+%type <node> scalar encaps_var encaps_var_offset
+%type <node> variable callable_variable simple_variable
+%type <node> static_member class_name variable_class_name
+%type <node> dereferencable dereferencable_scalar constant
+%type <node> property_name argument_list argument
+%type <node> function_call callable_expr member_name
 %type <node> array_pair possible_array_pair
-%type <node> isset_variable type return_type type_expr
-%type <node> class_modifier
-%type <node> argument_list ctor_arguments
-%type <node> trait_adaptations
-%type <node> switch_case_list
-%type <node> method_body
-%type <node> foreach_statement for_statement while_statement
-%type <node> extends_from
-%type <node> implements_list
-%type <node> interface_extends_list
-%type <node> lexical_vars
-
-%type <node> member_modifier
-%type <node> use_type
-%type <node> foreach_variable
+%type <node> if_stmt alt_if_stmt
+%type <node> global_var static_var echo_expr unset_variable foreach_variable
+%type <node> finally_statement
 
 %%
 
@@ -272,24 +257,29 @@ import (
 start:
         top_statement_list
             {
-                children := yylex.(*Parser).List.Pop()
-                nodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, yylex.(*Parser).CurrentToken.HiddenTokens )
+                
+                root := ast.Node{
                     Type: ast.NodeTypeRoot,
-                })
-                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(children, nil, nil))
-                yylex.(*Parser).Children(nodeID, ast.NodeGroupStmts, children...)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).Ast.RootNode = nodeID
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(nodeID, ast.TokenGroupEnd, yylex.(*Parser).CurrentToken.HiddenTokens)
+                yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes( root ),
+                )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 reserved_non_modifiers:
-      T_INCLUDE {$$=$1} | T_INCLUDE_ONCE {$$=$1} | T_EVAL {$$=$1} | T_REQUIRE {$$=$1} | T_REQUIRE_ONCE {$$=$1} | T_LOGICAL_OR {$$=$1} | T_LOGICAL_XOR {$$=$1} | T_LOGICAL_AND {$$=$1} 
+    T_INCLUDE {$$=$1} | T_INCLUDE_ONCE {$$=$1} | T_EVAL {$$=$1} | T_REQUIRE {$$=$1} | T_REQUIRE_ONCE {$$=$1} | T_LOGICAL_OR {$$=$1} | T_LOGICAL_XOR {$$=$1} | T_LOGICAL_AND {$$=$1} 
     | T_INSTANCEOF {$$=$1} | T_NEW {$$=$1} | T_CLONE {$$=$1} | T_EXIT {$$=$1} | T_IF {$$=$1} | T_ELSEIF {$$=$1} | T_ELSE {$$=$1} | T_ENDIF {$$=$1} | T_ECHO {$$=$1} | T_DO {$$=$1} | T_WHILE {$$=$1} | T_ENDWHILE {$$=$1} 
     | T_FOR {$$=$1} | T_ENDFOR {$$=$1} | T_FOREACH {$$=$1} | T_ENDFOREACH {$$=$1} | T_DECLARE {$$=$1} | T_ENDDECLARE {$$=$1} | T_AS {$$=$1} | T_TRY {$$=$1} | T_CATCH {$$=$1} | T_FINALLY {$$=$1} 
     | T_THROW {$$=$1} | T_USE {$$=$1} | T_INSTEADOF {$$=$1} | T_GLOBAL {$$=$1} | T_VAR {$$=$1} | T_UNSET {$$=$1} | T_ISSET {$$=$1} | T_EMPTY {$$=$1} | T_CONTINUE {$$=$1} | T_GOTO {$$=$1} 
@@ -320,7 +310,7 @@ identifier:
 top_statement_list:
         top_statement_list top_statement
             {
-                if $2 != 0 {
+                if $2.Type != 0 {
                     yylex.(*Parser).List.Add($2)
                 }
 
@@ -343,31 +333,32 @@ top_statement_list:
 namespace_name:
         T_STRING
             {
-                nodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                namePartNode := ast.Node{
                     Type: ast.NodeTypeNameNamePart,
-                })
-                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add(nodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(nodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).List.Add(namePartNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                nodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+                
+                namePartNode := ast.Node{
                     Type: ast.NodeTypeNameNamePart,
-                })
-                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
-                yylex.(*Parser).List.Add(nodeID)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(nodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).List.Add(namePartNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -376,44 +367,51 @@ namespace_name:
 name:
         namespace_name
             {
-                children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupParts),
+                )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeNameName,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(children, nil, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupParts, children...)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(children[0], $$)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     | T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeNameRelative,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
-                yylex.(*Parser).Children($$, ast.NodeGroupParts, children...)
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupParts),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupNamespace, $2.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupNamespace, $2.HiddenTokens )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeNameRelative,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     | T_NS_SEPARATOR namespace_name
             {
-                children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeNameFullyQualified,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
-                yylex.(*Parser).Children($$, ast.NodeGroupParts, children...)
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupParts),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeNameFullyQualified,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -423,7 +421,7 @@ top_statement:
         error
             {
                 // error
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -458,163 +456,205 @@ top_statement:
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_HALT_COMPILER '(' ')' ';'
-            {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+            { 
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupHaltCompiller, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupOpenParenthesisToken, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCloseParenthesisToken, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtHaltCompiler,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupHaltCompiller, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupOpenParenthesisToken, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE namespace_name ';'
             {
-                children := yylex.(*Parser).List.Pop()
+                // namespace name 
 
-                // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupParts),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                
+                nameNode := ast.Node{
                     Type: ast.NodeTypeNameName,
-                })
-                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
-                yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, children...)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupNamespaceName,
+                }
 
-                // Create Namespace Node
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // namespace
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(nameNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtNamespace,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupNamespaceName, nameNodeID)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(children[0], nameNodeID)
-                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
             {
-                childrenStmts := yylex.(*Parser).List.Pop()
-                childrenNameParts := yylex.(*Parser).List.Pop()
+                childrenStmts := yylex.(*Parser).List.Pop(ast.NodeGroupStmts)
+                childrenNameParts := yylex.(*Parser).List.Pop(ast.NodeGroupParts)
 
-                // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // namespace name 
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    childrenNameParts,
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                
+                nameNode := ast.Node{
                     Type: ast.NodeTypeNameName,
-                })
-                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-                yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupNamespaceName,
+                }
 
-                // Create Namespace Node
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // namespace
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(nameNode),
+                    childrenStmts,
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $5.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtNamespace,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupNamespaceName, nameNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, childrenStmts...)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $5.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NAMESPACE '{' top_statement_list '}'
             {
-                children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtNamespace,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, children...)
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupNamespace, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $4.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupNamespace, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $4.HiddenTokens )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtNamespace,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE mixed_group_use_declaration ';'
             {
                 $$ = $2
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUseDeclarationList, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupUseDeclarationList, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$.Position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil)
+                $$.Tokens = yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE use_type group_use_declaration ';'
             {
-                yylex.(*Parser).SavePosition($2, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-                yylex.(*Parser).Children($3, ast.NodeGroupUseType, $2)
-                
+                $2.Group = ast.NodeGroupUseType
+
                 $$ = $3
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUseDeclarationList, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupUseDeclarationList, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+
+                $$.Position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil)
+                $$.Tokens = yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )
+                $$.Children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                    yylex.(*Parser).List.Pop(ast.NodeGroupPrefix, ast.NodeGroupUseList),
+                )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE use_declarations ';'
             {
-                children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtUseList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupUses, children...)
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupUses),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUseDeclarationList, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupUseDeclarationList, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtUseList,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE use_type use_declarations ';'
             {
-                children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtUseList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupUseType, $2)
-                yylex.(*Parser).Children($$, ast.NodeGroupUses, children...)
+                $2.Group = ast.NodeGroupUseType
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUseDeclarationList, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                    yylex.(*Parser).List.Pop(ast.NodeGroupUses),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupUseDeclarationList, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtUseList,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CONST const_list ';'
             {
-                children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtConstList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupConsts, children...)
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupConsts),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtConstList,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -623,98 +663,121 @@ top_statement:
 use_type:
         T_FUNCTION
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
             }
     |   T_CONST
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
             }
 ;
 
 group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
-                childrenUseDeclarations := yylex.(*Parser).List.Pop()
-                childrenNameParts := yylex.(*Parser).List.Pop()
+                childrenUseDeclarations := yylex.(*Parser).List.Pop(ast.NodeGroupUseList)
+                childrenNameParts       := yylex.(*Parser).List.Pop(ast.NodeGroupParts)
 
-                // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // name 
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    childrenNameParts,
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $2.HiddenTokens )
+                
+                nameNode := ast.Node{
                     Type: ast.NodeTypeNameName,
-                })
-                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-                yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
-
-                // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtGroupUse,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$6}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupPrefix, nameNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupUseList, childrenUseDeclarations...)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, $3.HiddenTokens)
-                if $5 != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $5.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, []scanner.Token{*$5})
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
-                } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupPrefix,
                 }
 
+                // GroupUse
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtGroupUse,
+                    Position: yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$6}, nil),
+                    Children: children,
+                }
+
+                // push children
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(childrenUseDeclarations...)
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(nameNode)
+
+                // push tokens
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupSlash, $3.HiddenTokens )
+                if $5 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $5.HiddenTokens )
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStmts, []scanner.Token{*$5} )
+                } 
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $6.HiddenTokens )
+                
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
-                childrenUseDeclarations := yylex.(*Parser).List.Pop()
-                childrenNameParts := yylex.(*Parser).List.Pop()
+                childrenUseDeclarations := yylex.(*Parser).List.Pop(ast.NodeGroupUseList)
+                childrenNameParts       := yylex.(*Parser).List.Pop(ast.NodeGroupParts)
 
-                // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // name 
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    childrenNameParts,
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                
+                nameNode := ast.Node{
                     Type: ast.NodeTypeNameName,
-                })
-                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-                yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
-
-                // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtGroupUse,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupPrefix, nameNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupUseList, childrenUseDeclarations...)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUseType, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, $4.HiddenTokens)
-                if $6 != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, []scanner.Token{*$6})
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
-                } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupPrefix,
                 }
 
+                // GroupUse
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtGroupUse,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil),
+                    Children: children,
+                }
+
+                // push children
+
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(childrenUseDeclarations...)
+                yylex.(*Parser).List.Push()
+                yylex.(*Parser).List.Add(nameNode)
+
+                // push tokens
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupUse, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupUse, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSlash, $4.HiddenTokens )
+                if $6 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $6.HiddenTokens )
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStmts, []scanner.Token{*$6} )
+                } 
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $7.HiddenTokens )
+                
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -722,72 +785,94 @@ group_use_declaration:
 mixed_group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
-                childrenUseDeclarations := yylex.(*Parser).List.Pop()
-                childrenNameParts := yylex.(*Parser).List.Pop()
+                childrenUseDeclarations := yylex.(*Parser).List.Pop(ast.NodeGroupUseList)
+                childrenNameParts       := yylex.(*Parser).List.Pop(ast.NodeGroupParts)
 
-                // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // name 
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    childrenNameParts,
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $2.HiddenTokens )
+                
+                nameNode := ast.Node{
                     Type: ast.NodeTypeNameName,
-                })
-                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-                yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
-
-                // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtGroupUse,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$6}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupPrefix, nameNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupUseList, childrenUseDeclarations...)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, $3.HiddenTokens)
-                if $5 != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $5.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, []scanner.Token{*$5})
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
-                } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupPrefix,
                 }
+
+                // GroupUse
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(nameNode),
+                    childrenUseDeclarations,
+                )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtGroupUse,
+                    Position: yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$6}, nil),
+                    Children: children,
+                }
+
+                // push tokens
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupSlash, $3.HiddenTokens )
+                if $5 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $5.HiddenTokens )
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStmts, []scanner.Token{*$5} )
+                } 
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $6.HiddenTokens )
                 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
-                childrenUseDeclarations := yylex.(*Parser).List.Pop()
-                childrenNameParts := yylex.(*Parser).List.Pop()
+                childrenUseDeclarations := yylex.(*Parser).List.Pop(ast.NodeGroupUseList)
+                childrenNameParts       := yylex.(*Parser).List.Pop(ast.NodeGroupParts)
 
-                // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // name 
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    childrenNameParts,
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                
+                nameNode := ast.Node{
                     Type: ast.NodeTypeNameName,
-                })
-                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-                yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
-
-                // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtGroupUse,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupPrefix, nameNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupUseList, childrenUseDeclarations...)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUse, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUse, []scanner.Token{*$1})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, $4.HiddenTokens)
-                if $6 != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, []scanner.Token{*$6})
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
-                } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupPrefix,
                 }
 
+                // GroupUse
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(nameNode),
+                    childrenUseDeclarations,
+                )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtGroupUse,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil),
+                    Children: children,
+                }
+
+                // push tokens
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupUse, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupUse, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSlash, $4.HiddenTokens )
+                if $6 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $6.HiddenTokens )
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStmts, []scanner.Token{*$6} )
+                } 
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $7.HiddenTokens )
+                
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -804,60 +889,67 @@ possible_comma:
 ;
 
 inline_use_declarations:
-        inline_use_declarations ',' inline_use_declaration
+        inline_use_declarations ',' { yylex.(*Parser).PrependToken($2) } inline_use_declaration
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   inline_use_declaration
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 unprefixed_use_declarations:
-        unprefixed_use_declarations ',' unprefixed_use_declaration
+        unprefixed_use_declarations ',' { yylex.(*Parser).PrependToken($2) } unprefixed_use_declaration
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupAlias, ast.NodeGroupUse),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                useNode := ast.Node{
+                    Type: ast.NodeTypeStmtUse,
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
+
+                yylex.(*Parser).List.Add(useNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   unprefixed_use_declaration
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupAlias, ast.NodeGroupUse),
+                )
+
+                useNode := ast.Node{
+                    Type: ast.NodeTypeStmtUse,
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
+
+                yylex.(*Parser).List.Push(useNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 use_declarations:
-        use_declarations ',' use_declaration
+        use_declarations ',' { yylex.(*Parser).PrependToken($2) } use_declaration
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   use_declaration
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -866,15 +958,34 @@ use_declarations:
 inline_use_declaration:
         unprefixed_use_declaration
             {
-                $$ = $1
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupAlias, ast.NodeGroupUse),
+                )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtUse,
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   use_type unprefixed_use_declaration
             {
-                yylex.(*Parser).Children($2, ast.NodeGroupUseType, $1)
-                
-                $$ = $2
+                $1.Group = ast.NodeGroupUseType
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                    yylex.(*Parser).List.Pop(ast.NodeGroupAlias, ast.NodeGroupUse),
+                )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtUse,
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -883,56 +994,60 @@ inline_use_declaration:
 unprefixed_use_declaration:
         namespace_name
             {
-                childrenNameParts := yylex.(*Parser).List.Pop()
+                // Name
 
-                // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupParts),
+                )
+                
+                nameNode := ast.Node{
                     Type: ast.NodeTypeNameName,
-                })
-                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-                yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupUse,
+                }
 
-                // Create Use Node
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtUse,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupUse, nameNodeID)
+                yylex.(*Parser).List.Push(nameNode)
 
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
+                // Alias
+
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_AS T_STRING
             {
-                childrenNameParts := yylex.(*Parser).List.Pop()
+                // Name
 
-                // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupParts),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $2.HiddenTokens )
+                
+                nameNode := ast.Node{
                     Type: ast.NodeTypeNameName,
-                })
-                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
-                yylex.(*Parser).Children(nameNodeID, ast.NodeGroupParts, childrenNameParts...)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupUse,
+                }
 
-                // create Alias Node
-                aliasNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).List.Push(nameNode)
+
+                // Alias
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+                
+                aliasNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupAlias,
+                }
 
-                // Create Use Node
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtUse,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$3}, nil))
-                yylex.(*Parser).Children($$, ast.NodeGroupUse, nameNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupAlias, aliasNodeID)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(aliasNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).List.Push(aliasNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -941,48 +1056,51 @@ unprefixed_use_declaration:
 use_declaration:
         unprefixed_use_declaration
             {
-                $$ = $1
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupAlias, ast.NodeGroupUse),
+                )
 
-                // save tokens
-                yylex.(*Parser).Ast.Foreach($1, func(e graph.Edge, n graph.Node) bool {
-                    if n.Type != stxtree.NodeTypeNode {
-                        return false
-                    }
-
-                    yylex.(*Parser).MoveStartTokens(e.To, $$)
-
-                    return true
-                })
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtUse,
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR unprefixed_use_declaration
             {
-                $$ = $2;
+                // Use
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSlash, []scanner.Token{*$1})
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupAlias, ast.NodeGroupUse),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSlash, []scanner.Token{*$1} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtUse,
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 const_list:
-        const_list ',' const_decl
+        const_list ',' { yylex.(*Parser).PrependToken($2) } const_decl
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   const_decl
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -997,7 +1115,7 @@ inner_statement_list:
                 //     yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
                 // }
 
-                if $2 != 0 {
+                if $2.Type != 0 {
                     yylex.(*Parser).List.Add($2)
                 }
 
@@ -1015,7 +1133,7 @@ inner_statement:
         error
             {
                 // error
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1050,18 +1168,18 @@ inner_statement:
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_HALT_COMPILER '(' ')' ';'
-            {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+            { 
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupHaltCompiller, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupOpenParenthesisToken, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCloseParenthesisToken, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtHaltCompiler,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupHaltCompiller, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupOpenParenthesisToken, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1069,18 +1187,19 @@ inner_statement:
 statement:
         '{' inner_statement_list '}'
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                )
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $3.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1098,373 +1217,458 @@ statement:
             }
     |   T_WHILE '(' expr ')' while_statement
             {
-                $$ = $5
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+                statementNode := yylex.(*Parser).List.Pop(ast.NodeGroupStmt)[0]
 
-                yylex.(*Parser).Children($$, ast.NodeGroupCond, $3)
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
+                $3.Group = ast.NodeGroupCond
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($3, statementNode),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupWhile, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupWhile, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+
+                $$.Children = children
+                $$.Position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, yylex.(*Parser).Nodes($$))
+                $$.Tokens = yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DO statement T_WHILE '(' expr ')' ';'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtDo,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil))
-                
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, $2)
-                yylex.(*Parser).Children($$, ast.NodeGroupCond, $5)
+                $2.Group = ast.NodeGroupStmt
+                $5.Group = ast.NodeGroupCond
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2, $5),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupWhile, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $7.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$7})
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupWhile, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $7.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$7} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtDo,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
-                yylex.(*Parser).Children($9, ast.NodeGroupLoop, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($9, ast.NodeGroupCond, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($9, ast.NodeGroupInit, yylex.(*Parser).List.Pop()...)
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+                statementNode := yylex.(*Parser).List.Pop(ast.NodeGroupStmt)[0]
 
-                $$ = $9
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$9}))
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupLoop, ast.NodeGroupCond, ast.NodeGroupInit),
+                    yylex.(*Parser).Nodes(statementNode),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupFor, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupInitExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCondExpr, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupIncExpr, $8.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupFor, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupInitExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCondExpr, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupIncExpr, $8.HiddenTokens )
+
+                $$.Children = children
+                $$.Position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, yylex.(*Parser).Nodes($$))
+                $$.Tokens = yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_SWITCH '(' expr ')' switch_case_list
             {
-                $$ = $5
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+                caseListNode := yylex.(*Parser).List.Pop(ast.NodeGroupCaseList)[0]
 
-                yylex.(*Parser).Children($$, ast.NodeGroupCond, $3)
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
+                $3.Group = ast.NodeGroupCond
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($3, caseListNode),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSwitch, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSwitch, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+
+                $$.Children = children
+                $$.Position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, yylex.(*Parser).Nodes($$))
+                $$.Tokens = yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_BREAK optional_expr ';'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtBreak,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
+                var children []ast.Node
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                if $2.Type != ast.NodeTypeNil {
+                    $2.Group = ast.NodeGroupExpr
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($2),
+                    )
+                };
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtBreak,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CONTINUE optional_expr ';'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtContinue,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
+                var children []ast.Node
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                if $2.Type != ast.NodeTypeNil {
+                    $2.Group = ast.NodeGroupExpr
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($2),
+                    )
+                };
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtContinue,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_RETURN optional_expr ';'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtReturn,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
+                var children []ast.Node
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                if $2.Type != ast.NodeTypeNil {
+                    $2.Group = ast.NodeGroupExpr
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($2),
+                    )
+                };
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtReturn,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_GLOBAL global_var_list ';'
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupVars),
+                )
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVarList, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtGlobal,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                
-                yylex.(*Parser).Children($$, ast.NodeGroupVars, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STATIC static_var_list ';'
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupVars),
+                )
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVarList, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtStatic,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                
-                yylex.(*Parser).Children($$, ast.NodeGroupVars, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ECHO echo_expr_list ';'
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupExprs),
+                )
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEcho, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtEcho,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-                
-                yylex.(*Parser).Children($$, ast.NodeGroupExprs, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEcho, []scanner.Token{*$1})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_INLINE_HTML
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtInlineHtml,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtInlineHtml,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr ';'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupExpr
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$2} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtExpression,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $1)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$2}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupVars),
+                )
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtUnset,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil))
-                
-                yylex.(*Parser).Children($$, ast.NodeGroupVars, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUnset, $2.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupUnset, $2.HiddenTokens )
                 if $4 != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $4.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, []scanner.Token{*$4})
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $5.HiddenTokens)
-                } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $5.HiddenTokens)
-                }
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$6})
+                    yylex.(*Parser).PushTokens( ast.TokenGroupVarList, $4.HiddenTokens )
+                    yylex.(*Parser).PushTokens( ast.TokenGroupVarList, []scanner.Token{*$4} )
+                };
+                yylex.(*Parser).PushTokens( ast.TokenGroupVarList, $5.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCloseParenthesisToken, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$6} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtUnset,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
             {
-                yylex.(*Parser).Children($7, ast.NodeGroupExpr, $3)
-                yylex.(*Parser).Children($7, ast.NodeGroupVar, $5)
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+                statementNode := yylex.(*Parser).List.Pop(ast.NodeGroupStmt)[0]
 
-                $$ = $7
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$7}))
+                $3.Group = ast.NodeGroupExpr
+                $5.Group = ast.NodeGroupVar
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($3, $5, statementNode),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupForeach, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $6.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupForeach, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $6.HiddenTokens )
 
+                $$.Children = children
+                $$.Position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, yylex.(*Parser).Nodes($$))
+                $$.Tokens = yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
             {
-                yylex.(*Parser).Children($9, ast.NodeGroupExpr, $3)
-                yylex.(*Parser).Children($9, ast.NodeGroupKey, $5)
-                yylex.(*Parser).Children($9, ast.NodeGroupVar, $7)
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+                statementNode := yylex.(*Parser).List.Pop(ast.NodeGroupStmt)[0]
 
-                $$ = $9
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$9}))
+                $3.Group = ast.NodeGroupExpr
+                $5.Group = ast.NodeGroupKey
+                $7.Group = ast.NodeGroupVar
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($3, $5, $7, statementNode),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupForeach, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupKey, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $8.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupForeach, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupKey, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $8.HiddenTokens )
+
+                $$.Children = children
+                $$.Position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, yylex.(*Parser).Nodes($$))
+                $$.Tokens = yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DECLARE '(' const_list ')' declare_statement
             {
-                children := yylex.(*Parser).List.Pop()
-                yylex.(*Parser).Children($5, ast.NodeGroupConsts, children...)
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+                statementNode := yylex.(*Parser).List.Pop(ast.NodeGroupStmt)[0]
 
-                $$ = $5
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupConsts),
+                    yylex.(*Parser).Nodes(statementNode),
+                )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupDeclare, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupConstList, $4.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupDeclare, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupConstList, $4.HiddenTokens )
+
+                $$.Children = children
+                $$.Position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, yylex.(*Parser).Nodes($$))
+                $$.Tokens = yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ';'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtNop,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$1} )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$1})
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtNop,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
-                childrenCatches := yylex.(*Parser).List.Pop()
-                childrenStmts := yylex.(*Parser).List.Pop()
+                var nodes []ast.Node
 
-                var posID graph.NodeID
-                if $6 == 0 {
-                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, childrenCatches)
-                } else {
-                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$6})
-                }
+                if $6.Type != ast.NodeTypeNil {
+                    $6.Group = ast.NodeGroupFinally
+                    nodes = yylex.(*Parser).Nodes($6);
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupCatches, ast.NodeGroupStmts), nodes,
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupTry, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $4.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTry,
-                })
-                yylex.(*Parser).SavePosition($$, posID)
-
-                yylex.(*Parser).Children($$, ast.NodeGroupConsts, $6)
-                yylex.(*Parser).Children($$, ast.NodeGroupCatches, childrenCatches...)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, childrenStmts...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupTry, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_THROW expr ';'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtThrow,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_GOTO T_STRING ';'
             {
-                LableNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupLabel,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Goto
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupLabel, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtGoto,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLabel, LableNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(LableNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupLabel, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STRING ':'
             {
-                LableNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Group: ast.NodeGroupLabelName,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Label
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupLabel, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtLabel,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLabelName, LableNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupLabel, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1478,54 +1682,68 @@ catch_list:
             }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$5}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$5}, nil),
+                    Group: ast.NodeGroupVarName,
+                };
+
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $5.HiddenTokens )
                 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                variableNode := ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$5}, nil))
-                
-                catchNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVar,
+                };
+
+                // catch
+
+                statements := yylex.(*Parser).List.Pop(ast.NodeGroupStmts)
+                types := yylex.(*Parser).List.Pop(ast.NodeGroupTypes)
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    types, yylex.(*Parser).Nodes(variableNode), statements,
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCatch, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $7.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $9.HiddenTokens )
+
+                catchNode := ast.Node{
                     Type: ast.NodeTypeStmtCatch,
-                })
-                yylex.(*Parser).SavePosition(catchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $9}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $9}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children(catchNodeID, ast.NodeGroupVar, varNodeID)
-                yylex.(*Parser).Children(catchNodeID, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children(catchNodeID, ast.NodeGroupTypes, yylex.(*Parser).List.Pop()...)
-
-                yylex.(*Parser).List.Add(catchNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $5.HiddenTokens)
-                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupCatch, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupVar, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupCond, $7.HiddenTokens)
-                yylex.(*Parser).AppendTokens(catchNodeID, ast.TokenGroupStmts, $9.HiddenTokens)
+                yylex.(*Parser).List.Add(catchNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
+
 catch_name_list:
         name
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   catch_name_list '|' name
+    |   catch_name_list '|' { yylex.(*Parser).PrependToken($2) } name
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1534,23 +1752,26 @@ catch_name_list:
 finally_statement:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FINALLY '{' inner_statement_list '}'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupFinally, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $4.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtFinally,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupFinally, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1559,18 +1780,13 @@ finally_statement:
 unset_variables:
         unset_variable
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   unset_variables ',' unset_variable
+    |   unset_variables ',' { yylex.(*Parser).PrependToken($2) } unset_variable
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1588,38 +1804,54 @@ unset_variable:
 function_declaration_statement:
         T_FUNCTION returns_ref T_STRING backup_doc_comment '(' parameter_list ')' return_type '{' inner_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Group: ast.NodeGroupFunctionName,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
+
+                // Function
+
+                var children []ast.Node
+                if $8.Type == ast.NodeTypeNil {
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes(identifierNode),
+                        yylex.(*Parser).List.Pop(ast.NodeGroupStmts, ast.NodeGroupParams),
+                    );
+                } else {
+                    $8.Group = ast.NodeGroupReturnType
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes(identifierNode, $8),
+                        yylex.(*Parser).List.Pop(ast.NodeGroupStmts, ast.NodeGroupParams),
+                    );
+                };
 
                 var flag ast.NodeFlag
                 if $2 != nil {
                     flag = flag | ast.NodeFlagRef
-                }
+                };
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                if $2 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupFunction, $2.HiddenTokens )
+                };
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $5.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupParamList, $7.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupReturnType, $9.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $11.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtFunction,
                     Flag: flag,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $11}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupFunctionName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupReturnType, $8)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($$, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
-
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                if $2 != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $2.HiddenTokens)
-                } 
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $5.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupParamList, $7.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupReturnType, $9.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $11.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $11}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1650,56 +1882,95 @@ is_variadic:
 class_declaration_statement:
     class_modifiers T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                childrenStmts := yylex.(*Parser).List.Pop()
-                childrenModifiers := yylex.(*Parser).List.Pop()
+                // Identifier
 
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Group: ast.NodeGroupClassName,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
+
+                // Class
+
+                childrenStmts := yylex.(*Parser).List.Pop(ast.NodeGroupStmts)
+                childrenModifiers := yylex.(*Parser).List.Pop(ast.NodeGroupModifiers)
+
+                nodes := make([]ast.Node, 0, 3)
+                nodes = append(nodes, identifierNode)
+
+                if $4.Type != ast.NodeTypeNil {
+                    $4.Group = ast.NodeGroupExtends
+                    nodes = append(nodes, $4)
+                };
+
+                if $5.Type != ast.NodeTypeNil {
+                    $5.Group = ast.NodeGroupImplements
+                    nodes = append(nodes, $5)
+                };
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    childrenModifiers, nodes, childrenStmts,
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupModifierList, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $7.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $9.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtClass,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$9}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupImplements, $5)
-                yylex.(*Parser).Children($$, ast.NodeGroupExtends, $4)
-                yylex.(*Parser).Children($$, ast.NodeGroupClassName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupModifiers, childrenModifiers...)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, childrenStmts...)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(childrenModifiers[0], $$)
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupModifierList, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $7.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $9.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$9}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                    Group: ast.NodeGroupClassName,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
+
+                // Class
+
+                nodes := make([]ast.Node, 0, 3)
+                nodes = append(nodes, identifierNode)
+
+                if $3.Type != ast.NodeTypeNil {
+                    $3.Group = ast.NodeGroupExtends
+                    nodes = append(nodes, $3)
+                };
+
+                if $4.Type != ast.NodeTypeNil {
+                    $4.Group = ast.NodeGroupImplements
+                    nodes = append(nodes, $4)
+                };
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    nodes, 
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $8.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtClass,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $8}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupImplements, $4)
-                yylex.(*Parser).Children($$, ast.NodeGroupExtends, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupClassName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $8.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $8}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1708,8 +1979,7 @@ class_declaration_statement:
 class_modifiers:
         class_modifier
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1724,25 +1994,25 @@ class_modifiers:
 class_modifier:
         T_ABSTRACT
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FINAL
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1751,24 +2021,34 @@ class_modifier:
 trait_declaration_statement:
         T_TRAIT T_STRING backup_doc_comment '{' class_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                    Group: ast.NodeGroupTraitName,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
+
+                // Trait
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $6.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTrait,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupTraitName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1777,25 +2057,42 @@ trait_declaration_statement:
 interface_declaration_statement:
         T_INTERFACE T_STRING interface_extends_list backup_doc_comment '{' class_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                    Group: ast.NodeGroupClassName,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
+
+                // Interface
+
+                nodes := make([]ast.Node, 0, 3)
+                nodes = append(nodes, identifierNode)
+
+                if $3.Type != ast.NodeTypeNil {
+                    $3.Group = ast.NodeGroupExtends
+                    nodes = append(nodes, $3)
+                };
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    nodes, 
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $5.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $7.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtInterface,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExtends, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupInterfaceName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $5.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1804,21 +2101,25 @@ interface_declaration_statement:
 extends_from:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EXTENDS name
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupClassName
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtClassExtends,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClassName, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1827,23 +2128,24 @@ extends_from:
 interface_extends_list:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EXTENDS name_list
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupInterfaceNames),
+                );
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtInterfaceExtends,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupInterfaceNames, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1852,23 +2154,24 @@ interface_extends_list:
 implements_list:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_IMPLEMENTS name_list
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupInterfaceNames),
+                );
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtClassImplements,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupInterfaceNames, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1883,46 +2186,56 @@ foreach_variable:
             }
     |   '&' variable
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupVar
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprReference,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupItems),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupList, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupArrayPairList, $4.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupList, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArrayPairList, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '[' array_pair_list ']'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupItems),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupArrayPairList, $3.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprShortList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-
-                // save tokensc
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArrayPairList, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1931,38 +2244,45 @@ foreach_variable:
 for_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                forNode := ast.Node{
                     Type: ast.NodeTypeStmtFor,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(yylex.(*Parser).Nodes($1), nil, nil),
+                };
 
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, $1)
+                yylex.(*Parser).List.Push($1)
+                yylex.(*Parser).List.Push(forNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDFOR ';'
             {
-                children := yylex.(*Parser).List.Pop()
-
-                stmtListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Statement
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
+                
+                statementNode := ast.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                })
-                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // While
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAltEnd, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+                
+                forNode := ast.Node{
                     Type: ast.NodeTypeStmtAltFor,
                     Flag: ast.NodeFlagAltSyntax,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$1, $4}, nil),
+                };
 
-                yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, stmtListNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                yylex.(*Parser).List.Push(statementNode)
+                yylex.(*Parser).List.Push(forNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1971,38 +2291,45 @@ for_statement:
 foreach_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                foreachNode := ast.Node{
                     Type: ast.NodeTypeStmtForeach,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(yylex.(*Parser).Nodes($1), nil, nil),
+                };
 
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, $1)
+                yylex.(*Parser).List.Push($1)
+                yylex.(*Parser).List.Push(foreachNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
-                children := yylex.(*Parser).List.Pop()
-
-                stmtListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Statement
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
+                
+                statementNode := ast.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                })
-                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // While
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAltEnd, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+                
+                foreachNode := ast.Node{
                     Type: ast.NodeTypeStmtAltForeach,
                     Flag: ast.NodeFlagAltSyntax,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$1, $4}, nil),
+                };
 
-                yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, stmtListNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                yylex.(*Parser).List.Push(statementNode)
+                yylex.(*Parser).List.Push(foreachNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2011,38 +2338,45 @@ foreach_statement:
 declare_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                declareNode := ast.Node{
                     Type: ast.NodeTypeStmtDeclare,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(yylex.(*Parser).Nodes($1), nil, nil),
+                };
 
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, $1)
+                yylex.(*Parser).List.Push($1)
+                yylex.(*Parser).List.Push(declareNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
-                children := yylex.(*Parser).List.Pop()
-
-                stmtListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Statement
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
+                
+                statementNode := ast.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                })
-                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // While
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAltEnd, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+                
+                declareNode := ast.Node{
                     Type: ast.NodeTypeStmtDeclare,
                     Flag: ast.NodeFlagAltSyntax,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$1, $4}, nil),
+                };
 
-                yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, stmtListNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                yylex.(*Parser).List.Push(statementNode)
+                yylex.(*Parser).List.Push(declareNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2051,103 +2385,133 @@ declare_statement:
 switch_case_list:
         '{' case_list '}'
             {
-                children := yylex.(*Parser).List.Pop()
+                // CaseList
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupCases),
+                );
 
-                caseListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseListEnd, $3.HiddenTokens )
+                
+                caseListNode := ast.Node{
                     Type: ast.NodeTypeStmtCaseList,
-                })
-                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Switch
+                
+                switchNode := ast.Node{
                     Type: ast.NodeTypeStmtSwitch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$1, $3}, nil),
+                };
 
-                yylex.(*Parser).Children(caseListNodeID, ast.NodeGroupCases, children...)
-                yylex.(*Parser).Children($$, ast.NodeGroupCaseList, caseListNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $3.HiddenTokens)
+                yylex.(*Parser).List.Push(caseListNode)
+                yylex.(*Parser).List.Push(switchNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' ';' case_list '}'
             {
-                children := yylex.(*Parser).List.Pop()
+                // CaseList
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupCases),
+                );
 
-                caseListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseListStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseListStart, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseListEnd, $4.HiddenTokens )
+                
+                caseListNode := ast.Node{
                     Type: ast.NodeTypeStmtCaseList,
-                })
-                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Switch
+                
+                switchNode := ast.Node{
                     Type: ast.NodeTypeStmtSwitch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$1, $4}, nil),
+                };
 
-                yylex.(*Parser).Children(caseListNodeID, ast.NodeGroupCases, children...)
-                yylex.(*Parser).Children($$, ast.NodeGroupCaseList, caseListNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*$2})
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $4.HiddenTokens)
+                yylex.(*Parser).List.Push(caseListNode)
+                yylex.(*Parser).List.Push(switchNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' case_list T_ENDSWITCH ';'
             {
-                children := yylex.(*Parser).List.Pop()
+                // CaseList
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupCases),
+                );
 
-                caseListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseListEnd, $3.HiddenTokens )
+                
+                caseListNode := ast.Node{
                     Type: ast.NodeTypeStmtCaseList,
-                })
-                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtAltSwitch,
+                // Switch
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAltEnd, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+                
+                switchNode := ast.Node{
+                    Type: ast.NodeTypeStmtSwitch,
                     Flag: ast.NodeFlagAltSyntax,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$1, $4}, nil),
+                };
 
-                yylex.(*Parser).Children(caseListNodeID, ast.NodeGroupCases, children...)
-                yylex.(*Parser).Children($$, ast.NodeGroupCaseList, caseListNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                yylex.(*Parser).List.Push(caseListNode)
+                yylex.(*Parser).List.Push(switchNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' ';' case_list T_ENDSWITCH ';'
             {
-                children := yylex.(*Parser).List.Pop()
+                // CaseList
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupCases),
+                );
 
-                caseListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseListStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseListStart, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseListEnd, $4.HiddenTokens )
+                
+                caseListNode := ast.Node{
                     Type: ast.NodeTypeStmtCaseList,
-                })
-                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtAltSwitch,
+                // Switch
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAltEnd, $5.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$5} )
+                
+                switchNode := ast.Node{
+                    Type: ast.NodeTypeStmtSwitch,
                     Flag: ast.NodeFlagAltSyntax,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$1, $5}, nil),
+                };
 
-                yylex.(*Parser).Children(caseListNodeID, ast.NodeGroupCases, children...)
-                yylex.(*Parser).Children($$, ast.NodeGroupCaseList, caseListNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*$2})
-                yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $5.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$5})
+                yylex.(*Parser).List.Push(caseListNode)
+                yylex.(*Parser).List.Push(switchNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2162,41 +2526,45 @@ case_list:
             }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                children := yylex.(*Parser).List.Pop()
+                $3.Group = ast.NodeGroupExpr
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($3),
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
 
-                caseNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseSeparator, []scanner.Token{*$4} )
+                
+                caseNode := ast.Node{
                     Type: ast.NodeTypeStmtCase,
-                })
-                yylex.(*Parser).SavePosition(caseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).Children(caseNodeID, ast.NodeGroupStmts, children...)
-
-                yylex.(*Parser).List.Add(caseNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(caseNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(caseNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens(caseNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*$4})
+                yylex.(*Parser).List.Add(caseNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
 
-                defaultNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupDefault, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCaseSeparator, []scanner.Token{*$3} )
+                
+                caseNode := ast.Node{
                     Type: ast.NodeTypeStmtDefault,
-                })
-                yylex.(*Parser).SavePosition(defaultNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).Children(defaultNodeID, ast.NodeGroupStmts, children...)
-
-                yylex.(*Parser).List.Add(defaultNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(defaultNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(defaultNodeID, ast.TokenGroupDefault, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens(defaultNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*$3})
+                yylex.(*Parser).List.Add(caseNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2216,38 +2584,45 @@ case_separator:
 while_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                whileNode := ast.Node{
                     Type: ast.NodeTypeStmtWhile,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(yylex.(*Parser).Nodes($1), nil, nil),
+                };
 
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, $1)
+                yylex.(*Parser).List.Push($1)
+                yylex.(*Parser).List.Push(whileNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
-                children := yylex.(*Parser).List.Pop()
-
-                stmtListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Statement
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
+                
+                statementNode := ast.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                })
-                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtAltWhile,
+                // While
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAltEnd, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+                
+                whileNode := ast.Node{
+                    Type: ast.NodeTypeStmtWhile,
                     Flag: ast.NodeFlagAltSyntax,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$1, $4}, nil),
+                };
 
-                yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, stmtListNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                yylex.(*Parser).List.Push(statementNode)
+                yylex.(*Parser).List.Push(whileNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2256,39 +2631,44 @@ while_statement:
 if_stmt_without_else:
         T_IF '(' expr ')' statement
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupIf, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                
+                ifNode := ast.Node{
                     Type: ast.NodeTypeStmtIf,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).Children($$, ast.NodeGroupCond, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, $5)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupIf, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).List.Push(ifNode)
+                yylex.(*Parser).List.Push($3)
+                yylex.(*Parser).List.Push($5)
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             {
-                elseIfNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $4.Group = ast.NodeGroupCond
+                $6.Group = ast.NodeGroupStmt
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($4, $6),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupElseIf, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $5.HiddenTokens )
+                
+                elseIfNode := ast.Node{
                     Type: ast.NodeTypeStmtElseIf,
-                })
-                yylex.(*Parser).SavePosition(elseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$6}))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).Children(elseIfNodeID, ast.NodeGroupCond, $4)
-                yylex.(*Parser).Children(elseIfNodeID, ast.NodeGroupStmt, $6)
-                yylex.(*Parser).Children($1, ast.NodeGroupElseIf, elseIfNodeID)
-
-                $$ = $1
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $6}, nil, nil))
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(elseIfNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(elseIfNodeID, ast.TokenGroupElseIf, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens(elseIfNodeID, ast.TokenGroupExpr, $5.HiddenTokens)
+                yylex.(*Parser).List.Add(elseIfNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2297,23 +2677,48 @@ if_stmt_without_else:
 if_stmt:
         if_stmt_without_else %prec T_NOELSE
             {
-                $$ = $1
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupElseIf, ast.NodeGroupStmt, ast.NodeGroupCond),
+                );
+
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+
+                $$.Position = yylex.(*Parser).NewPosition(yylex.(*Parser).Nodes($$), nil, children)
+                $$.Children = children
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   if_stmt_without_else T_ELSE statement
             {
-                elseNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Else
+                
+                $3.Group = ast.NodeGroupStmt
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($3),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                
+                elseNode := ast.Node{
                     Type: ast.NodeTypeStmtElse,
-                })
-                yylex.(*Parser).SavePosition(elseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$3}))
-                yylex.(*Parser).SavePosition($1, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupElse,
+                };
 
-                yylex.(*Parser).Children(elseNodeID, ast.NodeGroupStmt, $3)
-                yylex.(*Parser).Children($1, ast.NodeGroupElse, elseNodeID)
+                // If
 
-                // save tokens
-                yylex.(*Parser).AppendTokens(elseNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupElseIf, ast.NodeGroupStmt, ast.NodeGroupCond),
+                    yylex.(*Parser).Nodes(elseNode),
+                );
+
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+
+                $$.Position = yylex.(*Parser).NewPosition(yylex.(*Parser).Nodes($$), nil, children)
+                $$.Children = children
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2322,57 +2727,76 @@ if_stmt:
 alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             {
-                children := yylex.(*Parser).List.Pop()
+                // Statement
 
-                stmtListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                )
+
+                stmtNode := ast.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                })
-                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Group: ast.NodeGroupStmt,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Alt if
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupIf, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $5.HiddenTokens )
+                
+                ifNode := ast.Node{
                     Type: ast.NodeTypeStmtAltIf,
                     Flag: ast.NodeFlagAltSyntax,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
-                yylex.(*Parser).Children($$, ast.NodeGroupCond, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, stmtListNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupIf, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $5.HiddenTokens)
+                yylex.(*Parser).List.Push(ifNode)
+                yylex.(*Parser).List.Push($3)
+                yylex.(*Parser).List.Push(stmtNode)
+                yylex.(*Parser).List.Push()
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
-                children := yylex.(*Parser).List.Pop()
+                // Statement
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                )
 
-                stmtListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                stmtNode := ast.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                })
-                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Group: ast.NodeGroupStmt,
+                };
 
-                AltElseIfNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Alt else if
+
+                $4.Group = ast.NodeGroupCond
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($4, stmtNode),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupElseIf, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $5.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $6.HiddenTokens )
+                
+                elseIfNode := ast.Node{
                     Type: ast.NodeTypeStmtAltElseIf,
-                })
-                yylex.(*Parser).SavePosition(AltElseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
+                    Flag: ast.NodeFlagAltSyntax,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
-                yylex.(*Parser).Children(AltElseIfNodeID, ast.NodeGroupCond, $4)
-                yylex.(*Parser).Children(AltElseIfNodeID, ast.NodeGroupStmt, stmtListNodeID)
-                yylex.(*Parser).Children($1, ast.NodeGroupElseIf, AltElseIfNodeID)
-
-                $$ = $1
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(AltElseIfNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(AltElseIfNodeID, ast.TokenGroupElseIf, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens(AltElseIfNodeID, ast.TokenGroupExpr, $5.HiddenTokens)
-                yylex.(*Parser).AppendTokens(AltElseIfNodeID, ast.TokenGroupCond, $6.HiddenTokens)
+                yylex.(*Parser).List.Add(elseIfNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2381,43 +2805,80 @@ alt_if_stmt_without_else:
 alt_if_stmt:
         alt_if_stmt_without_else T_ENDIF ';'
             {
-                $$ = $1
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupElseIf, ast.NodeGroupStmt, ast.NodeGroupCond),
+                );
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAltEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+
+                $$.Position = yylex.(*Parser).NewPosition(yylex.(*Parser).Nodes($$), []*scanner.Token{$3}, nil)
+                $$.Children = children
+
+                // TODO: rewrite to prevent memory allocations
+                $$.Tokens = append( 
+                    $$.Tokens, 
+                    yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )...,
+                )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
-                children := yylex.(*Parser).List.Pop()
+                // Statement
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                )
 
-                stmtListNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                stmtNode := ast.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                })
-                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Group: ast.NodeGroupStmt,
+                };
 
-                AltElseNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Alt else
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes( stmtNode ),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupElse, $3.HiddenTokens )
+                
+                elseNode := ast.Node{
                     Type: ast.NodeTypeStmtAltElse,
-                })
-                yylex.(*Parser).SavePosition(AltElseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
+                    Flag: ast.NodeFlagAltSyntax,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupElse,
+                };
 
-                yylex.(*Parser).Children(stmtListNodeID, ast.NodeGroupStmts, children...)
-                yylex.(*Parser).Children(AltElseNodeID, ast.NodeGroupStmt, stmtListNodeID)
-                yylex.(*Parser).Children($1, ast.NodeGroupElse, AltElseNodeID)
+                // If
 
-                $$ = $1
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$6}, nil))
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupElseIf, ast.NodeGroupStmt, ast.NodeGroupCond),
+                    yylex.(*Parser).Nodes(elseNode),
+                );
 
-                // save tokens
-                yylex.(*Parser).AppendTokens(AltElseNodeID, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(AltElseNodeID, ast.TokenGroupElse, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $5.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAltEnd, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$6})
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $5.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAltEnd, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$6} )
+
+                $$ = yylex.(*Parser).List.Pop(ast.NodeGroupNil)[0]
+
+                $$.Position = yylex.(*Parser).NewPosition(yylex.(*Parser).Nodes($$), []*scanner.Token{$6}, nil)
+                $$.Children = children
+
+                // TODO: rewrite to prevent memory allocations
+                $$.Tokens = append( 
+                    $$.Tokens, 
+                    yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() )...,
+                )
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2439,18 +2900,13 @@ parameter_list:
 non_empty_parameter_list:
         parameter
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   non_empty_parameter_list ',' parameter
+    |   non_empty_parameter_list ',' { yylex.(*Parser).PrependToken($2) } parameter
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2459,26 +2915,67 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                // Variable
 
-                var posID graph.NodeID
-                if $1 != 0 {
-                    posID = yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil)
-                } else if $2 != nil {
-                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil)
-                } else if $3 != nil {
-                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3, $4}, nil)
+                var children []ast.Node
+                if $1.Type != ast.NodeTypeNil {
+                    $1.Group = ast.NodeGroupVarType
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($1, identifierNode),
+                    );
                 } else {
-                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil)
-                }
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes(identifierNode),
+                    );
+                };
+
+                var f bool
+                if $1.Type != ast.NodeTypeNil {
+                    f = true
+                };
+
+                if f && $2 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupOptionalType, $2.HiddenTokens )
+                    f = true
+                } else if $2 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                    f = true
+                };
+
+                if f && $3 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupAmpersand, $3.HiddenTokens )
+                    f = true
+                } else if $3 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+                    f = true
+                };
+
+                if f {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupVariadic, $4.HiddenTokens )
+                    f = true
+                } else {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStart, $4.HiddenTokens )
+                    f = true
+                };
+
+                var position ast.Position
+                if $1.Type != ast.NodeTypeNil {
+                    position = yylex.(*Parser).NewPosition(children, []*scanner.Token{$4}, nil)
+                } else if $2 != nil {
+                    position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil)
+                } else if $3 != nil {
+                    position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3, $4}, nil)
+                } else {
+                    position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil)
+                };
 
                 var flag ast.NodeFlag
                 if $2 != nil {
@@ -2486,142 +2983,99 @@ parameter:
                 }
                 if $3 != nil {
                     flag = flag | ast.NodeFlagVariadic
-                }
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeParameter,
                     Flag: flag,
-                })
-                yylex.(*Parser).SavePosition($$, posID)
-
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVarType, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-
-                // save tokens
-
-                tmp := [4][]scanner.Token{}
-                if $2 != nil {
-                    tmp[1] = $2.HiddenTokens
-                }
-                if $3 != nil {
-                    tmp[2] = $3.HiddenTokens
-                }
-                tmp[3] = $4.HiddenTokens
-
-                if $3 == nil {
-                    tmp[2] = tmp[3]
-                    tmp[3] = nil
-                }
-                if $2 == nil {
-                    tmp[1] = tmp[2]
-                    tmp[2] = nil
-                }
-                if $1 == 0 {
-                    tmp[0] = tmp[1]
-                    tmp[1] = nil
-                }
-
-                if $1 != 0 {
-                    yylex.(*Parser).MoveStartTokens($1, $$)
-                }
-                if tmp[0] != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, tmp[0])
-                }
-                if tmp[1] != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupOptionalType, tmp[1])
-                }
-                if tmp[2] != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, tmp[2])
-                }
-                if tmp[3] != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVariadic, tmp[3])
-                }
+                    Position: position,
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                // Variable
 
-                var posID graph.NodeID
-                if $1 != 0 {
-                    posID = yylex.(*Parser).NewPosition([]graph.NodeID{$1, $6}, nil, nil)
-                } else if $2 != nil {
-                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$6})
-                } else if $3 != nil {
-                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$6})
+                $6.Group = ast.NodeGroupDefaultValue
+                var children []ast.Node
+                if $1.Type != ast.NodeTypeNil {
+                    $1.Group = ast.NodeGroupVarType
+                        children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($1, identifierNode, $6),
+                    )
                 } else {
-                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, []graph.NodeID{$6})
-                }
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes(identifierNode, $6),
+                    )
+                };
+
+                var f bool
+                if $1.Type != ast.NodeTypeNil {
+                    f = true
+                };
+
+                if f && $2 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupOptionalType, $2.HiddenTokens )
+                    f = true
+                } else if $2 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                    f = true
+                };
+
+                if f && $3 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupAmpersand, $3.HiddenTokens )
+                    f = true
+                } else if $3 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+                    f = true
+                };
+
+                if f {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupVariadic, $4.HiddenTokens )
+                    f = true
+                } else {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStart, $4.HiddenTokens )
+                    f = true
+                };
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $5.HiddenTokens )
+
+                var position ast.Position
+                if $1.Type != ast.NodeTypeNil {
+                    position = yylex.(*Parser).NewPosition(children, nil, nil)
+                } else if $2 != nil {
+                    position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children)
+                } else if $3 != nil {
+                    position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, children)
+                } else {
+                    position = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, children)
+                };
 
                 var flag ast.NodeFlag
                 if $2 != nil {
                     flag = flag | ast.NodeFlagRef
-                }
+                };
                 if $3 != nil {
                     flag = flag | ast.NodeFlagVariadic
-                }
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeParameter,
                     Flag: flag,
-                })
-                yylex.(*Parser).SavePosition($$, posID)
-
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVarType, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupDefaultValue, $6)
-
-                // save tokens
-
-                tmp := [4][]scanner.Token{}
-                if $2 != nil {
-                    tmp[1] = $2.HiddenTokens
-                }
-                if $3 != nil {
-                    tmp[2] = $3.HiddenTokens
-                }
-                tmp[3] = $4.HiddenTokens
-
-                if $3 == nil {
-                    tmp[2] = tmp[3]
-                    tmp[3] = nil
-                }
-                if $2 == nil {
-                    tmp[1] = tmp[2]
-                    tmp[2] = nil
-                }
-                if $1 == 0 {
-                    tmp[0] = tmp[1]
-                    tmp[1] = nil
-                }
-
-                if $1 != 0 {
-                    yylex.(*Parser).MoveStartTokens($1, $$)
-                }
-                if tmp[0] != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, tmp[0])
-                }
-                if tmp[1] != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupOptionalType, tmp[1])
-                }
-                if tmp[2] != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, tmp[2])
-                }
-                if tmp[3] != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVariadic, tmp[3])
-                }
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $5.HiddenTokens)
+                    Position: position,
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2630,7 +3084,7 @@ parameter:
 optional_type:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2651,15 +3105,20 @@ type_expr:
             }
     |   '?' type
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeNullable,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2668,25 +3127,25 @@ type_expr:
 type:
         T_ARRAY
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CALLABLE
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2701,21 +3160,26 @@ type:
 return_type:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' type_expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtReturnType,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2724,35 +3188,36 @@ return_type:
 argument_list:
         '(' ')'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeArgumentList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupArgumentList, $2.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArgumentList, $2.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeArgumentList,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' non_empty_argument_list possible_comma ')'
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupArguments),
+                )
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeArgumentList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupArguments, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
                 if $3 != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupArgumentList, $3.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupArgumentList, []scanner.Token{*$3})
+                    yylex.(*Parser).PushTokens( ast.TokenGroupArgumentList, $3.HiddenTokens )
+                    yylex.(*Parser).PushTokens( ast.TokenGroupArgumentList, []scanner.Token{*$3} )
                 }
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArgumentList, $4.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupArgumentList, $4.HiddenTokens )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeArgumentList,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2761,18 +3226,13 @@ argument_list:
 non_empty_argument_list:
         argument
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   non_empty_argument_list ',' argument
+    |   non_empty_argument_list ',' { yylex.(*Parser).PrependToken($2) } argument
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2781,50 +3241,53 @@ non_empty_argument_list:
 argument:
         expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeArgument,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $1)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ELLIPSIS expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeArgument,
-                    Flag: ast.NodeFlagVariadic,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                            Flag: ast.NodeFlagVariadic,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 global_var_list:
-        global_var_list ',' global_var
+        global_var_list ',' { yylex.(*Parser).PrependToken($2) } global_var
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   global_var
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2840,20 +3303,15 @@ global_var:
 ;
 
 static_var_list:
-        static_var_list ',' static_var
+        static_var_list ',' { yylex.(*Parser).PrependToken($2) } static_var
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_var
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2862,53 +3320,83 @@ static_var_list:
 static_var:
         T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                );
+                
+                variableNode := ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Group: ast.NodeGroupVar,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Static var
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtStaticVar,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE '=' expr
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                );
+                
+                variableNode := ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Group: ast.NodeGroupVar,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Property
+
+                $3.Group = ast.NodeGroupExpr
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode, $3),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtStaticVar,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
-
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2932,115 +3420,121 @@ class_statement_list:
 class_statement:
         variable_modifiers property_list ';'
             {
-                childrenProperties := yylex.(*Parser).List.Pop()
-                childrenModifiers := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupProperties, ast.NodeGroupModifiers),
+                );
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupPropertyList, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$3} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtPropertyList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupModifiers, childrenModifiers...)
-                yylex.(*Parser).Children($$, ast.NodeGroupProperties, childrenProperties...)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens(childrenModifiers[0], $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupPropertyList, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   method_modifiers T_CONST class_const_list ';'
             {
-                childrenConstants := yylex.(*Parser).List.Pop()
-                childrenModifiers := yylex.(*Parser).List.Pop()
+                childrenConstants := yylex.(*Parser).List.Pop(ast.NodeGroupConsts)
+                childrenModifiers := yylex.(*Parser).List.Pop(ast.NodeGroupModifiers)
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtClassConstList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$2, $4}, nil))
+                children := yylex.(*Parser).Ast.AddNodes(
+                    childrenModifiers, childrenConstants,
+                );
 
-                yylex.(*Parser).Children($$, ast.NodeGroupModifiers, childrenModifiers...)
-                yylex.(*Parser).Children($$, ast.NodeGroupConsts, childrenConstants...)
-
-                // save tokens
                 if len(childrenModifiers) > 0 {
-                    yylex.(*Parser).MoveStartTokens(childrenModifiers[0], $$)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupModifierList, $2.HiddenTokens)
+                    yylex.(*Parser).PushTokens( ast.TokenGroupModifierList, $2.HiddenTokens )
                 } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $2.HiddenTokens)
-                }
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupConstList, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                };
+                yylex.(*Parser).PushTokens( ast.TokenGroupConstList, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$4} )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtClassConstList,
+                    Position: yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$2, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE name_list trait_adaptations
             {
-                childrenTraits := yylex.(*Parser).List.Pop()
+                $3.Group = ast.NodeGroupTraitAdaptationList
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupTraits),
+                    yylex.(*Parser).Nodes($3),
+                );
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitUse,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupTraitAdaptationList, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupTraits, childrenTraits...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   method_modifiers T_FUNCTION returns_ref identifier backup_doc_comment '(' parameter_list ')' return_type method_body
             {
-                childrenParams := yylex.(*Parser).List.Pop()
-                childrenModifiers := yylex.(*Parser).List.Pop()
+                // Identifier
 
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $4.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil),
+                    Group: ast.NodeGroupMethodName,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                var posID graph.NodeID
-                if len(childrenModifiers) == 0 {
-                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$10})
+                // Class method
+
+                childrenParams := yylex.(*Parser).List.Pop(ast.NodeGroupParams)
+                childrenModifiers := yylex.(*Parser).List.Pop(ast.NodeGroupModifiers)
+
+                nodes := make([]ast.Node, 0, 2)
+                if $9.Type != ast.NodeTypeNil {
+                    nodes = append(nodes, $9)
+                    $9.Group = ast.NodeGroupReturnType
+                };
+                
+                $10.Group = ast.NodeGroupStmt
+                nodes = append(nodes, $10)
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    childrenModifiers, yylex.(*Parser).Nodes(identifierNode), childrenParams, nodes,
+                );
+
+                if len(childrenModifiers) > 0 {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupModifierList, $2.HiddenTokens )
                 } else {
-                    posID = yylex.(*Parser).NewPosition(childrenModifiers, nil, []graph.NodeID{$10})
-                }
+                    yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                };
+                if $3 != nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupFunction, $3.HiddenTokens )
+                };
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupParameterList, $8.HiddenTokens )
 
                 var flag ast.NodeFlag
                 if $3 != nil {
                     flag = flag | ast.NodeFlagRef
-                }
-
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                };
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtClassMethod,
                     Flag: flag,
-                })
-                yylex.(*Parser).SavePosition($$, posID)
-
-                yylex.(*Parser).Children($$, ast.NodeGroupMethodName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupReturnType, $9)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmt, $10)
-                yylex.(*Parser).Children($$, ast.NodeGroupModifiers, childrenModifiers...)
-                yylex.(*Parser).Children($$, ast.NodeGroupParams, childrenParams...)
-
-                // save tokens
-                if len(childrenModifiers) > 0 {
-                    yylex.(*Parser).MoveStartTokens(childrenModifiers[0], $$)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupModifierList, $2.HiddenTokens)
-                } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $2.HiddenTokens)
-                }
-                if $3 == nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $4.HiddenTokens)
-                } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $3.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, $4.HiddenTokens)
-                }
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupParameterList, $8.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$2}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3049,18 +3543,13 @@ class_statement:
 name_list:
         name
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   name_list ',' name
+    |   name_list ',' { yylex.(*Parser).PrependToken($2) } name
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3069,45 +3558,45 @@ name_list:
 trait_adaptations:
         ';'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtNop,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$1})
-
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' '}'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAdaptationList, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitAdaptationList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAdaptationList, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' trait_adaptation_list '}'
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupAdaptations),
+                );
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupAdaptationList, $3.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitAdaptationList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupAdaptations, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAdaptationList, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3116,8 +3605,7 @@ trait_adaptations:
 trait_adaptation_list:
         trait_adaptation
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3132,21 +3620,39 @@ trait_adaptation_list:
 trait_adaptation:
         trait_precedence ';'
             {
-                $$ = $1;
+                $1.Group = ast.NodeGroupStmt
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                );
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupNameList, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$2} )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$2}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_alias ';'
             {
-                $$ = $1;
+                $1.Group = ast.NodeGroupStmt
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                );
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupAlias, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$2} )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$2}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3155,19 +3661,20 @@ trait_adaptation:
 trait_precedence:
         absolute_trait_method_reference T_INSTEADOF name_list
             {
-                children := yylex.(*Parser).List.Pop()
+                $1.Group = ast.NodeGroupRef
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                    yylex.(*Parser).List.Pop(ast.NodeGroupInsteadof),
+                );
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupRef, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitUsePrecedence,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, nil, children))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupRef, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupInsteadof, children...)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3176,84 +3683,115 @@ trait_precedence:
 trait_alias:
         trait_method_reference T_AS T_STRING
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Group: ast.NodeGroupAlias,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Alias
+
+                $1.Group = ast.NodeGroupRef
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, identifierNode),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupRef, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitUseAlias,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupRef, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupAlias, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_method_reference T_AS reserved_non_modifiers
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Group: ast.NodeGroupAlias,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Alias
+
+                $1.Group = ast.NodeGroupRef
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, identifierNode),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupRef, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitUseAlias,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupRef, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupAlias, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_method_reference T_AS member_modifier identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $4.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil),
+                    Group: ast.NodeGroupAlias,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Alias
+
+                $1.Group = ast.NodeGroupRef
+                $3.Group = ast.NodeGroupModifier
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3, identifierNode),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupRef, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitUseAlias,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupRef, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupModifier, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupAlias, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_method_reference T_AS member_modifier
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+
+                $1.Group = ast.NodeGroupRef
+                $3.Group = ast.NodeGroupModifier
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupRef, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitUseAlias,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupRef, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupModifier, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3262,20 +3800,28 @@ trait_alias:
 trait_method_reference:
         identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Group: ast.NodeGroupMethod,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Trait reference
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitMethodRef,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupMethod, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3290,23 +3836,32 @@ trait_method_reference:
 absolute_trait_method_reference:
         name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Group: ast.NodeGroupMethod,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Trait reference
+
+                $1.Group = ast.NodeGroupTrait
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, identifierNode),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtTraitMethodRef,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupTrait, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupMethod, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3315,31 +3870,32 @@ absolute_trait_method_reference:
 method_body:
         ';' /* abstract method */ 
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupSemiColon, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtNop,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$1})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' inner_statement_list '}'
             {
-                children := yylex.(*Parser).List.Pop()
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeStmtStmtList,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $3.HiddenTokens )
                 
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, children...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeStmtStmtList,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3352,16 +3908,15 @@ variable_modifiers:
             }
     |   T_VAR
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add(identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).List.Push(identifierNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3383,8 +3938,7 @@ method_modifiers:
 non_empty_member_modifiers:
         member_modifier
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3399,93 +3953,88 @@ non_empty_member_modifiers:
 member_modifier:
         T_PUBLIC
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_PROTECTED
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_PRIVATE
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STATIC
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ABSTRACT
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FINAL
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 property_list:
-        property_list ',' property
+        property_list ',' { yylex.(*Parser).PrependToken($2) } property
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   property
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3494,73 +4043,98 @@ property_list:
 property:
         T_VARIABLE backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                );
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                variableNode := ast.Node{
+                    Type: ast.NodeTypeExprVariable,
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Group: ast.NodeGroupVar,
+                };
+
+                // Property
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtProperty,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE '=' expr backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                );
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                variableNode := ast.Node{
+                    Type: ast.NodeTypeExprVariable,
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Group: ast.NodeGroupVar,
+                };
+
+                // Property
+
+                $3.Group = ast.NodeGroupExpr
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode, $3),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtProperty,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
-
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 class_const_list:
-        class_const_list ',' class_const_decl
+        class_const_list ',' { yylex.(*Parser).PrependToken($2) } class_const_decl
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_const_decl
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3569,22 +4143,31 @@ class_const_list:
 class_const_decl:
         identifier '=' expr backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-                
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupConstantName,
+                };
+
+                // const
+
+                $3.Group = ast.NodeGroupExpr
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupConstantName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3593,42 +4176,46 @@ class_const_decl:
 const_decl:
         T_STRING '=' expr backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-                
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupConstantName,
+                };
+
+                // const
+
+                $3.Group = ast.NodeGroupExpr
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupConstantName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 echo_expr_list:
-        echo_expr_list ',' echo_expr
+        echo_expr_list ',' { yylex.(*Parser).PrependToken($2) } echo_expr
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   echo_expr
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3657,20 +4244,15 @@ for_exprs:
 ;
 
 non_empty_for_exprs:
-        non_empty_for_exprs ',' expr
+        non_empty_for_exprs ',' { yylex.(*Parser).PrependToken($2) } expr
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3679,20 +4261,37 @@ non_empty_for_exprs:
 anonymous_class:
         T_CLASS ctor_arguments extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                nodes := make([]ast.Node, 0, 3)
+
+                if $2.Type != ast.NodeTypeNil {
+                    $2.Group = ast.NodeGroupArgumentList
+                    nodes = append(nodes, $2)
+                };
+
+                if $3.Type != ast.NodeTypeNil {
+                    $3.Group = ast.NodeGroupExtends
+                    nodes = append(nodes, $3)
+                };
+
+                if $4.Type != ast.NodeTypeNil {
+                    $4.Group = ast.NodeGroupImplements
+                    nodes = append(nodes, $4)
+                };
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    nodes, yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $8.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeStmtClass,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $8}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExtends, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupImplements, $4)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($$, ast.NodeGroupArgumentList, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $8.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $8}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3701,35 +4300,47 @@ anonymous_class:
 new_expr:
         T_NEW class_name_reference ctor_arguments
             {
-                lastNodeID := $3
-                if lastNodeID == 0 {
-                    lastNodeID = $2
-                }
+                nodes := make([]ast.Node, 0, 2)
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupClass
+                nodes = append(nodes, $2)
+
+                if $3.Type != ast.NodeTypeNil {
+                    $3.Group = ast.NodeGroupArgumentList
+                    nodes = append(nodes, $3)
+                };
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    nodes,
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprNew,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{lastNodeID}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $2)
-                yylex.(*Parser).Children($$, ast.NodeGroupArgumentList, $3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NEW anonymous_class
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupClass
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                );
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprNew,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3738,846 +4349,1093 @@ new_expr:
 expr_without_variable:
         T_LIST '(' array_pair_list ')' '=' expr
             {
-                listNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprList,
-                })
-                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                // Array pair list
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupItems),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupList, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupArrayPairList, $4.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                listNode := ast.Node{
+                    Type: ast.NodeTypeExprList,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVar,
+                };
+
+                // Assign
+
+                $6.Group = ast.NodeGroupExpr
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(listNode, $6),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $5.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignAssign,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$6}))
-
-                yylex.(*Parser).Children(listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, listNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $6)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupList, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $5.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '[' array_pair_list ']' '=' expr
             {
-                listNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprShortList,
-                })
-                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                // Array pair list
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupItems),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupArrayPairList, $3.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                listNode := ast.Node{
+                    Type: ast.NodeTypeExprShortList,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVar,
+                };
+
+                // Assign
+
+                $5.Group = ast.NodeGroupExpr
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(listNode, $5),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $4.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignAssign,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
-
-                yylex.(*Parser).Children(listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, listNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $5)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable '=' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignAssign,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable '=' '&' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $4.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $4),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEqual, $3.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignReference,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $4)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEqual, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CLONE expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprClone,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_PLUS_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignPlus,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_MINUS_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignMinus,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_MUL_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignMul,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_POW_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignPow,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_DIV_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignDiv,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_CONCAT_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignConcat,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_MOD_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignMod,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
-
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
+                
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_AND_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignBitwiseAnd,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_OR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignBitwiseOr,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_XOR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignBitwiseXor,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_SL_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignShiftLeft,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_SR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeAssignShiftRight,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_INC
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprPostInc,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$2}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_INC variable
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupVar
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprPreInc,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable T_DEC
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprPostDec,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$2}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DEC variable
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupVar
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprPreDec,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_BOOLEAN_OR expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryBooleanOr,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_BOOLEAN_AND expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryBooleanAnd,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_LOGICAL_OR expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryLogicalOr,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_LOGICAL_AND expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryLogicalAnd,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_LOGICAL_XOR expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryLogicalXor,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '|' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryBitwiseOr,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '&' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryBitwiseAnd,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '^' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryBitwiseXor,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '.' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryConcat,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '+' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryPlus,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '-' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryMinus,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '*' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryMul,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_POW expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryPow,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '/' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryDiv,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '%' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryMod,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_SL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryShiftLeft,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_SR expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryShiftRight,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '+' expr %prec T_INC
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprUnaryPlus,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '-' expr %prec T_INC
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprUnaryMinus,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '!' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprBooleanNot,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '~' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprBitwiseNot,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_IDENTICAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryIdentical,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryNotIdentical,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryEqual,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_NOT_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEqual, []scanner.Token{*$2} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryNotEqual,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEqual, []scanner.Token{*$2})
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '<' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinarySmaller,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinarySmallerOrEqual,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '>' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryGreater,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryGreaterOrEqual,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_SPACESHIP expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinarySpaceship,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_INSTANCEOF class_name_reference
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupExpr
+                $3.Group = ast.NodeGroupClass
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprInstanceOf,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' expr ')'
             {
-                $$ = $2;
+                $2.Group = ast.NodeGroupExpr
 
-                // save tokens
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4589,52 +5447,64 @@ expr_without_variable:
             }
     |   expr '?' expr ':' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupCond
+                $3.Group = ast.NodeGroupIfTrue
+                $5.Group = ast.NodeGroupIfFalse
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3, $5),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupTrue, $4.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprTernary,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $5}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupCond, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupIfTrue, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupIfFalse, $5)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupTrue, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '?' ':' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupCond
+                $4.Group = ast.NodeGroupIfFalse
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $4),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupCond, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupTrue, $3.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprTernary,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupCond, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupIfFalse, $4)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupTrue, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_COALESCE expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupLeft
+                $3.Group = ast.NodeGroupRight
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeBinaryCoalesce,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupLeft, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupRight, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4646,147 +5516,189 @@ expr_without_variable:
             }
     |   T_INT_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCast, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeCastInt,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DOUBLE_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCast, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeCastDouble,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STRING_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCast, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeCastString,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ARRAY_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCast, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeCastArray,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_OBJECT_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCast, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeCastObject,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_BOOL_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCast, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeCastBool,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_UNSET_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupCast, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeCastUnset,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EXIT exit_expr
             {
-                $$ = $2
+                var children []ast.Node
+
+                if $2.Type != ast.NodeTypeNil {
+                    $2.Group = ast.NodeGroupExpr
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($2),
+                    )
+                };
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
                 var flag ast.NodeFlag
-                exitTknValue := yylex.(*Parser).Ast.FileData[$1.StartPos:$1.EndPos]
+                exitTknValue := yylex.(*Parser).FileData[$1.StartPos:$1.EndPos]
                 if bytes.EqualFold(exitTknValue, []byte("die")) {
                     flag = ast.NodeFlagAltSyntax
-                }
+                };
 
-                if $$ == 0 {
-                    $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                        Type: ast.NodeTypeExprExit,
-                        Flag: flag,
-                    })
-                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-                } else {
-                    n := yylex.(*Parser).Ast.Graph.GetNode($$)
-                    yylex.(*Parser).Ast.Nodes[n.ID].Flag = flag
-                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-                }
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeExprExit,
+                    Flag: flag,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '@' expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprErrorSuppress,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4798,150 +5710,202 @@ expr_without_variable:
             }
     |   '`' backticks_expr '`'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupParts),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprShellExec,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_PRINT expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprPrint,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_YIELD
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprYield,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_YIELD expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupVal
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprYield,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVal, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupKey
+                $4.Group = ast.NodeGroupVal
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2, $4),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $3.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprYield,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$4}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupKey, $2)
-                yylex.(*Parser).Children($$, ast.NodeGroupVal, $4)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_YIELD_FROM expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprYieldFrom,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
+                stmts := yylex.(*Parser).List.Pop(ast.NodeGroupStmts)
+                params := yylex.(*Parser).List.Pop(ast.NodeGroupParams)
+                nodes := make([]ast.Node, 0, 2)
+
+                if $7.Type != ast.NodeTypeNil {
+                    $7.Group = ast.NodeGroupClosureUse
+                    nodes = append(nodes, $7)
+                };
+                
+                if $8.Type != ast.NodeTypeNil {
+                    $8.Group = ast.NodeGroupReturnType
+                    nodes = append(nodes, $8)
+                };
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    params, nodes, stmts,
+                );
+
                 var flag ast.NodeFlag
                 if $2 != nil {
                     flag = flag | ast.NodeFlagRef
-                }
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                if $2 == nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupFunction, $4.HiddenTokens )
+                } else {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupFunction, $2.HiddenTokens )
+                    yylex.(*Parser).PushTokens( ast.TokenGroupAmpersand, $4.HiddenTokens )
+                };
+                yylex.(*Parser).PushTokens( ast.TokenGroupParameterList, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupReturnType, $9.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $11.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprClosure,
                     Flag: flag,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $11}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClosureUse, $7)
-                yylex.(*Parser).Children($$, ast.NodeGroupReturnType, $8)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($$, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
-                
-                // // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                if $2 == nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $4.HiddenTokens)
-                } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $2.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, $4.HiddenTokens)
-                }
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupParameterList, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupReturnType, $9.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $11.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $11}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STATIC T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                flag := ast.NodeFlagStatic
-                if $2 != nil {
-                    flag = flag | ast.NodeFlagRef
-                }
+                stmts := yylex.(*Parser).List.Pop(ast.NodeGroupStmts)
+                params := yylex.(*Parser).List.Pop(ast.NodeGroupParams)
+                nodes := make([]ast.Node, 0, 2)
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                if $8.Type != ast.NodeTypeNil {
+                    $8.Group = ast.NodeGroupClosureUse
+                    nodes = append(nodes, $8)
+                };
+                
+                if $9.Type != ast.NodeTypeNil {
+                    $9.Group = ast.NodeGroupReturnType
+                    nodes = append(nodes, $9)
+                };
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    params, nodes, stmts,
+                );
+
+                flag := ast.NodeFlagStatic
+                if $3 != nil {
+                    flag = flag | ast.NodeFlagRef
+                };
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStatic, $2.HiddenTokens )
+                if $3 == nil {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupFunction, $5.HiddenTokens )
+                } else {
+                    yylex.(*Parser).PushTokens( ast.TokenGroupFunction, $3.HiddenTokens )
+                    yylex.(*Parser).PushTokens( ast.TokenGroupAmpersand, $5.HiddenTokens )
+                };
+                yylex.(*Parser).PushTokens( ast.TokenGroupParameterList, $7.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupReturnType, $10.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStmts, $12.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprClosure,
                     Flag: flag,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $12}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClosureUse, $8)
-                yylex.(*Parser).Children($$, ast.NodeGroupReturnType, $9)
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($$, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
-                
-                // // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStatic, $2.HiddenTokens)
-                if $3 == nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $5.HiddenTokens)
-                } else {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupFunction, $3.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupAmpersand, $5.HiddenTokens)
-                }
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupParameterList, $7.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupReturnType, $10.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $12.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $12}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4963,43 +5927,41 @@ returns_ref:
 lexical_vars:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE '(' lexical_var_list ')'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupStmts),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupUse, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupLexicalVarList, $4.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprClosureUse,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupUse, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupLexicalVarList, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
 lexical_var_list:
-        lexical_var_list ',' lexical_var
+        lexical_var_list ',' { yylex.(*Parser).PrependToken($2) } lexical_var
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   lexical_var
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5008,46 +5970,74 @@ lexical_var_list:
 lexical_var:
     T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVarName, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '&' T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+
+                variableNode := ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVar,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Reference 
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprReference,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
-
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens(varNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVal,
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5056,65 +6046,75 @@ lexical_var:
 function_call:
         name argument_list
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupFunction
+                $2.Group = ast.NodeGroupArgumentList
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $2),
+                )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprFunctionCall,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $2}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupFunction, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupArgumentList, $2)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupClass
+                $3.Group = ast.NodeGroupCall
+                $4.Group = ast.NodeGroupArgumentList
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3, $4),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprStaticCall,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupCall, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupArgumentList, $4)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupClass
+                $3.Group = ast.NodeGroupCall
+                $4.Group = ast.NodeGroupArgumentList
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3, $4),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprStaticCall,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupCall, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupArgumentList, $4)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   callable_expr argument_list
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupFunction
+                $2.Group = ast.NodeGroupArgumentList
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $2),
+                )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprFunctionCall,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $2}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupFunction, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupArgumentList, $2)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5123,13 +6123,13 @@ function_call:
 class_name:
         T_STATIC
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5159,24 +6159,32 @@ class_name_reference:
 exit_expr:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' optional_expr ')'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprExit,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                var children []ast.Node
 
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
+                if $2.Type != ast.NodeTypeNil {
+                    $2.Group = ast.NodeGroupExpr
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($2),
+                    )
+                };
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExit, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExit, []scanner.Token{*$1})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$3})
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5191,12 +6199,13 @@ backticks_expr:
             }
     |   T_ENCAPSED_AND_WHITESPACE
             {
-                yylex.(*Parser).List.Push()
-                nodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                stringPartNode := ast.Node{
                     Type: ast.NodeTypeScalarEncapsedStringPart,
-                })
-                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-                yylex.(*Parser).List.Add(nodeID)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Group: ast.NodeGroupParts,
+                };
+
+                yylex.(*Parser).List.Push(stringPartNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5209,7 +6218,7 @@ backticks_expr:
 ctor_arguments:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5224,44 +6233,50 @@ ctor_arguments:
 dereferencable_scalar:
     T_ARRAY '(' array_pair_list ')'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupItems),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupArray, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupArrayPairList, $4.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArray,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArray, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArrayPairList, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '[' array_pair_list ']'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupItems),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupArrayPairList, $3.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprShortArray,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupArrayPairList, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarString,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarString,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5270,180 +6285,194 @@ dereferencable_scalar:
 scalar:
         T_LNUMBER
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarLnumber,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarLnumber,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DNUMBER
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarDnumber,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarDnumber,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_LINE
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarMagicConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarMagicConstant,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FILE
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarMagicConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarMagicConstant,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DIR
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarMagicConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarMagicConstant,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_TRAIT_C
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarMagicConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarMagicConstant,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_METHOD_C
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarMagicConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarMagicConstant,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FUNC_C
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarMagicConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarMagicConstant,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_C
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarMagicConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarMagicConstant,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CLASS_C
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarMagicConstant,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarMagicConstant,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
-                stringPartNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // String part
+
+                stringPartNode := ast.Node{
                     Type: ast.NodeTypeScalarEncapsedStringPart,
-                })
-                yylex.(*Parser).SavePosition(stringPartNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                    Group: ast.NodeGroupParts,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // HEREDOC
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(stringPartNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeScalarHeredoc,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupParts, stringPartNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_START_HEREDOC T_END_HEREDOC
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarHeredoc,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarHeredoc,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '"' encaps_list '"'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupParts),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeScalarEncapsed,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupParts),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeScalarHeredoc,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5464,59 +6493,78 @@ scalar:
 constant:
         name
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupConstant
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprConstFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupConstant, $1)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupConstantName,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Constant fetch
+
+                $1.Group = ast.NodeGroupClass
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprClassConstFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupConstantName, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupConstantName,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Constant fetch
+
+                $1.Group = ast.NodeGroupClass
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprClassConstFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupConstantName, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5540,7 +6588,7 @@ expr:
 optional_expr:
         /* empty */
             {
-                $$ = 0
+                $$ = ast.Node{};
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5570,13 +6618,23 @@ dereferencable:
             }
     |   '(' expr ')'
             {
-                $$ = $2;
+                $2.Group = ast.NodeGroupExpr
 
-                // save tokens
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5597,13 +6655,23 @@ callable_expr:
             }
     |   '(' expr ')'
             {
-                $$ = $2;
+                $2.Group = ast.NodeGroupExpr
 
-                // save tokens
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5624,75 +6692,105 @@ callable_variable:
             }
     |   dereferencable '[' optional_expr ']'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupDim
+
+                var children []ast.Node
+                if $3.Type == ast.NodeTypeNil {
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($1),
+                    )
+                } else {
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($1, $3),
+                    )
+                };
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, []scanner.Token{*$4} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupDim, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   constant '[' optional_expr ']'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupDim
+
+                var children []ast.Node
+                if $3.Type == ast.NodeTypeNil {
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($1),
+                    )
+                } else {
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($1, $3),
+                    )
+                };
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, []scanner.Token{*$4} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupDim, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   dereferencable '{' expr '}'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupDim
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+                
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, []scanner.Token{*$4} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupDim, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupMethod
+                $4.Group = ast.NodeGroupArgumentList
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3, $4),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprMethodCall,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupMethod, $3)
-                yylex.(*Parser).Children($$, ast.NodeGroupArgumentList, $4)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5719,17 +6817,21 @@ variable:
             }
     |   dereferencable T_OBJECT_OPERATOR property_name
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupProperty
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprPropertyFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupProperty, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5738,53 +6840,71 @@ variable:
 simple_variable:
         T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVarName, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '$' '{' expr '}'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $3.Group = ast.NodeGroupVarName
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$4} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVarName, $3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupDollar, []scanner.Token{*$1})
-                yylex.(*Parser).PrependTokens($3, ast.TokenGroupStart, []scanner.Token{*$2})
-                yylex.(*Parser).PrependTokens($3, ast.TokenGroupStart, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($3, ast.TokenGroupEnd, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($3, ast.TokenGroupEnd, []scanner.Token{*$4})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '$' simple_variable
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupVarName
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVarName, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupDollar, []scanner.Token{*$1})
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5793,33 +6913,39 @@ simple_variable:
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupClass
+                $3.Group = ast.NodeGroupProperty
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprStaticPropertyFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupProperty, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupClass
+                $3.Group = ast.NodeGroupProperty
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprStaticPropertyFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupProperty, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5834,87 +6960,112 @@ new_variable:
             }
     |   new_variable '[' optional_expr ']'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupDim
+
+                var children []ast.Node
+                if $3.Type == ast.NodeTypeNil {
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($1),
+                    )
+                } else {
+                    children = yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes($1, $3),
+                    )
+                };
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, []scanner.Token{*$4} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupDim, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   new_variable '{' expr '}'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVar
+                $3.Group = ast.NodeGroupDim
+                
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+                
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, []scanner.Token{*$4} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupDim, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   new_variable T_OBJECT_OPERATOR property_name
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupClass
+                $3.Group = ast.NodeGroupProperty
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprPropertyFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupProperty, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupClass
+                $3.Group = ast.NodeGroupProperty
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprStaticPropertyFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupProperty, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupClass
+                $3.Group = ast.NodeGroupProperty
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupName, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprStaticPropertyFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupClass, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupProperty, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5923,25 +7074,35 @@ new_variable:
 member_name:
         identifier
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' expr '}'
             {
-                $$ = $2;
+                $2.Group = ast.NodeGroupExpr
 
-                // save tokens
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5956,25 +7117,35 @@ member_name:
 property_name:
         T_STRING
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '{' expr '}'
             {
-                $$ = $2;
-                
-                // save tokens
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
-                yylex.(*Parser).PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$3} )
+
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5989,6 +7160,14 @@ property_name:
 array_pair_list:
         non_empty_array_pair_list
             {
+                items := yylex.(*Parser).List.Pop(ast.NodeGroupItems)
+
+                if len(items) == 1 && items[0].Position.PS == 0 && items[0].Position.PE == 0 {
+                    yylex.(*Parser).List.Push()
+                } else {
+                    yylex.(*Parser).List.Push(items...)
+                };
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -5996,9 +7175,10 @@ array_pair_list:
 possible_array_pair:
         /* empty */
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                })
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6011,20 +7191,15 @@ possible_array_pair:
 ;
 
 non_empty_array_pair_list:
-        non_empty_array_pair_list ',' possible_array_pair
+        non_empty_array_pair_list ',' { yylex.(*Parser).PrependToken($2) } possible_array_pair
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   possible_array_pair
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6033,125 +7208,184 @@ non_empty_array_pair_list:
 array_pair:
         expr T_DOUBLE_ARROW expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupKey
+                $3.Group = ast.NodeGroupVal
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupKey, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupVal, $3)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $1.Group = ast.NodeGroupVal
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1),
+                )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVal, $1)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_DOUBLE_ARROW '&' variable
             {
-                refNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprReference,
-                })
-                yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$4}))
+                // Reference
+
+                $4.Group = ast.NodeGroupVar
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($4),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                refNode := ast.Node{
+                    Type: ast.NodeTypeExprReference,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVal,
+                };
+
+                // Array item
+
+                $1.Group = ast.NodeGroupKey
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, refNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
-
-                yylex.(*Parser).Children(refNodeID, ast.NodeGroupVar, $4)
-                yylex.(*Parser).Children($$, ast.NodeGroupKey, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupVal, refNodeID)
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(refNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '&' variable
             {
-                refNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprReference,
-                })
-                yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
+                $2.Group = ast.NodeGroupVar
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                refNode := ast.Node{
+                    Type: ast.NodeTypeExprReference,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVal,
+                };
+
+                // Array item
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(refNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children(refNodeID, ast.NodeGroupVar, $2)
-                yylex.(*Parser).Children($$, ast.NodeGroupVal, refNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
-                listNodeID :=  yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // List
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupItems),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupList, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupArrayPairList, $6.HiddenTokens )
+
+                listNode := ast.Node{
                     Type: ast.NodeTypeExprList,
-                })
-                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3, $6}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3, $6}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVal,
+                };
+
+                // Array item
+
+                $1.Group = ast.NodeGroupKey
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($1, listNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $2.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$6}, nil))
-
-                yylex.(*Parser).Children(listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($$, ast.NodeGroupKey, $1)
-                yylex.(*Parser).Children($$, ast.NodeGroupVal, listNodeID)
-
-                // TODO: Cannot use list() as standalone expression
-
-                // save tokens
-                yylex.(*Parser).MoveStartTokens($1, $$)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupStart, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupList, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $6.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$6}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                listNodeID :=  yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // List
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupItems),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupList, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupArrayPairList, $4.HiddenTokens )
+
+                listNode := ast.Node{
                     Type: ast.NodeTypeExprList,
-                })
-                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVal,
+                };
+
+                // Array item
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(listNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children(listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children($$, ast.NodeGroupVal, listNodeID)
-
-                // TODO: Cannot use list() as standalone expression
-                
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupList, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6166,39 +7400,35 @@ encaps_list:
             }
     |   encaps_list T_ENCAPSED_AND_WHITESPACE
             {
-                encapsNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+                
+                encapsNode := ast.Node{
                     Type: ast.NodeTypeScalarEncapsedStringPart,
-                })
-                yylex.(*Parser).SavePosition(encapsNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).List.Add(encapsNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(encapsNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).List.Add(encapsNode)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   encaps_var
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ENCAPSED_AND_WHITESPACE encaps_var
             {
-                yylex.(*Parser).List.Push()
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
                 
-                encapsNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                encapsNode := ast.Node{
                     Type: ast.NodeTypeScalarEncapsedStringPart,
-                })
-                yylex.(*Parser).SavePosition(encapsNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
-                yylex.(*Parser).List.Add(encapsNodeID)
-                yylex.(*Parser).List.Add($2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(encapsNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).List.Push(encapsNode, $2)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6207,161 +7437,306 @@ encaps_list:
 encaps_var:
         T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVarName, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                variableNode := ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVar,
+                };
+
+                // Fetch
+
+                $3.Group = ast.NodeGroupDim
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode, $3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, []scanner.Token{*$2} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, []scanner.Token{*$4} )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupDim, $3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
-                varNameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(varNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                // Identifier
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                identifierNode := ast.Node{
+                    Type: ast.NodeTypeIdentifier,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVarName,
+                };
+
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                variableNode := ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVar,
+                };
 
-                propertyNameNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Property
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $3.HiddenTokens )
+
+                propertyNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(propertyNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
-                
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupProperty,
+                };
+
+                // Fetch
+
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode, propertyNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $2.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprPropertyFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
-
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, varNameNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupProperty, propertyNameNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens(propertyNameNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                $2.Group = ast.NodeGroupVarName
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                variableNode := ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Group: ast.NodeGroupExpr,
+                };
 
-                yylex.(*Parser).Children($$, ast.NodeGroupVarName, $2)
+                // Wrapper
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$3} )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+
+                variableNode := ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupExpr,
+                };
 
-                yylex.(*Parser).Children($$, ast.NodeGroupVarName, identifierNodeID)
+                // Wrapper
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$3} )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                varNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $2.HiddenTokens )
+
+                variableNode := ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVar,
+                };
+
+                // Fetch
+
+                $4.Group = ast.NodeGroupDim
                 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(variableNode, $4),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, []scanner.Token{*$3} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $5.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, []scanner.Token{*$5} )
+
+                fetchNode := ast.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil))
+                    Position: yylex.(*Parser).NewPosition(children, []*scanner.Token{$5}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupExpr,
+                };
 
-                yylex.(*Parser).Children(varNodeID, ast.NodeGroupVarName, identifierNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupVar, varNodeID)
-                yylex.(*Parser).Children($$, ast.NodeGroupDim, $4)
+                // Wrapper
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$3})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $5.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$5})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $6.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$6})
+                children = yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(fetchNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $6.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$6} )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CURLY_OPEN variable '}'
             {
-                $$ = $2;
+                $2.Group = ast.NodeGroupExpr
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, []scanner.Token{*$1} )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, $3.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEnd, []scanner.Token{*$3} )
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeWrapper,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6370,80 +7745,92 @@ encaps_var:
 encaps_var_offset:
         T_STRING
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeScalarString,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $1.HiddenTokens )
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                $$ = ast.Node{
+                    Type: ast.NodeTypeScalarString,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NUM_STRING
             {
-                // TODO: add option to handle 64 bit integer
-                tknValue := yylex.(*Parser).Ast.FileData[$1.StartPos:$1.EndPos]
+                nodeType := ast.NodeTypeScalarString
+                tknValue := yylex.(*Parser).FileData[$1.StartPos:$1.EndPos]
                 if _, err := strconv.Atoi(string(tknValue)); err == nil {
-                    $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                        Type: ast.NodeTypeScalarLnumber,
-                    })
-                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-                } else {
-                    $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                        Type: ast.NodeTypeScalarString,
-                    })
-                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-                }
+                    nodeType = ast.NodeTypeScalarLnumber
+                };
 
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $1.HiddenTokens )
+
+                $$ = ast.Node{
+                    Type: nodeType,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '-' T_NUM_STRING
             {
-                tknValue := yylex.(*Parser).Ast.FileData[$2.StartPos:$2.EndPos]
+                yylex.(*Parser).PushTokens( ast.TokenGroupVar, $1.HiddenTokens )
+
+                tknValue := yylex.(*Parser).FileData[$2.StartPos:$2.EndPos]
                 if _, err := strconv.Atoi(string(tknValue)); err == nil {
-                    lnumberNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                    lnumberNode := ast.Node{
                         Type: ast.NodeTypeScalarLnumber,
-                    })
-                    yylex.(*Parser).SavePosition(lnumberNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
+                        Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil),
+                        Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                        Group: ast.NodeGroupExpr,
+                    };
                     
-                    $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                    children := yylex.(*Parser).Ast.AddNodes(
+                        yylex.(*Parser).Nodes(lnumberNode),
+                    )
+
+                    $$ = ast.Node{
                         Type: ast.NodeTypeExprUnaryMinus,
-                    })
-                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
-
-                    yylex.(*Parser).Children($$, ast.NodeGroupExpr, lnumberNodeID)
+                        Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil),
+                        Children: children,
+                        Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    };
                 } else {
-                    $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                    $$ = ast.Node{
                         Type: ast.NodeTypeScalarString,
-                    })
-                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
-                }
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                        Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil),
+                        Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    };
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Identifier
+
+                identifierNode := ast.Node{
                     Type: ast.NodeTypeIdentifier,
-                })
-                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil),
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                    Group: ast.NodeGroupVarName,
+                };
 
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                // Variable
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes(identifierNode),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprVariable,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupVarName, identifierNodeID)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(children, nil, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6452,109 +7839,141 @@ encaps_var_offset:
 internal_functions_in_yacc:
         T_ISSET '(' isset_variables possible_comma ')'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
-                    Type: ast.NodeTypeExprIsset,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).List.Pop(ast.NodeGroupVars),
+                )
 
-                yylex.(*Parser).Children($$, ast.NodeGroupVars, yylex.(*Parser).List.Pop()...)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupIsset, $2.HiddenTokens)
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupIsset, $2.HiddenTokens )
                 if $4 != nil {
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $4.HiddenTokens)
-                    yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, []scanner.Token{*$4})
-                }
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupVarList, $5.HiddenTokens)
+                    yylex.(*Parser).PushTokens( ast.TokenGroupVarList, $4.HiddenTokens )
+                    yylex.(*Parser).PushTokens( ast.TokenGroupVarList, []scanner.Token{*$4} )
+                };
+                
+                $$ = ast.Node{
+                    Type: ast.NodeTypeExprIsset,
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EMPTY '(' expr ')'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEmpty, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprEmpty,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEmpty, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_INCLUDE expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprInclude,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_INCLUDE_ONCE expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprIncludeOnce,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EVAL '(' expr ')'
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $3.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($3),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupEval, $2.HiddenTokens )
+                yylex.(*Parser).PushTokens( ast.TokenGroupExpr, $4.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprEval,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupEval, $2.HiddenTokens)
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_REQUIRE expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprRequire,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_REQUIRE_ONCE expr
             {
-                $$ = yylex.(*Parser).Ast.NewNode(ast.SimpleNode{
+                $2.Group = ast.NodeGroupExpr
+
+                children := yylex.(*Parser).Ast.AddNodes(
+                    yylex.(*Parser).Nodes($2),
+                )
+
+                yylex.(*Parser).PushTokens( ast.TokenGroupStart, $1.HiddenTokens )
+                
+                $$ = ast.Node{
                     Type: ast.NodeTypeExprRequireOnce,
-                })
-                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
-
-                yylex.(*Parser).Children($$, ast.NodeGroupExpr, $2)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                    Position: yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children),
+                    Children: children,
+                    Tokens: yylex.(*Parser).Ast.AddTokens( yylex.(*Parser).PopTokens() ),
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6563,18 +7982,13 @@ internal_functions_in_yacc:
 isset_variables:
         isset_variable
             {
-                yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add($1)
+                yylex.(*Parser).List.Push($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   isset_variables ',' isset_variable
+    |   isset_variables ',' { yylex.(*Parser).PrependToken($2) } isset_variable
             {
-                prevNodeID := yylex.(*Parser).List.Last()
-                yylex.(*Parser).List.Add($3)
-
-                // save tokens
-                yylex.(*Parser).AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).List.Add($4)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

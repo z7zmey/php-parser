@@ -4,15 +4,14 @@ import (
 	"sync"
 
 	"github.com/z7zmey/php-parser/internal/parser"
-	"github.com/z7zmey/php-parser/internal/parser/php5"
 	"github.com/z7zmey/php-parser/internal/parser/php7"
-	"github.com/z7zmey/php-parser/internal/stxtree"
+	"github.com/z7zmey/php-parser/internal/tree"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/traverser"
 )
 
 var traverserPool = sync.Pool{
-	New: func() interface{} { return new(stxtree.Graph) },
+	New: func() interface{} { return new(tree.Tree) },
 }
 
 type Parser interface {
@@ -25,7 +24,7 @@ type phpParser struct {
 }
 
 func (p *phpParser) Parse(data []byte) (traverser.Traverser, []*errors.Error) {
-	t := traverserPool.New().(*stxtree.Graph)
+	t := traverserPool.New().(*tree.Tree)
 	p.parser.Parse(data, t)
 	return t, p.parser.GetErrors()
 }
@@ -43,7 +42,7 @@ func NewPHP7Parser() Parser {
 
 func NewPHP5Parser() Parser {
 	return &phpParser{
-		parser: php5.NewParser(),
+		parser: php7.NewParser(),
 	}
 }
 

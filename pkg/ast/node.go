@@ -43,7 +43,9 @@ type NodeType uint16
 
 //go:generate stringer -type=NodeType -trimprefix=NodeType -output ./nodetype_string.go
 const (
-	NodeTypeRoot NodeType = iota
+	NodeTypeNil NodeType = iota
+	NodeTypeRoot
+	NodeTypeWrapper
 
 	NodeTypeParameter
 	NodeTypeArgument
@@ -308,44 +310,38 @@ func (et NodeGroup) Is(ect NodeGroupFlag) bool {
 	return uint8(et)&uint8(ect) == uint8(ect)
 }
 
-type SimpleNode struct {
-	Type  NodeType
-	Flag  NodeFlag
-	Group NodeGroup
-}
-
 type Node struct {
-	SimpleNode
+	Type     NodeType
+	Flag     NodeFlag
+	Group    NodeGroup
 	Position Position
-	Children map[NodeGroup][]*Node
-	Tokens   map[TokenGroup][]Token
-	Value    string
-}
-
-type node struct {
-	Type     string             `json:"type"`
-	Flags    []string           `json:"flags"`
-	Value    string             `json:"value"`
-	Position Position           `json:"position"`
-	Tokens   map[string][]Token `json:"tokens"`
-	Children map[string][]*Node `json:"children"`
+	Children []Node
+	Tokens   []Token
+	Value    []byte
 }
 
 func (n Node) MarshalJSON() ([]byte, error) {
-	children := map[string][]*Node{}
-	for k, v := range n.Children {
-		children[k.String()] = v
+	children := map[string][]Node{}
+	for _, v := range n.Children {
+		children[v.Group.String()] = append(children[v.Group.String()], v)
 	}
 
 	tokens := map[string][]Token{}
-	for k, v := range n.Tokens {
-		tokens[k.String()] = v
+	for _, v := range n.Tokens {
+		tokens[v.Group.String()] = append(tokens[v.Group.String()], v)
 	}
 
-	out := node{
+	out := struct {
+		Type     string             `json:"type"`
+		Flags    []string           `json:"flags"`
+		Value    string             `json:"value"`
+		Position Position           `json:"position"`
+		Tokens   map[string][]Token `json:"tokens"`
+		Children map[string][]Node  `json:"children"`
+	}{
 		Type:     n.Type.String(),
 		Flags:    n.Flag.GetFlagNames(),
-		Value:    n.Value,
+		Value:    string(n.Value),
 		Position: n.Position,
 		Tokens:   tokens,
 		Children: children,

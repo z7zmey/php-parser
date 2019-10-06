@@ -13,7 +13,6 @@ import (
 
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/traverser"
-	"github.com/z7zmey/php-parser/pkg/visitor"
 
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
@@ -168,12 +167,8 @@ func printerWorker(r <-chan result) {
 		// 	res.parser.GetRootNode().Walk(nsResolver)
 		// }
 
-		linker := &visitor.Linker{}
-
 		if *dump {
-			res.traverser.Traverse(linker)
-
-			buf, err := json.MarshalIndent(linker.GetRoot(), "", "  ")
+			buf, err := json.MarshalIndent(res.traverser.RootNode(), "", "  ")
 			checkErr(err)
 			_, err = os.Stdout.Write(buf)
 			checkErr(err)
