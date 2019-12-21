@@ -75,18 +75,11 @@ func (l *Lexer) SetErrors(e []*errors.Error) {
 	l.Errors = e
 }
 
-func (lex *Lexer) createToken(lval Lval) *Token {
-	token := lex.TokenPool.Get()
-	token.FreeFloating = lex.FreeFloating
-	token.Value = string(lex.data[lex.ts:lex.te])
-
+func (lex *Lexer) setTokenPosition(token *Token) {
 	token.StartLine = lex.NewLines.GetLine(lex.ts)
 	token.EndLine = lex.NewLines.GetLine(lex.te - 1)
 	token.StartPos = lex.ts
 	token.EndPos = lex.te
-
-	lval.Token(token)
-	return token
 }
 
 func (lex *Lexer) addFreeFloating(t freefloating.StringType, ps, pe int) {
