@@ -66,6 +66,7 @@ import (
 %token <token> T_CONTINUE
 %token <token> T_GOTO
 %token <token> T_FUNCTION
+%token <token> T_FN
 %token <token> T_CONST
 %token <token> T_RETURN
 %token <token> T_TRY
@@ -157,6 +158,7 @@ import (
 %token <token> T_XOR_EQUAL
 %token <token> T_SL_EQUAL
 %token <token> T_SR_EQUAL
+%token <token> T_COALESCE_EQUAL
 %token <token> T_BOOLEAN_OR
 %token <token> T_BOOLEAN_AND
 %token <token> T_POW
