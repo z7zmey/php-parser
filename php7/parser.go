@@ -6,8 +6,8 @@ import (
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/positionbuilder"
 	"github.com/z7zmey/php-parser/scanner"
 )
 
@@ -19,13 +19,14 @@ func (lval *yySymType) Token(t *scanner.Token) {
 type Parser struct {
 	Lexer           scanner.Scanner
 	currentToken    *scanner.Token
-	positionBuilder *parser.PositionBuilder
+	positionBuilder *positionbuilder.PositionBuilder
 	rootNode        node.Node
 }
 
 // NewParser creates and returns new Parser
-func NewParser(src []byte) *Parser {
+func NewParser(src []byte, v string) *Parser {
 	lexer := scanner.NewLexer(src)
+	lexer.PHPVersion = v
 
 	return &Parser{
 		lexer,
@@ -61,7 +62,7 @@ func (l *Parser) Parse() int {
 	// init
 	l.Lexer.SetErrors(nil)
 	l.rootNode = nil
-	l.positionBuilder = &parser.PositionBuilder{}
+	l.positionBuilder = &positionbuilder.PositionBuilder{}
 
 	// parse
 

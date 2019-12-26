@@ -15,14 +15,12 @@ import (
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
 	"github.com/z7zmey/php-parser/parser"
-	"github.com/z7zmey/php-parser/php5"
-	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/printer"
 	"github.com/z7zmey/php-parser/visitor"
 )
 
 var wg sync.WaitGroup
-var usePhp5 *bool
+var phpVersion string
 var dumpType string
 var profiler string
 var withFreeFloating *bool
@@ -40,12 +38,12 @@ type result struct {
 }
 
 func main() {
-	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
 	withFreeFloating = flag.Bool("ff", false, "parse and show free floating strings")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
 	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
+	flag.StringVar(&phpVersion, "phpver", "7.4", "php version")
 
 	flag.Parse()
 
@@ -104,18 +102,15 @@ func processPath(pathList []string, fileCh chan<- *file) {
 }
 
 func parserWorker(fileCh <-chan *file, r chan<- result) {
-	var parserWorker parser.Parser
-
 	for {
 		f, ok := <-fileCh
 		if !ok {
 			return
 		}
 
-		if *usePhp5 {
-			parserWorker = php5.NewParser(f.content)
-		} else {
-			parserWorker = php7.NewParser(f.content)
+		parserWorker, err := parser.NewParser(f.content, phpVersion)
+		if err != nil {
+			panic(err.Error())
 		}
 
 		if *withFreeFloating {

@@ -29,7 +29,7 @@ abstract class Bar extends Baz
 
 	// parse
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.WithFreeFloating()
 	php7parser.Parse()
 
@@ -61,7 +61,7 @@ abstract class Bar extends Baz
 }
 
 func parse(src string) node.Node {
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.WithFreeFloating()
 	php7parser.Parse()
 

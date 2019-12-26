@@ -55,12 +55,12 @@ func TestIdentifier(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -794,7 +794,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -1436,7 +1436,7 @@ func TestPhp5ArgumentNode(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2096,7 +2096,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2724,7 +2724,7 @@ func TestPhp5ParameterNode(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2743,12 +2743,12 @@ func TestCommentEndFile(t *testing.T) {
 		Stmts: []node.Node{},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

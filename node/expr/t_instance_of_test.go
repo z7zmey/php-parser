@@ -82,12 +82,12 @@ func TestInstanceOf(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -159,12 +159,12 @@ func TestInstanceOfRelative(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -236,12 +236,12 @@ func TestInstanceOfFullyQualified(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

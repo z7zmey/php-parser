@@ -7,6 +7,7 @@ import (
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/version"
 )
 
 type Scanner interface {
@@ -133,11 +134,12 @@ func (lex *Lexer) isNotStringEnd(s byte) bool {
 }
 
 func (lex *Lexer) isHeredocEnd(p int) bool {
-	if lex.PHPVersion == "" {
+	r, err := version.Compare(lex.PHPVersion, "7.3")
+	if err != nil {
 		return lex.isHeredocEndSince73(p)
 	}
 
-	if comparePHPVersion(lex.PHPVersion, "7.3") == -1 {
+	if r == -1 {
 		return lex.isHeredocEndBefore73(p)
 	}
 
@@ -270,27 +272,4 @@ func isValidVarNameStart(r byte) bool {
 
 func isValidVarName(r byte) bool {
 	return (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '_' || (r >= 0x80 && r <= 0xff)
-}
-
-func comparePHPVersion(a string, b string) int {
-	first := strings.Split(a, ".")
-	second := strings.Split(b, ".")
-
-	if first[0] < second[0] {
-		return -1
-	}
-
-	if first[0] > second[0] {
-		return 1
-	}
-
-	if first[1] < second[1] {
-		return -1
-	}
-
-	if first[1] > second[1] {
-		return 1
-	}
-
-	return 0
 }
