@@ -2,6 +2,8 @@ package scanner
 
 import (
     "fmt"
+    "strconv"
+    "strings"
 
     "github.com/z7zmey/php-parser/freefloating"
 )
@@ -66,10 +68,10 @@ func (lex *Lexer) Lex(lval Lval) int {
         whitespace = [\t\v\f ];
         whitespace_line = [\t\v\f ] | newline;
 
-        lnum = [0-9]+;
-        dnum = ( [0-9]* "." [0-9]+ ) | ( [0-9]+ "." [0-9]* );
-        hnum = '0x' [0-9a-fA-F]+;
-        bnum = '0b' [01]+;
+        lnum = [0-9]+('_'[0-9]+)*;
+        dnum = (lnum?"." lnum)|(lnum"."lnum?);
+        hnum = '0x'[0-9a-fA-F]+('_'[0-9a-fA-F]+)*;
+        bnum = '0b'[01]+('_'[01]+)*;
 
         exponent_dnum = (lnum | dnum) ('e'|'E') ('+'|'-')? lnum;
         varname_first = [a-zA-Z_] | (0x0080..0x00FF);
@@ -162,36 +164,38 @@ func (lex *Lexer) Lex(lval Lval) int {
 
             (dnum | exponent_dnum)          => {lex.setTokenPosition(token); tok = T_DNUMBER; fbreak;};
             bnum => {
-                firstNum := 2
-                for i := lex.ts + 2; i < lex.te; i++ {
-                    if lex.data[i] == '0' {
-                        firstNum++
-                    }
-                }
+                s := strings.Replace(string(lex.data[lex.ts+2:lex.te]), "_", "", -1)
+                _, err := strconv.ParseInt(s, 2, 0)
 
-                if lex.te - lex.ts - firstNum < 64 {
+                if err == nil {
                     lex.setTokenPosition(token); tok = T_LNUMBER; fbreak;
-                }
+                } 
+                
                 lex.setTokenPosition(token); tok = T_DNUMBER; fbreak;
             };
             lnum => {
-                if lex.te - lex.ts < 20 {
-                    lex.setTokenPosition(token); tok = T_LNUMBER; fbreak;
+                base := 10
+                if lex.data[lex.ts] == '0' {
+                    base = 8
                 }
+
+                s := strings.Replace(string(lex.data[lex.ts:lex.te]), "_", "", -1)
+                _, err := strconv.ParseInt(s, base, 0)
+
+                if err == nil {
+                    lex.setTokenPosition(token); tok = T_LNUMBER; fbreak;
+                } 
+                
                 lex.setTokenPosition(token); tok = T_DNUMBER; fbreak;
             };
             hnum => {
-                firstNum := lex.ts + 2
-                for i := lex.ts + 2; i < lex.te; i++ {
-                    if lex.data[i] == '0' {
-                        firstNum++
-                    }
-                }
+                s := strings.Replace(string(lex.data[lex.ts+2:lex.te]), "_", "", -1)
+                _, err := strconv.ParseInt(s, 16, 0)
 
-                length := lex.te - firstNum
-                if length < 16 || (length == 16 && lex.data[firstNum] <= '7') {
+                if err == nil {
                     lex.setTokenPosition(token); tok = T_LNUMBER; fbreak;
                 } 
+                
                 lex.setTokenPosition(token); tok = T_DNUMBER; fbreak;
             };
 

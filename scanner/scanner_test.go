@@ -21,20 +21,6 @@ func TestTokens(t *testing.T) {
 		<? ?>
 		<?= ?>
 		<?php
-		
-		0.1
-		.1
-		1e10
-		.1e10
-
-		0b1
-		0b1111111111111111111111111111111111111111111111111111111111111111
-
-		0x007111111111111111
-		0x8111111111111111
-
-		1234567890123456789
-		12345678901234567890
 
 		abstract
 		array
@@ -214,20 +200,6 @@ func TestTokens(t *testing.T) {
 		TokenID(int(';')).String(),
 		T_INLINE_HTML.String(),
 
-		T_DNUMBER.String(),
-		T_DNUMBER.String(),
-		T_DNUMBER.String(),
-		T_DNUMBER.String(),
-
-		T_LNUMBER.String(),
-		T_DNUMBER.String(),
-
-		T_LNUMBER.String(),
-		T_DNUMBER.String(),
-
-		T_LNUMBER.String(),
-		T_DNUMBER.String(),
-
 		T_ABSTRACT.String(),
 		T_ARRAY.String(),
 		T_AS.String(),
@@ -386,6 +358,62 @@ func TestTokens(t *testing.T) {
 		T_STRING_CAST.String(),
 		T_STRING_CAST.String(),
 		T_UNSET_CAST.String(),
+	}
+
+	lexer := NewLexer([]byte(src))
+	lexer.WithFreeFloating = true
+	lv := &lval{}
+	actual := []string{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token == 0 {
+			break
+		}
+
+		actual = append(actual, TokenID(token).String())
+	}
+
+	assert.DeepEqual(t, expected, actual)
+}
+
+func TestNumberTokens(t *testing.T) {
+	src := `<?php
+		0.1
+		.1
+		1e10
+		.1e10
+
+		0b01111111_11111111_11111111_11111111_11111111_11111111_11111111_11111111
+		0b10111111_11111111_11111111_11111111_11111111_11111111_11111111_11111111
+
+		0x0_7FFF_FFFF_FFFF_FFFF
+		0x8111_1111_1111_1111
+
+		92233_72036_85477_5807
+		0_77777_77777_77777_77777_7
+
+		92233_72036_85477_5808
+		0_77777_77777_77777_77777_70
+	`
+
+	expected := []string{
+		T_DNUMBER.String(),
+		T_DNUMBER.String(),
+		T_DNUMBER.String(),
+		T_DNUMBER.String(),
+
+		T_LNUMBER.String(),
+		T_DNUMBER.String(),
+
+		T_LNUMBER.String(),
+		T_DNUMBER.String(),
+
+		T_LNUMBER.String(),
+		T_LNUMBER.String(),
+
+		T_DNUMBER.String(),
+		T_DNUMBER.String(),
 	}
 
 	lexer := NewLexer([]byte(src))
