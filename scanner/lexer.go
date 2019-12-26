@@ -41,6 +41,7 @@ type Lexer struct {
 	lastToken        *Token
 	Errors           []*errors.Error
 	NewLines         NewLines
+	PHPVersion       string
 }
 
 func (l *Lexer) ReturnTokenToPool(t *Token) {
@@ -132,6 +133,18 @@ func (lex *Lexer) isNotStringEnd(s byte) bool {
 }
 
 func (lex *Lexer) isHeredocEnd(p int) bool {
+	if lex.PHPVersion == "" {
+		return lex.isHeredocEndSince73(p)
+	}
+
+	if comparePHPVersion(lex.PHPVersion, "7.3") == -1 {
+		return lex.isHeredocEndBefore73(p)
+	}
+
+	return lex.isHeredocEndSince73(p)
+}
+
+func (lex *Lexer) isHeredocEndBefore73(p int) bool {
 	if lex.data[p-1] != '\r' && lex.data[p-1] != '\n' {
 		return false
 	}
@@ -150,6 +163,37 @@ func (lex *Lexer) isHeredocEnd(p int) bool {
 	}
 
 	return bytes.Equal(lex.heredocLabel, lex.data[p:p+l])
+}
+
+func (lex *Lexer) isHeredocEndSince73(p int) bool {
+	if lex.data[p-1] != '\r' && lex.data[p-1] != '\n' {
+		return false
+	}
+
+	for lex.data[p] == ' ' || lex.data[p] == '\t' {
+		p++
+	}
+
+	l := len(lex.heredocLabel)
+	if len(lex.data) < p+l {
+		return false
+	}
+
+	if len(lex.data) > p+l && isValidVarName(lex.data[p+l]) {
+		return false
+	}
+
+	a := string(lex.heredocLabel)
+	b := string(lex.data[p : p+l])
+
+	_, _ = a, b
+
+	if bytes.Equal(lex.heredocLabel, lex.data[p:p+l]) {
+		lex.p = p
+		return true
+	}
+
+	return false
 }
 
 func (lex *Lexer) isNotHeredocEnd(p int) bool {
@@ -221,5 +265,32 @@ func (lex *Lexer) Error(msg string) {
 }
 
 func isValidVarNameStart(r byte) bool {
-	return r >= 'A' && r <= 'Z' || r == '_' || r >= 'a' && r <= 'z' || r >= '\u007f' && r <= 'ÿ'
+	return (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || r == '_' || (r >= 0x80 && r <= 0xff)
+}
+
+func isValidVarName(r byte) bool {
+	return (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '_' || (r >= 0x80 && r <= 0xff)
+}
+
+func comparePHPVersion(a string, b string) int {
+	first := strings.Split(a, ".")
+	second := strings.Split(b, ".")
+
+	if first[0] < second[0] {
+		return -1
+	}
+
+	if first[0] > second[0] {
+		return 1
+	}
+
+	if first[1] < second[1] {
+		return -1
+	}
+
+	if first[1] > second[1] {
+		return 1
+	}
+
+	return 0
 }

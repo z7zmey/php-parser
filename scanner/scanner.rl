@@ -394,7 +394,7 @@ func (lex *Lexer) Lex(lval Lval) int {
                 lex.setTokenPosition(token);
                 tok = T_ENCAPSED_AND_WHITESPACE;
 
-                if lex.data[lex.p+1] != '$' && lex.data[lex.p+1] != '{' {
+                if len(lex.data) > lex.p+1 && lex.data[lex.p+1] != '$' && lex.data[lex.p+1] != '{' {
                     fnext heredoc_end;
                 }
                 fbreak;
