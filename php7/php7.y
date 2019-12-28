@@ -271,6 +271,7 @@ import (
 %type <node> switch_case_list
 %type <node> method_body
 %type <node> foreach_statement for_statement while_statement
+%type <node> inline_function
 %type <ClassExtends> extends_from
 %type <ClassImplements> implements_list
 %type <InterfaceExtends> interface_extends_list
@@ -318,7 +319,7 @@ reserved_non_modifiers:
     | T_THROW {$$=$1} | T_USE {$$=$1} | T_INSTEADOF {$$=$1} | T_GLOBAL {$$=$1} | T_VAR {$$=$1} | T_UNSET {$$=$1} | T_ISSET {$$=$1} | T_EMPTY {$$=$1} | T_CONTINUE {$$=$1} | T_GOTO {$$=$1} 
     | T_FUNCTION {$$=$1} | T_CONST {$$=$1} | T_RETURN {$$=$1} | T_PRINT {$$=$1} | T_YIELD {$$=$1} | T_LIST {$$=$1} | T_SWITCH {$$=$1} | T_ENDSWITCH {$$=$1} | T_CASE {$$=$1} | T_DEFAULT {$$=$1} | T_BREAK {$$=$1} 
     | T_ARRAY {$$=$1} | T_CALLABLE {$$=$1} | T_EXTENDS {$$=$1} | T_IMPLEMENTS {$$=$1} | T_NAMESPACE {$$=$1} | T_TRAIT {$$=$1} | T_INTERFACE {$$=$1} | T_CLASS {$$=$1} 
-    | T_CLASS_C {$$=$1} | T_TRAIT_C {$$=$1} | T_FUNC_C {$$=$1} | T_METHOD_C {$$=$1} | T_LINE {$$=$1} | T_FILE {$$=$1} | T_DIR {$$=$1} | T_NS_C {$$=$1} 
+    | T_CLASS_C {$$=$1} | T_TRAIT_C {$$=$1} | T_FUNC_C {$$=$1} | T_METHOD_C {$$=$1} | T_LINE {$$=$1} | T_FILE {$$=$1} | T_DIR {$$=$1} | T_NS_C {$$=$1} | T_FN {$$=$1}
 ;
 
 semi_reserved:
@@ -3400,6 +3401,19 @@ expr_without_variable:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
+    |   variable T_COALESCE_EQUAL expr
+            {
+                $$ = assign.NewCoalesce($1, $3)
+
+                // save position
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+
+                // save comments
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
     |   variable T_INC
             {
                 $$ = expr.NewPostInc($1)
@@ -4122,7 +4136,36 @@ expr_without_variable:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
+    |   inline_function
+            {
+                $$ = $1;
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
+    |   T_STATIC inline_function
+            {
+                $$ = $2;
+
+                switch n := $$.(type) {
+                case *expr.Closure :
+                    n.Static = true;
+                case *expr.ArrowFunction :
+                    n.Static = true;
+                };
+
+                // save position
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+
+                // save comments
+                yylex.(*Parser).setFreeFloating($$, freefloating.Static, (*$$.GetFreeFloating())[freefloating.Start]); delete((*$$.GetFreeFloating()), freefloating.Start)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating);
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
+;
+
+inline_function:
+        T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
                 $$ = expr.NewClosure($5, $7, $8, $10, false, $2 != nil, $3)
 
@@ -4154,36 +4197,31 @@ expr_without_variable:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   T_STATIC T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
+    |   T_FN returns_ref '(' parameter_list ')' return_type backup_doc_comment T_DOUBLE_ARROW expr
             {
-                $$ = expr.NewClosure($6, $8, $9, $11, true, $3 != nil, $4)
+                $$ = expr.NewArrowFunction($4, $6, $9, false, $2 != nil, $7)
 
                 // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $12))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
                 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Static, $2.FreeFloating)
-                if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $5.FreeFloating)
-                } else {
+                if $2 == nil {
                     yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $5.FreeFloating)
-                }
-                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $7.FreeFloating)
-                if $9 != nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, (*$9.GetFreeFloating())[freefloating.Colon]); delete((*$9.GetFreeFloating()), freefloating.Colon)
-                }
-                yylex.(*Parser).setFreeFloating($$, freefloating.ReturnType, $10.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $12.FreeFloating)
+                } else {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $2.FreeFloating)
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
+                };
+                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $5.FreeFloating)
+                if $6 != nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$6.GetFreeFloating())[freefloating.Colon]); delete((*$6.GetFreeFloating()), freefloating.Colon)
+                };
+                yylex.(*Parser).setFreeFloating($$, freefloating.ReturnType, $8.FreeFloating)
 
                 // normalize
-                if $9 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, (*$$.GetFreeFloating())[freefloating.ReturnType]); delete((*$$.GetFreeFloating()), freefloating.ReturnType)
-                }
-                if $8 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.LexicalVarList]); delete((*$$.GetFreeFloating()), freefloating.LexicalVarList)
-                }
+                if $6 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.ReturnType]); delete((*$$.GetFreeFloating()), freefloating.ReturnType)
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

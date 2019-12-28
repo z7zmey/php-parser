@@ -231,6 +231,7 @@ func (lex *Lexer) Lex(lval Lval) int {
             'for'i                            => {lex.setTokenPosition(token); tok = T_FOR; fbreak;};
             'foreach'i                        => {lex.setTokenPosition(token); tok = T_FOREACH; fbreak;};
             'function'i | 'cfunction'i        => {lex.setTokenPosition(token); tok = T_FUNCTION; fbreak;};
+            'fn'i                             => {lex.setTokenPosition(token); tok = T_FN; fbreak;};
             'global'i                         => {lex.setTokenPosition(token); tok = T_GLOBAL; fbreak;};
             'goto'i                           => {lex.setTokenPosition(token); tok = T_GOTO; fbreak;};
             'if'i                             => {lex.setTokenPosition(token); tok = T_IF; fbreak;};
@@ -305,6 +306,7 @@ func (lex *Lexer) Lex(lval Lval) int {
             '<<'                              => {lex.setTokenPosition(token); tok = T_SL; fbreak;};
             '>>'                              => {lex.setTokenPosition(token); tok = T_SR; fbreak;};
             '??'                              => {lex.setTokenPosition(token); tok = T_COALESCE; fbreak;};
+            '??='                             => {lex.setTokenPosition(token); tok = T_COALESCE_EQUAL; fbreak;};
 
             '(' whitespace* 'array'i whitespace* ')'                     => {lex.setTokenPosition(token); tok = T_ARRAY_CAST; fbreak;};
             '(' whitespace* ('bool'i|'boolean'i) whitespace* ')'         => {lex.setTokenPosition(token); tok = T_BOOL_CAST; fbreak;};

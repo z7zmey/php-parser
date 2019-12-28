@@ -586,6 +586,27 @@ func TestPrinterPrintAssignBitwiseXor(t *testing.T) {
 	}
 }
 
+func TestPrinterPrintAssignCoalesce(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&assign.Coalesce{
+		Variable: &expr.Variable{
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			VarName: &node.Identifier{Value: "b"},
+		},
+	})
+
+	expected := `$a??=$b`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrinterPrintAssignConcat(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -1699,6 +1720,40 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 	})
 
 	expected := `static function&(&$var)use(&$a,$b):\Foo{$a;}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintExprArrowFunction(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Expression{
+		Expr: &expr.ArrowFunction{
+			Static:     true,
+			ReturnsRef: true,
+			Params: []node.Node{
+				&node.Parameter{
+					ByRef:    true,
+					Variadic: false,
+					Variable: &expr.Variable{
+						VarName: &node.Identifier{Value: "var"},
+					},
+				},
+			},
+			ReturnType: &name.FullyQualified{
+				Parts: []node.Node{&name.NamePart{Value: "Foo"}},
+			},
+			Expr: &expr.Variable{
+				VarName: &node.Identifier{Value: "a"},
+			},
+		},
+	})
+
+	expected := `static fn&(&$var):\Foo=>$a;`
 	actual := o.String()
 
 	if expected != actual {

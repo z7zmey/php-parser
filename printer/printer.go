@@ -135,6 +135,8 @@ func (p *Printer) printNode(n node.Node) {
 		p.printAssignBitwiseOr(n)
 	case *assign.BitwiseXor:
 		p.printAssignBitwiseXor(n)
+	case *assign.Coalesce:
+		p.printAssignCoalesce(n)
 	case *assign.Concat:
 		p.printAssignConcat(n)
 	case *assign.Div:
@@ -236,6 +238,8 @@ func (p *Printer) printNode(n node.Node) {
 		p.printExprArrayItem(n)
 	case *expr.Array:
 		p.printExprArray(n)
+	case *expr.ArrowFunction:
+		p.printExprArrowFunction(n)
 	case *expr.BitwiseNot:
 		p.printExprBitwiseNot(n)
 	case *expr.BooleanNot:
@@ -707,6 +711,17 @@ func (p *Printer) printAssignBitwiseXor(n node.Node) {
 	p.Print(nn.Variable)
 	p.printFreeFloating(nn, freefloating.Var)
 	io.WriteString(p.w, "^=")
+	p.Print(nn.Expression)
+
+	p.printFreeFloating(nn, freefloating.End)
+}
+
+func (p *Printer) printAssignCoalesce(n node.Node) {
+	nn := n.(*assign.Coalesce)
+	p.printFreeFloating(nn, freefloating.Start)
+	p.Print(nn.Variable)
+	p.printFreeFloating(nn, freefloating.Var)
+	io.WriteString(p.w, "??=")
 	p.Print(nn.Expression)
 
 	p.printFreeFloating(nn, freefloating.End)
@@ -1309,6 +1324,45 @@ func (p *Printer) printExprArray(n node.Node) {
 	p.joinPrint(",", nn.Items)
 	p.printFreeFloating(nn, freefloating.ArrayPairList)
 	io.WriteString(p.w, ")")
+
+	p.printFreeFloating(nn, freefloating.End)
+}
+
+func (p *Printer) printExprArrowFunction(n node.Node) {
+	nn := n.(*expr.ArrowFunction)
+	p.printFreeFloating(nn, freefloating.Start)
+
+	if nn.Static {
+		io.WriteString(p.w, "static")
+	}
+	p.printFreeFloating(nn, freefloating.Static)
+	if nn.Static && n.GetFreeFloating().IsEmpty() {
+		io.WriteString(p.w, " ")
+	}
+
+	io.WriteString(p.w, "fn")
+	p.printFreeFloating(nn, freefloating.Function)
+
+	if nn.ReturnsRef {
+		io.WriteString(p.w, "&")
+	}
+	p.printFreeFloating(nn, freefloating.Ampersand)
+
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Params)
+	p.printFreeFloating(nn, freefloating.ParameterList)
+	io.WriteString(p.w, ")")
+	p.printFreeFloating(nn, freefloating.Params)
+
+	if nn.ReturnType != nil {
+		io.WriteString(p.w, ":")
+		p.Print(nn.ReturnType)
+	}
+	p.printFreeFloating(nn, freefloating.ReturnType)
+
+	io.WriteString(p.w, "=>")
+
+	p.printNode(nn.Expr)
 
 	p.printFreeFloating(nn, freefloating.End)
 }

@@ -98,6 +98,18 @@ var nodesToTest = []struct {
 		map[string]interface{}{"ReturnsRef": true, "Static": false, "PhpDocComment": ""},
 	},
 	{
+		&expr.ArrowFunction{
+			ReturnsRef:    true,
+			Static:        false,
+			PhpDocComment: "",
+			Params:        []node.Node{&node.Parameter{}},
+			ReturnType:    &name.Name{},
+			Expr:          &expr.Variable{},
+		},
+		[]string{"Params", "ReturnType", "Expr"},
+		map[string]interface{}{"ReturnsRef": true, "Static": false, "PhpDocComment": ""},
+	},
+	{
 		&expr.ConstFetch{
 			Constant: &node.Identifier{Value: "foo"},
 		},

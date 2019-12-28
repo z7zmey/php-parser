@@ -270,6 +270,7 @@ func TestParseAndPrintAssign(t *testing.T) {
 	$a &= $b ;
 	$a |= $b ;
 	$a ^= $b ;
+	$a ??= $b ;
 	$a .= $b ;
 	$a /= $b ;
 	$a -= $b ;
@@ -473,6 +474,18 @@ func TestParseAndPrintClosure(t *testing.T) {
 	$a  = static function & ( ) : void {
 		// do nothing
 	} ;
+	`
+
+	actual := print(parse(src))
+
+	if src != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)
+	}
+}
+
+func TestParseAndPrintArrowFunction(t *testing.T) {
+	src := `<?php
+	$a = static fn & ( $b ) : void => $c ;
 	`
 
 	actual := print(parse(src))
