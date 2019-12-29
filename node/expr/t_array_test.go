@@ -218,3 +218,67 @@ func TestArrayItems(t *testing.T) {
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 }
+
+func TestArrayItemUnpack(t *testing.T) {
+	src := `<? array(...$b);`
+
+	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  3,
+			EndPos:    16,
+		},
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  3,
+					EndPos:    16,
+				},
+				Expr: &expr.Array{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  3,
+						EndPos:    15,
+					},
+					Items: []node.Node{
+						&expr.ArrayItem{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  9,
+								EndPos:    14,
+							},
+							Unpack: true,
+							Val: &expr.Variable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  12,
+									EndPos:    14,
+								},
+								VarName: &node.Identifier{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  12,
+										EndPos:    14,
+									},
+									Value: "b",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	php7parser := php7.NewParser([]byte(src), "7.4")
+	php7parser.Parse()
+	actual := php7parser.GetRootNode()
+	assert.DeepEqual(t, expected, actual)
+}

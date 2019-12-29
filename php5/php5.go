@@ -8469,7 +8469,7 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line php5/php5.y:5919
 		{
-			arrayItem := expr.NewArrayItem(yyDollar[3].node, yyDollar[5].node)
+			arrayItem := expr.NewArrayItem(yyDollar[3].node, yyDollar[5].node, false)
 			yyVAL.list = append(yyDollar[1].list, arrayItem)
 
 			// save position
@@ -8486,7 +8486,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:5934
 		{
-			arrayItem := expr.NewArrayItem(nil, yyDollar[3].node)
+			arrayItem := expr.NewArrayItem(nil, yyDollar[3].node, false)
 			yyVAL.list = append(yyDollar[1].list, arrayItem)
 
 			// save position
@@ -8502,7 +8502,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:5948
 		{
-			arrayItem := expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node)
+			arrayItem := expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node, false)
 			yyVAL.list = []node.Node{arrayItem}
 
 			// save position
@@ -8518,7 +8518,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:5962
 		{
-			arrayItem := expr.NewArrayItem(nil, yyDollar[1].node)
+			arrayItem := expr.NewArrayItem(nil, yyDollar[1].node, false)
 			yyVAL.list = []node.Node{arrayItem}
 
 			// save position
@@ -9142,7 +9142,7 @@ yydefault:
 		//line php5/php5.y:6570
 		{
 			if len(yyDollar[1].list) == 0 {
-				yyDollar[1].list = []node.Node{expr.NewArrayItem(nil, nil)}
+				yyDollar[1].list = []node.Node{expr.NewArrayItem(nil, nil, false)}
 			}
 
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
@@ -9168,7 +9168,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:6597
 		{
-			yyVAL.node = expr.NewArrayItem(nil, yyDollar[1].node)
+			yyVAL.node = expr.NewArrayItem(nil, yyDollar[1].node, false)
 
 			// save position
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
@@ -9183,7 +9183,7 @@ yydefault:
 		//line php5/php5.y:6609
 		{
 			listNode := expr.NewList(yyDollar[3].list)
-			yyVAL.node = expr.NewArrayItem(nil, listNode)
+			yyVAL.node = expr.NewArrayItem(nil, listNode, false)
 
 			// save position
 			listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
@@ -9200,7 +9200,7 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		//line php5/php5.y:6625
 		{
-			yyVAL.node = expr.NewArrayItem(nil, nil)
+			yyVAL.node = expr.NewArrayItem(nil, nil, false)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -9219,7 +9219,7 @@ yydefault:
 			yyVAL.list = yyDollar[1].list
 
 			if yyDollar[2].token != nil {
-				yyVAL.list = append(yyDollar[1].list, expr.NewArrayItem(nil, nil))
+				yyVAL.list = append(yyDollar[1].list, expr.NewArrayItem(nil, nil, false))
 			}
 
 			// save comments
@@ -9233,7 +9233,7 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line php5/php5.y:6659
 		{
-			arrayItem := expr.NewArrayItem(yyDollar[3].node, yyDollar[5].node)
+			arrayItem := expr.NewArrayItem(yyDollar[3].node, yyDollar[5].node, false)
 			yyVAL.list = append(yyDollar[1].list, arrayItem)
 
 			// save position
@@ -9250,7 +9250,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:6674
 		{
-			arrayItem := expr.NewArrayItem(nil, yyDollar[3].node)
+			arrayItem := expr.NewArrayItem(nil, yyDollar[3].node, false)
 			yyVAL.list = append(yyDollar[1].list, arrayItem)
 
 			// save position
@@ -9266,7 +9266,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:6688
 		{
-			arrayItem := expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node)
+			arrayItem := expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node, false)
 			yyVAL.list = []node.Node{arrayItem}
 
 			// save position
@@ -9282,7 +9282,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:6702
 		{
-			arrayItem := expr.NewArrayItem(nil, yyDollar[1].node)
+			arrayItem := expr.NewArrayItem(nil, yyDollar[1].node, false)
 			yyVAL.list = []node.Node{arrayItem}
 
 			// save position
@@ -9298,7 +9298,7 @@ yydefault:
 		//line php5/php5.y:6715
 		{
 			reference := expr.NewReference(yyDollar[6].node)
-			arrayItem := expr.NewArrayItem(yyDollar[3].node, reference)
+			arrayItem := expr.NewArrayItem(yyDollar[3].node, reference, false)
 			yyVAL.list = append(yyDollar[1].list, arrayItem)
 
 			// save position
@@ -9318,7 +9318,7 @@ yydefault:
 		//line php5/php5.y:6733
 		{
 			reference := expr.NewReference(yyDollar[4].node)
-			arrayItem := expr.NewArrayItem(nil, reference)
+			arrayItem := expr.NewArrayItem(nil, reference, false)
 			yyVAL.list = append(yyDollar[1].list, arrayItem)
 
 			// save position
@@ -9336,7 +9336,7 @@ yydefault:
 		//line php5/php5.y:6749
 		{
 			reference := expr.NewReference(yyDollar[4].node)
-			arrayItem := expr.NewArrayItem(yyDollar[1].node, reference)
+			arrayItem := expr.NewArrayItem(yyDollar[1].node, reference, false)
 			yyVAL.list = []node.Node{arrayItem}
 
 			// save position
@@ -9355,7 +9355,7 @@ yydefault:
 		//line php5/php5.y:6766
 		{
 			reference := expr.NewReference(yyDollar[2].node)
-			arrayItem := expr.NewArrayItem(nil, reference)
+			arrayItem := expr.NewArrayItem(nil, reference, false)
 			yyVAL.list = []node.Node{arrayItem}
 
 			// save position

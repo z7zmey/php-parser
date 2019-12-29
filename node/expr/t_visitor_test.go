@@ -31,11 +31,12 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.ArrayItem{
-			Key: &scalar.String{Value: "key"},
-			Val: &scalar.Lnumber{Value: "1"},
+			Key:    &scalar.String{Value: "key"},
+			Val:    &scalar.Lnumber{Value: "1"},
+			Unpack: true,
 		},
 		[]string{"Key", "Val"},
-		nil,
+		map[string]interface{}{"Unpack": true},
 	},
 	{
 		&expr.Array{

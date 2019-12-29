@@ -1304,6 +1304,10 @@ func (p *Printer) printExprArrayItem(n node.Node) {
 	nn := n.(*expr.ArrayItem)
 	p.printFreeFloating(nn, freefloating.Start)
 
+	if nn.Unpack {
+		io.WriteString(p.w, "...")
+	}
+
 	if nn.Key != nil {
 		p.Print(nn.Key)
 		p.printFreeFloating(nn, freefloating.Expr)

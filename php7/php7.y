@@ -5162,7 +5162,7 @@ array_pair_list:
 possible_array_pair:
         /* empty */
             {
-                $$ = expr.NewArrayItem(nil, nil)
+                $$ = expr.NewArrayItem(nil, nil, false)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5178,7 +5178,7 @@ non_empty_array_pair_list:
         non_empty_array_pair_list ',' possible_array_pair
             {
                 if len($1) == 0 {
-                    $1 = []node.Node{expr.NewArrayItem(nil, nil)}
+                    $1 = []node.Node{expr.NewArrayItem(nil, nil, false)}
                 }
 
                 $$ = append($1, $3)
@@ -5203,7 +5203,7 @@ non_empty_array_pair_list:
 array_pair:
         expr T_DOUBLE_ARROW expr
             {
-                $$ = expr.NewArrayItem($1, $3)
+                $$ = expr.NewArrayItem($1, $3, false)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
@@ -5216,7 +5216,7 @@ array_pair:
             }
     |   expr
             {
-                $$ = expr.NewArrayItem(nil, $1)
+                $$ = expr.NewArrayItem(nil, $1, false)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
@@ -5229,7 +5229,7 @@ array_pair:
     |   expr T_DOUBLE_ARROW '&' variable
             {
                 reference := expr.NewReference($4)
-                $$ = expr.NewArrayItem($1, reference)
+                $$ = expr.NewArrayItem($1, reference, false)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
@@ -5245,7 +5245,7 @@ array_pair:
     |   '&' variable
             {
                 reference := expr.NewReference($2)
-                $$ = expr.NewArrayItem(nil, reference)
+                $$ = expr.NewArrayItem(nil, reference, false)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
@@ -5256,11 +5256,23 @@ array_pair:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
+    |   T_ELLIPSIS expr
+            {
+                $$ = expr.NewArrayItem(nil, $2, true)
+
+                // save position
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+
+                // save comments
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
                 // TODO: Cannot use list() as standalone expression
                 listNode := expr.NewList($5)
-                $$ = expr.NewArrayItem($1, listNode)
+                $$ = expr.NewArrayItem($1, listNode, false)
 
                 // save position
                 listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($3, $6))
@@ -5279,7 +5291,7 @@ array_pair:
             {
                 // TODO: Cannot use list() as standalone expression
                 listNode := expr.NewList($3)
-                $$ = expr.NewArrayItem(nil, listNode)
+                $$ = expr.NewArrayItem(nil, listNode, false)
 
                 // save position
                 listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
