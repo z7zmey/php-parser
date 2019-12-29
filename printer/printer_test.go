@@ -586,6 +586,27 @@ func TestPrinterPrintAssignBitwiseXor(t *testing.T) {
 	}
 }
 
+func TestPrinterPrintAssignCoalesce(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&assign.Coalesce{
+		Variable: &expr.Variable{
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			VarName: &node.Identifier{Value: "b"},
+		},
+	})
+
+	expected := `$a??=$b`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrinterPrintAssignConcat(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -1530,6 +1551,25 @@ func TestPrinterPrintExprArrayItem(t *testing.T) {
 	}
 }
 
+func TestPrinterPrintExprArrayItemUnpack(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&expr.ArrayItem{
+		Unpack: true,
+		Val: &expr.Variable{
+			VarName: &node.Identifier{Value: "world"},
+		},
+	})
+
+	expected := `...$world`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrinterPrintExprArray(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -1699,6 +1739,40 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 	})
 
 	expected := `static function&(&$var)use(&$a,$b):\Foo{$a;}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintExprArrowFunction(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Expression{
+		Expr: &expr.ArrowFunction{
+			Static:     true,
+			ReturnsRef: true,
+			Params: []node.Node{
+				&node.Parameter{
+					ByRef:    true,
+					Variadic: false,
+					Variable: &expr.Variable{
+						VarName: &node.Identifier{Value: "var"},
+					},
+				},
+			},
+			ReturnType: &name.FullyQualified{
+				Parts: []node.Node{&name.NamePart{Value: "Foo"}},
+			},
+			Expr: &expr.Variable{
+				VarName: &node.Identifier{Value: "a"},
+			},
+		},
+	})
+
+	expected := `static fn&(&$var):\Foo=>$a;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3873,6 +3947,13 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 			&node.Identifier{Value: "public"},
 			&node.Identifier{Value: "static"},
 		},
+		Type: &name.Name{
+			Parts: []node.Node{
+				&name.NamePart{
+					Value: "Foo",
+				},
+			},
+		},
 		Properties: []node.Node{
 			&stmt.Property{
 				Variable: &expr.Variable{
@@ -3888,7 +3969,7 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 		},
 	})
 
-	expected := `public static $a='a',$b;`
+	expected := `public static Foo $a='a',$b;`
 	actual := o.String()
 
 	if expected != actual {

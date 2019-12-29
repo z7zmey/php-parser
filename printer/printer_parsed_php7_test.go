@@ -29,7 +29,7 @@ abstract class Bar extends Baz
 
 	// parse
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.WithFreeFloating()
 	php7parser.Parse()
 
@@ -61,7 +61,7 @@ abstract class Bar extends Baz
 }
 
 func parse(src string) node.Node {
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.WithFreeFloating()
 	php7parser.Parse()
 
@@ -270,6 +270,7 @@ func TestParseAndPrintAssign(t *testing.T) {
 	$a &= $b ;
 	$a |= $b ;
 	$a ^= $b ;
+	$a ??= $b ;
 	$a .= $b ;
 	$a /= $b ;
 	$a -= $b ;
@@ -383,6 +384,7 @@ func TestParseAndPrintArrayItem(t *testing.T) {
 		$world ,
 		& $world ,
 		'Hello' => $world ,
+		... $unpack
 	] ;
 	`
 
@@ -473,6 +475,18 @@ func TestParseAndPrintClosure(t *testing.T) {
 	$a  = static function & ( ) : void {
 		// do nothing
 	} ;
+	`
+
+	actual := print(parse(src))
+
+	if src != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)
+	}
+}
+
+func TestParseAndPrintArrowFunction(t *testing.T) {
+	src := `<?php
+	$a = static fn & ( $b ) : void => $c ;
 	`
 
 	actual := print(parse(src))
@@ -1186,6 +1200,18 @@ func TestParseAndPrintInlineHtml(t *testing.T) {
 	}
 }
 
+func TestParseAndPrintShebang(t *testing.T) {
+	src := `#!/usr/bin/env php
+	<?php
+	$a;?>test<? `
+
+	actual := print(parse(src))
+
+	if src != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)
+	}
+}
+
 func TestParseAndPrintInterface(t *testing.T) {
 	src := `<?php
 	interface Foo extends Bar , Baz {
@@ -1243,7 +1269,7 @@ func TestParseAndPrintPropertyList(t *testing.T) {
 	class Foo {
 		var $a = '' , $b = null ;
 		private $c ;
-		public static $d ;
+		public static Bar $d ;
 		
 	}`
 

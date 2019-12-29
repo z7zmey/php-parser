@@ -2,6 +2,8 @@ package scanner
 
 import (
     "fmt"
+    "strconv"
+    "strings"
 
     "github.com/z7zmey/php-parser/freefloating"
 )
@@ -66,10 +68,10 @@ func (lex *Lexer) Lex(lval Lval) int {
         whitespace = [\t\v\f ];
         whitespace_line = [\t\v\f ] | newline;
 
-        lnum = [0-9]+;
-        dnum = ( [0-9]* "." [0-9]+ ) | ( [0-9]+ "." [0-9]* );
-        hnum = '0x' [0-9a-fA-F]+;
-        bnum = '0b' [01]+;
+        lnum = [0-9]+('_'[0-9]+)*;
+        dnum = (lnum?"." lnum)|(lnum"."lnum?);
+        hnum = '0x'[0-9a-fA-F]+('_'[0-9a-fA-F]+)*;
+        bnum = '0b'[01]+('_'[01]+)*;
 
         exponent_dnum = (lnum | dnum) ('e'|'E') ('+'|'-')? lnum;
         varname_first = [a-zA-Z_] | (0x0080..0x00FF);
@@ -132,6 +134,16 @@ func (lex *Lexer) Lex(lval Lval) int {
             );
 
         main := |*
+            "#!" any* :>> newline => {
+                lex.addFreeFloating(freefloating.CommentType, lex.ts, lex.te)
+            };
+            any => {
+                fnext html;
+                lex.ungetCnt(1)
+            };
+        *|;
+
+        html := |*
             any_line+ -- '<?' => {
                 lex.ungetStr("<")
                 lex.setTokenPosition(token)
@@ -157,41 +169,43 @@ func (lex *Lexer) Lex(lval Lval) int {
 
         php := |*
             whitespace_line*                   => {lex.addFreeFloating(freefloating.WhiteSpaceType, lex.ts, lex.te)};
-            '?>' newline?                      => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext main; fbreak;};
-            ';' whitespace_line* '?>' newline? => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext main; fbreak;};
+            '?>' newline?                      => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext html; fbreak;};
+            ';' whitespace_line* '?>' newline? => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext html; fbreak;};
 
             (dnum | exponent_dnum)          => {lex.setTokenPosition(token); tok = T_DNUMBER; fbreak;};
             bnum => {
-                firstNum := 2
-                for i := lex.ts + 2; i < lex.te; i++ {
-                    if lex.data[i] == '0' {
-                        firstNum++
-                    }
-                }
+                s := strings.Replace(string(lex.data[lex.ts+2:lex.te]), "_", "", -1)
+                _, err := strconv.ParseInt(s, 2, 0)
 
-                if lex.te - lex.ts - firstNum < 64 {
+                if err == nil {
                     lex.setTokenPosition(token); tok = T_LNUMBER; fbreak;
-                }
+                } 
+                
                 lex.setTokenPosition(token); tok = T_DNUMBER; fbreak;
             };
             lnum => {
-                if lex.te - lex.ts < 20 {
-                    lex.setTokenPosition(token); tok = T_LNUMBER; fbreak;
+                base := 10
+                if lex.data[lex.ts] == '0' {
+                    base = 8
                 }
+
+                s := strings.Replace(string(lex.data[lex.ts:lex.te]), "_", "", -1)
+                _, err := strconv.ParseInt(s, base, 0)
+
+                if err == nil {
+                    lex.setTokenPosition(token); tok = T_LNUMBER; fbreak;
+                } 
+                
                 lex.setTokenPosition(token); tok = T_DNUMBER; fbreak;
             };
             hnum => {
-                firstNum := lex.ts + 2
-                for i := lex.ts + 2; i < lex.te; i++ {
-                    if lex.data[i] == '0' {
-                        firstNum++
-                    }
-                }
+                s := strings.Replace(string(lex.data[lex.ts+2:lex.te]), "_", "", -1)
+                _, err := strconv.ParseInt(s, 16, 0)
 
-                length := lex.te - firstNum
-                if length < 16 || (length == 16 && lex.data[firstNum] <= '7') {
+                if err == nil {
                     lex.setTokenPosition(token); tok = T_LNUMBER; fbreak;
                 } 
+                
                 lex.setTokenPosition(token); tok = T_DNUMBER; fbreak;
             };
 
@@ -227,6 +241,7 @@ func (lex *Lexer) Lex(lval Lval) int {
             'for'i                            => {lex.setTokenPosition(token); tok = T_FOR; fbreak;};
             'foreach'i                        => {lex.setTokenPosition(token); tok = T_FOREACH; fbreak;};
             'function'i | 'cfunction'i        => {lex.setTokenPosition(token); tok = T_FUNCTION; fbreak;};
+            'fn'i                             => {lex.setTokenPosition(token); tok = T_FN; fbreak;};
             'global'i                         => {lex.setTokenPosition(token); tok = T_GLOBAL; fbreak;};
             'goto'i                           => {lex.setTokenPosition(token); tok = T_GOTO; fbreak;};
             'if'i                             => {lex.setTokenPosition(token); tok = T_IF; fbreak;};
@@ -301,6 +316,7 @@ func (lex *Lexer) Lex(lval Lval) int {
             '<<'                              => {lex.setTokenPosition(token); tok = T_SL; fbreak;};
             '>>'                              => {lex.setTokenPosition(token); tok = T_SR; fbreak;};
             '??'                              => {lex.setTokenPosition(token); tok = T_COALESCE; fbreak;};
+            '??='                             => {lex.setTokenPosition(token); tok = T_COALESCE_EQUAL; fbreak;};
 
             '(' whitespace* 'array'i whitespace* ')'                     => {lex.setTokenPosition(token); tok = T_ARRAY_CAST; fbreak;};
             '(' whitespace* ('bool'i|'boolean'i) whitespace* ')'         => {lex.setTokenPosition(token); tok = T_BOOL_CAST; fbreak;};
@@ -394,7 +410,7 @@ func (lex *Lexer) Lex(lval Lval) int {
                 lex.setTokenPosition(token);
                 tok = T_ENCAPSED_AND_WHITESPACE;
 
-                if lex.data[lex.p+1] != '$' && lex.data[lex.p+1] != '{' {
+                if len(lex.data) > lex.p+1 && lex.data[lex.p+1] != '$' && lex.data[lex.p+1] != '{' {
                     fnext heredoc_end;
                 }
                 fbreak;

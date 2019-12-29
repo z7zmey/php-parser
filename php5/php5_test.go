@@ -18401,7 +18401,7 @@ func TestPhp5(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18516,7 +18516,7 @@ func TestPhp5Strings(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18706,7 +18706,7 @@ CAD;
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18726,7 +18726,7 @@ func TestPhp5ControlCharsErrors(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src))
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual := php5parser.GetErrors()
 	assert.DeepEqual(t, expected, actual)

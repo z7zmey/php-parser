@@ -1,4 +1,4 @@
-package parser
+package positionbuilder
 
 import (
 	"github.com/z7zmey/php-parser/node"

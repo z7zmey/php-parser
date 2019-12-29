@@ -61,6 +61,7 @@ const (
 	Else
 	Variadic
 	Function
+	DoubleArrow
 	Alias
 	As
 	Equal

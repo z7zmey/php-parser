@@ -20,7 +20,7 @@ func ExampleGoDumper() {
 			}
 		}`
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.WithFreeFloating()
 	php7parser.Parse()
 	nodes := php7parser.GetRootNode()

@@ -4,9 +4,9 @@ package freefloating
 
 import "strconv"
 
-const _Position_name = "StartEndSlashColonSemiColonAltEndDollarAmpersandNamePrefixKeyVarUseTypeReturnTypeOptionalTypeCaseSeparatorLexicalVarsParamsRefCastExprInitExprCondExprIncExprTrueCondHaltCompillerNamespaceStaticClassUseWhileForSwitchBreakForeachDeclareLabelFinallyListDefaultIfElseIfElseVariadicFunctionAliasAsEqualExitArrayIssetEmptyEvalEchoTryCatchUnsetStmtsVarListConstListNameListParamListModifierListArrayPairListCaseListStartCaseListEndArgumentListPropertyListParameterListAdaptationListLexicalVarListUseDeclarationListOpenParenthesisTokenCloseParenthesisToken"
+const _Position_name = "StartEndSlashColonSemiColonAltEndDollarAmpersandNamePrefixKeyVarUseTypeReturnTypeOptionalTypeCaseSeparatorLexicalVarsParamsRefCastExprInitExprCondExprIncExprTrueCondHaltCompillerNamespaceStaticClassUseWhileForSwitchBreakForeachDeclareLabelFinallyListDefaultIfElseIfElseVariadicFunctionDoubleArrowAliasAsEqualExitArrayIssetEmptyEvalEchoTryCatchUnsetStmtsVarListConstListNameListParamListModifierListArrayPairListCaseListStartCaseListEndArgumentListPropertyListParameterListAdaptationListLexicalVarListUseDeclarationListOpenParenthesisTokenCloseParenthesisToken"
 
-var _Position_index = [...]uint16{0, 5, 8, 13, 18, 27, 33, 39, 48, 52, 58, 61, 64, 71, 81, 93, 106, 117, 123, 126, 130, 134, 142, 150, 157, 161, 165, 178, 187, 193, 198, 201, 206, 209, 215, 220, 227, 234, 239, 246, 250, 257, 259, 265, 269, 277, 285, 290, 292, 297, 301, 306, 311, 316, 320, 324, 327, 332, 337, 342, 349, 358, 366, 375, 387, 400, 413, 424, 436, 448, 461, 475, 489, 507, 527, 548}
+var _Position_index = [...]uint16{0, 5, 8, 13, 18, 27, 33, 39, 48, 52, 58, 61, 64, 71, 81, 93, 106, 117, 123, 126, 130, 134, 142, 150, 157, 161, 165, 178, 187, 193, 198, 201, 206, 209, 215, 220, 227, 234, 239, 246, 250, 257, 259, 265, 269, 277, 285, 296, 301, 303, 308, 312, 317, 322, 327, 331, 335, 338, 343, 348, 353, 360, 369, 377, 386, 398, 411, 424, 435, 447, 459, 472, 486, 500, 518, 538, 559}
 
 func (i Position) String() string {
 	if i < 0 || i >= Position(len(_Position_index)-1) {

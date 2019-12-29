@@ -7,6 +7,7 @@ import (
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/version"
 )
 
 type Scanner interface {
@@ -41,6 +42,7 @@ type Lexer struct {
 	lastToken        *Token
 	Errors           []*errors.Error
 	NewLines         NewLines
+	PHPVersion       string
 }
 
 func (l *Lexer) ReturnTokenToPool(t *Token) {
@@ -132,6 +134,19 @@ func (lex *Lexer) isNotStringEnd(s byte) bool {
 }
 
 func (lex *Lexer) isHeredocEnd(p int) bool {
+	r, err := version.Compare(lex.PHPVersion, "7.3")
+	if err != nil {
+		return lex.isHeredocEndSince73(p)
+	}
+
+	if r == -1 {
+		return lex.isHeredocEndBefore73(p)
+	}
+
+	return lex.isHeredocEndSince73(p)
+}
+
+func (lex *Lexer) isHeredocEndBefore73(p int) bool {
 	if lex.data[p-1] != '\r' && lex.data[p-1] != '\n' {
 		return false
 	}
@@ -150,6 +165,37 @@ func (lex *Lexer) isHeredocEnd(p int) bool {
 	}
 
 	return bytes.Equal(lex.heredocLabel, lex.data[p:p+l])
+}
+
+func (lex *Lexer) isHeredocEndSince73(p int) bool {
+	if lex.data[p-1] != '\r' && lex.data[p-1] != '\n' {
+		return false
+	}
+
+	for lex.data[p] == ' ' || lex.data[p] == '\t' {
+		p++
+	}
+
+	l := len(lex.heredocLabel)
+	if len(lex.data) < p+l {
+		return false
+	}
+
+	if len(lex.data) > p+l && isValidVarName(lex.data[p+l]) {
+		return false
+	}
+
+	a := string(lex.heredocLabel)
+	b := string(lex.data[p : p+l])
+
+	_, _ = a, b
+
+	if bytes.Equal(lex.heredocLabel, lex.data[p:p+l]) {
+		lex.p = p
+		return true
+	}
+
+	return false
 }
 
 func (lex *Lexer) isNotHeredocEnd(p int) bool {
@@ -221,5 +267,9 @@ func (lex *Lexer) Error(msg string) {
 }
 
 func isValidVarNameStart(r byte) bool {
-	return r >= 'A' && r <= 'Z' || r == '_' || r >= 'a' && r <= 'z' || r >= '\u007f' && r <= 'ÿ'
+	return (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || r == '_' || (r >= 0x80 && r <= 0xff)
+}
+
+func isValidVarName(r byte) bool {
+	return (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '_' || (r >= 0x80 && r <= 0xff)
 }

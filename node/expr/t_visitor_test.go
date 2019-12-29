@@ -31,11 +31,12 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.ArrayItem{
-			Key: &scalar.String{Value: "key"},
-			Val: &scalar.Lnumber{Value: "1"},
+			Key:    &scalar.String{Value: "key"},
+			Val:    &scalar.Lnumber{Value: "1"},
+			Unpack: true,
 		},
 		[]string{"Key", "Val"},
-		nil,
+		map[string]interface{}{"Unpack": true},
 	},
 	{
 		&expr.Array{
@@ -95,6 +96,18 @@ var nodesToTest = []struct {
 			Stmts:         []node.Node{&stmt.Nop{}},
 		},
 		[]string{"Params", "ClosureUse", "ReturnType", "Stmts"},
+		map[string]interface{}{"ReturnsRef": true, "Static": false, "PhpDocComment": ""},
+	},
+	{
+		&expr.ArrowFunction{
+			ReturnsRef:    true,
+			Static:        false,
+			PhpDocComment: "",
+			Params:        []node.Node{&node.Parameter{}},
+			ReturnType:    &name.Name{},
+			Expr:          &expr.Variable{},
+		},
+		[]string{"Params", "ReturnType", "Expr"},
 		map[string]interface{}{"ReturnsRef": true, "Static": false, "PhpDocComment": ""},
 	},
 	{

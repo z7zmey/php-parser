@@ -3,26 +3,24 @@ package expr_test
 import (
 	"testing"
 
-	"gotest.tools/assert"
-
-	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/position"
-
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/stmt"
-	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
+	"gotest.tools/assert"
 )
 
-func TestVariable(t *testing.T) {
-	src := `<? $a;`
+func TestArrowFunction(t *testing.T) {
+	src := `<? fn() => $a;`
 
 	expected := &node.Root{
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
 			StartPos:  3,
-			EndPos:    6,
+			EndPos:    14,
 		},
 		Stmts: []node.Node{
 			&stmt.Expression{
@@ -30,78 +28,31 @@ func TestVariable(t *testing.T) {
 					StartLine: 1,
 					EndLine:   1,
 					StartPos:  3,
-					EndPos:    6,
+					EndPos:    14,
 				},
-				Expr: &expr.Variable{
+				Expr: &expr.ArrowFunction{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
 						StartPos:  3,
-						EndPos:    5,
+						EndPos:    13,
 					},
-					VarName: &node.Identifier{
+					ReturnsRef:    false,
+					Static:        false,
+					PhpDocComment: "",
+					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  3,
-							EndPos:    5,
-						},
-						Value: "a",
-					},
-				},
-			},
-		},
-	}
-
-	php7parser := php7.NewParser([]byte(src), "7.4")
-	php7parser.Parse()
-	actual := php7parser.GetRootNode()
-	assert.DeepEqual(t, expected, actual)
-
-	php5parser := php5.NewParser([]byte(src), "5.6")
-	php5parser.Parse()
-	actual = php5parser.GetRootNode()
-	assert.DeepEqual(t, expected, actual)
-}
-
-func TestVariableVariable(t *testing.T) {
-	src := `<? $$a;`
-
-	expected := &node.Root{
-		Position: &position.Position{
-			StartLine: 1,
-			EndLine:   1,
-			StartPos:  3,
-			EndPos:    7,
-		},
-		Stmts: []node.Node{
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 1,
-					EndLine:   1,
-					StartPos:  3,
-					EndPos:    7,
-				},
-				Expr: &expr.Variable{
-					Position: &position.Position{
-						StartLine: 1,
-						EndLine:   1,
-						StartPos:  3,
-						EndPos:    6,
-					},
-					VarName: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 1,
-							EndLine:   1,
-							StartPos:  4,
-							EndPos:    6,
+							StartPos:  11,
+							EndPos:    13,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  4,
-								EndPos:    6,
+								StartPos:  11,
+								EndPos:    13,
 							},
 							Value: "a",
 						},
@@ -115,9 +66,79 @@ func TestVariableVariable(t *testing.T) {
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
+}
 
-	php5parser := php5.NewParser([]byte(src), "5.6")
-	php5parser.Parse()
-	actual = php5parser.GetRootNode()
+func TestArrowFunctionReturnType(t *testing.T) {
+	src := `<? fn & () : foo => $a;`
+
+	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  3,
+			EndPos:    23,
+		},
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  3,
+					EndPos:    23,
+				},
+				Expr: &expr.ArrowFunction{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  3,
+						EndPos:    22,
+					},
+					Static:        false,
+					PhpDocComment: "",
+					ReturnsRef:    true,
+					ReturnType: &name.Name{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  13,
+							EndPos:    16,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  13,
+									EndPos:    16,
+								},
+								Value: "foo",
+							},
+						},
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  20,
+							EndPos:    22,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  20,
+								EndPos:    22,
+							},
+							Value: "a",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	php7parser := php7.NewParser([]byte(src), "7.4")
+	php7parser.Parse()
+	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 }
