@@ -1077,6 +1077,18 @@ func TestParseAndPrintPhp5InlineHtml(t *testing.T) {
 	}
 }
 
+func TestParseAndPrintPhp5Shebang(t *testing.T) {
+	src := `#!/usr/bin/env php
+	<?php
+	$a;?>test<? `
+
+	actual := print(parse(src))
+
+	if src != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)
+	}
+}
+
 func TestParseAndPrintPhp5Interface(t *testing.T) {
 	src := `<?php
 	interface Foo extends Bar , Baz {

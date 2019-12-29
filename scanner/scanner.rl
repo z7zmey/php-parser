@@ -134,6 +134,16 @@ func (lex *Lexer) Lex(lval Lval) int {
             );
 
         main := |*
+            "#!" any* :>> newline => {
+                lex.addFreeFloating(freefloating.CommentType, lex.ts, lex.te)
+            };
+            any => {
+                fnext html;
+                lex.ungetCnt(1)
+            };
+        *|;
+
+        html := |*
             any_line+ -- '<?' => {
                 lex.ungetStr("<")
                 lex.setTokenPosition(token)
@@ -159,8 +169,8 @@ func (lex *Lexer) Lex(lval Lval) int {
 
         php := |*
             whitespace_line*                   => {lex.addFreeFloating(freefloating.WhiteSpaceType, lex.ts, lex.te)};
-            '?>' newline?                      => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext main; fbreak;};
-            ';' whitespace_line* '?>' newline? => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext main; fbreak;};
+            '?>' newline?                      => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext html; fbreak;};
+            ';' whitespace_line* '?>' newline? => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext html; fbreak;};
 
             (dnum | exponent_dnum)          => {lex.setTokenPosition(token); tok = T_DNUMBER; fbreak;};
             bnum => {

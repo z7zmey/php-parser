@@ -377,6 +377,51 @@ func TestTokens(t *testing.T) {
 	assert.DeepEqual(t, expected, actual)
 }
 
+func TestShebang(t *testing.T) {
+	src := `#!/usr/bin/env php
+<?php
+0.1
+`
+
+	expected := []string{
+		"#!/usr/bin/env php\n",
+		"<?php",
+		"\n",
+	}
+
+	lexer := NewLexer([]byte(src))
+	lexer.WithFreeFloating = true
+	lv := &lval{}
+	actual := []string{}
+
+	token := lexer.Lex(lv)
+	assert.Equal(t, token, int(T_DNUMBER))
+
+	for _, tt := range lv.Tkn.FreeFloating {
+		actual = append(actual, tt.Value)
+	}
+
+	assert.DeepEqual(t, expected, actual)
+}
+
+func TestShebangHtml(t *testing.T) {
+	src := `#!/usr/bin/env php
+<br/><?php
+0.1
+`
+
+	lexer := NewLexer([]byte(src))
+	lexer.WithFreeFloating = true
+	lv := &lval{}
+
+	token := lexer.Lex(lv)
+	assert.Equal(t, token, int(T_INLINE_HTML))
+	assert.Equal(t, lv.Tkn.FreeFloating[0].Value, "#!/usr/bin/env php\n")
+
+	token = lexer.Lex(lv)
+	assert.Equal(t, token, int(T_DNUMBER))
+}
+
 func TestNumberTokens(t *testing.T) {
 	src := `<?php
 		0.1
