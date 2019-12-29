@@ -1256,7 +1256,7 @@ func TestParseAndPrintPropertyList(t *testing.T) {
 	class Foo {
 		var $a = '' , $b = null ;
 		private $c ;
-		public static $d ;
+		public static Bar $d ;
 		
 	}`
 

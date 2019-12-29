@@ -2701,7 +2701,7 @@ class_statement_list:
 class_statement:
         variable_modifiers class_variable_declaration ';'
             {
-                $$ = stmt.NewPropertyList($1, $2)
+                $$ = stmt.NewPropertyList($1, nil, $2)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))

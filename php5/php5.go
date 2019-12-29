@@ -4904,7 +4904,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:2703
 		{
-			yyVAL.node = stmt.NewPropertyList(yyDollar[1].list, yyDollar[2].list)
+			yyVAL.node = stmt.NewPropertyList(yyDollar[1].list, nil, yyDollar[2].list)
 
 			// save position
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))

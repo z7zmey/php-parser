@@ -3928,6 +3928,13 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 			&node.Identifier{Value: "public"},
 			&node.Identifier{Value: "static"},
 		},
+		Type: &name.Name{
+			Parts: []node.Node{
+				&name.NamePart{
+					Value: "Foo",
+				},
+			},
+		},
 		Properties: []node.Node{
 			&stmt.Property{
 				Variable: &expr.Variable{
@@ -3943,7 +3950,7 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 		},
 	})
 
-	expected := `public static $a='a',$b;`
+	expected := `public static Foo $a='a',$b;`
 	actual := o.String()
 
 	if expected != actual {

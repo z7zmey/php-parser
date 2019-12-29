@@ -12,14 +12,16 @@ type PropertyList struct {
 	FreeFloating freefloating.Collection
 	Position     *position.Position
 	Modifiers    []node.Node
+	Type         node.Node
 	Properties   []node.Node
 }
 
 // NewPropertyList node constructor
-func NewPropertyList(Modifiers []node.Node, Properties []node.Node) *PropertyList {
+func NewPropertyList(Modifiers []node.Node, Type node.Node, Properties []node.Node) *PropertyList {
 	return &PropertyList{
 		FreeFloating: nil,
 		Modifiers:    Modifiers,
+		Type:         Type,
 		Properties:   Properties,
 	}
 }
@@ -58,6 +60,12 @@ func (n *PropertyList) Walk(v walker.Visitor) {
 			}
 		}
 		v.LeaveChildList("Modifiers", n)
+	}
+
+	if n.Type != nil {
+		v.EnterChildNode("Type", n)
+		n.Type.Walk(v)
+		v.LeaveChildNode("Type", n)
 	}
 
 	if n.Properties != nil {
