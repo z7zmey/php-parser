@@ -516,6 +516,7 @@ func TestConstantStrings(t *testing.T) {
 		T_CONSTANT_ENCAPSED_STRING.String(),
 		T_CONSTANT_ENCAPSED_STRING.String(),
 		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
 	lexer := NewLexer([]byte(src))
