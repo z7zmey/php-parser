@@ -120,9 +120,10 @@ func (lex *Lexer) Lex(lval Lval) int {
                 | "\n" @constant_string_new_line   -> double_qoute
             ),
             double_qoute_nondollar: (
-                (any - [$"\r\n])                   -> double_qoute
+                (any - [\\$"\r\n])                 -> double_qoute
                 | "\r" @constant_string_new_line   -> double_qoute
                 | "\n" @constant_string_new_line   -> double_qoute
+                | "\\"                             -> double_qoute_any
                 | '"'                              -> final
             ),
             double_qoute_nonvarname: (

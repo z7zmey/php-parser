@@ -496,6 +496,7 @@ func TestConstantStrings(t *testing.T) {
 		"{"
 		"{a"
 		"\{$"
+		"{\""
 	`
 
 	expected := []string{
