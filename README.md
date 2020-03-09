@@ -23,39 +23,14 @@ Features:
 - Parsing syntax-invalid PHP files
 - Saving and printing free-floating comments and whitespaces
 
-Roadmap
--------
+Who Uses
+--------
 
-- Control Flow Graph (CFG)
-- PhpDocComment parser
-- Stabilize api
+[VKCOM/noverify](https://github.com/VKCOM/noverify) - NoVerify is a pretty fast linter for PHP
 
-Install
--------
+[quasilyte/phpgrep](https://github.com/quasilyte/phpgrep) - phpgrep is a tool for syntax-aware PHP code search
 
-```
-go get github.com/z7zmey/php-parser
-```
-
-CLI
----
-
-```
-php-parser [flags] <path> ...
-```
-
-| flag  | type |                description                   |
-|-------|------|----------------------------------------------|
-| -p    | bool | print filepath                               |
-| -d    |string| dump format: [custom, go, json, pretty-json] |
-| -r    | bool | resolve names                                |
-| -ff   | bool | parse and show free floating strings         |
-| -prof |string| start profiler: [cpu, mem, trace]            |
-| -php5 | bool | parse as PHP5                                |
-
-Dump AST to stdout.
-
-Example
+Usage example
 -------
 
 ```Golang
@@ -88,6 +63,38 @@ func main() {
 	rootNode.Walk(&visitor)
 }
 ```
+
+Roadmap
+-------
+
+- Control Flow Graph (CFG)
+- PhpDocComment parser
+- Stabilize api
+
+Install
+-------
+
+```
+go get github.com/z7zmey/php-parser
+```
+
+CLI
+---
+
+```
+php-parser [flags] <path> ...
+```
+
+| flag  | type |                description                   |
+|-------|------|----------------------------------------------|
+| -p    | bool | print filepath                               |
+| -d    |string| dump format: [custom, go, json, pretty-json] |
+| -r    | bool | resolve names                                |
+| -ff   | bool | parse and show free floating strings         |
+| -prof |string| start profiler: [cpu, mem, trace]            |
+| -php5 | bool | parse as PHP5                                |
+
+Dump AST to stdout.
 
 Namespace resolver
 ------------------
