@@ -46,6 +46,7 @@ php-parser [flags] <path> ...
 
 | flag  | type |                description                   |
 |-------|------|----------------------------------------------|
+| -p    | bool | print filepath                               |
 | -d    |string| dump format: [custom, go, json, pretty-json] |
 | -r    | bool | resolve names                                |
 | -ff   | bool | parse and show free floating strings         |
@@ -71,7 +72,7 @@ import (
 func main() {
 	src := []byte(`<? echo "Hello world";`)
 
-	parser := php7.NewParser(src)
+	parser := php7.NewParser(src, "7.4")
 	parser.Parse()
 
 	for _, e := range parser.GetErrors() {

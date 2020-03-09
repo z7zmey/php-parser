@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"flag"
 	"fmt"
@@ -26,6 +25,7 @@ var profiler string
 var withFreeFloating *bool
 var showResolvedNs *bool
 var printBack *bool
+var printPath *bool
 
 type file struct {
 	path    string
@@ -41,6 +41,7 @@ func main() {
 	withFreeFloating = flag.Bool("ff", false, "parse and show free floating strings")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
+	printPath = flag.Bool("p", false, "print filepath")
 	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
 	flag.StringVar(&phpVersion, "phpver", "7.4", "php version")
@@ -126,25 +127,20 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 func printerWorker(r <-chan result) {
 	var counter int
 
-	w := bufio.NewWriter(os.Stdout)
-
 	for {
 		res, ok := <-r
 		if !ok {
-			w.Flush()
 			return
 		}
 
 		counter++
 
-		fmt.Fprintf(w, "==> [%d] %s\n", counter, res.path)
+		if *printPath {
+			fmt.Fprintf(os.Stdout, "==> [%d] %s\n", counter, res.path)
+		}
 
 		for _, e := range res.parser.GetErrors() {
-			// if !strings.Contains(e.Msg, "WARNING") {
-			// 	fmt.Print("\n\n\n" + parserWorker.GetPath() + "\n ")
-			// 	panic(e.Msg)
-			// }
-			fmt.Fprintln(w, e)
+			fmt.Fprintf(os.Stdout, "==> %s\n", e)
 		}
 
 		if *printBack {
