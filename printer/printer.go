@@ -43,8 +43,7 @@ func (p *Printer) SetState(s printerState) {
 func (p *Printer) Print(n node.Node) {
 	_, isRoot := n.(*node.Root)
 	_, isInlineHtml := n.(*stmt.InlineHtml)
-	_, isEcho := n.(*stmt.Echo)
-	if p.s == HtmlState && !isInlineHtml && !isRoot && !isEcho {
+	if p.s == HtmlState && !isInlineHtml && !isRoot {
 		if n.GetFreeFloating().IsEmpty() {
 			io.WriteString(p.w, "<?php ")
 		}
@@ -136,6 +135,8 @@ func (p *Printer) printNode(n node.Node) {
 		p.printAssignBitwiseOr(n)
 	case *assign.BitwiseXor:
 		p.printAssignBitwiseXor(n)
+	case *assign.Coalesce:
+		p.printAssignCoalesce(n)
 	case *assign.Concat:
 		p.printAssignConcat(n)
 	case *assign.Div:
@@ -237,6 +238,8 @@ func (p *Printer) printNode(n node.Node) {
 		p.printExprArrayItem(n)
 	case *expr.Array:
 		p.printExprArray(n)
+	case *expr.ArrowFunction:
+		p.printExprArrowFunction(n)
 	case *expr.BitwiseNot:
 		p.printExprBitwiseNot(n)
 	case *expr.BooleanNot:
@@ -618,9 +621,7 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 	nn := n.(*scalar.Heredoc)
 	p.printFreeFloating(nn, freefloating.Start)
 
-	io.WriteString(p.w, "<<<")
 	io.WriteString(p.w, nn.Label)
-	io.WriteString(p.w, "\n")
 
 	for _, part := range nn.Parts {
 		switch part.(type) {
@@ -643,8 +644,7 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 		}
 	}
 
-	io.WriteString(p.w, "\n")
-	io.WriteString(p.w, strings.Trim(nn.Label, "\"'"))
+	io.WriteString(p.w, strings.Trim(nn.Label, "<\"'\n"))
 
 	p.printFreeFloating(nn, freefloating.End)
 }
@@ -711,6 +711,17 @@ func (p *Printer) printAssignBitwiseXor(n node.Node) {
 	p.Print(nn.Variable)
 	p.printFreeFloating(nn, freefloating.Var)
 	io.WriteString(p.w, "^=")
+	p.Print(nn.Expression)
+
+	p.printFreeFloating(nn, freefloating.End)
+}
+
+func (p *Printer) printAssignCoalesce(n node.Node) {
+	nn := n.(*assign.Coalesce)
+	p.printFreeFloating(nn, freefloating.Start)
+	p.Print(nn.Variable)
+	p.printFreeFloating(nn, freefloating.Var)
+	io.WriteString(p.w, "??=")
 	p.Print(nn.Expression)
 
 	p.printFreeFloating(nn, freefloating.End)
@@ -1293,6 +1304,10 @@ func (p *Printer) printExprArrayItem(n node.Node) {
 	nn := n.(*expr.ArrayItem)
 	p.printFreeFloating(nn, freefloating.Start)
 
+	if nn.Unpack {
+		io.WriteString(p.w, "...")
+	}
+
 	if nn.Key != nil {
 		p.Print(nn.Key)
 		p.printFreeFloating(nn, freefloating.Expr)
@@ -1313,6 +1328,45 @@ func (p *Printer) printExprArray(n node.Node) {
 	p.joinPrint(",", nn.Items)
 	p.printFreeFloating(nn, freefloating.ArrayPairList)
 	io.WriteString(p.w, ")")
+
+	p.printFreeFloating(nn, freefloating.End)
+}
+
+func (p *Printer) printExprArrowFunction(n node.Node) {
+	nn := n.(*expr.ArrowFunction)
+	p.printFreeFloating(nn, freefloating.Start)
+
+	if nn.Static {
+		io.WriteString(p.w, "static")
+	}
+	p.printFreeFloating(nn, freefloating.Static)
+	if nn.Static && n.GetFreeFloating().IsEmpty() {
+		io.WriteString(p.w, " ")
+	}
+
+	io.WriteString(p.w, "fn")
+	p.printFreeFloating(nn, freefloating.Function)
+
+	if nn.ReturnsRef {
+		io.WriteString(p.w, "&")
+	}
+	p.printFreeFloating(nn, freefloating.Ampersand)
+
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Params)
+	p.printFreeFloating(nn, freefloating.ParameterList)
+	io.WriteString(p.w, ")")
+	p.printFreeFloating(nn, freefloating.Params)
+
+	if nn.ReturnType != nil {
+		io.WriteString(p.w, ":")
+		p.Print(nn.ReturnType)
+	}
+	p.printFreeFloating(nn, freefloating.ReturnType)
+
+	io.WriteString(p.w, "=>")
+
+	p.printNode(nn.Expr)
 
 	p.printFreeFloating(nn, freefloating.End)
 }
@@ -2434,19 +2488,11 @@ func (p *Printer) printStmtDo(n node.Node) {
 func (p *Printer) printStmtEcho(n node.Node) {
 	nn := n.(*stmt.Echo)
 
-	if p.s == HtmlState {
-		if nn.GetFreeFloating().IsEmpty() {
-			io.WriteString(p.w, "<?=")
-		}
-
-		p.SetState(PhpState)
-	} else {
-		if nn.GetFreeFloating().IsEmpty() {
-			io.WriteString(p.w, "echo")
-		}
-		if nn.Exprs[0].GetFreeFloating().IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
+	if nn.GetFreeFloating().IsEmpty() {
+		io.WriteString(p.w, "echo")
+	}
+	if nn.Exprs[0].GetFreeFloating().IsEmpty() {
+		io.WriteString(p.w, " ")
 	}
 
 	p.printFreeFloating(nn, freefloating.Start)
@@ -2845,6 +2891,12 @@ func (p *Printer) printStmtPropertyList(n node.Node) {
 		}
 		p.Print(m)
 	}
+
+	if nn.Type != nil && nn.Type.GetFreeFloating().IsEmpty() {
+		io.WriteString(p.w, " ")
+	}
+
+	p.Print(nn.Type)
 
 	if nn.Properties[0].GetFreeFloating().IsEmpty() {
 		io.WriteString(p.w, " ")

@@ -1,7 +1,6 @@
 package stmt_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestGlobal(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    13,
 		},
 		Stmts: []node.Node{
@@ -30,7 +29,7 @@ func TestGlobal(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    13,
 				},
 				Vars: []node.Node{
@@ -38,14 +37,14 @@ func TestGlobal(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  11,
+							StartPos:  10,
 							EndPos:    12,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  11,
+								StartPos:  10,
 								EndPos:    12,
 							},
 							Value: "a",
@@ -56,12 +55,12 @@ func TestGlobal(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -74,7 +73,7 @@ func TestGlobalVars(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    32,
 		},
 		Stmts: []node.Node{
@@ -82,7 +81,7 @@ func TestGlobalVars(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    32,
 				},
 				Vars: []node.Node{
@@ -90,14 +89,14 @@ func TestGlobalVars(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  11,
+							StartPos:  10,
 							EndPos:    12,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  11,
+								StartPos:  10,
 								EndPos:    12,
 							},
 							Value: "a",
@@ -107,14 +106,14 @@ func TestGlobalVars(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  15,
+							StartPos:  14,
 							EndPos:    16,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  15,
+								StartPos:  14,
 								EndPos:    16,
 							},
 							Value: "b",
@@ -124,21 +123,21 @@ func TestGlobalVars(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    21,
 						},
 						VarName: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  20,
+								StartPos:  19,
 								EndPos:    21,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  20,
+									StartPos:  19,
 									EndPos:    21,
 								},
 								Value: "c",
@@ -149,21 +148,21 @@ func TestGlobalVars(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  24,
+							StartPos:  23,
 							EndPos:    31,
 						},
 						VarName: &expr.FunctionCall{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  26,
+								StartPos:  25,
 								EndPos:    30,
 							},
 							Function: &name.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  26,
+									StartPos:  25,
 									EndPos:    28,
 								},
 								Parts: []node.Node{
@@ -171,7 +170,7 @@ func TestGlobalVars(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  26,
+											StartPos:  25,
 											EndPos:    28,
 										},
 										Value: "foo",
@@ -182,7 +181,7 @@ func TestGlobalVars(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  29,
+									StartPos:  28,
 									EndPos:    30,
 								},
 							},
@@ -193,12 +192,12 @@ func TestGlobalVars(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

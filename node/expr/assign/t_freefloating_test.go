@@ -41,6 +41,9 @@ var nodes = []node.Node{
 	&assign.BitwiseXor{
 		FreeFloating: expected,
 	},
+	&assign.Coalesce{
+		FreeFloating: expected,
+	},
 	&assign.Concat{
 		FreeFloating: expected,
 	},

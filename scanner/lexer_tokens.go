@@ -1,10 +1,10 @@
 package scanner
 
-type LexerToken int
+type TokenID int
 
-//go:generate stringer -type=LexerToken -output ./lexer_tokens_string.go
+//go:generate stringer -type=TokenID -output ./tokenid_string.go
 const (
-	T_INCLUDE LexerToken = iota + 57346
+	T_INCLUDE TokenID = iota + 57346
 	T_INCLUDE_ONCE
 	T_EXIT
 	T_IF
@@ -38,6 +38,7 @@ const (
 	T_CONTINUE
 	T_GOTO
 	T_FUNCTION
+	T_FN
 	T_CONST
 	T_RETURN
 	T_TRY
@@ -129,6 +130,7 @@ const (
 	T_XOR_EQUAL
 	T_SL_EQUAL
 	T_SR_EQUAL
+	T_COALESCE_EQUAL
 	T_BOOLEAN_OR
 	T_BOOLEAN_AND
 	T_POW

@@ -57,6 +57,14 @@ var nodesToTest = []struct {
 		nil,
 	},
 	{
+		&assign.Coalesce{
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
+		},
+		[]string{"Variable", "Expression"},
+		nil,
+	},
+	{
 		&assign.Concat{
 			Variable:   &expr.Variable{},
 			Expression: &expr.Variable{},

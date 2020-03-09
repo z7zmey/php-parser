@@ -1,14 +1,13 @@
 package php7
 
 import (
-	"io"
 	"strings"
 
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/positionbuilder"
 	"github.com/z7zmey/php-parser/scanner"
 )
 
@@ -18,27 +17,25 @@ func (lval *yySymType) Token(t *scanner.Token) {
 
 // Parser structure
 type Parser struct {
-	*scanner.Lexer
-	path            string
+	Lexer           scanner.Scanner
 	currentToken    *scanner.Token
-	positionBuilder *parser.PositionBuilder
+	positionBuilder *positionbuilder.PositionBuilder
 	rootNode        node.Node
 }
 
 // NewParser creates and returns new Parser
-func NewParser(src io.Reader, path string) *Parser {
-	lexer := scanner.NewLexer(src, path)
+func NewParser(src []byte, v string) *Parser {
+	lexer := scanner.NewLexer(src)
+	lexer.PHPVersion = v
 
 	return &Parser{
 		lexer,
-		path,
 		nil,
 		nil,
 		nil,
 	}
 }
 
-// Lex proxy to lexer Lex
 func (l *Parser) Lex(lval *yySymType) int {
 	t := l.Lexer.Lex(lval)
 	l.currentToken = lval.token
@@ -53,28 +50,23 @@ func (l *Parser) Error(msg string) {
 		EndPos:    l.currentToken.EndPos,
 	}
 
-	l.Lexer.Errors = append(l.Lexer.Errors, errors.NewError(msg, pos))
+	l.Lexer.AddError(errors.NewError(msg, pos))
 }
 
 func (l *Parser) WithFreeFloating() {
-	l.Lexer.WithFreeFloating = true
+	l.Lexer.SetWithFreeFloating(true)
 }
 
 // Parse the php7 Parser entrypoint
 func (l *Parser) Parse() int {
 	// init
-	l.Lexer.Errors = nil
+	l.Lexer.SetErrors(nil)
 	l.rootNode = nil
-	l.positionBuilder = &parser.PositionBuilder{}
+	l.positionBuilder = &positionbuilder.PositionBuilder{}
 
 	// parse
 
 	return yyParse(l)
-}
-
-// GetPath return path to file
-func (l *Parser) GetPath() string {
-	return l.path
 }
 
 // GetRootNode returns root node
@@ -84,7 +76,7 @@ func (l *Parser) GetRootNode() node.Node {
 
 // GetErrors returns errors list
 func (l *Parser) GetErrors() []*errors.Error {
-	return l.Lexer.Errors
+	return l.Lexer.GetErrors()
 }
 
 // helpers
@@ -105,7 +97,7 @@ func isDollar(r rune) bool {
 }
 
 func (l *Parser) MoveFreeFloating(src node.Node, dst node.Node) {
-	if l.Lexer.WithFreeFloating == false {
+	if l.Lexer.GetWithFreeFloating() == false {
 		return
 	}
 
@@ -118,7 +110,7 @@ func (l *Parser) MoveFreeFloating(src node.Node, dst node.Node) {
 }
 
 func (l *Parser) setFreeFloating(dst node.Node, p freefloating.Position, strings []freefloating.String) {
-	if l.Lexer.WithFreeFloating == false {
+	if l.Lexer.GetWithFreeFloating() == false {
 		return
 	}
 
@@ -135,7 +127,7 @@ func (l *Parser) setFreeFloating(dst node.Node, p freefloating.Position, strings
 }
 
 func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []freefloating.String {
-	if l.Lexer.WithFreeFloating == false {
+	if l.Lexer.GetWithFreeFloating() == false {
 		return []freefloating.String{}
 	}
 
@@ -143,7 +135,7 @@ func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []freefloating.String {
 }
 
 func (l *Parser) addDollarToken(v node.Node) {
-	if l.Lexer.WithFreeFloating == false {
+	if l.Lexer.GetWithFreeFloating() == false {
 		return
 	}
 
@@ -162,7 +154,7 @@ func (l *Parser) addDollarToken(v node.Node) {
 }
 
 func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode node.Node, prevNode node.Node) {
-	if l.Lexer.WithFreeFloating == false {
+	if l.Lexer.GetWithFreeFloating() == false {
 		return
 	}
 
@@ -225,7 +217,7 @@ func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode node.Node, prevNode node.
 func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {
 	for i := 1; i < len(yyDollar); i++ {
 		if yyDollar[i].token != nil {
-			p.TokenPool.Put(yyDollar[i].token)
+			p.Lexer.ReturnTokenToPool(yyDollar[i].token)
 		}
 		yyDollar[i].token = nil
 	}

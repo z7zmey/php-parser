@@ -35,6 +35,9 @@ var nodes = []node.Node{
 	&expr.Array{
 		FreeFloating: expected,
 	},
+	&expr.ArrowFunction{
+		FreeFloating: expected,
+	},
 	&expr.BitwiseNot{
 		FreeFloating: expected,
 	},

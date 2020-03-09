@@ -1,7 +1,6 @@
 package expr_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -23,7 +22,7 @@ func TestForeachWithRef(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    31,
 		},
 		Stmts: []node.Node{
@@ -31,21 +30,21 @@ func TestForeachWithRef(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    31,
 				},
 				Expr: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  13,
+						StartPos:  12,
 						EndPos:    14,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    14,
 						},
 						Value: "a",
@@ -55,14 +54,14 @@ func TestForeachWithRef(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  19,
+						StartPos:  18,
 						EndPos:    20,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    20,
 						},
 						Value: "k",
@@ -72,21 +71,21 @@ func TestForeachWithRef(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  25,
+						StartPos:  24,
 						EndPos:    27,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  26,
+							StartPos:  25,
 							EndPos:    27,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  26,
+								StartPos:  25,
 								EndPos:    27,
 							},
 							Value: "v",
@@ -97,7 +96,7 @@ func TestForeachWithRef(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  30,
+						StartPos:  29,
 						EndPos:    31,
 					},
 					Stmts: []node.Node{},
@@ -106,12 +105,12 @@ func TestForeachWithRef(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

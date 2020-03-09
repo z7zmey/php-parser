@@ -66,6 +66,7 @@ import (
 %token <token> T_CONTINUE
 %token <token> T_GOTO
 %token <token> T_FUNCTION
+%token <token> T_FN
 %token <token> T_CONST
 %token <token> T_RETURN
 %token <token> T_TRY
@@ -157,6 +158,7 @@ import (
 %token <token> T_XOR_EQUAL
 %token <token> T_SL_EQUAL
 %token <token> T_SR_EQUAL
+%token <token> T_COALESCE_EQUAL
 %token <token> T_BOOLEAN_OR
 %token <token> T_BOOLEAN_AND
 %token <token> T_POW
@@ -282,11 +284,9 @@ start:
                 yylex.(*Parser).rootNode = node.NewRoot($1)
                 yylex.(*Parser).rootNode.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
+                yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-                
-                if yylex.(*Parser).currentToken.Value == "\xff" {
-                    yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
-                }
             }
 ;
 
@@ -383,8 +383,6 @@ top_statement:
                 yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-
-                yylex.(*Parser).Begin(scanner.HALT_COMPILER)
             }
     |   T_NAMESPACE namespace_name ';'
             {
@@ -871,8 +869,6 @@ inner_statement:
                 yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-
-                yylex.(*Parser).Begin(scanner.HALT_COMPILER)
             }
 ;
 
@@ -2705,7 +2701,7 @@ class_statement_list:
 class_statement:
         variable_modifiers class_variable_declaration ';'
             {
-                $$ = stmt.NewPropertyList($1, $2)
+                $$ = stmt.NewPropertyList($1, nil, $2)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
@@ -5921,7 +5917,7 @@ possible_comma:
 non_empty_static_array_pair_list:
         non_empty_static_array_pair_list ',' static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
-                arrayItem := expr.NewArrayItem($3, $5)
+                arrayItem := expr.NewArrayItem($3, $5, false)
                 $$ = append($1, arrayItem)
                 
                 // save position
@@ -5936,7 +5932,7 @@ non_empty_static_array_pair_list:
             }
     |   non_empty_static_array_pair_list ',' static_scalar_value
             {
-                arrayItem := expr.NewArrayItem(nil, $3)
+                arrayItem := expr.NewArrayItem(nil, $3, false)
                 $$ = append($1, arrayItem)
                 
                 // save position
@@ -5950,7 +5946,7 @@ non_empty_static_array_pair_list:
             }
     |   static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
-                arrayItem := expr.NewArrayItem($1, $3)
+                arrayItem := expr.NewArrayItem($1, $3, false)
                 $$ = []node.Node{arrayItem}
 
                 // save position
@@ -5964,7 +5960,7 @@ non_empty_static_array_pair_list:
             }
     |   static_scalar_value
             {
-                arrayItem := expr.NewArrayItem(nil, $1)
+                arrayItem := expr.NewArrayItem(nil, $1, false)
                 $$ = []node.Node{arrayItem}
                 
                 // save position
@@ -6573,7 +6569,7 @@ assignment_list:
         assignment_list ',' assignment_list_element
             {
                 if len($1) == 0 {
-                    $1 = []node.Node{expr.NewArrayItem(nil, nil)}
+                    $1 = []node.Node{expr.NewArrayItem(nil, nil, false)}
                 }
 
                 $$ = append($1, $3)
@@ -6599,7 +6595,7 @@ assignment_list:
 assignment_list_element:
         variable
             {
-                $$ = expr.NewArrayItem(nil, $1)
+                $$ = expr.NewArrayItem(nil, $1, false)
                 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
@@ -6612,7 +6608,7 @@ assignment_list_element:
     |   T_LIST '(' assignment_list ')'
             {
                 listNode := expr.NewList($3)
-                $$ = expr.NewArrayItem(nil, listNode)
+                $$ = expr.NewArrayItem(nil, listNode, false)
                 
                 // save position
                 listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
@@ -6627,7 +6623,7 @@ assignment_list_element:
             }
     |   /* empty */
             {
-                $$ = expr.NewArrayItem(nil, nil) 
+                $$ = expr.NewArrayItem(nil, nil, false) 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6646,7 +6642,7 @@ array_pair_list:
                 $$ = $1
 
                 if $2 != nil {
-                    $$ = append($1, expr.NewArrayItem(nil, nil))
+                    $$ = append($1, expr.NewArrayItem(nil, nil, false))
                 }
 
                 // save comments
@@ -6661,7 +6657,7 @@ array_pair_list:
 non_empty_array_pair_list:
         non_empty_array_pair_list ',' expr T_DOUBLE_ARROW expr
             {
-                arrayItem := expr.NewArrayItem($3, $5)
+                arrayItem := expr.NewArrayItem($3, $5, false)
                 $$ = append($1, arrayItem)
 
                 // save position
@@ -6676,7 +6672,7 @@ non_empty_array_pair_list:
             }
     |   non_empty_array_pair_list ',' expr
             {
-                arrayItem := expr.NewArrayItem(nil, $3)
+                arrayItem := expr.NewArrayItem(nil, $3, false)
                 $$ = append($1, arrayItem)
                 
                 // save position
@@ -6690,7 +6686,7 @@ non_empty_array_pair_list:
             }
     |   expr T_DOUBLE_ARROW expr
             {
-                arrayItem := expr.NewArrayItem($1, $3)
+                arrayItem := expr.NewArrayItem($1, $3, false)
                 $$ = []node.Node{arrayItem}
 
                 // save position
@@ -6704,7 +6700,7 @@ non_empty_array_pair_list:
             }
     |   expr
             {
-                arrayItem := expr.NewArrayItem(nil, $1)
+                arrayItem := expr.NewArrayItem(nil, $1, false)
                 $$ = []node.Node{arrayItem}
 
                 // save position
@@ -6718,7 +6714,7 @@ non_empty_array_pair_list:
     |   non_empty_array_pair_list ',' expr T_DOUBLE_ARROW '&' w_variable
             {
                 reference := expr.NewReference($6)
-                arrayItem := expr.NewArrayItem($3, reference)
+                arrayItem := expr.NewArrayItem($3, reference, false)
                 $$ = append($1, arrayItem)
                 
                 // save position
@@ -6736,7 +6732,7 @@ non_empty_array_pair_list:
     |   non_empty_array_pair_list ',' '&' w_variable
             {
                 reference := expr.NewReference($4)
-                arrayItem := expr.NewArrayItem(nil, reference)
+                arrayItem := expr.NewArrayItem(nil, reference, false)
                 $$ = append($1, arrayItem)
                 
                 // save position
@@ -6752,7 +6748,7 @@ non_empty_array_pair_list:
     |   expr T_DOUBLE_ARROW '&' w_variable
             {
                 reference := expr.NewReference($4)
-                arrayItem := expr.NewArrayItem($1, reference)
+                arrayItem := expr.NewArrayItem($1, reference, false)
                 $$ = []node.Node{arrayItem}
                 
                 // save position
@@ -6769,7 +6765,7 @@ non_empty_array_pair_list:
     |   '&' w_variable
             {
                 reference := expr.NewReference($2)
-                arrayItem := expr.NewArrayItem(nil, reference)
+                arrayItem := expr.NewArrayItem(nil, reference, false)
                 $$ = []node.Node{arrayItem}
                 
                 // save position

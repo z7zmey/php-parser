@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"flag"
 	"fmt"
@@ -15,34 +14,44 @@ import (
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
 	"github.com/z7zmey/php-parser/parser"
-	"github.com/z7zmey/php-parser/php5"
-	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/printer"
 	"github.com/z7zmey/php-parser/visitor"
 )
 
 var wg sync.WaitGroup
-var usePhp5 *bool
+var phpVersion string
 var dumpType string
 var profiler string
 var withFreeFloating *bool
 var showResolvedNs *bool
 var printBack *bool
+var printPath *bool
 
 type file struct {
 	path    string
 	content []byte
 }
 
+type result struct {
+	path   string
+	parser parser.Parser
+}
+
 func main() {
-	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
 	withFreeFloating = flag.Bool("ff", false, "parse and show free floating strings")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
+	printPath = flag.Bool("p", false, "print filepath")
 	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
+	flag.StringVar(&phpVersion, "phpver", "7.4", "php version")
 
 	flag.Parse()
+
+	if len(flag.Args()) == 0 {
+		flag.Usage()
+		return
+	}
 
 	switch profiler {
 	case "cpu":
@@ -53,10 +62,10 @@ func main() {
 		defer profile.Start(profile.TraceProfile, profile.ProfilePath("."), profile.NoShutdownHook).Stop()
 	}
 
-	numCpu := runtime.NumCPU()
+	numCpu := runtime.GOMAXPROCS(0)
 
 	fileCh := make(chan *file, numCpu)
-	resultCh := make(chan parser.Parser, numCpu)
+	resultCh := make(chan result, numCpu)
 
 	// run 4 concurrent parserWorkers
 	for i := 0; i < numCpu; i++ {
@@ -93,21 +102,16 @@ func processPath(pathList []string, fileCh chan<- *file) {
 	}
 }
 
-func parserWorker(fileCh <-chan *file, result chan<- parser.Parser) {
-	var parserWorker parser.Parser
-
+func parserWorker(fileCh <-chan *file, r chan<- result) {
 	for {
 		f, ok := <-fileCh
 		if !ok {
 			return
 		}
 
-		src := bytes.NewReader(f.content)
-
-		if *usePhp5 {
-			parserWorker = php5.NewParser(src, f.path)
-		} else {
-			parserWorker = php7.NewParser(src, f.path)
+		parserWorker, err := parser.NewParser(f.content, phpVersion)
+		if err != nil {
+			panic(err.Error())
 		}
 
 		if *withFreeFloating {
@@ -116,43 +120,42 @@ func parserWorker(fileCh <-chan *file, result chan<- parser.Parser) {
 
 		parserWorker.Parse()
 
-		result <- parserWorker
+		r <- result{path: f.path, parser: parserWorker}
 	}
 }
 
-func printerWorker(result <-chan parser.Parser) {
+func printerWorker(r <-chan result) {
 	var counter int
 
-	w := bufio.NewWriter(os.Stdout)
-
 	for {
-		parserWorker, ok := <-result
+		res, ok := <-r
 		if !ok {
-			w.Flush()
 			return
 		}
 
 		counter++
 
-		fmt.Fprintf(w, "==> [%d] %s\n", counter, parserWorker.GetPath())
+		if *printPath {
+			fmt.Fprintf(os.Stdout, "==> [%d] %s\n", counter, res.path)
+		}
 
-		for _, e := range parserWorker.GetErrors() {
-			fmt.Fprintln(w, e)
+		for _, e := range res.parser.GetErrors() {
+			fmt.Fprintf(os.Stdout, "==> %s\n", e)
 		}
 
 		if *printBack {
 			o := bytes.NewBuffer([]byte{})
 			p := printer.NewPrinter(o)
-			p.Print(parserWorker.GetRootNode())
+			p.Print(res.parser.GetRootNode())
 
-			err := ioutil.WriteFile(parserWorker.GetPath(), o.Bytes(), 0644)
+			err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
 			checkErr(err)
 		}
 
 		var nsResolver *visitor.NamespaceResolver
 		if *showResolvedNs {
 			nsResolver = visitor.NewNamespaceResolver()
-			parserWorker.GetRootNode().Walk(nsResolver)
+			res.parser.GetRootNode().Walk(nsResolver)
 		}
 
 		switch dumpType {
@@ -162,22 +165,22 @@ func printerWorker(result <-chan parser.Parser) {
 				Indent:     "| ",
 				NsResolver: nsResolver,
 			}
-			parserWorker.GetRootNode().Walk(dumper)
+			res.parser.GetRootNode().Walk(dumper)
 		case "json":
 			dumper := &visitor.JsonDumper{
 				Writer:     os.Stdout,
 				NsResolver: nsResolver,
 			}
-			parserWorker.GetRootNode().Walk(dumper)
+			res.parser.GetRootNode().Walk(dumper)
 		case "pretty_json":
 			dumper := &visitor.PrettyJsonDumper{
 				Writer:     os.Stdout,
 				NsResolver: nsResolver,
 			}
-			parserWorker.GetRootNode().Walk(dumper)
+			res.parser.GetRootNode().Walk(dumper)
 		case "go":
 			dumper := &visitor.GoDumper{Writer: os.Stdout}
-			parserWorker.GetRootNode().Walk(dumper)
+			res.parser.GetRootNode().Walk(dumper)
 		}
 
 		wg.Done()

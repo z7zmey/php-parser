@@ -1,7 +1,6 @@
 package stmt_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestIf(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    13,
 		},
 		Stmts: []node.Node{
@@ -30,21 +29,21 @@ func TestIf(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    13,
 				},
 				Cond: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    9,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  8,
+							StartPos:  7,
 							EndPos:    9,
 						},
 						Value: "a",
@@ -54,7 +53,7 @@ func TestIf(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  12,
+						StartPos:  11,
 						EndPos:    13,
 					},
 					Stmts: []node.Node{},
@@ -63,12 +62,12 @@ func TestIf(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -81,7 +80,7 @@ func TestElseIf(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    28,
 		},
 		Stmts: []node.Node{
@@ -89,21 +88,21 @@ func TestElseIf(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    28,
 				},
 				Cond: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    9,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  8,
+							StartPos:  7,
 							EndPos:    9,
 						},
 						Value: "a",
@@ -113,7 +112,7 @@ func TestElseIf(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  12,
+						StartPos:  11,
 						EndPos:    13,
 					},
 					Stmts: []node.Node{},
@@ -123,21 +122,21 @@ func TestElseIf(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  15,
+							StartPos:  14,
 							EndPos:    28,
 						},
 						Cond: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  23,
+								StartPos:  22,
 								EndPos:    24,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  23,
+									StartPos:  22,
 									EndPos:    24,
 								},
 								Value: "b",
@@ -147,7 +146,7 @@ func TestElseIf(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  27,
+								StartPos:  26,
 								EndPos:    28,
 							},
 							Stmts: []node.Node{},
@@ -158,12 +157,12 @@ func TestElseIf(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -176,7 +175,7 @@ func TestElse(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    21,
 		},
 		Stmts: []node.Node{
@@ -184,21 +183,21 @@ func TestElse(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    21,
 				},
 				Cond: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    9,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  8,
+							StartPos:  7,
 							EndPos:    9,
 						},
 						Value: "a",
@@ -208,7 +207,7 @@ func TestElse(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  12,
+						StartPos:  11,
 						EndPos:    13,
 					},
 					Stmts: []node.Node{},
@@ -217,14 +216,14 @@ func TestElse(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  15,
+						StartPos:  14,
 						EndPos:    21,
 					},
 					Stmt: &stmt.StmtList{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  20,
+							StartPos:  19,
 							EndPos:    21,
 						},
 						Stmts: []node.Node{},
@@ -234,12 +233,12 @@ func TestElse(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -252,7 +251,7 @@ func TestElseElseIf(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    51,
 		},
 		Stmts: []node.Node{
@@ -260,21 +259,21 @@ func TestElseElseIf(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    51,
 				},
 				Cond: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    9,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  8,
+							StartPos:  7,
 							EndPos:    9,
 						},
 						Value: "a",
@@ -284,7 +283,7 @@ func TestElseElseIf(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  12,
+						StartPos:  11,
 						EndPos:    13,
 					},
 					Stmts: []node.Node{},
@@ -294,21 +293,21 @@ func TestElseElseIf(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  15,
+							StartPos:  14,
 							EndPos:    28,
 						},
 						Cond: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  23,
+								StartPos:  22,
 								EndPos:    24,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  23,
+									StartPos:  22,
 									EndPos:    24,
 								},
 								Value: "b",
@@ -318,7 +317,7 @@ func TestElseElseIf(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  27,
+								StartPos:  26,
 								EndPos:    28,
 							},
 							Stmts: []node.Node{},
@@ -328,21 +327,21 @@ func TestElseElseIf(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  30,
+							StartPos:  29,
 							EndPos:    43,
 						},
 						Cond: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  38,
+								StartPos:  37,
 								EndPos:    39,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  38,
+									StartPos:  37,
 									EndPos:    39,
 								},
 								Value: "c",
@@ -352,7 +351,7 @@ func TestElseElseIf(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  42,
+								StartPos:  41,
 								EndPos:    43,
 							},
 							Stmts: []node.Node{},
@@ -363,14 +362,14 @@ func TestElseElseIf(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  45,
+						StartPos:  44,
 						EndPos:    51,
 					},
 					Stmt: &stmt.StmtList{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  50,
+							StartPos:  49,
 							EndPos:    51,
 						},
 						Stmts: []node.Node{},
@@ -380,12 +379,12 @@ func TestElseElseIf(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -398,7 +397,7 @@ func TestElseIfElseIfElse(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    52,
 		},
 		Stmts: []node.Node{
@@ -406,21 +405,21 @@ func TestElseIfElseIfElse(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    52,
 				},
 				Cond: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    9,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  8,
+							StartPos:  7,
 							EndPos:    9,
 						},
 						Value: "a",
@@ -430,7 +429,7 @@ func TestElseIfElseIfElse(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  12,
+						StartPos:  11,
 						EndPos:    13,
 					},
 					Stmts: []node.Node{},
@@ -440,21 +439,21 @@ func TestElseIfElseIfElse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  15,
+							StartPos:  14,
 							EndPos:    28,
 						},
 						Cond: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  23,
+								StartPos:  22,
 								EndPos:    24,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  23,
+									StartPos:  22,
 									EndPos:    24,
 								},
 								Value: "b",
@@ -464,7 +463,7 @@ func TestElseIfElseIfElse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  27,
+								StartPos:  26,
 								EndPos:    28,
 							},
 							Stmts: []node.Node{},
@@ -475,28 +474,28 @@ func TestElseIfElseIfElse(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  30,
+						StartPos:  29,
 						EndPos:    52,
 					},
 					Stmt: &stmt.If{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  35,
+							StartPos:  34,
 							EndPos:    52,
 						},
 						Cond: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  39,
+								StartPos:  38,
 								EndPos:    40,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  39,
+									StartPos:  38,
 									EndPos:    40,
 								},
 								Value: "c",
@@ -506,7 +505,7 @@ func TestElseIfElseIfElse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  43,
+								StartPos:  42,
 								EndPos:    44,
 							},
 							Stmts: []node.Node{},
@@ -515,14 +514,14 @@ func TestElseIfElseIfElse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  46,
+								StartPos:  45,
 								EndPos:    52,
 							},
 							Stmt: &stmt.StmtList{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  51,
+									StartPos:  50,
 									EndPos:    52,
 								},
 								Stmts: []node.Node{},
@@ -534,12 +533,12 @@ func TestElseIfElseIfElse(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

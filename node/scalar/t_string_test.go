@@ -1,7 +1,6 @@
 package scalar_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -21,7 +20,7 @@ func TestDoubleQuotedScalarString(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    10,
 		},
 		Stmts: []node.Node{
@@ -29,14 +28,14 @@ func TestDoubleQuotedScalarString(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    10,
 				},
 				Expr: &scalar.String{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    9,
 					},
 					Value: "\"test\"",
@@ -45,12 +44,12 @@ func TestDoubleQuotedScalarString(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -63,7 +62,7 @@ func TestDoubleQuotedScalarStringWithEscapedVar(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    12,
 		},
 		Stmts: []node.Node{
@@ -71,14 +70,14 @@ func TestDoubleQuotedScalarStringWithEscapedVar(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    12,
 				},
 				Expr: &scalar.String{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    11,
 					},
 					Value: "\"\\$test\"",
@@ -87,12 +86,12 @@ func TestDoubleQuotedScalarStringWithEscapedVar(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -107,7 +106,7 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   3,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    14,
 		},
 		Stmts: []node.Node{
@@ -115,14 +114,14 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   3,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    14,
 				},
 				Expr: &scalar.String{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   3,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    13,
 					},
 					Value: "\"\n\ttest\n\t\"",
@@ -131,12 +130,12 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -149,7 +148,7 @@ func TestSingleQuotedScalarString(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    11,
 		},
 		Stmts: []node.Node{
@@ -157,14 +156,14 @@ func TestSingleQuotedScalarString(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    11,
 				},
 				Expr: &scalar.String{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    10,
 					},
 					Value: "'$test'",
@@ -173,12 +172,12 @@ func TestSingleQuotedScalarString(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -193,7 +192,7 @@ func TestMultilineSingleQuotedScalarString(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   3,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    15,
 		},
 		Stmts: []node.Node{
@@ -201,14 +200,14 @@ func TestMultilineSingleQuotedScalarString(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   3,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    15,
 				},
 				Expr: &scalar.String{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   3,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    14,
 					},
 					Value: "'\n\t$test\n\t'",
@@ -217,12 +216,12 @@ func TestMultilineSingleQuotedScalarString(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

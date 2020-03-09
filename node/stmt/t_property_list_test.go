@@ -1,12 +1,12 @@
 package stmt_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/position"
 
@@ -23,7 +23,7 @@ func TestProperty(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    22,
 		},
 		Stmts: []node.Node{
@@ -31,7 +31,7 @@ func TestProperty(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    22,
 				},
 				PhpDocComment: "",
@@ -39,7 +39,7 @@ func TestProperty(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "foo",
@@ -49,7 +49,7 @@ func TestProperty(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  15,
+							StartPos:  14,
 							EndPos:    21,
 						},
 						Modifiers: []node.Node{
@@ -57,7 +57,7 @@ func TestProperty(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  15,
+									StartPos:  14,
 									EndPos:    17,
 								},
 								Value: "var",
@@ -68,7 +68,7 @@ func TestProperty(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  19,
+									StartPos:  18,
 									EndPos:    20,
 								},
 								PhpDocComment: "",
@@ -76,14 +76,14 @@ func TestProperty(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  19,
+										StartPos:  18,
 										EndPos:    20,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  19,
+											StartPos:  18,
 											EndPos:    20,
 										},
 										Value: "a",
@@ -97,12 +97,12 @@ func TestProperty(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -115,7 +115,7 @@ func TestProperties(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    40,
 		},
 		Stmts: []node.Node{
@@ -123,7 +123,7 @@ func TestProperties(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    40,
 				},
 				PhpDocComment: "",
@@ -131,7 +131,7 @@ func TestProperties(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "foo",
@@ -141,7 +141,7 @@ func TestProperties(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  15,
+							StartPos:  14,
 							EndPos:    39,
 						},
 						Modifiers: []node.Node{
@@ -149,7 +149,7 @@ func TestProperties(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  15,
+									StartPos:  14,
 									EndPos:    20,
 								},
 								Value: "public",
@@ -158,7 +158,7 @@ func TestProperties(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  22,
+									StartPos:  21,
 									EndPos:    27,
 								},
 								Value: "static",
@@ -169,7 +169,7 @@ func TestProperties(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  29,
+									StartPos:  28,
 									EndPos:    30,
 								},
 								PhpDocComment: "",
@@ -177,14 +177,14 @@ func TestProperties(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  29,
+										StartPos:  28,
 										EndPos:    30,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  29,
+											StartPos:  28,
 											EndPos:    30,
 										},
 										Value: "a",
@@ -195,7 +195,7 @@ func TestProperties(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  33,
+									StartPos:  32,
 									EndPos:    38,
 								},
 								PhpDocComment: "",
@@ -203,14 +203,14 @@ func TestProperties(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  33,
+										StartPos:  32,
 										EndPos:    34,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  33,
+											StartPos:  32,
 											EndPos:    34,
 										},
 										Value: "b",
@@ -220,7 +220,7 @@ func TestProperties(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  38,
+										StartPos:  37,
 										EndPos:    38,
 									},
 									Value: "1",
@@ -233,12 +233,12 @@ func TestProperties(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -251,7 +251,7 @@ func TestProperties2(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    40,
 		},
 		Stmts: []node.Node{
@@ -259,7 +259,7 @@ func TestProperties2(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    40,
 				},
 				PhpDocComment: "",
@@ -267,7 +267,7 @@ func TestProperties2(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "foo",
@@ -277,7 +277,7 @@ func TestProperties2(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  15,
+							StartPos:  14,
 							EndPos:    39,
 						},
 						Modifiers: []node.Node{
@@ -285,7 +285,7 @@ func TestProperties2(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  15,
+									StartPos:  14,
 									EndPos:    20,
 								},
 								Value: "public",
@@ -294,7 +294,7 @@ func TestProperties2(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  22,
+									StartPos:  21,
 									EndPos:    27,
 								},
 								Value: "static",
@@ -305,7 +305,7 @@ func TestProperties2(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  29,
+									StartPos:  28,
 									EndPos:    34,
 								},
 								PhpDocComment: "",
@@ -313,14 +313,14 @@ func TestProperties2(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  29,
+										StartPos:  28,
 										EndPos:    30,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  29,
+											StartPos:  28,
 											EndPos:    30,
 										},
 										Value: "a",
@@ -330,7 +330,7 @@ func TestProperties2(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  34,
+										StartPos:  33,
 										EndPos:    34,
 									},
 									Value: "1",
@@ -340,7 +340,7 @@ func TestProperties2(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  37,
+									StartPos:  36,
 									EndPos:    38,
 								},
 								PhpDocComment: "",
@@ -348,14 +348,14 @@ func TestProperties2(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  37,
+										StartPos:  36,
 										EndPos:    38,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  37,
+											StartPos:  36,
 											EndPos:    38,
 										},
 										Value: "b",
@@ -369,13 +369,119 @@ func TestProperties2(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
+	assert.DeepEqual(t, expected, actual)
+}
+
+func TestPropertyType(t *testing.T) {
+	src := `<? class foo {var bar $a;}`
+
+	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  3,
+			EndPos:    26,
+		},
+		Stmts: []node.Node{
+			&stmt.Class{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  3,
+					EndPos:    26,
+				},
+				PhpDocComment: "",
+				ClassName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  9,
+						EndPos:    12,
+					},
+					Value: "foo",
+				},
+				Stmts: []node.Node{
+					&stmt.PropertyList{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  14,
+							EndPos:    25,
+						},
+						Modifiers: []node.Node{
+							&node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  14,
+									EndPos:    17,
+								},
+								Value: "var",
+							},
+						},
+						Type: &name.Name{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  18,
+								EndPos:    21,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  18,
+										EndPos:    21,
+									},
+									Value: "bar",
+								},
+							},
+						},
+						Properties: []node.Node{
+							&stmt.Property{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  22,
+									EndPos:    24,
+								},
+								PhpDocComment: "",
+								Variable: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  22,
+										EndPos:    24,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  22,
+											EndPos:    24,
+										},
+										Value: "a",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	php7parser := php7.NewParser([]byte(src), "7.4")
+	php7parser.Parse()
+	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 }

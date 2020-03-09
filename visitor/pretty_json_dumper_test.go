@@ -1,7 +1,6 @@
 package visitor_test
 
 import (
-	"bytes"
 	"os"
 
 	"github.com/z7zmey/php-parser/php7"
@@ -27,7 +26,7 @@ func ExamplePrettyJsonDumper() {
 		}
 		`
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.WithFreeFloating()
 	php7parser.Parse()
 	nodes := php7parser.GetRootNode()
@@ -42,7 +41,7 @@ func ExamplePrettyJsonDumper() {
 	// {
 	//   "type": "*node.Root",
 	//   "position": {
-	//     "startPos": 10,
+	//     "startPos": 9,
 	//     "endPos": 198,
 	//     "startLine": 3,
 	//     "endLine": 16
@@ -59,7 +58,7 @@ func ExamplePrettyJsonDumper() {
 	//     {
 	//       "type": "*stmt.Namespace",
 	//       "position": {
-	//         "startPos": 10,
+	//         "startPos": 9,
 	//         "endPos": 198,
 	//         "startLine": 3,
 	//         "endLine": 16
@@ -85,19 +84,19 @@ func ExamplePrettyJsonDumper() {
 	//       "NamespaceName": {
 	//         "type": "*name.Name",
 	//         "position": {
-	//           "startPos": 20,
+	//           "startPos": 19,
 	//           "endPos": 22,
 	//           "startLine": 3,
 	//           "endLine": 3
 	//         },
 	//         "freefloating": {
-	//           "End": [
+	//           "Start": [
 	//             {
 	//               "type": "freefloating.WhiteSpaceType",
 	//               "value": " "
 	//             }
 	//           ],
-	//           "Start": [
+	//           "End": [
 	//             {
 	//               "type": "freefloating.WhiteSpaceType",
 	//               "value": " "
@@ -108,7 +107,7 @@ func ExamplePrettyJsonDumper() {
 	//           {
 	//             "type": "*name.NamePart",
 	//             "position": {
-	//               "startPos": 20,
+	//               "startPos": 19,
 	//               "endPos": 22,
 	//               "startLine": 3,
 	//               "endLine": 3
@@ -121,7 +120,7 @@ func ExamplePrettyJsonDumper() {
 	//         {
 	//           "type": "*stmt.Class",
 	//           "position": {
-	//             "startPos": 29,
+	//             "startPos": 28,
 	//             "endPos": 162,
 	//             "startLine": 4,
 	//             "endLine": 11
@@ -151,7 +150,7 @@ func ExamplePrettyJsonDumper() {
 	//           "ClassName": {
 	//             "type": "*node.Identifier",
 	//             "position": {
-	//               "startPos": 35,
+	//               "startPos": 34,
 	//               "endPos": 37,
 	//               "startLine": 4,
 	//               "endLine": 4
@@ -170,7 +169,7 @@ func ExamplePrettyJsonDumper() {
 	//             {
 	//               "type": "*stmt.ClassMethod",
 	//               "position": {
-	//                 "startPos": 45,
+	//                 "startPos": 44,
 	//                 "endPos": 157,
 	//                 "startLine": 5,
 	//                 "endLine": 10
@@ -193,12 +192,6 @@ func ExamplePrettyJsonDumper() {
 	//                     "type": "freefloating.WhiteSpaceType",
 	//                     "value": " "
 	//                   }
-	//                 ],
-	//                 "Name": [
-
-	//                 ],
-	//                 "ParameterList": [
-
 	//                 ]
 	//               },
 	//               "ReturnsRef": false,
@@ -206,7 +199,7 @@ func ExamplePrettyJsonDumper() {
 	//               "MethodName": {
 	//                 "type": "*node.Identifier",
 	//                 "position": {
-	//                   "startPos": 61,
+	//                   "startPos": 60,
 	//                   "endPos": 72,
 	//                   "startLine": 5,
 	//                   "endLine": 5
@@ -217,7 +210,7 @@ func ExamplePrettyJsonDumper() {
 	//                 {
 	//                   "type": "*node.Identifier",
 	//                   "position": {
-	//                     "startPos": 45,
+	//                     "startPos": 44,
 	//                     "endPos": 50,
 	//                     "startLine": 5,
 	//                     "endLine": 5
@@ -229,26 +222,17 @@ func ExamplePrettyJsonDumper() {
 	//                 {
 	//                   "type": "*node.Parameter",
 	//                   "position": {
-	//                     "startPos": 74,
+	//                     "startPos": 73,
 	//                     "endPos": 89,
 	//                     "startLine": 5,
 	//                     "endLine": 5
 	//                   },
 	//                   "freefloating": {
-	//                     "Ref": [
-
-	//                     ],
 	//                     "OptionalType": [
 	//                       {
 	//                         "type": "freefloating.WhiteSpaceType",
 	//                         "value": " "
 	//                       }
-	//                     ],
-	//                     "Start": [
-
-	//                     ],
-	//                     "Variadic": [
-
 	//                     ],
 	//                     "Var": [
 	//                       {
@@ -262,7 +246,7 @@ func ExamplePrettyJsonDumper() {
 	//                   "VariableType": {
 	//                     "type": "*name.Name",
 	//                     "position": {
-	//                       "startPos": 74,
+	//                       "startPos": 73,
 	//                       "endPos": 77,
 	//                       "startLine": 5,
 	//                       "endLine": 5
@@ -272,7 +256,7 @@ func ExamplePrettyJsonDumper() {
 	//                       {
 	//                         "type": "*name.NamePart",
 	//                         "position": {
-	//                           "startPos": 74,
+	//                           "startPos": 73,
 	//                           "endPos": 77,
 	//                           "startLine": 5,
 	//                           "endLine": 5
@@ -284,7 +268,7 @@ func ExamplePrettyJsonDumper() {
 	//                   "Variable": {
 	//                     "type": "*expr.Variable",
 	//                     "position": {
-	//                       "startPos": 79,
+	//                       "startPos": 78,
 	//                       "endPos": 82,
 	//                       "startLine": 5,
 	//                       "endLine": 5
@@ -300,7 +284,7 @@ func ExamplePrettyJsonDumper() {
 	//                     "VarName": {
 	//                       "type": "*node.Identifier",
 	//                       "position": {
-	//                         "startPos": 79,
+	//                         "startPos": 78,
 	//                         "endPos": 82,
 	//                         "startLine": 5,
 	//                         "endLine": 5
@@ -311,7 +295,7 @@ func ExamplePrettyJsonDumper() {
 	//                   "DefaultValue": {
 	//                     "type": "*expr.ConstFetch",
 	//                     "position": {
-	//                       "startPos": 86,
+	//                       "startPos": 85,
 	//                       "endPos": 89,
 	//                       "startLine": 5,
 	//                       "endLine": 5
@@ -327,7 +311,7 @@ func ExamplePrettyJsonDumper() {
 	//                     "Constant": {
 	//                       "type": "*name.Name",
 	//                       "position": {
-	//                         "startPos": 86,
+	//                         "startPos": 85,
 	//                         "endPos": 89,
 	//                         "startLine": 5,
 	//                         "endLine": 5
@@ -337,7 +321,7 @@ func ExamplePrettyJsonDumper() {
 	//                         {
 	//                           "type": "*name.NamePart",
 	//                           "position": {
-	//                             "startPos": 86,
+	//                             "startPos": 85,
 	//                             "endPos": 89,
 	//                             "startLine": 5,
 	//                             "endLine": 5
@@ -352,19 +336,19 @@ func ExamplePrettyJsonDumper() {
 	//               "Stmt": {
 	//                 "type": "*stmt.StmtList",
 	//                 "position": {
-	//                   "startPos": 96,
+	//                   "startPos": 95,
 	//                   "endPos": 157,
 	//                   "startLine": 6,
 	//                   "endLine": 10
 	//                 },
 	//                 "freefloating": {
-	//                   "Start": [
+	//                   "Stmts": [
 	//                     {
 	//                       "type": "freefloating.WhiteSpaceType",
 	//                       "value": "\n\t\t\t\t"
 	//                     }
 	//                   ],
-	//                   "Stmts": [
+	//                   "Start": [
 	//                     {
 	//                       "type": "freefloating.WhiteSpaceType",
 	//                       "value": "\n\t\t\t\t"
@@ -375,7 +359,7 @@ func ExamplePrettyJsonDumper() {
 	//                   {
 	//                     "type": "*stmt.Expression",
 	//                     "position": {
-	//                       "startPos": 147,
+	//                       "startPos": 146,
 	//                       "endPos": 151,
 	//                       "startLine": 9,
 	//                       "endLine": 9
@@ -403,9 +387,6 @@ func ExamplePrettyJsonDumper() {
 	//                           "value": "\t\t\t\t\t"
 	//                         }
 	//                       ],
-	//                       "Expr": [
-
-	//                       ],
 	//                       "SemiColon": [
 	//                         {
 	//                           "type": "freefloating.TokenType",
@@ -416,15 +397,12 @@ func ExamplePrettyJsonDumper() {
 	//                     "Expr": {
 	//                       "type": "*expr.Variable",
 	//                       "position": {
-	//                         "startPos": 147,
+	//                         "startPos": 146,
 	//                         "endPos": 150,
 	//                         "startLine": 9,
 	//                         "endLine": 9
 	//                       },
 	//                       "freefloating": {
-	//                         "Start": [
-
-	//                         ],
 	//                         "Dollar": [
 	//                           {
 	//                             "type": "freefloating.TokenType",
@@ -435,7 +413,7 @@ func ExamplePrettyJsonDumper() {
 	//                       "VarName": {
 	//                         "type": "*node.Identifier",
 	//                         "position": {
-	//                           "startPos": 147,
+	//                           "startPos": 146,
 	//                           "endPos": 150,
 	//                           "startLine": 9,
 	//                           "endLine": 9
@@ -452,35 +430,23 @@ func ExamplePrettyJsonDumper() {
 	//         {
 	//           "type": "*stmt.Function",
 	//           "position": {
-	//             "startPos": 168,
+	//             "startPos": 167,
 	//             "endPos": 194,
 	//             "startLine": 13,
 	//             "endLine": 15
 	//           },
 	//           "namespacedName": "Foo\\foo",
 	//           "freefloating": {
+	//             "Params": [
+	//               {
+	//                 "type": "freefloating.WhiteSpaceType",
+	//                 "value": " "
+	//               }
+	//             ],
 	//             "Start": [
 	//               {
 	//                 "type": "freefloating.WhiteSpaceType",
 	//                 "value": "\n\n\t\t\t"
-	//               }
-	//             ],
-	//             "Function": [
-	//               {
-	//                 "type": "freefloating.WhiteSpaceType",
-	//                 "value": " "
-	//               }
-	//             ],
-	//             "Name": [
-
-	//             ],
-	//             "ParamList": [
-
-	//             ],
-	//             "ReturnType": [
-	//               {
-	//                 "type": "freefloating.WhiteSpaceType",
-	//                 "value": " "
 	//               }
 	//             ],
 	//             "Stmts": [
@@ -495,10 +461,18 @@ func ExamplePrettyJsonDumper() {
 	//           "FunctionName": {
 	//             "type": "*node.Identifier",
 	//             "position": {
-	//               "startPos": 177,
+	//               "startPos": 176,
 	//               "endPos": 179,
 	//               "startLine": 13,
 	//               "endLine": 13
+	//             },
+	//             "freefloating": {
+	//               "Start": [
+	//                 {
+	//                   "type": "freefloating.WhiteSpaceType",
+	//                   "value": " "
+	//                 }
+	//               ]
 	//             },
 	//             "Value": "foo"
 	//           },
@@ -506,7 +480,7 @@ func ExamplePrettyJsonDumper() {
 	//             {
 	//               "type": "*stmt.Nop",
 	//               "position": {
-	//                 "startPos": 189,
+	//                 "startPos": 188,
 	//                 "endPos": 189,
 	//                 "startLine": 14,
 	//                 "endLine": 14

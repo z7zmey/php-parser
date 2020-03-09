@@ -66,6 +66,7 @@ import (
 %token <token> T_CONTINUE
 %token <token> T_GOTO
 %token <token> T_FUNCTION
+%token <token> T_FN
 %token <token> T_CONST
 %token <token> T_RETURN
 %token <token> T_TRY
@@ -157,6 +158,7 @@ import (
 %token <token> T_XOR_EQUAL
 %token <token> T_SL_EQUAL
 %token <token> T_SR_EQUAL
+%token <token> T_COALESCE_EQUAL
 %token <token> T_BOOLEAN_OR
 %token <token> T_BOOLEAN_AND
 %token <token> T_POW
@@ -206,7 +208,7 @@ import (
 %right T_YIELD
 %right T_DOUBLE_ARROW
 %right T_YIELD_FROM
-%left '=' T_PLUS_EQUAL T_MINUS_EQUAL T_MUL_EQUAL T_DIV_EQUAL T_CONCAT_EQUAL T_MOD_EQUAL T_AND_EQUAL T_OR_EQUAL T_XOR_EQUAL T_SL_EQUAL T_SR_EQUAL T_POW_EQUAL
+%left '=' T_PLUS_EQUAL T_MINUS_EQUAL T_MUL_EQUAL T_DIV_EQUAL T_CONCAT_EQUAL T_MOD_EQUAL T_AND_EQUAL T_OR_EQUAL T_XOR_EQUAL T_SL_EQUAL T_SR_EQUAL T_POW_EQUAL T_COALESCE_EQUAL
 %left '?' ':'
 %right T_COALESCE
 %left T_BOOLEAN_OR
@@ -269,6 +271,7 @@ import (
 %type <node> switch_case_list
 %type <node> method_body
 %type <node> foreach_statement for_statement while_statement
+%type <node> inline_function
 %type <ClassExtends> extends_from
 %type <ClassImplements> implements_list
 %type <InterfaceExtends> interface_extends_list
@@ -303,11 +306,9 @@ start:
                 // save position
                 yylex.(*Parser).rootNode.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
+                yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-                
-                if yylex.(*Parser).currentToken.Value == "\xff" {
-                    yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
-                }
             }
 ;
 
@@ -318,7 +319,7 @@ reserved_non_modifiers:
     | T_THROW {$$=$1} | T_USE {$$=$1} | T_INSTEADOF {$$=$1} | T_GLOBAL {$$=$1} | T_VAR {$$=$1} | T_UNSET {$$=$1} | T_ISSET {$$=$1} | T_EMPTY {$$=$1} | T_CONTINUE {$$=$1} | T_GOTO {$$=$1} 
     | T_FUNCTION {$$=$1} | T_CONST {$$=$1} | T_RETURN {$$=$1} | T_PRINT {$$=$1} | T_YIELD {$$=$1} | T_LIST {$$=$1} | T_SWITCH {$$=$1} | T_ENDSWITCH {$$=$1} | T_CASE {$$=$1} | T_DEFAULT {$$=$1} | T_BREAK {$$=$1} 
     | T_ARRAY {$$=$1} | T_CALLABLE {$$=$1} | T_EXTENDS {$$=$1} | T_IMPLEMENTS {$$=$1} | T_NAMESPACE {$$=$1} | T_TRAIT {$$=$1} | T_INTERFACE {$$=$1} | T_CLASS {$$=$1} 
-    | T_CLASS_C {$$=$1} | T_TRAIT_C {$$=$1} | T_FUNC_C {$$=$1} | T_METHOD_C {$$=$1} | T_LINE {$$=$1} | T_FILE {$$=$1} | T_DIR {$$=$1} | T_NS_C {$$=$1} 
+    | T_CLASS_C {$$=$1} | T_TRAIT_C {$$=$1} | T_FUNC_C {$$=$1} | T_METHOD_C {$$=$1} | T_LINE {$$=$1} | T_FILE {$$=$1} | T_DIR {$$=$1} | T_NS_C {$$=$1} | T_FN {$$=$1}
 ;
 
 semi_reserved:
@@ -485,8 +486,6 @@ top_statement:
                 yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-
-                yylex.(*Parser).Begin(scanner.HALT_COMPILER)
             }
     |   T_NAMESPACE namespace_name ';'
             {
@@ -2497,17 +2496,17 @@ class_statement_list:
 ;
 
 class_statement:
-        variable_modifiers property_list ';'
+        variable_modifiers optional_type property_list ';'
             {
-                $$ = stmt.NewPropertyList($1, $2)
+                $$ = stmt.NewPropertyList($1, $2, $3)
 
                 // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating($$, freefloating.PropertyList, $3.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
+                yylex.(*Parser).setFreeFloating($$, freefloating.PropertyList, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3402,6 +3401,19 @@ expr_without_variable:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
+    |   variable T_COALESCE_EQUAL expr
+            {
+                $$ = assign.NewCoalesce($1, $3)
+
+                // save position
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+
+                // save comments
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
     |   variable T_INC
             {
                 $$ = expr.NewPostInc($1)
@@ -4124,7 +4136,36 @@ expr_without_variable:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
+    |   inline_function
+            {
+                $$ = $1;
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
+    |   T_STATIC inline_function
+            {
+                $$ = $2;
+
+                switch n := $$.(type) {
+                case *expr.Closure :
+                    n.Static = true;
+                case *expr.ArrowFunction :
+                    n.Static = true;
+                };
+
+                // save position
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+
+                // save comments
+                yylex.(*Parser).setFreeFloating($$, freefloating.Static, (*$$.GetFreeFloating())[freefloating.Start]); delete((*$$.GetFreeFloating()), freefloating.Start)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating);
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
+;
+
+inline_function:
+        T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
                 $$ = expr.NewClosure($5, $7, $8, $10, false, $2 != nil, $3)
 
@@ -4156,36 +4197,31 @@ expr_without_variable:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   T_STATIC T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
+    |   T_FN returns_ref '(' parameter_list ')' return_type backup_doc_comment T_DOUBLE_ARROW expr
             {
-                $$ = expr.NewClosure($6, $8, $9, $11, true, $3 != nil, $4)
+                $$ = expr.NewArrowFunction($4, $6, $9, false, $2 != nil, $7)
 
                 // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $12))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
                 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Static, $2.FreeFloating)
-                if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $5.FreeFloating)
-                } else {
+                if $2 == nil {
                     yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $5.FreeFloating)
-                }
-                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $7.FreeFloating)
-                if $9 != nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, (*$9.GetFreeFloating())[freefloating.Colon]); delete((*$9.GetFreeFloating()), freefloating.Colon)
-                }
-                yylex.(*Parser).setFreeFloating($$, freefloating.ReturnType, $10.FreeFloating)
-                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $12.FreeFloating)
+                } else {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $2.FreeFloating)
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
+                };
+                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $5.FreeFloating)
+                if $6 != nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$6.GetFreeFloating())[freefloating.Colon]); delete((*$6.GetFreeFloating()), freefloating.Colon)
+                };
+                yylex.(*Parser).setFreeFloating($$, freefloating.ReturnType, $8.FreeFloating)
 
                 // normalize
-                if $9 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, (*$$.GetFreeFloating())[freefloating.ReturnType]); delete((*$$.GetFreeFloating()), freefloating.ReturnType)
-                }
-                if $8 == nil {
-                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.LexicalVarList]); delete((*$$.GetFreeFloating()), freefloating.LexicalVarList)
-                }
+                if $6 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.ReturnType]); delete((*$$.GetFreeFloating()), freefloating.ReturnType)
+                };
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4194,8 +4230,8 @@ expr_without_variable:
 backup_doc_comment:
         /* empty */
             {
-                $$ = yylex.(*Parser).PhpDocComment
-                yylex.(*Parser).PhpDocComment = ""
+                $$ = yylex.(*Parser).Lexer.GetPhpDocComment()
+                yylex.(*Parser).Lexer.SetPhpDocComment("")
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5126,7 +5162,7 @@ array_pair_list:
 possible_array_pair:
         /* empty */
             {
-                $$ = expr.NewArrayItem(nil, nil)
+                $$ = expr.NewArrayItem(nil, nil, false)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5142,7 +5178,7 @@ non_empty_array_pair_list:
         non_empty_array_pair_list ',' possible_array_pair
             {
                 if len($1) == 0 {
-                    $1 = []node.Node{expr.NewArrayItem(nil, nil)}
+                    $1 = []node.Node{expr.NewArrayItem(nil, nil, false)}
                 }
 
                 $$ = append($1, $3)
@@ -5167,7 +5203,7 @@ non_empty_array_pair_list:
 array_pair:
         expr T_DOUBLE_ARROW expr
             {
-                $$ = expr.NewArrayItem($1, $3)
+                $$ = expr.NewArrayItem($1, $3, false)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
@@ -5180,7 +5216,7 @@ array_pair:
             }
     |   expr
             {
-                $$ = expr.NewArrayItem(nil, $1)
+                $$ = expr.NewArrayItem(nil, $1, false)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
@@ -5193,7 +5229,7 @@ array_pair:
     |   expr T_DOUBLE_ARROW '&' variable
             {
                 reference := expr.NewReference($4)
-                $$ = expr.NewArrayItem($1, reference)
+                $$ = expr.NewArrayItem($1, reference, false)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
@@ -5209,7 +5245,7 @@ array_pair:
     |   '&' variable
             {
                 reference := expr.NewReference($2)
-                $$ = expr.NewArrayItem(nil, reference)
+                $$ = expr.NewArrayItem(nil, reference, false)
 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
@@ -5220,11 +5256,23 @@ array_pair:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
+    |   T_ELLIPSIS expr
+            {
+                $$ = expr.NewArrayItem(nil, $2, true)
+
+                // save position
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+
+                // save comments
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
                 // TODO: Cannot use list() as standalone expression
                 listNode := expr.NewList($5)
-                $$ = expr.NewArrayItem($1, listNode)
+                $$ = expr.NewArrayItem($1, listNode, false)
 
                 // save position
                 listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($3, $6))
@@ -5243,7 +5291,7 @@ array_pair:
             {
                 // TODO: Cannot use list() as standalone expression
                 listNode := expr.NewList($3)
-                $$ = expr.NewArrayItem(nil, listNode)
+                $$ = expr.NewArrayItem(nil, listNode, false)
 
                 // save position
                 listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))

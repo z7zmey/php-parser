@@ -1,7 +1,6 @@
 package expr_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestTernary(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    16,
 		},
 		Stmts: []node.Node{
@@ -30,28 +29,28 @@ func TestTernary(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    16,
 				},
 				Expr: &expr.Ternary{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    15,
 					},
 					Condition: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    5,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  4,
+								StartPos:  3,
 								EndPos:    5,
 							},
 							Value: "a",
@@ -61,14 +60,14 @@ func TestTernary(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  9,
+							StartPos:  8,
 							EndPos:    10,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  9,
+								StartPos:  8,
 								EndPos:    10,
 							},
 							Value: "b",
@@ -78,14 +77,14 @@ func TestTernary(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  14,
+							StartPos:  13,
 							EndPos:    15,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  14,
+								StartPos:  13,
 								EndPos:    15,
 							},
 							Value: "c",
@@ -96,12 +95,12 @@ func TestTernary(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -114,7 +113,7 @@ func TestTernarySimple(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    13,
 		},
 		Stmts: []node.Node{
@@ -122,28 +121,28 @@ func TestTernarySimple(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    13,
 				},
 				Expr: &expr.Ternary{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    12,
 					},
 					Condition: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    5,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  4,
+								StartPos:  3,
 								EndPos:    5,
 							},
 							Value: "a",
@@ -153,14 +152,14 @@ func TestTernarySimple(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  11,
+							StartPos:  10,
 							EndPos:    12,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  11,
+								StartPos:  10,
 								EndPos:    12,
 							},
 							Value: "c",
@@ -171,12 +170,12 @@ func TestTernarySimple(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -189,7 +188,7 @@ func TestTernaryNestedTrue(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    26,
 		},
 		Stmts: []node.Node{
@@ -197,28 +196,28 @@ func TestTernaryNestedTrue(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    26,
 				},
 				Expr: &expr.Ternary{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    25,
 					},
 					Condition: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    5,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  4,
+								StartPos:  3,
 								EndPos:    5,
 							},
 							Value: "a",
@@ -228,21 +227,21 @@ func TestTernaryNestedTrue(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  9,
+							StartPos:  8,
 							EndPos:    20,
 						},
 						Condition: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  9,
+								StartPos:  8,
 								EndPos:    10,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  9,
+									StartPos:  8,
 									EndPos:    10,
 								},
 								Value: "b",
@@ -252,14 +251,14 @@ func TestTernaryNestedTrue(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  14,
+								StartPos:  13,
 								EndPos:    15,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  14,
+									StartPos:  13,
 									EndPos:    15,
 								},
 								Value: "c",
@@ -269,14 +268,14 @@ func TestTernaryNestedTrue(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  19,
+								StartPos:  18,
 								EndPos:    20,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  19,
+									StartPos:  18,
 									EndPos:    20,
 								},
 								Value: "d",
@@ -287,14 +286,14 @@ func TestTernaryNestedTrue(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  24,
+							StartPos:  23,
 							EndPos:    25,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  24,
+								StartPos:  23,
 								EndPos:    25,
 							},
 							Value: "e",
@@ -305,12 +304,12 @@ func TestTernaryNestedTrue(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -323,7 +322,7 @@ func TestTernaryNestedCond(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    26,
 		},
 		Stmts: []node.Node{
@@ -331,35 +330,35 @@ func TestTernaryNestedCond(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    26,
 				},
 				Expr: &expr.Ternary{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    25,
 					},
 					Condition: &expr.Ternary{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    15,
 						},
 						Condition: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  4,
+								StartPos:  3,
 								EndPos:    5,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  4,
+									StartPos:  3,
 									EndPos:    5,
 								},
 								Value: "a",
@@ -369,14 +368,14 @@ func TestTernaryNestedCond(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  9,
+								StartPos:  8,
 								EndPos:    10,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  9,
+									StartPos:  8,
 									EndPos:    10,
 								},
 								Value: "b",
@@ -386,14 +385,14 @@ func TestTernaryNestedCond(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  14,
+								StartPos:  13,
 								EndPos:    15,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  14,
+									StartPos:  13,
 									EndPos:    15,
 								},
 								Value: "c",
@@ -404,14 +403,14 @@ func TestTernaryNestedCond(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    20,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  19,
+								StartPos:  18,
 								EndPos:    20,
 							},
 							Value: "d",
@@ -421,14 +420,14 @@ func TestTernaryNestedCond(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  24,
+							StartPos:  23,
 							EndPos:    25,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  24,
+								StartPos:  23,
 								EndPos:    25,
 							},
 							Value: "e",
@@ -439,12 +438,12 @@ func TestTernaryNestedCond(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

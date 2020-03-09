@@ -1,7 +1,6 @@
 package expr_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestEmptyList(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    15,
 		},
 		Stmts: []node.Node{
@@ -30,21 +29,21 @@ func TestEmptyList(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    15,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    14,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    9,
 						},
 						Items: []node.Node{},
@@ -53,14 +52,14 @@ func TestEmptyList(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    14,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  13,
+								StartPos:  12,
 								EndPos:    14,
 							},
 							Value: "b",
@@ -71,12 +70,12 @@ func TestEmptyList(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -89,7 +88,7 @@ func TestList(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    17,
 		},
 		Stmts: []node.Node{
@@ -97,21 +96,21 @@ func TestList(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    17,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    16,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    11,
 						},
 						Items: []node.Node{
@@ -119,21 +118,21 @@ func TestList(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  9,
+									StartPos:  8,
 									EndPos:    10,
 								},
 								Val: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  9,
+										StartPos:  8,
 										EndPos:    10,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  9,
+											StartPos:  8,
 											EndPos:    10,
 										},
 										Value: "a",
@@ -146,14 +145,14 @@ func TestList(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  15,
+							StartPos:  14,
 							EndPos:    16,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  15,
+								StartPos:  14,
 								EndPos:    16,
 							},
 							Value: "b",
@@ -164,12 +163,12 @@ func TestList(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -182,7 +181,7 @@ func TestListArrayIndex(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    19,
 		},
 		Stmts: []node.Node{
@@ -190,21 +189,21 @@ func TestListArrayIndex(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    19,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    18,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    13,
 						},
 						Items: []node.Node{
@@ -212,28 +211,28 @@ func TestListArrayIndex(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  9,
+									StartPos:  8,
 									EndPos:    12,
 								},
 								Val: &expr.ArrayDimFetch{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  9,
+										StartPos:  8,
 										EndPos:    12,
 									},
 									Variable: &expr.Variable{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  9,
+											StartPos:  8,
 											EndPos:    10,
 										},
 										VarName: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  9,
+												StartPos:  8,
 												EndPos:    10,
 											},
 											Value: "a",
@@ -247,14 +246,14 @@ func TestListArrayIndex(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  17,
+							StartPos:  16,
 							EndPos:    18,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  17,
+								StartPos:  16,
 								EndPos:    18,
 							},
 							Value: "b",
@@ -265,12 +264,12 @@ func TestListArrayIndex(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -283,7 +282,7 @@ func TestListList(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    23,
 		},
 		Stmts: []node.Node{
@@ -291,21 +290,21 @@ func TestListList(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    23,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    22,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    17,
 						},
 						Items: []node.Node{
@@ -313,14 +312,14 @@ func TestListList(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  9,
+									StartPos:  8,
 									EndPos:    16,
 								},
 								Val: &expr.List{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  9,
+										StartPos:  8,
 										EndPos:    16,
 									},
 									Items: []node.Node{
@@ -328,21 +327,21 @@ func TestListList(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  14,
+												StartPos:  13,
 												EndPos:    15,
 											},
 											Val: &expr.Variable{
 												Position: &position.Position{
 													StartLine: 1,
 													EndLine:   1,
-													StartPos:  14,
+													StartPos:  13,
 													EndPos:    15,
 												},
 												VarName: &node.Identifier{
 													Position: &position.Position{
 														StartLine: 1,
 														EndLine:   1,
-														StartPos:  14,
+														StartPos:  13,
 														EndPos:    15,
 													},
 													Value: "a",
@@ -358,14 +357,14 @@ func TestListList(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  21,
+							StartPos:  20,
 							EndPos:    22,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  21,
+								StartPos:  20,
 								EndPos:    22,
 							},
 							Value: "b",
@@ -376,12 +375,12 @@ func TestListList(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -394,7 +393,7 @@ func TestListEmptyItem(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    19,
 		},
 		Stmts: []node.Node{
@@ -402,21 +401,21 @@ func TestListEmptyItem(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    19,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    18,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    13,
 						},
 						Items: []node.Node{
@@ -425,21 +424,21 @@ func TestListEmptyItem(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  11,
+									StartPos:  10,
 									EndPos:    12,
 								},
 								Val: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  11,
+										StartPos:  10,
 										EndPos:    12,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  11,
+											StartPos:  10,
 											EndPos:    12,
 										},
 										Value: "a",
@@ -452,14 +451,14 @@ func TestListEmptyItem(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  17,
+							StartPos:  16,
 							EndPos:    18,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  17,
+								StartPos:  16,
 								EndPos:    18,
 							},
 							Value: "b",
@@ -470,12 +469,12 @@ func TestListEmptyItem(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -488,7 +487,7 @@ func TestListEmptyItems(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    23,
 		},
 		Stmts: []node.Node{
@@ -496,21 +495,21 @@ func TestListEmptyItems(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    23,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    22,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    17,
 						},
 						Items: []node.Node{
@@ -520,21 +519,21 @@ func TestListEmptyItems(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  13,
+									StartPos:  12,
 									EndPos:    14,
 								},
 								Val: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  13,
+										StartPos:  12,
 										EndPos:    14,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  13,
+											StartPos:  12,
 											EndPos:    14,
 										},
 										Value: "a",
@@ -548,14 +547,14 @@ func TestListEmptyItems(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  21,
+							StartPos:  20,
 							EndPos:    22,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  21,
+								StartPos:  20,
 								EndPos:    22,
 							},
 							Value: "b",
@@ -566,12 +565,12 @@ func TestListEmptyItems(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

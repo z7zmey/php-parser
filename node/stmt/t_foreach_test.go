@@ -1,7 +1,6 @@
 package stmt_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestForeach(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    24,
 		},
 		Stmts: []node.Node{
@@ -30,21 +29,21 @@ func TestForeach(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    24,
 				},
 				Expr: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  13,
+						StartPos:  12,
 						EndPos:    14,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    14,
 						},
 						Value: "a",
@@ -54,14 +53,14 @@ func TestForeach(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  19,
+						StartPos:  18,
 						EndPos:    20,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    20,
 						},
 						Value: "v",
@@ -71,7 +70,7 @@ func TestForeach(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  23,
+						StartPos:  22,
 						EndPos:    24,
 					},
 					Stmts: []node.Node{},
@@ -80,12 +79,12 @@ func TestForeach(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -98,7 +97,7 @@ func TestForeachExpr(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    24,
 		},
 		Stmts: []node.Node{
@@ -106,14 +105,14 @@ func TestForeachExpr(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    24,
 				},
 				Expr: &expr.ShortArray{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  13,
+						StartPos:  12,
 						EndPos:    14,
 					},
 					Items: []node.Node{},
@@ -122,14 +121,14 @@ func TestForeachExpr(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  19,
+						StartPos:  18,
 						EndPos:    20,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    20,
 						},
 						Value: "v",
@@ -139,7 +138,7 @@ func TestForeachExpr(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  23,
+						StartPos:  22,
 						EndPos:    24,
 					},
 					Stmts: []node.Node{},
@@ -148,12 +147,12 @@ func TestForeachExpr(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -166,7 +165,7 @@ func TestAltForeach(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    35,
 		},
 		Stmts: []node.Node{
@@ -174,21 +173,21 @@ func TestAltForeach(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    35,
 				},
 				Expr: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  13,
+						StartPos:  12,
 						EndPos:    14,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    14,
 						},
 						Value: "a",
@@ -198,14 +197,14 @@ func TestAltForeach(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  19,
+						StartPos:  18,
 						EndPos:    20,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    20,
 						},
 						Value: "v",
@@ -224,12 +223,12 @@ func TestAltForeach(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -242,7 +241,7 @@ func TestForeachWithKey(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    30,
 		},
 		Stmts: []node.Node{
@@ -250,21 +249,21 @@ func TestForeachWithKey(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    30,
 				},
 				Expr: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  13,
+						StartPos:  12,
 						EndPos:    14,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    14,
 						},
 						Value: "a",
@@ -274,14 +273,14 @@ func TestForeachWithKey(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  19,
+						StartPos:  18,
 						EndPos:    20,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    20,
 						},
 						Value: "k",
@@ -291,14 +290,14 @@ func TestForeachWithKey(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  25,
+						StartPos:  24,
 						EndPos:    26,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  25,
+							StartPos:  24,
 							EndPos:    26,
 						},
 						Value: "v",
@@ -308,7 +307,7 @@ func TestForeachWithKey(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  29,
+						StartPos:  28,
 						EndPos:    30,
 					},
 					Stmts: []node.Node{},
@@ -317,12 +316,12 @@ func TestForeachWithKey(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -335,7 +334,7 @@ func TestForeachExprWithKey(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    30,
 		},
 		Stmts: []node.Node{
@@ -343,14 +342,14 @@ func TestForeachExprWithKey(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    30,
 				},
 				Expr: &expr.ShortArray{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  13,
+						StartPos:  12,
 						EndPos:    14,
 					},
 					Items: []node.Node{},
@@ -359,14 +358,14 @@ func TestForeachExprWithKey(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  19,
+						StartPos:  18,
 						EndPos:    20,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    20,
 						},
 						Value: "k",
@@ -376,14 +375,14 @@ func TestForeachExprWithKey(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  25,
+						StartPos:  24,
 						EndPos:    26,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  25,
+							StartPos:  24,
 							EndPos:    26,
 						},
 						Value: "v",
@@ -393,7 +392,7 @@ func TestForeachExprWithKey(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  29,
+						StartPos:  28,
 						EndPos:    30,
 					},
 					Stmts: []node.Node{},
@@ -402,12 +401,12 @@ func TestForeachExprWithKey(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -420,7 +419,7 @@ func TestForeachWithRef(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    31,
 		},
 		Stmts: []node.Node{
@@ -428,21 +427,21 @@ func TestForeachWithRef(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    31,
 				},
 				Expr: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  13,
+						StartPos:  12,
 						EndPos:    14,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    14,
 						},
 						Value: "a",
@@ -452,14 +451,14 @@ func TestForeachWithRef(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  19,
+						StartPos:  18,
 						EndPos:    20,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    20,
 						},
 						Value: "k",
@@ -469,21 +468,21 @@ func TestForeachWithRef(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  25,
+						StartPos:  24,
 						EndPos:    27,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  26,
+							StartPos:  25,
 							EndPos:    27,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  26,
+								StartPos:  25,
 								EndPos:    27,
 							},
 							Value: "v",
@@ -494,7 +493,7 @@ func TestForeachWithRef(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  30,
+						StartPos:  29,
 						EndPos:    31,
 					},
 					Stmts: []node.Node{},
@@ -503,12 +502,12 @@ func TestForeachWithRef(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -521,7 +520,7 @@ func TestForeachWithList(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    36,
 		},
 		Stmts: []node.Node{
@@ -529,21 +528,21 @@ func TestForeachWithList(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    36,
 				},
 				Expr: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  13,
+						StartPos:  12,
 						EndPos:    14,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    14,
 						},
 						Value: "a",
@@ -553,14 +552,14 @@ func TestForeachWithList(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  19,
+						StartPos:  18,
 						EndPos:    20,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    20,
 						},
 						Value: "k",
@@ -570,7 +569,7 @@ func TestForeachWithList(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  25,
+						StartPos:  24,
 						EndPos:    32,
 					},
 					Items: []node.Node{
@@ -578,21 +577,21 @@ func TestForeachWithList(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  30,
+								StartPos:  29,
 								EndPos:    31,
 							},
 							Val: &expr.Variable{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  30,
+									StartPos:  29,
 									EndPos:    31,
 								},
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  30,
+										StartPos:  29,
 										EndPos:    31,
 									},
 									Value: "v",
@@ -605,7 +604,7 @@ func TestForeachWithList(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  35,
+						StartPos:  34,
 						EndPos:    36,
 					},
 					Stmts: []node.Node{},
@@ -614,12 +613,12 @@ func TestForeachWithList(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src), "7.4")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

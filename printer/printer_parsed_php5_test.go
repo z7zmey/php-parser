@@ -10,7 +10,7 @@ import (
 )
 
 func parsePhp5(src string) node.Node {
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src), "5.6")
 	php5parser.WithFreeFloating()
 	php5parser.Parse()
 
@@ -1071,6 +1071,18 @@ func TestParseAndPrintPhp5InlineHtml(t *testing.T) {
 	$a;?>test<? `
 
 	actual := printPhp5(parsePhp5(src))
+
+	if src != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)
+	}
+}
+
+func TestParseAndPrintPhp5Shebang(t *testing.T) {
+	src := `#!/usr/bin/env php
+	<?php
+	$a;?>test<? `
+
+	actual := print(parse(src))
 
 	if src != actual {
 		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)

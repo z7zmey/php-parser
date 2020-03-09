@@ -129,9 +129,10 @@ var nodesToTest = []struct {
 		&stmt.Declare{
 			Consts: []node.Node{&stmt.Expression{}},
 			Stmt:   &stmt.StmtList{},
+			Alt:    true,
 		},
 		[]string{"Consts", "Stmt"},
-		nil,
+		map[string]interface{}{"Alt": true},
 	},
 	{
 		&stmt.Default{
@@ -322,9 +323,10 @@ var nodesToTest = []struct {
 	{
 		&stmt.PropertyList{
 			Modifiers:  []node.Node{&stmt.Expression{}},
+			Type:       &name.Name{},
 			Properties: []node.Node{&stmt.Expression{}},
 		},
-		[]string{"Modifiers", "Properties"},
+		[]string{"Modifiers", "Type", "Properties"},
 		nil,
 	},
 	{

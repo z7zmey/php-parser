@@ -25,10 +25,13 @@ bench:
 compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go fmt
 	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./php7/php7.go
 	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./php5/php5.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./php5/php5.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./php7/php7.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./scanner/scanner.go
 	rm -f y.output
 
-./scanner/scanner.go: ./scanner/scanner.l
-	golex -o $@ $<
+./scanner/scanner.go: ./scanner/scanner.rl
+	ragel -Z -G2 -o $@ $<
 
 ./php5/php5.go: ./php5/php5.y
 	goyacc -o $@ $<
