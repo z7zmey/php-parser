@@ -1,0 +1,1814 @@
+package ast
+
+import (
+	"github.com/z7zmey/php-parser/freefloating"
+	"github.com/z7zmey/php-parser/position"
+)
+
+type Node struct {
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+}
+
+// SetPosition sets node position
+func (n *Node) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Node) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *Node) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
+}
+
+// Root node
+type Root struct {
+	Node
+	Stmts []Vertex
+}
+
+func (n *Root) Accept(v NodeVisitor) {
+	v.Root(n)
+}
+
+// Nullable node
+type Nullable struct {
+	Node
+	Expr Vertex
+}
+
+func (n *Nullable) Accept(v NodeVisitor) {
+	v.Nullable(n)
+}
+
+// Parameter node
+type Parameter struct {
+	Node
+	ByRef        bool
+	Variadic     bool
+	Type         Vertex
+	Var          Vertex
+	DefaultValue Vertex
+}
+
+func (n *Parameter) Accept(v NodeVisitor) {
+	v.Parameter(n)
+}
+
+// Identifier node
+type Identifier struct {
+	Node
+	Value string
+}
+
+func (n *Identifier) Accept(v NodeVisitor) {
+	v.Identifier(n)
+}
+
+// ArgumentList node
+type ArgumentList struct {
+	Node
+	Arguments []Vertex
+}
+
+func (n *ArgumentList) Accept(v NodeVisitor) {
+	v.ArgumentList(n)
+}
+
+// Argument node
+type Argument struct {
+	Node
+	Variadic    bool
+	IsReference bool
+	Expr        Vertex
+}
+
+func (n *Argument) Accept(v NodeVisitor) {
+	v.Argument(n)
+}
+
+// ScalarDnumber node
+type ScalarDnumber struct {
+	Node
+	Value string
+}
+
+func (n *ScalarDnumber) Accept(v NodeVisitor) {
+	v.ScalarDnumber(n)
+}
+
+// ScalarEncapsed node
+type ScalarEncapsed struct {
+	Node
+	Parts []Vertex
+}
+
+func (n *ScalarEncapsed) Accept(v NodeVisitor) {
+	v.ScalarEncapsed(n)
+}
+
+// ScalarEncapsedStringPart node
+type ScalarEncapsedStringPart struct {
+	Node
+	Value string
+}
+
+func (n *ScalarEncapsedStringPart) Accept(v NodeVisitor) {
+	v.ScalarEncapsedStringPart(n)
+}
+
+// ScalarHeredoc node
+type ScalarHeredoc struct {
+	Node
+	Label string
+	Parts []Vertex
+}
+
+func (n *ScalarHeredoc) Accept(v NodeVisitor) {
+	v.ScalarHeredoc(n)
+}
+
+// ScalarLnumber node
+type ScalarLnumber struct {
+	Node
+	Value string
+}
+
+func (n *ScalarLnumber) Accept(v NodeVisitor) {
+	v.ScalarLnumber(n)
+}
+
+// ScalarMagicConstant node
+type ScalarMagicConstant struct {
+	Node
+	Value string
+}
+
+func (n *ScalarMagicConstant) Accept(v NodeVisitor) {
+	v.ScalarMagicConstant(n)
+}
+
+// ScalarString node
+type ScalarString struct {
+	Node
+	Value string
+}
+
+func (n *ScalarString) Accept(v NodeVisitor) {
+	v.ScalarString(n)
+}
+
+// StmtAltElse node
+type StmtAltElse struct {
+	Node
+	Stmt Vertex
+}
+
+func (n *StmtAltElse) Accept(v NodeVisitor) {
+	v.StmtAltElse(n)
+}
+
+// StmtAltElseIf node
+type StmtAltElseIf struct {
+	Node
+	Cond Vertex
+	Stmt Vertex
+}
+
+func (n *StmtAltElseIf) Accept(v NodeVisitor) {
+	v.StmtAltElseIf(n)
+}
+
+// StmtAltFor node
+type StmtAltFor struct {
+	Node
+	Init []Vertex
+	Cond []Vertex
+	Loop []Vertex
+	Stmt Vertex
+}
+
+func (n *StmtAltFor) Accept(v NodeVisitor) {
+	v.StmtAltFor(n)
+}
+
+// StmtAltForeach node
+type StmtAltForeach struct {
+	Node
+	Expr Vertex
+	Key  Vertex
+	Var  Vertex
+	Stmt Vertex
+}
+
+func (n *StmtAltForeach) Accept(v NodeVisitor) {
+	v.StmtAltForeach(n)
+}
+
+// StmtAltIf node
+type StmtAltIf struct {
+	Node
+	Cond   Vertex
+	Stmt   Vertex
+	ElseIf []Vertex
+	Else   Vertex
+}
+
+func (n *StmtAltIf) Accept(v NodeVisitor) {
+	v.StmtAltIf(n)
+}
+
+// StmtAltSwitch node
+type StmtAltSwitch struct {
+	Node
+	Cond     Vertex
+	CaseList *StmtCaseList
+}
+
+func (n *StmtAltSwitch) Accept(v NodeVisitor) {
+	v.StmtAltSwitch(n)
+}
+
+// StmtAltWhile node
+type StmtAltWhile struct {
+	Node
+	Cond Vertex
+	Stmt Vertex
+}
+
+func (n *StmtAltWhile) Accept(v NodeVisitor) {
+	v.StmtAltWhile(n)
+}
+
+// StmtBreak node
+type StmtBreak struct {
+	Node
+	Expr Vertex
+}
+
+func (n *StmtBreak) Accept(v NodeVisitor) {
+	v.StmtBreak(n)
+}
+
+// StmtCase node
+type StmtCase struct {
+	Node
+	Cond  Vertex
+	Stmts []Vertex
+}
+
+func (n *StmtCase) Accept(v NodeVisitor) {
+	v.StmtCase(n)
+}
+
+// StmtCaseList node
+type StmtCaseList struct {
+	Node
+	Cases []Vertex
+}
+
+func (n *StmtCaseList) Accept(v NodeVisitor) {
+	v.StmtCaseList(n)
+}
+
+// StmtCatch node
+type StmtCatch struct {
+	Node
+	Types []Vertex
+	Var   Vertex
+	Stmts []Vertex
+}
+
+func (n *StmtCatch) Accept(v NodeVisitor) {
+	v.StmtCatch(n)
+}
+
+// StmtClass node
+type StmtClass struct {
+	Node
+	ClassName    Vertex
+	Modifiers    []Vertex
+	ArgumentList *ArgumentList
+	Extends      *StmtClassExtends
+	Implements   *StmtClassImplements
+	Stmts        []Vertex
+}
+
+func (n *StmtClass) Accept(v NodeVisitor) {
+	v.StmtClass(n)
+}
+
+// StmtClassConstList node
+type StmtClassConstList struct {
+	Node
+	Modifiers []Vertex
+	Consts    []Vertex
+}
+
+func (n *StmtClassConstList) Accept(v NodeVisitor) {
+	v.StmtClassConstList(n)
+}
+
+// StmtClassExtends node
+type StmtClassExtends struct {
+	Node
+	ClassName Vertex
+}
+
+func (n *StmtClassExtends) Accept(v NodeVisitor) {
+	v.StmtClassExtends(n)
+}
+
+// StmtClassImplements node
+type StmtClassImplements struct {
+	Node
+	InterfaceNames []Vertex
+}
+
+func (n *StmtClassImplements) Accept(v NodeVisitor) {
+	v.StmtClassImplements(n)
+}
+
+// StmtClassMethod node
+type StmtClassMethod struct {
+	Node
+	ReturnsRef bool
+	MethodName Vertex
+	Modifiers  []Vertex
+	Params     []Vertex
+	ReturnType Vertex
+	Stmt       Vertex
+}
+
+func (n *StmtClassMethod) Accept(v NodeVisitor) {
+	v.StmtClassMethod(n)
+}
+
+// StmtConstList node
+type StmtConstList struct {
+	Node
+	Consts []Vertex
+}
+
+func (n *StmtConstList) Accept(v NodeVisitor) {
+	v.StmtConstList(n)
+}
+
+// StmtConstant node
+type StmtConstant struct {
+	Node
+	ConstantName Vertex
+	Expr         Vertex
+}
+
+func (n *StmtConstant) Accept(v NodeVisitor) {
+	v.StmtConstant(n)
+}
+
+// StmtContinue node
+type StmtContinue struct {
+	Node
+	Expr Vertex
+}
+
+func (n *StmtContinue) Accept(v NodeVisitor) {
+	v.StmtContinue(n)
+}
+
+// StmtDeclare node
+type StmtDeclare struct {
+	Node
+	Alt    bool
+	Consts []Vertex
+	Stmt   Vertex
+}
+
+func (n *StmtDeclare) Accept(v NodeVisitor) {
+	v.StmtDeclare(n)
+}
+
+// StmtDefault node
+type StmtDefault struct {
+	Node
+	Stmts []Vertex
+}
+
+func (n *StmtDefault) Accept(v NodeVisitor) {
+	v.StmtDefault(n)
+}
+
+// StmtDo node
+type StmtDo struct {
+	Node
+	Stmt Vertex
+	Cond Vertex
+}
+
+func (n *StmtDo) Accept(v NodeVisitor) {
+	v.StmtDo(n)
+}
+
+// StmtEcho node
+type StmtEcho struct {
+	Node
+	Exprs []Vertex
+}
+
+func (n *StmtEcho) Accept(v NodeVisitor) {
+	v.StmtEcho(n)
+}
+
+// StmtElse node
+type StmtElse struct {
+	Node
+	Stmt Vertex
+}
+
+func (n *StmtElse) Accept(v NodeVisitor) {
+	v.StmtElse(n)
+}
+
+// StmtElseIf node
+type StmtElseIf struct {
+	Node
+	Cond Vertex
+	Stmt Vertex
+}
+
+func (n *StmtElseIf) Accept(v NodeVisitor) {
+	v.StmtElseIf(n)
+}
+
+// StmtExpression node
+type StmtExpression struct {
+	Node
+	Expr Vertex
+}
+
+func (n *StmtExpression) Accept(v NodeVisitor) {
+	v.StmtExpression(n)
+}
+
+// StmtFinally node
+type StmtFinally struct {
+	Node
+	Stmts []Vertex
+}
+
+func (n *StmtFinally) Accept(v NodeVisitor) {
+	v.StmtFinally(n)
+}
+
+// StmtFor node
+type StmtFor struct {
+	Node
+	Init []Vertex
+	Cond []Vertex
+	Loop []Vertex
+	Stmt Vertex
+}
+
+func (n *StmtFor) Accept(v NodeVisitor) {
+	v.StmtFor(n)
+}
+
+// StmtForeach node
+type StmtForeach struct {
+	Node
+	Expr Vertex
+	Key  Vertex
+	Var  Vertex
+	Stmt Vertex
+}
+
+func (n *StmtForeach) Accept(v NodeVisitor) {
+	v.StmtForeach(n)
+}
+
+// StmtFunction node
+type StmtFunction struct {
+	Node
+	ReturnsRef   bool
+	FunctionName Vertex
+	Params       []Vertex
+	ReturnType   Vertex
+	Stmts        []Vertex
+}
+
+func (n *StmtFunction) Accept(v NodeVisitor) {
+	v.StmtFunction(n)
+}
+
+// StmtGlobal node
+type StmtGlobal struct {
+	Node
+	Vars []Vertex
+}
+
+func (n *StmtGlobal) Accept(v NodeVisitor) {
+	v.StmtGlobal(n)
+}
+
+// StmtGoto node
+type StmtGoto struct {
+	Node
+	Label Vertex
+}
+
+func (n *StmtGoto) Accept(v NodeVisitor) {
+	v.StmtGoto(n)
+}
+
+// StmtGroupUse node
+type StmtGroupUse struct {
+	Node
+	UseType Vertex
+	Prefix  Vertex
+	UseList []Vertex
+}
+
+func (n *StmtGroupUse) Accept(v NodeVisitor) {
+	v.StmtGroupUse(n)
+}
+
+// StmtHaltCompiler node
+type StmtHaltCompiler struct {
+	Node
+}
+
+func (n *StmtHaltCompiler) Accept(v NodeVisitor) {
+	v.StmtHaltCompiler(n)
+}
+
+// StmtIf node
+type StmtIf struct {
+	Node
+	Cond   Vertex
+	Stmt   Vertex
+	ElseIf []Vertex
+	Else   Vertex
+}
+
+func (n *StmtIf) Accept(v NodeVisitor) {
+	v.StmtIf(n)
+}
+
+// StmtInlineHtml node
+type StmtInlineHtml struct {
+	Node
+	Value string
+}
+
+func (n *StmtInlineHtml) Accept(v NodeVisitor) {
+	v.StmtInlineHtml(n)
+}
+
+// StmtInterface node
+type StmtInterface struct {
+	Node
+	InterfaceName Vertex
+	Extends       *StmtInterfaceExtends
+	Stmts         []Vertex
+}
+
+func (n *StmtInterface) Accept(v NodeVisitor) {
+	v.StmtInterface(n)
+}
+
+// StmtInterfaceExtends node
+type StmtInterfaceExtends struct {
+	Node
+	InterfaceNames []Vertex
+}
+
+func (n *StmtInterfaceExtends) Accept(v NodeVisitor) {
+	v.StmtInterfaceExtends(n)
+}
+
+// StmtLabel node
+type StmtLabel struct {
+	Node
+	LabelName Vertex
+}
+
+func (n *StmtLabel) Accept(v NodeVisitor) {
+	v.StmtLabel(n)
+}
+
+// StmtNamespace node
+type StmtNamespace struct {
+	Node
+	NamespaceName Vertex
+	Stmts         []Vertex
+}
+
+func (n *StmtNamespace) Accept(v NodeVisitor) {
+	v.StmtNamespace(n)
+}
+
+// StmtNop node
+type StmtNop struct {
+	Node
+}
+
+func (n *StmtNop) Accept(v NodeVisitor) {
+	v.StmtNop(n)
+}
+
+// StmtProperty node
+type StmtProperty struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *StmtProperty) Accept(v NodeVisitor) {
+	v.StmtProperty(n)
+}
+
+// StmtPropertyList node
+type StmtPropertyList struct {
+	Node
+	Modifiers  []Vertex
+	Type       Vertex
+	Properties []Vertex
+}
+
+func (n *StmtPropertyList) Accept(v NodeVisitor) {
+	v.StmtPropertyList(n)
+}
+
+// StmtReturn node
+type StmtReturn struct {
+	Node
+	Expr Vertex
+}
+
+func (n *StmtReturn) Accept(v NodeVisitor) {
+	v.StmtReturn(n)
+}
+
+// StmtStatic node
+type StmtStatic struct {
+	Node
+	Vars []Vertex
+}
+
+func (n *StmtStatic) Accept(v NodeVisitor) {
+	v.StmtStatic(n)
+}
+
+// StmtStaticVar node
+type StmtStaticVar struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *StmtStaticVar) Accept(v NodeVisitor) {
+	v.StmtStaticVar(n)
+}
+
+// StmtStmtList node
+type StmtStmtList struct {
+	Node
+	Stmts []Vertex
+}
+
+func (n *StmtStmtList) Accept(v NodeVisitor) {
+	v.StmtStmtList(n)
+}
+
+// StmtSwitch node
+type StmtSwitch struct {
+	Node
+	Cond     Vertex
+	CaseList *StmtCaseList
+}
+
+func (n *StmtSwitch) Accept(v NodeVisitor) {
+	v.StmtSwitch(n)
+}
+
+// StmtThrow node
+type StmtThrow struct {
+	Node
+	Expr Vertex
+}
+
+func (n *StmtThrow) Accept(v NodeVisitor) {
+	v.StmtThrow(n)
+}
+
+// StmtTrait node
+type StmtTrait struct {
+	Node
+	TraitName Vertex
+	Stmts     []Vertex
+}
+
+func (n *StmtTrait) Accept(v NodeVisitor) {
+	v.StmtTrait(n)
+}
+
+// StmtTraitAdaptationList node
+type StmtTraitAdaptationList struct {
+	Node
+	Adaptations []Vertex
+}
+
+func (n *StmtTraitAdaptationList) Accept(v NodeVisitor) {
+	v.StmtTraitAdaptationList(n)
+}
+
+// StmtTraitMethodRef node
+type StmtTraitMethodRef struct {
+	Node
+	Trait  Vertex
+	Method Vertex
+}
+
+func (n *StmtTraitMethodRef) Accept(v NodeVisitor) {
+	v.StmtTraitMethodRef(n)
+}
+
+// StmtTraitUse node
+type StmtTraitUse struct {
+	Node
+	Traits              []Vertex
+	TraitAdaptationList Vertex
+}
+
+func (n *StmtTraitUse) Accept(v NodeVisitor) {
+	v.StmtTraitUse(n)
+}
+
+// StmtTraitUseAlias node
+type StmtTraitUseAlias struct {
+	Node
+	Ref      Vertex
+	Modifier Vertex
+	Alias    Vertex
+}
+
+func (n *StmtTraitUseAlias) Accept(v NodeVisitor) {
+	v.StmtTraitUseAlias(n)
+}
+
+// StmtTraitUsePrecedence node
+type StmtTraitUsePrecedence struct {
+	Node
+	Ref       Vertex
+	Insteadof []Vertex
+}
+
+func (n *StmtTraitUsePrecedence) Accept(v NodeVisitor) {
+	v.StmtTraitUsePrecedence(n)
+}
+
+// StmtTry node
+type StmtTry struct {
+	Node
+	Stmts   []Vertex
+	Catches []Vertex
+	Finally Vertex
+}
+
+func (n *StmtTry) Accept(v NodeVisitor) {
+	v.StmtTry(n)
+}
+
+// StmtUnset node
+type StmtUnset struct {
+	Node
+	Vars []Vertex
+}
+
+func (n *StmtUnset) Accept(v NodeVisitor) {
+	v.StmtUnset(n)
+}
+
+// StmtUse node
+type StmtUse struct {
+	Node
+	UseType Vertex
+	Use     Vertex
+	Alias   Vertex
+}
+
+func (n *StmtUse) Accept(v NodeVisitor) {
+	v.StmtUse(n)
+}
+
+// StmtUseList node
+type StmtUseList struct {
+	Node
+	UseType Vertex
+	Uses    []Vertex
+}
+
+func (n *StmtUseList) Accept(v NodeVisitor) {
+	v.StmtUseList(n)
+}
+
+// StmtWhile node
+type StmtWhile struct {
+	Node
+	Cond Vertex
+	Stmt Vertex
+}
+
+func (n *StmtWhile) Accept(v NodeVisitor) {
+	v.StmtWhile(n)
+}
+
+// ExprArray node
+type ExprArray struct {
+	Node
+	Items []Vertex
+}
+
+func (n *ExprArray) Accept(v NodeVisitor) {
+	v.ExprArray(n)
+}
+
+// ExprArrayDimFetch node
+type ExprArrayDimFetch struct {
+	Node
+	Var Vertex
+	Dim Vertex
+}
+
+func (n *ExprArrayDimFetch) Accept(v NodeVisitor) {
+	v.ExprArrayDimFetch(n)
+}
+
+// ExprArrayItem node
+type ExprArrayItem struct {
+	Node
+	Unpack bool
+	Key    Vertex
+	Val    Vertex
+}
+
+func (n *ExprArrayItem) Accept(v NodeVisitor) {
+	v.ExprArrayItem(n)
+}
+
+// ExprArrowFunction node
+type ExprArrowFunction struct {
+	Node
+	ReturnsRef bool
+	Static     bool
+	Params     []Vertex
+	ReturnType Vertex
+	Expr       Vertex
+}
+
+func (n *ExprArrowFunction) Accept(v NodeVisitor) {
+	v.ExprArrowFunction(n)
+}
+
+// ExprBitwiseNot node
+type ExprBitwiseNot struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprBitwiseNot) Accept(v NodeVisitor) {
+	v.ExprBitwiseNot(n)
+}
+
+// ExprBooleanNot node
+type ExprBooleanNot struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprBooleanNot) Accept(v NodeVisitor) {
+	v.ExprBooleanNot(n)
+}
+
+// ExprClassConstFetch node
+type ExprClassConstFetch struct {
+	Node
+	Class        Vertex
+	ConstantName Vertex
+}
+
+func (n *ExprClassConstFetch) Accept(v NodeVisitor) {
+	v.ExprClassConstFetch(n)
+}
+
+// ExprClone node
+type ExprClone struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprClone) Accept(v NodeVisitor) {
+	v.ExprClone(n)
+}
+
+// ExprClosure node
+type ExprClosure struct {
+	Node
+	ReturnsRef bool
+	Static     bool
+	Params     []Vertex
+	ClosureUse *ExprClosureUse
+	ReturnType Vertex
+	Stmts      []Vertex
+}
+
+func (n *ExprClosure) Accept(v NodeVisitor) {
+	v.ExprClosure(n)
+}
+
+// ExprClosureUse node
+type ExprClosureUse struct {
+	Node
+	Uses []Vertex
+}
+
+func (n *ExprClosureUse) Accept(v NodeVisitor) {
+	v.ExprClosureUse(n)
+}
+
+// ExprConstFetch node
+type ExprConstFetch struct {
+	Node
+	Const Vertex
+}
+
+func (n *ExprConstFetch) Accept(v NodeVisitor) {
+	v.ExprConstFetch(n)
+}
+
+// ExprEmpty node
+type ExprEmpty struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprEmpty) Accept(v NodeVisitor) {
+	v.ExprEmpty(n)
+}
+
+// ExprErrorSuppress node
+type ExprErrorSuppress struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprErrorSuppress) Accept(v NodeVisitor) {
+	v.ExprErrorSuppress(n)
+}
+
+// ExprEval node
+type ExprEval struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprEval) Accept(v NodeVisitor) {
+	v.ExprEval(n)
+}
+
+// ExprExit node
+type ExprExit struct {
+	Node
+	Die  bool
+	Expr Vertex
+}
+
+func (n *ExprExit) Accept(v NodeVisitor) {
+	v.ExprExit(n)
+}
+
+// ExprFunctionCall node
+type ExprFunctionCall struct {
+	Node
+	Function     Vertex
+	ArgumentList *ArgumentList
+}
+
+func (n *ExprFunctionCall) Accept(v NodeVisitor) {
+	v.ExprFunctionCall(n)
+}
+
+// ExprInclude node
+type ExprInclude struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprInclude) Accept(v NodeVisitor) {
+	v.ExprInclude(n)
+}
+
+// ExprIncludeOnce node
+type ExprIncludeOnce struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprIncludeOnce) Accept(v NodeVisitor) {
+	v.ExprIncludeOnce(n)
+}
+
+// ExprInstanceOf node
+type ExprInstanceOf struct {
+	Node
+	Expr  Vertex
+	Class Vertex
+}
+
+func (n *ExprInstanceOf) Accept(v NodeVisitor) {
+	v.ExprInstanceOf(n)
+}
+
+// ExprIsset node
+type ExprIsset struct {
+	Node
+	Vars []Vertex
+}
+
+func (n *ExprIsset) Accept(v NodeVisitor) {
+	v.ExprIsset(n)
+}
+
+// ExprList node
+type ExprList struct {
+	Node
+	Items []Vertex
+}
+
+func (n *ExprList) Accept(v NodeVisitor) {
+	v.ExprList(n)
+}
+
+// ExprMethodCall node
+type ExprMethodCall struct {
+	Node
+	Var          Vertex
+	Method       Vertex
+	ArgumentList *ArgumentList
+}
+
+func (n *ExprMethodCall) Accept(v NodeVisitor) {
+	v.ExprMethodCall(n)
+}
+
+// ExprNew node
+type ExprNew struct {
+	Node
+	Class        Vertex
+	ArgumentList *ArgumentList
+}
+
+func (n *ExprNew) Accept(v NodeVisitor) {
+	v.ExprNew(n)
+}
+
+// ExprPostDec node
+type ExprPostDec struct {
+	Node
+	Var Vertex
+}
+
+func (n *ExprPostDec) Accept(v NodeVisitor) {
+	v.ExprPostDec(n)
+}
+
+// ExprPostInc node
+type ExprPostInc struct {
+	Node
+	Var Vertex
+}
+
+func (n *ExprPostInc) Accept(v NodeVisitor) {
+	v.ExprPostInc(n)
+}
+
+// ExprPreDec node
+type ExprPreDec struct {
+	Node
+	Var Vertex
+}
+
+func (n *ExprPreDec) Accept(v NodeVisitor) {
+	v.ExprPreDec(n)
+}
+
+// ExprPreInc node
+type ExprPreInc struct {
+	Node
+	Var Vertex
+}
+
+func (n *ExprPreInc) Accept(v NodeVisitor) {
+	v.ExprPreInc(n)
+}
+
+// ExprPrint node
+type ExprPrint struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprPrint) Accept(v NodeVisitor) {
+	v.ExprPrint(n)
+}
+
+// ExprPropertyFetch node
+type ExprPropertyFetch struct {
+	Node
+	Var      Vertex
+	Property Vertex
+}
+
+func (n *ExprPropertyFetch) Accept(v NodeVisitor) {
+	v.ExprPropertyFetch(n)
+}
+
+// ExprReference node
+type ExprReference struct {
+	Node
+	Var Vertex
+}
+
+func (n *ExprReference) Accept(v NodeVisitor) {
+	v.ExprReference(n)
+}
+
+// ExprRequire node
+type ExprRequire struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprRequire) Accept(v NodeVisitor) {
+	v.ExprRequire(n)
+}
+
+// ExprRequireOnce node
+type ExprRequireOnce struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprRequireOnce) Accept(v NodeVisitor) {
+	v.ExprRequireOnce(n)
+}
+
+// ExprShellExec node
+type ExprShellExec struct {
+	Node
+	Parts []Vertex
+}
+
+func (n *ExprShellExec) Accept(v NodeVisitor) {
+	v.ExprShellExec(n)
+}
+
+// ExprShortArray node
+type ExprShortArray struct {
+	Node
+	Items []Vertex
+}
+
+func (n *ExprShortArray) Accept(v NodeVisitor) {
+	v.ExprShortArray(n)
+}
+
+// ExprShortList node
+type ExprShortList struct {
+	Node
+	Items []Vertex
+}
+
+func (n *ExprShortList) Accept(v NodeVisitor) {
+	v.ExprShortList(n)
+}
+
+// ExprStaticCall node
+type ExprStaticCall struct {
+	Node
+	Class        Vertex
+	Call         Vertex
+	ArgumentList *ArgumentList
+}
+
+func (n *ExprStaticCall) Accept(v NodeVisitor) {
+	v.ExprStaticCall(n)
+}
+
+// ExprStaticPropertyFetch node
+type ExprStaticPropertyFetch struct {
+	Node
+	Class    Vertex
+	Property Vertex
+}
+
+func (n *ExprStaticPropertyFetch) Accept(v NodeVisitor) {
+	v.ExprStaticPropertyFetch(n)
+}
+
+// ExprTernary node
+type ExprTernary struct {
+	Node
+	Condition Vertex
+	IfTrue    Vertex
+	IfFalse   Vertex
+}
+
+func (n *ExprTernary) Accept(v NodeVisitor) {
+	v.ExprTernary(n)
+}
+
+// ExprUnaryMinus node
+type ExprUnaryMinus struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprUnaryMinus) Accept(v NodeVisitor) {
+	v.ExprUnaryMinus(n)
+}
+
+// ExprUnaryPlus node
+type ExprUnaryPlus struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprUnaryPlus) Accept(v NodeVisitor) {
+	v.ExprUnaryPlus(n)
+}
+
+// ExprVariable node
+type ExprVariable struct {
+	Node
+	VarName Vertex
+}
+
+func (n *ExprVariable) Accept(v NodeVisitor) {
+	v.ExprVariable(n)
+}
+
+// ExprYield node
+type ExprYield struct {
+	Node
+	Key   Vertex
+	Value Vertex
+}
+
+func (n *ExprYield) Accept(v NodeVisitor) {
+	v.ExprYield(n)
+}
+
+// ExprYieldFrom node
+type ExprYieldFrom struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprYieldFrom) Accept(v NodeVisitor) {
+	v.ExprYieldFrom(n)
+}
+
+// ExprCastArray node
+type ExprCastArray struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprCastArray) Accept(v NodeVisitor) {
+	v.ExprCastArray(n)
+}
+
+// ExprCastBool node
+type ExprCastBool struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprCastBool) Accept(v NodeVisitor) {
+	v.ExprCastBool(n)
+}
+
+// ExprCastDouble node
+type ExprCastDouble struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprCastDouble) Accept(v NodeVisitor) {
+	v.ExprCastDouble(n)
+}
+
+// ExprCastInt node
+type ExprCastInt struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprCastInt) Accept(v NodeVisitor) {
+	v.ExprCastInt(n)
+}
+
+// ExprCastObject node
+type ExprCastObject struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprCastObject) Accept(v NodeVisitor) {
+	v.ExprCastObject(n)
+}
+
+// ExprCastString node
+type ExprCastString struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprCastString) Accept(v NodeVisitor) {
+	v.ExprCastString(n)
+}
+
+// ExprCastUnset node
+type ExprCastUnset struct {
+	Node
+	Expr Vertex
+}
+
+func (n *ExprCastUnset) Accept(v NodeVisitor) {
+	v.ExprCastUnset(n)
+}
+
+// ExprAssign node
+type ExprAssign struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssign) Accept(v NodeVisitor) {
+	v.ExprAssign(n)
+}
+
+// ExprAssignReference node
+type ExprAssignReference struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignReference) Accept(v NodeVisitor) {
+	v.ExprAssignReference(n)
+}
+
+// ExprAssignBitwiseAnd node
+type ExprAssignBitwiseAnd struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignBitwiseAnd) Accept(v NodeVisitor) {
+	v.ExprAssignBitwiseAnd(n)
+}
+
+// ExprAssignBitwiseOr node
+type ExprAssignBitwiseOr struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignBitwiseOr) Accept(v NodeVisitor) {
+	v.ExprAssignBitwiseOr(n)
+}
+
+// ExprAssignBitwiseXor node
+type ExprAssignBitwiseXor struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignBitwiseXor) Accept(v NodeVisitor) {
+	v.ExprAssignBitwiseXor(n)
+}
+
+// ExprAssignCoalesce node
+type ExprAssignCoalesce struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignCoalesce) Accept(v NodeVisitor) {
+	v.ExprAssignCoalesce(n)
+}
+
+// ExprAssignConcat node
+type ExprAssignConcat struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignConcat) Accept(v NodeVisitor) {
+	v.ExprAssignConcat(n)
+}
+
+// ExprAssignDiv node
+type ExprAssignDiv struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignDiv) Accept(v NodeVisitor) {
+	v.ExprAssignDiv(n)
+}
+
+// ExprAssignMinus node
+type ExprAssignMinus struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignMinus) Accept(v NodeVisitor) {
+	v.ExprAssignMinus(n)
+}
+
+// ExprAssignMod node
+type ExprAssignMod struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignMod) Accept(v NodeVisitor) {
+	v.ExprAssignMod(n)
+}
+
+// ExprAssignMul node
+type ExprAssignMul struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignMul) Accept(v NodeVisitor) {
+	v.ExprAssignMul(n)
+}
+
+// ExprAssignPlus node
+type ExprAssignPlus struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignPlus) Accept(v NodeVisitor) {
+	v.ExprAssignPlus(n)
+}
+
+// ExprAssignPow node
+type ExprAssignPow struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignPow) Accept(v NodeVisitor) {
+	v.ExprAssignPow(n)
+}
+
+// ExprAssignShiftLeft node
+type ExprAssignShiftLeft struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignShiftLeft) Accept(v NodeVisitor) {
+	v.ExprAssignShiftLeft(n)
+}
+
+// ExprAssignShiftRight node
+type ExprAssignShiftRight struct {
+	Node
+	Var  Vertex
+	Expr Vertex
+}
+
+func (n *ExprAssignShiftRight) Accept(v NodeVisitor) {
+	v.ExprAssignShiftRight(n)
+}
+
+// ExprBinaryBitwiseAnd node
+type ExprBinaryBitwiseAnd struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryBitwiseAnd) Accept(v NodeVisitor) {
+	v.ExprBinaryBitwiseAnd(n)
+}
+
+// ExprBinaryBitwiseOr node
+type ExprBinaryBitwiseOr struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryBitwiseOr) Accept(v NodeVisitor) {
+	v.ExprBinaryBitwiseOr(n)
+}
+
+// ExprBinaryBitwiseXor node
+type ExprBinaryBitwiseXor struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryBitwiseXor) Accept(v NodeVisitor) {
+	v.ExprBinaryBitwiseXor(n)
+}
+
+// ExprBinaryBooleanAnd node
+type ExprBinaryBooleanAnd struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryBooleanAnd) Accept(v NodeVisitor) {
+	v.ExprBinaryBooleanAnd(n)
+}
+
+// ExprBinaryBooleanOr node
+type ExprBinaryBooleanOr struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryBooleanOr) Accept(v NodeVisitor) {
+	v.ExprBinaryBooleanOr(n)
+}
+
+// ExprBinaryCoalesce node
+type ExprBinaryCoalesce struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryCoalesce) Accept(v NodeVisitor) {
+	v.ExprBinaryCoalesce(n)
+}
+
+// ExprBinaryConcat node
+type ExprBinaryConcat struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryConcat) Accept(v NodeVisitor) {
+	v.ExprBinaryConcat(n)
+}
+
+// ExprBinaryDiv node
+type ExprBinaryDiv struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryDiv) Accept(v NodeVisitor) {
+	v.ExprBinaryDiv(n)
+}
+
+// ExprBinaryEqual node
+type ExprBinaryEqual struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryEqual) Accept(v NodeVisitor) {
+	v.ExprBinaryEqual(n)
+}
+
+// ExprBinaryGreater node
+type ExprBinaryGreater struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryGreater) Accept(v NodeVisitor) {
+	v.ExprBinaryGreater(n)
+}
+
+// ExprBinaryGreaterOrEqual node
+type ExprBinaryGreaterOrEqual struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryGreaterOrEqual) Accept(v NodeVisitor) {
+	v.ExprBinaryGreaterOrEqual(n)
+}
+
+// ExprBinaryIdentical node
+type ExprBinaryIdentical struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryIdentical) Accept(v NodeVisitor) {
+	v.ExprBinaryIdentical(n)
+}
+
+// ExprBinaryLogicalAnd node
+type ExprBinaryLogicalAnd struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryLogicalAnd) Accept(v NodeVisitor) {
+	v.ExprBinaryLogicalAnd(n)
+}
+
+// ExprBinaryLogicalOr node
+type ExprBinaryLogicalOr struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryLogicalOr) Accept(v NodeVisitor) {
+	v.ExprBinaryLogicalOr(n)
+}
+
+// ExprBinaryLogicalXor node
+type ExprBinaryLogicalXor struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryLogicalXor) Accept(v NodeVisitor) {
+	v.ExprBinaryLogicalXor(n)
+}
+
+// ExprBinaryMinus node
+type ExprBinaryMinus struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryMinus) Accept(v NodeVisitor) {
+	v.ExprBinaryMinus(n)
+}
+
+// ExprBinaryMod node
+type ExprBinaryMod struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryMod) Accept(v NodeVisitor) {
+	v.ExprBinaryMod(n)
+}
+
+// ExprBinaryMul node
+type ExprBinaryMul struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryMul) Accept(v NodeVisitor) {
+	v.ExprBinaryMul(n)
+}
+
+// ExprBinaryNotEqual node
+type ExprBinaryNotEqual struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryNotEqual) Accept(v NodeVisitor) {
+	v.ExprBinaryNotEqual(n)
+}
+
+// ExprBinaryNotIdentical node
+type ExprBinaryNotIdentical struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryNotIdentical) Accept(v NodeVisitor) {
+	v.ExprBinaryNotIdentical(n)
+}
+
+// ExprBinaryPlus node
+type ExprBinaryPlus struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryPlus) Accept(v NodeVisitor) {
+	v.ExprBinaryPlus(n)
+}
+
+// ExprBinaryPow node
+type ExprBinaryPow struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryPow) Accept(v NodeVisitor) {
+	v.ExprBinaryPow(n)
+}
+
+// ExprBinaryShiftLeft node
+type ExprBinaryShiftLeft struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryShiftLeft) Accept(v NodeVisitor) {
+	v.ExprBinaryShiftLeft(n)
+}
+
+// ExprBinaryShiftRight node
+type ExprBinaryShiftRight struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinaryShiftRight) Accept(v NodeVisitor) {
+	v.ExprBinaryShiftRight(n)
+}
+
+// ExprBinarySmaller node
+type ExprBinarySmaller struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinarySmaller) Accept(v NodeVisitor) {
+	v.ExprBinarySmaller(n)
+}
+
+// ExprBinarySmallerOrEqual node
+type ExprBinarySmallerOrEqual struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinarySmallerOrEqual) Accept(v NodeVisitor) {
+	v.ExprBinarySmallerOrEqual(n)
+}
+
+// ExprBinarySpaceship node
+type ExprBinarySpaceship struct {
+	Node
+	Left  Vertex
+	Right Vertex
+}
+
+func (n *ExprBinarySpaceship) Accept(v NodeVisitor) {
+	v.ExprBinarySpaceship(n)
+}
