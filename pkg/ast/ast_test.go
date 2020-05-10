@@ -1,8 +1,6 @@
 package ast_test
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/ast/traverser"
@@ -10,92 +8,6 @@ import (
 	"os"
 	"strings"
 )
-
-func ExampleJSON() {
-	stxTree := &ast.Root{
-		Stmts: []ast.Vertex{
-			&ast.Nullable{
-				Expr: &ast.Parameter{
-					Type:         nil,
-					Var:          nil,
-					DefaultValue: nil,
-				},
-			},
-			&ast.Identifier{},
-			&ast.ArgumentList{
-				Arguments: []ast.Vertex{
-					&ast.Argument{},
-					&ast.Argument{
-						Expr: &ast.ScalarDnumber{},
-					},
-				},
-			},
-		},
-	}
-
-	jsonStxTree, err := json.Marshal(stxTree)
-	if err != nil {
-		panic(err)
-	}
-
-	buf := bytes.NewBuffer(nil)
-	err = json.Indent(buf, jsonStxTree, "", "  ")
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Fprint(os.Stdout, buf.String())
-
-	// output:
-	// {
-	//   "FreeFloating": null,
-	//   "Position": null,
-	//   "Stmts": [
-	//     {
-	//       "FreeFloating": null,
-	//       "Position": null,
-	//       "Expr": {
-	//         "FreeFloating": null,
-	//         "Position": null,
-	//         "ByRef": false,
-	//         "Variadic": false,
-	//         "Type": null,
-	//         "Var": null,
-	//         "DefaultValue": null
-	//       }
-	//     },
-	//     {
-	//       "FreeFloating": null,
-	//       "Position": null,
-	//       "Value": ""
-	//     },
-	//     {
-	//       "FreeFloating": null,
-	//       "Position": null,
-	//       "Arguments": [
-	//         {
-	//           "FreeFloating": null,
-	//           "Position": null,
-	//           "Variadic": false,
-	//           "IsReference": false,
-	//           "Expr": null
-	//         },
-	//         {
-	//           "FreeFloating": null,
-	//           "Position": null,
-	//           "Variadic": false,
-	//           "IsReference": false,
-	//           "Expr": {
-	//             "FreeFloating": null,
-	//             "Position": null,
-	//             "Value": ""
-	//           }
-	//         }
-	//       ]
-	//     }
-	//   ]
-	// }
-}
 
 func ExampleStxTree() {
 	stxTree := &ast.Root{

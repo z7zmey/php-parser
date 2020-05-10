@@ -1,27 +1,18 @@
 package ast
 
 import (
-	"github.com/z7zmey/php-parser/freefloating"
+	"github.com/z7zmey/php-parser/pkg/token"
 	"github.com/z7zmey/php-parser/position"
 )
 
 type Node struct {
-	FreeFloating freefloating.Collection
+	StartTokens  []token.Token
+	EndTokens    []token.Token
 	Position     *position.Position
 }
 
-// SetPosition sets node position
-func (n *Node) SetPosition(p *position.Position) {
-	n.Position = p
-}
-
-// GetPosition returns node positions
-func (n *Node) GetPosition() *position.Position {
-	return n.Position
-}
-
-func (n *Node) GetFreeFloating() *freefloating.Collection {
-	return &n.FreeFloating
+func (n *Node) GetNode() *Node {
+	return n
 }
 
 // Root node

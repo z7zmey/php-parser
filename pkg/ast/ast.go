@@ -1,16 +1,8 @@
 package ast
 
-import (
-	"github.com/z7zmey/php-parser/freefloating"
-	"github.com/z7zmey/php-parser/position"
-)
-
 type Vertex interface {
 	Accept(v NodeVisitor)
-
-	SetPosition(p *position.Position)
-	GetPosition() *position.Position
-	GetFreeFloating() *freefloating.Collection
+	GetNode() *Node
 }
 
 type Traverser interface {
