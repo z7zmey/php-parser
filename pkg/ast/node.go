@@ -1,14 +1,14 @@
 package ast
 
 import (
+	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
-	"github.com/z7zmey/php-parser/position"
 )
 
 type Node struct {
-	StartTokens  []token.Token
-	EndTokens    []token.Token
-	Position     *position.Position
+	StartTokens []token.Token
+	EndTokens   []token.Token
+	Position    *position.Position
 }
 
 func (n *Node) GetNode() *Node {

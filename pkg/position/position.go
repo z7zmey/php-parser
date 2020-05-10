@@ -1,9 +1,5 @@
 package position
 
-import (
-	"fmt"
-)
-
 // Position represents node position
 type Position struct {
 	StartLine int
@@ -20,8 +16,4 @@ func NewPosition(StartLine int, EndLine int, StartPos int, EndPos int) *Position
 		StartPos:  StartPos,
 		EndPos:    EndPos,
 	}
-}
-
-func (p Position) String() string {
-	return fmt.Sprintf("Pos{Line: %d-%d Pos: %d-%d}", p.StartLine, p.EndLine, p.StartPos, p.EndPos)
 }
