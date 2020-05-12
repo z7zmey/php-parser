@@ -189,4 +189,9 @@ type NodeVisitor interface {
 	ScalarLnumber(n *ScalarLnumber)
 	ScalarMagicConstant(n *ScalarMagicConstant)
 	ScalarString(n *ScalarString)
+
+	NameName(n *NameName)
+	NameFullyQualified(n *NameFullyQualified)
+	NameRelative(n *NameRelative)
+	NameNamePart(n *NameNamePart)
 }

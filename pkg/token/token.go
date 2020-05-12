@@ -1,9 +1,9 @@
 package token
 
-type TokenID int
+type ID int
 
 const (
-	T_INCLUDE TokenID = iota + 57346
+	T_INCLUDE ID = iota + 57346
 	T_INCLUDE_ONCE
 	T_EXIT
 	T_IF
@@ -144,6 +144,6 @@ const (
 )
 
 type Token struct {
-	ID    TokenID
+	ID    ID
 	Value []byte
 }

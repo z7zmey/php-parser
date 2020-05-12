@@ -8,6 +8,7 @@ import (
 type Node struct {
 	StartTokens []token.Token
 	EndTokens   []token.Token
+	Tokens      token.Collection
 	Position    *position.Position
 }
 
@@ -52,7 +53,7 @@ func (n *Parameter) Accept(v NodeVisitor) {
 // Identifier node
 type Identifier struct {
 	Node
-	Value string
+	Value []byte
 }
 
 func (n *Identifier) Accept(v NodeVisitor) {
@@ -84,7 +85,7 @@ func (n *Argument) Accept(v NodeVisitor) {
 // ScalarDnumber node
 type ScalarDnumber struct {
 	Node
-	Value string
+	Value []byte
 }
 
 func (n *ScalarDnumber) Accept(v NodeVisitor) {
@@ -104,7 +105,7 @@ func (n *ScalarEncapsed) Accept(v NodeVisitor) {
 // ScalarEncapsedStringPart node
 type ScalarEncapsedStringPart struct {
 	Node
-	Value string
+	Value []byte
 }
 
 func (n *ScalarEncapsedStringPart) Accept(v NodeVisitor) {
@@ -114,7 +115,7 @@ func (n *ScalarEncapsedStringPart) Accept(v NodeVisitor) {
 // ScalarHeredoc node
 type ScalarHeredoc struct {
 	Node
-	Label string
+	Label []byte
 	Parts []Vertex
 }
 
@@ -125,7 +126,7 @@ func (n *ScalarHeredoc) Accept(v NodeVisitor) {
 // ScalarLnumber node
 type ScalarLnumber struct {
 	Node
-	Value string
+	Value []byte
 }
 
 func (n *ScalarLnumber) Accept(v NodeVisitor) {
@@ -135,7 +136,7 @@ func (n *ScalarLnumber) Accept(v NodeVisitor) {
 // ScalarMagicConstant node
 type ScalarMagicConstant struct {
 	Node
-	Value string
+	Value []byte
 }
 
 func (n *ScalarMagicConstant) Accept(v NodeVisitor) {
@@ -145,7 +146,7 @@ func (n *ScalarMagicConstant) Accept(v NodeVisitor) {
 // ScalarString node
 type ScalarString struct {
 	Node
-	Value string
+	Value []byte
 }
 
 func (n *ScalarString) Accept(v NodeVisitor) {
@@ -550,7 +551,7 @@ func (n *StmtIf) Accept(v NodeVisitor) {
 // StmtInlineHtml node
 type StmtInlineHtml struct {
 	Node
-	Value string
+	Value []byte
 }
 
 func (n *StmtInlineHtml) Accept(v NodeVisitor) {
@@ -1802,4 +1803,40 @@ type ExprBinarySpaceship struct {
 
 func (n *ExprBinarySpaceship) Accept(v NodeVisitor) {
 	v.ExprBinarySpaceship(n)
+}
+
+type NameName struct {
+	Node
+	Parts []Vertex
+}
+
+func (n *NameName) Accept(v NodeVisitor) {
+	v.NameName(n)
+}
+
+type NameFullyQualified struct {
+	Node
+	Parts []Vertex
+}
+
+func (n *NameFullyQualified) Accept(v NodeVisitor) {
+	v.NameFullyQualified(n)
+}
+
+type NameRelative struct {
+	Node
+	Parts []Vertex
+}
+
+func (n *NameRelative) Accept(v NodeVisitor) {
+	v.NameRelative(n)
+}
+
+type NameNamePart struct {
+	Node
+	Value []byte
+}
+
+func (n *NameNamePart) Accept(v NodeVisitor) {
+	v.NameNamePart(n)
 }

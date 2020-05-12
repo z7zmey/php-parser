@@ -53,7 +53,6 @@ type testVisitor struct {
 	depth int
 }
 
-
 func (v *testVisitor) Enter(key string, _ bool) {
 	v.depth++
 	fmt.Fprint(os.Stdout, "=>", strings.Repeat("  ", v.depth), key, ":\n")
@@ -90,14 +89,14 @@ func (v *testVisitor) Identifier(_ *ast.Identifier) {
 	fmt.Fprintln(os.Stdout, "=>", strings.Repeat("  ", v.depth-1), "*ast.Identifier")
 }
 
-func (v *testVisitor) ArgumentList(_ *ast.ArgumentList)  {
+func (v *testVisitor) ArgumentList(_ *ast.ArgumentList) {
 	fmt.Fprintln(os.Stdout, "=>", strings.Repeat("  ", v.depth-1), "*ast.ArgumentList")
 }
 
-func (v *testVisitor) Argument(_ *ast.Argument)  {
+func (v *testVisitor) Argument(_ *ast.Argument) {
 	fmt.Fprintln(os.Stdout, "=>", strings.Repeat("  ", v.depth-1), "*ast.Argument")
 }
 
-func (v *testVisitor) ScalarDnumber(_ *ast.ScalarDnumber)  {
+func (v *testVisitor) ScalarDnumber(_ *ast.ScalarDnumber) {
 	fmt.Fprintln(os.Stdout, "=>", strings.Repeat("  ", v.depth-1), "*ast.ScalarDnumber")
 }

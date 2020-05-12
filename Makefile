@@ -22,21 +22,21 @@ bench:
 	go test -benchmem -bench=. ./php5
 	go test -benchmem -bench=. ./php7
 
-compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go fmt
-	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./php7/php7.go
-	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./php5/php5.go
-	sed -i '' -e 's/\/\/line/\/\/ line/g' ./php5/php5.go
-	sed -i '' -e 's/\/\/line/\/\/ line/g' ./php7/php7.go
-	sed -i '' -e 's/\/\/line/\/\/ line/g' ./scanner/scanner.go
+compile: ./internal/php5/php5.go ./internal/php7/php7.go ./internal/scanner/scanner.go fmt
+	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/php7/php7.go
+	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/php5/php5.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/php5/php5.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/php7/php7.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/scanner/scanner.go
 	rm -f y.output
 
-./scanner/scanner.go: ./scanner/scanner.rl
+./internal/scanner/scanner.go: ./internal/scanner/scanner.rl
 	ragel -Z -G2 -o $@ $<
 
-./php5/php5.go: ./php5/php5.y
+./internal/php5/php5.go: ./internal/php5/php5.y
 	goyacc -o $@ $<
 
-./php7/php7.go: ./php7/php7.y
+./internal/php7/php7.go: ./internal/php7/php7.y
 	goyacc -o $@ $<
 
 cpu_pprof:

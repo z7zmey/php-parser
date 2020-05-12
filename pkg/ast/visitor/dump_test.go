@@ -13,8 +13,7 @@ func ExampleDump() {
 			&ast.Identifier{},
 			&ast.Parameter{
 				Variadic: true,
-				Var: &ast.ExprVariable{
-				},
+				Var:      &ast.ExprVariable{},
 			},
 			&ast.StmtInlineHtml{
 				Value: "foo",

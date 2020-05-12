@@ -73,7 +73,7 @@ func (v *Dump) EnterNode(n ast.Vertex) bool {
 	}
 
 	n.Accept(v)
-	
+
 	return true
 }
 
