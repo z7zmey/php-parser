@@ -1,15 +1,14 @@
 package php5
 
 import (
-	"github.com/z7zmey/php-parser/freefloating"
-	"github.com/z7zmey/php-parser/node"
-	"strings"
+	"bytes"
 
 	"github.com/z7zmey/php-parser/internal/positionbuilder"
+	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
-	"github.com/z7zmey/php-parser/scanner"
+	"github.com/z7zmey/php-parser/pkg/token"
 )
 
 func (lval *yySymType) Token(t *scanner.Token) {
@@ -56,7 +55,7 @@ func (l *Parser) Error(msg string) {
 }
 
 func (l *Parser) WithTokens() {
-	l.Lexer.SetWithFreeFloating(true)
+	l.Lexer.SetWithTokens(true)
 }
 
 // Parse the php7 Parser entrypoint
@@ -83,14 +82,14 @@ func (l *Parser) GetErrors() []*errors.Error {
 
 // helpers
 
-func lastNode(nn []node.Node) node.Node {
+func lastNode(nn []ast.Vertex) ast.Vertex {
 	if len(nn) == 0 {
 		return nil
 	}
 	return nn[len(nn)-1]
 }
 
-func firstNode(nn []node.Node) node.Node {
+func firstNode(nn []ast.Vertex) ast.Vertex {
 	return nn[0]
 }
 
@@ -98,20 +97,20 @@ func isDollar(r rune) bool {
 	return r == '$'
 }
 
-func (l *Parser) MoveFreeFloating(src node.Node, dst node.Node) {
+func (l *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
 	if l.Lexer.GetWithFreeFloating() == false {
 		return
 	}
 
-	if src.GetFreeFloating() == nil {
+	if src.GetNode().Tokens == nil {
 		return
 	}
 
-	l.setFreeFloating(dst, freefloating.Start, (*src.GetFreeFloating())[freefloating.Start])
-	delete((*src.GetFreeFloating()), freefloating.Start)
+	l.setFreeFloating(dst, token.Start, src.GetNode().Tokens[token.Start])
+	delete(src.GetNode().Tokens, token.Start)
 }
 
-func (l *Parser) setFreeFloating(dst node.Node, p freefloating.Position, strings []freefloating.String) {
+func (l *Parser) setFreeFloating(dst ast.Vertex, p token.Position, strings []token.Token) {
 	if l.Lexer.GetWithFreeFloating() == false {
 		return
 	}
@@ -120,100 +119,65 @@ func (l *Parser) setFreeFloating(dst node.Node, p freefloating.Position, strings
 		return
 	}
 
-	dstCollection := dst.GetFreeFloating()
+	dstCollection := &dst.GetNode().Tokens
 	if *dstCollection == nil {
-		*dstCollection = make(freefloating.Collection)
+		*dstCollection = make(token.Collection)
 	}
 
 	(*dstCollection)[p] = strings
 }
 
-func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []freefloating.String {
+func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
 	if l.Lexer.GetWithFreeFloating() == false {
-		return []freefloating.String{}
+		return []token.Token{}
 	}
 
-	return t.GetFreeFloatingToken()
+	tokens := make([]token.Token, len(t.Tokens))
+	copy(tokens, t.Tokens)
+
+	return tokens
 }
 
-func (l *Parser) addDollarToken(v node.Node) {
+func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.Vertex) {
 	if l.Lexer.GetWithFreeFloating() == false {
 		return
 	}
 
-	l.setFreeFloating(v, freefloating.Dollar, []freefloating.String{
-		{
-			StringType: freefloating.TokenType,
-			Value:      "$",
-			Position: &position.Position{
-				StartLine: v.GetPosition().StartLine,
-				EndLine:   v.GetPosition().StartLine,
-				StartPos:  v.GetPosition().StartPos,
-				EndPos:    v.GetPosition().StartPos + 1,
-			},
-		},
-	})
-}
-
-func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode node.Node, prevNode node.Node) {
-	if l.Lexer.GetWithFreeFloating() == false {
-		return
-	}
-
-	semiColon := (*prevNode.GetFreeFloating())[freefloating.SemiColon]
-	delete((*prevNode.GetFreeFloating()), freefloating.SemiColon)
+	semiColon := prevNode.GetNode().Tokens[token.SemiColon]
+	delete(prevNode.GetNode().Tokens, token.SemiColon)
 	if len(semiColon) == 0 {
 		return
 	}
 
-	p := semiColon[0].Position
 	if semiColon[0].Value[0] == ';' {
-		l.setFreeFloating(prevNode, freefloating.SemiColon, []freefloating.String{
+		l.setFreeFloating(prevNode, token.SemiColon, []token.Token{
 			{
-				StringType: freefloating.TokenType,
-				Value:      ";",
-				Position: &position.Position{
-					StartLine: p.StartLine,
-					EndLine:   p.StartLine,
-					StartPos:  p.StartPos,
-					EndPos:    p.StartPos + 1,
-				},
+				ID:    token.ID(';'),
+				Value: semiColon[0].Value[0:1],
 			},
 		})
 	}
 
 	vlen := len(semiColon[0].Value)
 	tlen := 2
-	if strings.HasSuffix(semiColon[0].Value, "?>\n") {
+	if bytes.HasSuffix(semiColon[0].Value, []byte("?>\n")) {
 		tlen = 3
 	}
 
-	phpCloseTag := []freefloating.String{}
+	phpCloseTag := []token.Token{}
 	if vlen-tlen > 1 {
-		phpCloseTag = append(phpCloseTag, freefloating.String{
-			StringType: freefloating.WhiteSpaceType,
-			Value:      semiColon[0].Value[1 : vlen-tlen],
-			Position: &position.Position{
-				StartLine: p.StartLine,
-				EndLine:   p.EndLine,
-				StartPos:  p.StartPos + 1,
-				EndPos:    p.EndPos - tlen,
-			},
+		phpCloseTag = append(phpCloseTag, token.Token{
+			ID:    token.T_WHITESPACE,
+			Value: semiColon[0].Value[1 : vlen-tlen],
 		})
 	}
 
-	phpCloseTag = append(phpCloseTag, freefloating.String{
-		StringType: freefloating.WhiteSpaceType,
-		Value:      semiColon[0].Value[vlen-tlen:],
-		Position: &position.Position{
-			StartLine: p.EndLine,
-			EndLine:   p.EndLine,
-			StartPos:  p.EndPos - tlen,
-			EndPos:    p.EndPos,
-		},
+	phpCloseTag = append(phpCloseTag, token.Token{
+		ID:    T_CLOSE_TAG,
+		Value: semiColon[0].Value[vlen-tlen:],
 	})
 
-	l.setFreeFloating(htmlNode, freefloating.Start, append(phpCloseTag, (*htmlNode.GetFreeFloating())[freefloating.Start]...))
+	l.setFreeFloating(htmlNode, token.Start, append(phpCloseTag, htmlNode.GetNode().Tokens[token.Start]...))
 }
 
 func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {

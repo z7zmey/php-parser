@@ -3,7 +3,7 @@ package php5_test
 import (
 	"testing"
 
-	"github.com/z7zmey/php-parser/php5"
+	"github.com/z7zmey/php-parser/internal/php5"
 )
 
 func BenchmarkPhp5(b *testing.B) {
