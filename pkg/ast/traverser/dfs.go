@@ -13,479 +13,2641 @@ func NewDFS(visitor ast.Visitor) *DFS {
 }
 
 func (t *DFS) Traverse(n ast.Vertex) {
-	if n == nil {
-		return
-	}
-
-	if !t.visitor.EnterNode(n) {
-		return
-	}
-
 	switch nn := n.(type) {
 	case *ast.Root:
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.Nullable:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.Parameter:
-		t.traverseSingle("Type", nn.Type)
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("DefaultValue", nn.DefaultValue)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Type != nil {
+			t.visitor.Enter("Type", true)
+			t.Traverse(nn.Type)
+			t.visitor.Leave("Type", true)
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.DefaultValue != nil {
+			t.visitor.Enter("DefaultValue", true)
+			t.Traverse(nn.DefaultValue)
+			t.visitor.Leave("DefaultValue", true)
+		}
 	case *ast.Identifier:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 	case *ast.ArgumentList:
-		t.traverseArray("Arguments", nn.Arguments)
+		if nn.Arguments != nil {
+			t.visitor.Enter("Arguments", false)
+			for _, c := range nn.Arguments {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Arguments", false)
+		}
 	case *ast.Argument:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.StmtAltElse:
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtAltElseIf:
-		t.traverseSingle("Cond", nn.Cond)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtAltFor:
-		t.traverseArray("Init", nn.Init)
-		t.traverseArray("Cond", nn.Cond)
-		t.traverseArray("Loop", nn.Loop)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Init != nil {
+			t.visitor.Enter("Init", false)
+			for _, c := range nn.Init {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Init", false)
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", false)
+			for _, c := range nn.Cond {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Cond", false)
+		}
+		if nn.Loop != nil {
+			t.visitor.Enter("Loop", false)
+			for _, c := range nn.Loop {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Loop", false)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtAltForeach:
-		t.traverseSingle("Expr", nn.Expr)
-		t.traverseSingle("Key", nn.Key)
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
+		if nn.Key != nil {
+			t.visitor.Enter("Key", true)
+			t.Traverse(nn.Key)
+			t.visitor.Leave("Key", true)
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtAltIf:
-		t.traverseSingle("Cond", nn.Cond)
-		t.traverseSingle("Stmt", nn.Stmt)
-		t.traverseArray("ElseIf", nn.ElseIf)
-		t.traverseSingle("Else", nn.Else)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
+		if nn.ElseIf != nil {
+			t.visitor.Enter("ElseIf", false)
+			for _, c := range nn.ElseIf {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("ElseIf", false)
+		}
+		if nn.Else != nil {
+			t.visitor.Enter("Else", true)
+			t.Traverse(nn.Else)
+			t.visitor.Leave("Else", true)
+		}
 	case *ast.StmtAltSwitch:
-		t.traverseSingle("Cond", nn.Cond)
-		t.traverseSingle("CaseList", nn.CaseList)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
+		if nn.CaseList != nil {
+			t.visitor.Enter("CaseList", true)
+			t.Traverse(nn.CaseList)
+			t.visitor.Leave("CaseList", true)
+		}
 	case *ast.StmtAltWhile:
-		t.traverseSingle("Cond", nn.Cond)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtBreak:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.StmtCase:
-		t.traverseSingle("Cond", nn.Cond)
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtCaseList:
-		t.traverseArray("Cases", nn.Cases)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Cases != nil {
+			t.visitor.Enter("Cases", false)
+			for _, c := range nn.Cases {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Cases", false)
+		}
 	case *ast.StmtCatch:
-		t.traverseArray("Types", nn.Types)
-		t.traverseSingle("Var", nn.Var)
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Types != nil {
+			t.visitor.Enter("Types", false)
+			for _, c := range nn.Types {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Types", false)
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtClass:
-		t.traverseSingle("ClassName", nn.ClassName)
-		t.traverseArray("Modifiers", nn.Modifiers)
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.ClassName != nil {
+			t.visitor.Enter("ClassName", true)
+			t.Traverse(nn.ClassName)
+			t.visitor.Leave("ClassName", true)
+		}
+		if nn.Modifiers != nil {
+			t.visitor.Enter("Modifiers", false)
+			for _, c := range nn.Modifiers {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Modifiers", false)
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtClassConstList:
-		t.traverseArray("Modifiers", nn.Modifiers)
-		t.traverseArray("Consts", nn.Consts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Modifiers != nil {
+			t.visitor.Enter("Modifiers", false)
+			for _, c := range nn.Modifiers {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Modifiers", false)
+		}
+		if nn.Consts != nil {
+			t.visitor.Enter("Consts", false)
+			for _, c := range nn.Consts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Consts", false)
+		}
 	case *ast.StmtClassExtends:
-		t.traverseSingle("ClassName", nn.ClassName)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.ClassName != nil {
+			t.visitor.Enter("ClassName", true)
+			t.Traverse(nn.ClassName)
+			t.visitor.Leave("ClassName", true)
+		}
 	case *ast.StmtClassImplements:
-		t.traverseArray("InterfaceNames", nn.InterfaceNames)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.InterfaceNames != nil {
+			t.visitor.Enter("InterfaceNames", false)
+			for _, c := range nn.InterfaceNames {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("InterfaceNames", false)
+		}
 	case *ast.StmtClassMethod:
-		t.traverseSingle("MethodName", nn.MethodName)
-		t.traverseArray("Modifiers", nn.Modifiers)
-		t.traverseArray("Params", nn.Params)
-		t.traverseSingle("ReturnType", nn.ReturnType)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.MethodName != nil {
+			t.visitor.Enter("MethodName", true)
+			t.Traverse(nn.MethodName)
+			t.visitor.Leave("MethodName", true)
+		}
+		if nn.Modifiers != nil {
+			t.visitor.Enter("Modifiers", false)
+			for _, c := range nn.Modifiers {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Modifiers", false)
+		}
+		if nn.Params != nil {
+			t.visitor.Enter("Params", false)
+			for _, c := range nn.Params {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Params", false)
+		}
+		if nn.ReturnType != nil {
+			t.visitor.Enter("ReturnType", true)
+			t.Traverse(nn.ReturnType)
+			t.visitor.Leave("ReturnType", true)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtConstList:
-		t.traverseArray("Consts", nn.Consts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Consts != nil {
+			t.visitor.Enter("Consts", false)
+			for _, c := range nn.Consts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Consts", false)
+		}
 	case *ast.StmtConstant:
-		t.traverseSingle("ConstantName", nn.ConstantName)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.ConstantName != nil {
+			t.visitor.Enter("ConstantName", true)
+			t.Traverse(nn.ConstantName)
+			t.visitor.Leave("ConstantName", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.StmtContinue:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.StmtDeclare:
-		t.traverseArray("Consts", nn.Consts)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Consts != nil {
+			t.visitor.Enter("Consts", false)
+			for _, c := range nn.Consts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Consts", false)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtDefault:
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtDo:
-		t.traverseSingle("Stmt", nn.Stmt)
-		t.traverseSingle("Cond", nn.Cond)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
 	case *ast.StmtEcho:
-		t.traverseArray("Exprs", nn.Exprs)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Exprs != nil {
+			t.visitor.Enter("Exprs", false)
+			for _, c := range nn.Exprs {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Exprs", false)
+		}
 	case *ast.StmtElse:
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtElseIf:
-		t.traverseSingle("Cond", nn.Cond)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtExpression:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.StmtFinally:
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtFor:
-		t.traverseArray("Init", nn.Init)
-		t.traverseArray("Cond", nn.Cond)
-		t.traverseArray("Loop", nn.Loop)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Init != nil {
+			t.visitor.Enter("Init", false)
+			for _, c := range nn.Init {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Init", false)
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", false)
+			for _, c := range nn.Cond {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Cond", false)
+		}
+		if nn.Loop != nil {
+			t.visitor.Enter("Loop", false)
+			for _, c := range nn.Loop {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Loop", false)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtForeach:
-		t.traverseSingle("Expr", nn.Expr)
-		t.traverseSingle("Key", nn.Key)
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
+		if nn.Key != nil {
+			t.visitor.Enter("Key", true)
+			t.Traverse(nn.Key)
+			t.visitor.Leave("Key", true)
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.StmtFunction:
-		t.traverseSingle("FunctionName", nn.FunctionName)
-		t.traverseArray("Params", nn.Params)
-		t.traverseSingle("ReturnType", nn.ReturnType)
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.FunctionName != nil {
+			t.visitor.Enter("FunctionName", true)
+			t.Traverse(nn.FunctionName)
+			t.visitor.Leave("FunctionName", true)
+		}
+		if nn.Params != nil {
+			t.visitor.Enter("Params", false)
+			for _, c := range nn.Params {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Params", false)
+		}
+		if nn.ReturnType != nil {
+			t.visitor.Enter("ReturnType", true)
+			t.Traverse(nn.ReturnType)
+			t.visitor.Leave("ReturnType", true)
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtGlobal:
-		t.traverseArray("Vars", nn.Vars)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Vars != nil {
+			t.visitor.Enter("Vars", false)
+			for _, c := range nn.Vars {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Vars", false)
+		}
 	case *ast.StmtGoto:
-		t.traverseSingle("Label", nn.Label)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Label != nil {
+			t.visitor.Enter("Label", true)
+			t.Traverse(nn.Label)
+			t.visitor.Leave("Label", true)
+		}
 	case *ast.StmtGroupUse:
-		t.traverseSingle("UseType", nn.UseType)
-		t.traverseSingle("Prefix", nn.Prefix)
-		t.traverseArray("UseList", nn.UseList)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.UseType != nil {
+			t.visitor.Enter("UseType", true)
+			t.Traverse(nn.UseType)
+			t.visitor.Leave("UseType", true)
+		}
+		if nn.Prefix != nil {
+			t.visitor.Enter("Prefix", true)
+			t.Traverse(nn.Prefix)
+			t.visitor.Leave("Prefix", true)
+		}
+		if nn.UseList != nil {
+			t.visitor.Enter("UseList", false)
+			for _, c := range nn.UseList {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("UseList", false)
+		}
 	case *ast.StmtHaltCompiler:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 	case *ast.StmtIf:
-		t.traverseSingle("Cond", nn.Cond)
-		t.traverseSingle("Stmt", nn.Stmt)
-		t.traverseArray("ElseIf", nn.ElseIf)
-		t.traverseSingle("Else", nn.Else)
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
+		if nn.ElseIf != nil {
+			t.visitor.Enter("ElseIf", false)
+			for _, c := range nn.ElseIf {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("ElseIf", false)
+		}
+		if nn.Else != nil {
+			t.visitor.Enter("Else", true)
+			t.Traverse(nn.Else)
+			t.visitor.Leave("Else", true)
+		}
 	case *ast.StmtInlineHtml:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 	case *ast.StmtInterface:
-		t.traverseSingle("InterfaceName", nn.InterfaceName)
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.InterfaceName != nil {
+			t.visitor.Enter("InterfaceName", true)
+			t.Traverse(nn.InterfaceName)
+			t.visitor.Leave("InterfaceName", true)
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtInterfaceExtends:
-		t.traverseArray("InterfaceNames", nn.InterfaceNames)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.InterfaceNames != nil {
+			t.visitor.Enter("InterfaceNames", false)
+			for _, c := range nn.InterfaceNames {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("InterfaceNames", false)
+		}
 	case *ast.StmtLabel:
-		t.traverseSingle("LabelName", nn.LabelName)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.LabelName != nil {
+			t.visitor.Enter("LabelName", true)
+			t.Traverse(nn.LabelName)
+			t.visitor.Leave("LabelName", true)
+		}
 	case *ast.StmtNamespace:
-		t.traverseSingle("NamespaceName", nn.NamespaceName)
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.NamespaceName != nil {
+			t.visitor.Enter("NamespaceName", true)
+			t.Traverse(nn.NamespaceName)
+			t.visitor.Leave("NamespaceName", true)
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtNop:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 	case *ast.StmtProperty:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.StmtPropertyList:
-		t.traverseArray("Modifiers", nn.Modifiers)
-		t.traverseSingle("Type", nn.Type)
-		t.traverseArray("Properties", nn.Properties)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Modifiers != nil {
+			t.visitor.Enter("Modifiers", false)
+			for _, c := range nn.Modifiers {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Modifiers", false)
+		}
+		if nn.Type != nil {
+			t.visitor.Enter("Type", true)
+			t.Traverse(nn.Type)
+			t.visitor.Leave("Type", true)
+		}
+		if nn.Properties != nil {
+			t.visitor.Enter("Properties", false)
+			for _, c := range nn.Properties {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Properties", false)
+		}
 	case *ast.StmtReturn:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.StmtStatic:
-		t.traverseArray("Vars", nn.Vars)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Vars != nil {
+			t.visitor.Enter("Vars", false)
+			for _, c := range nn.Vars {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Vars", false)
+		}
 	case *ast.StmtStaticVar:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.StmtStmtList:
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtSwitch:
-		t.traverseSingle("Cond", nn.Cond)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
 	case *ast.StmtThrow:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.StmtTrait:
-		t.traverseSingle("TraitName", nn.TraitName)
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.TraitName != nil {
+			t.visitor.Enter("TraitName", true)
+			t.Traverse(nn.TraitName)
+			t.visitor.Leave("TraitName", true)
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.StmtTraitAdaptationList:
-		t.traverseArray("Adaptations", nn.Adaptations)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Adaptations != nil {
+			t.visitor.Enter("Adaptations", false)
+			for _, c := range nn.Adaptations {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Adaptations", false)
+		}
 	case *ast.StmtTraitMethodRef:
-		t.traverseSingle("Trait", nn.Trait)
-		t.traverseSingle("Method", nn.Method)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Trait != nil {
+			t.visitor.Enter("Trait", true)
+			t.Traverse(nn.Trait)
+			t.visitor.Leave("Trait", true)
+		}
+		if nn.Method != nil {
+			t.visitor.Enter("Method", true)
+			t.Traverse(nn.Method)
+			t.visitor.Leave("Method", true)
+		}
 	case *ast.StmtTraitUse:
-		t.traverseArray("Traits", nn.Traits)
-		t.traverseSingle("TraitAdaptationList", nn.TraitAdaptationList)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Traits != nil {
+			t.visitor.Enter("Traits", false)
+			for _, c := range nn.Traits {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Traits", false)
+		}
+		if nn.TraitAdaptationList != nil {
+			t.visitor.Enter("TraitAdaptationList", true)
+			t.Traverse(nn.TraitAdaptationList)
+			t.visitor.Leave("TraitAdaptationList", true)
+		}
 	case *ast.StmtTraitUseAlias:
-		t.traverseSingle("Ref", nn.Ref)
-		t.traverseSingle("Modifier", nn.Modifier)
-		t.traverseSingle("Alias", nn.Alias)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Ref != nil {
+			t.visitor.Enter("Ref", true)
+			t.Traverse(nn.Ref)
+			t.visitor.Leave("Ref", true)
+		}
+		if nn.Modifier != nil {
+			t.visitor.Enter("Modifier", true)
+			t.Traverse(nn.Modifier)
+			t.visitor.Leave("Modifier", true)
+		}
+		if nn.Alias != nil {
+			t.visitor.Enter("Alias", true)
+			t.Traverse(nn.Alias)
+			t.visitor.Leave("Alias", true)
+		}
 	case *ast.StmtTraitUsePrecedence:
-		t.traverseSingle("Ref", nn.Ref)
-		t.traverseArray("Insteadof", nn.Insteadof)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Ref != nil {
+			t.visitor.Enter("Ref", true)
+			t.Traverse(nn.Ref)
+			t.visitor.Leave("Ref", true)
+		}
+		if nn.Insteadof != nil {
+			t.visitor.Enter("Insteadof", false)
+			for _, c := range nn.Insteadof {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Insteadof", false)
+		}
 	case *ast.StmtTry:
-		t.traverseArray("Stmts", nn.Stmts)
-		t.traverseArray("Catches", nn.Catches)
-		t.traverseSingle("Finally", nn.Finally)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
+		if nn.Catches != nil {
+			t.visitor.Enter("Catches", false)
+			for _, c := range nn.Catches {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Catches", false)
+		}
+		if nn.Finally != nil {
+			t.visitor.Enter("Finally", true)
+			t.Traverse(nn.Finally)
+			t.visitor.Leave("Finally", true)
+		}
 	case *ast.StmtUnset:
-		t.traverseArray("Vars", nn.Vars)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Vars != nil {
+			t.visitor.Enter("Vars", false)
+			for _, c := range nn.Vars {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Vars", false)
+		}
 	case *ast.StmtUse:
-		t.traverseSingle("UseType", nn.UseType)
-		t.traverseSingle("Use", nn.Use)
-		t.traverseSingle("Alias", nn.Alias)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.UseType != nil {
+			t.visitor.Enter("UseType", true)
+			t.Traverse(nn.UseType)
+			t.visitor.Leave("UseType", true)
+		}
+		if nn.Use != nil {
+			t.visitor.Enter("Use", true)
+			t.Traverse(nn.Use)
+			t.visitor.Leave("Use", true)
+		}
+		if nn.Alias != nil {
+			t.visitor.Enter("Alias", true)
+			t.Traverse(nn.Alias)
+			t.visitor.Leave("Alias", true)
+		}
 	case *ast.StmtUseList:
-		t.traverseSingle("UseType", nn.UseType)
-		t.traverseArray("Uses", nn.Uses)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.UseType != nil {
+			t.visitor.Enter("UseType", true)
+			t.Traverse(nn.UseType)
+			t.visitor.Leave("UseType", true)
+		}
+		if nn.Uses != nil {
+			t.visitor.Enter("Uses", false)
+			for _, c := range nn.Uses {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Uses", false)
+		}
 	case *ast.StmtWhile:
-		t.traverseSingle("Cond", nn.Cond)
-		t.traverseSingle("Stmt", nn.Stmt)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Cond != nil {
+			t.visitor.Enter("Cond", true)
+			t.Traverse(nn.Cond)
+			t.visitor.Leave("Cond", true)
+		}
+		if nn.Stmt != nil {
+			t.visitor.Enter("Stmt", true)
+			t.Traverse(nn.Stmt)
+			t.visitor.Leave("Stmt", true)
+		}
 	case *ast.ExprArray:
-		t.traverseArray("Items", nn.Items)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Items != nil {
+			t.visitor.Enter("Items", false)
+			for _, c := range nn.Items {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Items", false)
+		}
 	case *ast.ExprArrayDimFetch:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Dim", nn.Dim)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Dim != nil {
+			t.visitor.Enter("Dim", true)
+			t.Traverse(nn.Dim)
+			t.visitor.Leave("Dim", true)
+		}
 	case *ast.ExprArrayItem:
-		t.traverseSingle("Key", nn.Key)
-		t.traverseSingle("Val", nn.Val)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Key != nil {
+			t.visitor.Enter("Key", true)
+			t.Traverse(nn.Key)
+			t.visitor.Leave("Key", true)
+		}
+		if nn.Val != nil {
+			t.visitor.Enter("Val", true)
+			t.Traverse(nn.Val)
+			t.visitor.Leave("Val", true)
+		}
 	case *ast.ExprArrowFunction:
-		t.traverseArray("Params", nn.Params)
-		t.traverseSingle("ReturnType", nn.ReturnType)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Params != nil {
+			t.visitor.Enter("Params", false)
+			for _, c := range nn.Params {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Params", false)
+		}
+		if nn.ReturnType != nil {
+			t.visitor.Enter("ReturnType", true)
+			t.Traverse(nn.ReturnType)
+			t.visitor.Leave("ReturnType", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprBitwiseNot:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprBooleanNot:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprClassConstFetch:
-		t.traverseSingle("Class", nn.Class)
-		t.traverseSingle("ConstantName", nn.ConstantName)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Class != nil {
+			t.visitor.Enter("Class", true)
+			t.Traverse(nn.Class)
+			t.visitor.Leave("Class", true)
+		}
+		if nn.ConstantName != nil {
+			t.visitor.Enter("ConstantName", true)
+			t.Traverse(nn.ConstantName)
+			t.visitor.Leave("ConstantName", true)
+		}
 	case *ast.ExprClone:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprClosure:
-		t.traverseArray("Params", nn.Params)
-		t.traverseSingle("ClosureUse", nn.ClosureUse)
-		t.traverseSingle("ReturnType", nn.ReturnType)
-		t.traverseArray("Stmts", nn.Stmts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Params != nil {
+			t.visitor.Enter("Params", false)
+			for _, c := range nn.Params {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Params", false)
+		}
+		if nn.ClosureUse != nil {
+			t.visitor.Enter("ClosureUse", true)
+			t.Traverse(nn.ClosureUse)
+			t.visitor.Leave("ClosureUse", true)
+		}
+		if nn.ReturnType != nil {
+			t.visitor.Enter("ReturnType", true)
+			t.Traverse(nn.ReturnType)
+			t.visitor.Leave("ReturnType", true)
+		}
+		if nn.Stmts != nil {
+			t.visitor.Enter("Stmts", false)
+			for _, c := range nn.Stmts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Stmts", false)
+		}
 	case *ast.ExprClosureUse:
-		t.traverseArray("Uses", nn.Uses)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Uses != nil {
+			t.visitor.Enter("Uses", false)
+			for _, c := range nn.Uses {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Uses", false)
+		}
 	case *ast.ExprConstFetch:
-		t.traverseSingle("Const", nn.Const)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Const != nil {
+			t.visitor.Enter("Const", true)
+			t.Traverse(nn.Const)
+			t.visitor.Leave("Const", true)
+		}
 	case *ast.ExprEmpty:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprErrorSuppress:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprEval:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprExit:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprFunctionCall:
-		t.traverseSingle("Function", nn.Function)
-		t.traverseSingle("ArgumentList", nn.ArgumentList)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Function != nil {
+			t.visitor.Enter("Function", true)
+			t.Traverse(nn.Function)
+			t.visitor.Leave("Function", true)
+		}
+		if nn.ArgumentList != nil {
+			t.visitor.Enter("ArgumentList", true)
+			t.Traverse(nn.ArgumentList)
+			t.visitor.Leave("ArgumentList", true)
+		}
 	case *ast.ExprInclude:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprIncludeOnce:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprInstanceOf:
-		t.traverseSingle("Expr", nn.Expr)
-		t.traverseSingle("Class", nn.Class)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
+		if nn.Class != nil {
+			t.visitor.Enter("Class", true)
+			t.Traverse(nn.Class)
+			t.visitor.Leave("Class", true)
+		}
 	case *ast.ExprIsset:
-		t.traverseArray("Vars", nn.Vars)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Vars != nil {
+			t.visitor.Enter("Vars", false)
+			for _, c := range nn.Vars {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Vars", false)
+		}
 	case *ast.ExprList:
-		t.traverseArray("Items", nn.Items)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Items != nil {
+			t.visitor.Enter("Items", false)
+			for _, c := range nn.Items {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Items", false)
+		}
 	case *ast.ExprMethodCall:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Method", nn.Method)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Method != nil {
+			t.visitor.Enter("Method", true)
+			t.Traverse(nn.Method)
+			t.visitor.Leave("Method", true)
+		}
 	case *ast.ExprNew:
-		t.traverseSingle("Class", nn.Class)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Class != nil {
+			t.visitor.Enter("Class", true)
+			t.Traverse(nn.Class)
+			t.visitor.Leave("Class", true)
+		}
 	case *ast.ExprPostDec:
-		t.traverseSingle("Var", nn.Var)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
 	case *ast.ExprPostInc:
-		t.traverseSingle("Var", nn.Var)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
 	case *ast.ExprPreDec:
-		t.traverseSingle("Var", nn.Var)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
 	case *ast.ExprPreInc:
-		t.traverseSingle("Var", nn.Var)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
 	case *ast.ExprPrint:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprPropertyFetch:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Property", nn.Property)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Property != nil {
+			t.visitor.Enter("Property", true)
+			t.Traverse(nn.Property)
+			t.visitor.Leave("Property", true)
+		}
 	case *ast.ExprReference:
-		t.traverseSingle("Var", nn.Var)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
 	case *ast.ExprRequire:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprRequireOnce:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprShellExec:
-		t.traverseArray("Parts", nn.Parts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Parts != nil {
+			t.visitor.Enter("Parts", false)
+			for _, c := range nn.Parts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Parts", false)
+		}
 	case *ast.ExprShortArray:
-		t.traverseArray("Items", nn.Items)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Items != nil {
+			t.visitor.Enter("Items", false)
+			for _, c := range nn.Items {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Items", false)
+		}
 	case *ast.ExprShortList:
-		t.traverseArray("Items", nn.Items)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Items != nil {
+			t.visitor.Enter("Items", false)
+			for _, c := range nn.Items {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Items", false)
+		}
 	case *ast.ExprStaticCall:
-		t.traverseSingle("Class", nn.Class)
-		t.traverseSingle("Call", nn.Call)
-		t.traverseSingle("ArgumentList", nn.ArgumentList)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Class != nil {
+			t.visitor.Enter("Class", true)
+			t.Traverse(nn.Class)
+			t.visitor.Leave("Class", true)
+		}
+		if nn.Call != nil {
+			t.visitor.Enter("Call", true)
+			t.Traverse(nn.Call)
+			t.visitor.Leave("Call", true)
+		}
+		if nn.ArgumentList != nil {
+			t.visitor.Enter("ArgumentList", true)
+			t.Traverse(nn.ArgumentList)
+			t.visitor.Leave("ArgumentList", true)
+		}
 	case *ast.ExprStaticPropertyFetch:
-		t.traverseSingle("Class", nn.Class)
-		t.traverseSingle("Property", nn.Property)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Class != nil {
+			t.visitor.Enter("Class", true)
+			t.Traverse(nn.Class)
+			t.visitor.Leave("Class", true)
+		}
+		if nn.Property != nil {
+			t.visitor.Enter("Property", true)
+			t.Traverse(nn.Property)
+			t.visitor.Leave("Property", true)
+		}
 	case *ast.ExprTernary:
-		t.traverseSingle("Condition", nn.Condition)
-		t.traverseSingle("IfTrue", nn.IfTrue)
-		t.traverseSingle("IfFalse", nn.IfFalse)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Condition != nil {
+			t.visitor.Enter("Condition", true)
+			t.Traverse(nn.Condition)
+			t.visitor.Leave("Condition", true)
+		}
+		if nn.IfTrue != nil {
+			t.visitor.Enter("IfTrue", true)
+			t.Traverse(nn.IfTrue)
+			t.visitor.Leave("IfTrue", true)
+		}
+		if nn.IfFalse != nil {
+			t.visitor.Enter("IfFalse", true)
+			t.Traverse(nn.IfFalse)
+			t.visitor.Leave("IfFalse", true)
+		}
 	case *ast.ExprUnaryMinus:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprUnaryPlus:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprVariable:
-		t.traverseSingle("VarName", nn.VarName)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.VarName != nil {
+			t.visitor.Enter("VarName", true)
+			t.Traverse(nn.VarName)
+			t.visitor.Leave("VarName", true)
+		}
 	case *ast.ExprYield:
-		t.traverseSingle("Key", nn.Key)
-		t.traverseSingle("Value", nn.Value)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Key != nil {
+			t.visitor.Enter("Key", true)
+			t.Traverse(nn.Key)
+			t.visitor.Leave("Key", true)
+		}
+		if nn.Value != nil {
+			t.visitor.Enter("Value", true)
+			t.Traverse(nn.Value)
+			t.visitor.Leave("Value", true)
+		}
 	case *ast.ExprYieldFrom:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssign:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignReference:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignBitwiseAnd:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignBitwiseOr:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignBitwiseXor:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignCoalesce:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignConcat:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignDiv:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignMinus:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignMod:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignMul:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignPlus:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignPow:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignShiftLeft:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprAssignShiftRight:
-		t.traverseSingle("Var", nn.Var)
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprBinaryBitwiseAnd:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryBitwiseOr:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryBitwiseXor:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryBooleanAnd:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryBooleanOr:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryCoalesce:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryConcat:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryDiv:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryEqual:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryGreater:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryGreaterOrEqual:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryIdentical:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryLogicalAnd:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryLogicalOr:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryLogicalXor:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryMinus:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryMod:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryMul:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryNotEqual:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryNotIdentical:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryPlus:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryPow:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryShiftLeft:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinaryShiftRight:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinarySmaller:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinarySmallerOrEqual:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprBinarySpaceship:
-		t.traverseSingle("Left", nn.Left)
-		t.traverseSingle("Right", nn.Right)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Left != nil {
+			t.visitor.Enter("Left", true)
+			t.Traverse(nn.Left)
+			t.visitor.Leave("Left", true)
+		}
+		if nn.Right != nil {
+			t.visitor.Enter("Right", true)
+			t.Traverse(nn.Right)
+			t.visitor.Leave("Right", true)
+		}
 	case *ast.ExprCastArray:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprCastBool:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprCastDouble:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprCastInt:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprCastObject:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprCastString:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprCastUnset:
-		t.traverseSingle("Expr", nn.Expr)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ScalarDnumber:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 	case *ast.ScalarEncapsed:
-		t.traverseArray("Parts", nn.Parts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Parts != nil {
+			t.visitor.Enter("Parts", false)
+			for _, c := range nn.Parts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Parts", false)
+		}
 	case *ast.ScalarEncapsedStringPart:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 	case *ast.ScalarHeredoc:
-		t.traverseArray("Parts", nn.Parts)
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Parts != nil {
+			t.visitor.Enter("Parts", false)
+			for _, c := range nn.Parts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Parts", false)
+		}
 	case *ast.ScalarLnumber:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 	case *ast.ScalarMagicConstant:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 	case *ast.ScalarString:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+	default:
+		panic("unexpected type of node")
 	}
 
 	t.visitor.LeaveNode(n)
-}
-
-func (t *DFS) traverseSingle(key string, n ast.Vertex) {
-	if n == nil {
-		return
-	}
-
-	t.visitor.Enter(key, true)
-	t.Traverse(n)
-	t.visitor.Leave(key, true)
-}
-
-func (t *DFS) traverseArray(key string, nn []ast.Vertex) {
-	if nn == nil {
-		return
-	}
-
-	t.visitor.Enter(key, false)
-	for _, c := range nn {
-		t.Traverse(c)
-	}
-	t.visitor.Leave(key, false)
 }

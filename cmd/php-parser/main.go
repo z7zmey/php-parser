@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
+	"github.com/z7zmey/php-parser/pkg/ast/traverser"
 	"io/ioutil"
 	"log"
 	"os"
@@ -13,15 +13,14 @@ import (
 
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
-	"github.com/z7zmey/php-parser/parser"
-	"github.com/z7zmey/php-parser/printer"
-	"github.com/z7zmey/php-parser/visitor"
+	"github.com/z7zmey/php-parser/pkg/parser"
+	"github.com/z7zmey/php-parser/pkg/ast/visitor"
 )
 
 var wg sync.WaitGroup
 var phpVersion string
-var dumpType string
 var profiler string
+var dump *bool
 var withFreeFloating *bool
 var showResolvedNs *bool
 var printBack *bool
@@ -42,7 +41,7 @@ func main() {
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
 	printPath = flag.Bool("p", false, "print filepath")
-	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
+	dump = flag.Bool("d", false, "dump")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
 	flag.StringVar(&phpVersion, "phpver", "7.4", "php version")
 
@@ -115,7 +114,7 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 		}
 
 		if *withFreeFloating {
-			parserWorker.WithFreeFloating()
+			parserWorker.WithTokens()
 		}
 
 		parserWorker.Parse()
@@ -143,44 +142,26 @@ func printerWorker(r <-chan result) {
 			fmt.Fprintf(os.Stdout, "==> %s\n", e)
 		}
 
-		if *printBack {
-			o := bytes.NewBuffer([]byte{})
-			p := printer.NewPrinter(o)
-			p.Print(res.parser.GetRootNode())
+		//if *printBack {
+		//	o := bytes.NewBuffer([]byte{})
+		//	p := printer.NewPrinter(o)
+		//	p.Print(res.parser.GetRootNode())
+		//
+		//	err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
+		//	checkErr(err)
+		//}
 
-			err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
-			checkErr(err)
-		}
-
-		var nsResolver *visitor.NamespaceResolver
 		if *showResolvedNs {
-			nsResolver = visitor.NewNamespaceResolver()
-			res.parser.GetRootNode().Walk(nsResolver)
+			v := visitor.NewNamespaceResolver()
+			t := traverser.NewDFS(v)
+			t.Traverse(res.parser.GetRootNode())
+			fmt.Printf("%+v", v.ResolvedNames)
 		}
 
-		switch dumpType {
-		case "custom":
-			dumper := &visitor.Dumper{
-				Writer:     os.Stdout,
-				Indent:     "| ",
-				NsResolver: nsResolver,
-			}
-			res.parser.GetRootNode().Walk(dumper)
-		case "json":
-			dumper := &visitor.JsonDumper{
-				Writer:     os.Stdout,
-				NsResolver: nsResolver,
-			}
-			res.parser.GetRootNode().Walk(dumper)
-		case "pretty_json":
-			dumper := &visitor.PrettyJsonDumper{
-				Writer:     os.Stdout,
-				NsResolver: nsResolver,
-			}
-			res.parser.GetRootNode().Walk(dumper)
-		case "go":
-			dumper := &visitor.GoDumper{Writer: os.Stdout}
-			res.parser.GetRootNode().Walk(dumper)
+		if *dump == true {
+			v := visitor.NewDump(os.Stdout)
+			t := traverser.NewDFS(v)
+			t.Traverse(res.parser.GetRootNode())
 		}
 
 		wg.Done()

@@ -16,7 +16,7 @@ func ExampleDump() {
 				Var:      &ast.ExprVariable{},
 			},
 			&ast.StmtInlineHtml{
-				Value: "foo",
+				Value: []byte("foo"),
 			},
 		},
 	}

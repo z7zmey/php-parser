@@ -7,7 +7,7 @@ fmt:
 
 build:
 	go generate ./...
-	go build
+	go build ./cmd/...
 
 run:
 	./php-parser -d go $(PHPFILE)

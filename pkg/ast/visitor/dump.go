@@ -117,7 +117,7 @@ func (v *Dump) Identifier(n *ast.Identifier) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.Identifier{\n")
 
-	v.printIndentIfNotSingle(v.indent)
+	v.printIndent(v.indent)
 	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
 }
 
@@ -335,7 +335,7 @@ func (v *Dump) StmtInlineHtml(n *ast.StmtInlineHtml) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtInlineHtml{\n")
 
-	v.printIndentIfNotSingle(v.indent)
+	v.printIndent(v.indent)
 	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
 }
 
@@ -953,7 +953,7 @@ func (v *Dump) ScalarDnumber(n *ast.ScalarDnumber) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ScalarDnumber{\n")
 
-	v.printIndentIfNotSingle(v.indent)
+	v.printIndent(v.indent)
 	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
 }
 
@@ -966,7 +966,7 @@ func (v *Dump) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ScalarEncapsedStringPart{\n")
 
-	v.printIndentIfNotSingle(v.indent)
+	v.printIndent(v.indent)
 	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
 }
 
@@ -974,7 +974,7 @@ func (v *Dump) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ScalarHeredoc{\n")
 
-	v.printIndentIfNotSingle(v.indent)
+	v.printIndent(v.indent)
 	v.print(fmt.Sprintf("Label: %q,\n", n.Label))
 }
 
@@ -982,7 +982,7 @@ func (v *Dump) ScalarLnumber(n *ast.ScalarLnumber) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ScalarLnumber{\n")
 
-	v.printIndentIfNotSingle(v.indent)
+	v.printIndent(v.indent)
 	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
 }
 
@@ -990,7 +990,7 @@ func (v *Dump) ScalarMagicConstant(n *ast.ScalarMagicConstant) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ScalarMagicConstant{\n")
 
-	v.printIndentIfNotSingle(v.indent)
+	v.printIndent(v.indent)
 	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
 }
 
@@ -998,6 +998,29 @@ func (v *Dump) ScalarString(n *ast.ScalarString) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ScalarString{\n")
 
-	v.printIndentIfNotSingle(v.indent)
+	v.printIndent(v.indent)
+	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
+}
+
+func (v *Dump) NameName(_ *ast.NameName) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.NameName{\n")
+}
+
+func (v *Dump) NameFullyQualified(_ *ast.NameFullyQualified) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.NameFullyQualified{\n")
+}
+
+func (v *Dump) NameRelative(_ *ast.NameRelative) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.NameRelative{\n")
+}
+
+func (v *Dump) NameNamePart(n *ast.NameNamePart) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.NameNamePart{\n")
+
+	v.printIndent(v.indent)
 	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
 }

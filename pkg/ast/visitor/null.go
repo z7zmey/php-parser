@@ -681,3 +681,19 @@ func (v *Null) ScalarMagicConstant(_ *ast.ScalarMagicConstant) {
 func (v *Null) ScalarString(_ *ast.ScalarString) {
 	// do nothing
 }
+
+func (v *Null) NameName(_ *ast.NameName) {
+	// do nothing
+}
+
+func (v *Null) NameFullyQualified(_ *ast.NameFullyQualified) {
+	// do nothing
+}
+
+func (v *Null) NameRelative(_ *ast.NameRelative) {
+	// do nothing
+}
+
+func (v *Null) NameNamePart(_ *ast.NameNamePart) {
+	// do nothing
+}
