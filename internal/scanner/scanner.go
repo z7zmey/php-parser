@@ -54,7 +54,7 @@ func NewLexer(data []byte) *Lexer {
 	return lex
 }
 
-func (lex *Lexer) Lex(lval Lval) int {
+func (lex *Lexer) Lex() *Token {
 	lex.HiddenTokens = nil
 	eof := lex.pe
 	var tok TokenID
@@ -22867,7 +22867,5 @@ func (lex *Lexer) Lex(lval Lval) int {
 	token.Value = lex.data[lex.ts:lex.te]
 	token.ID = tok
 
-	lval.Token(token)
-
-	return int(tok)
+	return token
 }

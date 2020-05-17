@@ -7,14 +7,6 @@ import (
 	"gotest.tools/assert"
 )
 
-type lval struct {
-	Tkn *Token
-}
-
-func (lv *lval) Token(t *Token) {
-	lv.Tkn = t
-}
-
 func TestTokens(t *testing.T) {
 	src := `inline html - 
 		<? ?>
@@ -361,16 +353,15 @@ func TestTokens(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -390,13 +381,12 @@ func TestShebang(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
-	token := lexer.Lex(lv)
-	assert.Equal(t, token, int(T_DNUMBER))
+	tkn := lexer.Lex()
+	assert.Equal(t, tkn.ID, T_DNUMBER)
 
-	for _, tt := range lv.Tkn.Hidden {
+	for _, tt := range tkn.Hidden {
 		actual = append(actual, string(tt.Value))
 	}
 
@@ -411,14 +401,13 @@ func TestShebangHtml(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	token := lexer.Lex(lv)
-	assert.Equal(t, token, int(T_INLINE_HTML))
-	assert.Equal(t, string(lv.Tkn.Hidden[0].Value), "#!/usr/bin/env php\n")
+	tkn := lexer.Lex()
+	assert.Equal(t, tkn.ID, T_INLINE_HTML)
+	assert.Equal(t, string(tkn.Hidden[0].Value), "#!/usr/bin/env php\n")
 
-	token = lexer.Lex(lv)
-	assert.Equal(t, token, int(T_DNUMBER))
+	tkn = lexer.Lex()
+	assert.Equal(t, tkn.ID, T_DNUMBER)
 }
 
 func TestNumberTokens(t *testing.T) {
@@ -462,16 +451,15 @@ func TestNumberTokens(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -520,16 +508,15 @@ func TestConstantStrings(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -567,16 +554,15 @@ func TestSingleQuoteStringTokens(t *testing.T) {
 	}
 
 	lexer := NewLexer([]byte(src))
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -656,16 +642,15 @@ func TestTeplateStringTokens(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -742,16 +727,15 @@ func TestBackquoteStringTokens(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -837,16 +821,15 @@ CAT;
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -911,16 +894,15 @@ CAT
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -951,16 +933,15 @@ CAT;
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -983,16 +964,15 @@ func TestHereDocTokens73(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -1015,16 +995,15 @@ CAT;`
 	lexer := NewLexer([]byte(src))
 	lexer.PHPVersion = "7.2"
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -1048,16 +1027,15 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 	actual := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -1083,18 +1061,17 @@ func TestStringTokensAfterVariable(t *testing.T) {
 	}
 
 	lexer := NewLexer([]byte(src))
-	lv := &lval{}
 	actual := []string{}
 	actualTokens := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actualTokens = append(actualTokens, string(lv.Tkn.Value))
-		actual = append(actual, TokenID(token).String())
+		actualTokens = append(actualTokens, string(tkn.Value))
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -1117,18 +1094,17 @@ func TestSlashAfterVariable(t *testing.T) {
 	}
 
 	lexer := NewLexer([]byte(src))
-	lv := &lval{}
 	actual := []string{}
 	actualTokens := []string{}
 
 	for {
-		token := lexer.Lex(lv)
-		if token == 0 {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
 			break
 		}
 
-		actualTokens = append(actualTokens, string(lv.Tkn.Value))
-		actual = append(actual, TokenID(token).String())
+		actualTokens = append(actualTokens, string(tkn.Value))
+		actual = append(actual, tkn.ID.String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -1156,9 +1132,8 @@ func TestCommentEnd(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	lexer.Lex(lv)
+	lexer.Lex()
 
 	actual := lexer.HiddenTokens
 
@@ -1186,11 +1161,10 @@ func TestCommentNewLine(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	lexer.Lex(lv)
+	tkn := lexer.Lex()
 
-	actual := lv.Tkn.Hidden
+	actual := tkn.Hidden
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1216,11 +1190,10 @@ func TestCommentNewLine1(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	lexer.Lex(lv)
+	tkn := lexer.Lex()
 
-	actual := lv.Tkn.Hidden
+	actual := tkn.Hidden
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1246,11 +1219,10 @@ func TestCommentNewLine2(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	lexer.Lex(lv)
+	tkn := lexer.Lex()
 
-	actual := lv.Tkn.Hidden
+	actual := tkn.Hidden
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1277,11 +1249,10 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	lexer.Lex(lv)
+	tkn := lexer.Lex()
 
-	actual := lv.Tkn.Hidden
+	actual := tkn.Hidden
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1308,11 +1279,10 @@ func TestInlineComment(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	lexer.Lex(lv)
+	tkn := lexer.Lex()
 
-	actual := lv.Tkn.Hidden
+	actual := tkn.Hidden
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1339,9 +1309,8 @@ func TestInlineComment2(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	lexer.Lex(lv)
+	lexer.Lex()
 
 	actual := lexer.HiddenTokens
 
@@ -1374,9 +1343,8 @@ func TestEmptyInlineComment(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	lexer.Lex(lv)
+	lexer.Lex()
 
 	actual := lexer.HiddenTokens
 
@@ -1405,11 +1373,10 @@ func TestEmptyInlineComment2(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
-	lexer.Lex(lv)
+	tkn := lexer.Lex()
 
-	actual := lv.Tkn.Hidden
+	actual := tkn.Hidden
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1420,7 +1387,6 @@ func TestMethodCallTokens(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
 	expected := []token.Token{
 		{
@@ -1432,8 +1398,8 @@ func TestMethodCallTokens(t *testing.T) {
 			Value: []byte("\n\t"),
 		},
 	}
-	lexer.Lex(lv)
-	actual := lv.Tkn.Hidden
+	tkn := lexer.Lex()
+	actual := tkn.Hidden
 	assert.DeepEqual(t, expected, actual)
 
 	expected = []token.Token{
@@ -1442,8 +1408,8 @@ func TestMethodCallTokens(t *testing.T) {
 			Value: []byte(" "),
 		},
 	}
-	lexer.Lex(lv)
-	actual = lv.Tkn.Hidden
+	tkn = lexer.Lex()
+	actual = tkn.Hidden
 	assert.DeepEqual(t, expected, actual)
 
 	expected = []token.Token{
@@ -1452,8 +1418,8 @@ func TestMethodCallTokens(t *testing.T) {
 			Value: []byte(" "),
 		},
 	}
-	lexer.Lex(lv)
-	actual = lv.Tkn.Hidden
+	tkn = lexer.Lex()
+	actual = tkn.Hidden
 	assert.DeepEqual(t, expected, actual)
 
 	expected = []token.Token{
@@ -1462,8 +1428,8 @@ func TestMethodCallTokens(t *testing.T) {
 			Value: []byte(" "),
 		},
 	}
-	lexer.Lex(lv)
-	actual = lv.Tkn.Hidden
+	tkn = lexer.Lex()
+	actual = tkn.Hidden
 	assert.DeepEqual(t, expected, actual)
 
 	expected = []token.Token{
@@ -1472,8 +1438,8 @@ func TestMethodCallTokens(t *testing.T) {
 			Value: []byte(" "),
 		},
 	}
-	lexer.Lex(lv)
-	actual = lv.Tkn.Hidden
+	tkn = lexer.Lex()
+	actual = tkn.Hidden
 	assert.DeepEqual(t, expected, actual)
 
 	expected = []token.Token{
@@ -1482,8 +1448,8 @@ func TestMethodCallTokens(t *testing.T) {
 			Value: []byte(" "),
 		},
 	}
-	lexer.Lex(lv)
-	actual = lv.Tkn.Hidden
+	tkn = lexer.Lex()
+	actual = tkn.Hidden
 	assert.DeepEqual(t, expected, actual)
 
 	expected = []token.Token{
@@ -1492,8 +1458,8 @@ func TestMethodCallTokens(t *testing.T) {
 			Value: []byte(" "),
 		},
 	}
-	lexer.Lex(lv)
-	actual = lv.Tkn.Hidden
+	tkn = lexer.Lex()
+	actual = tkn.Hidden
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -1503,7 +1469,6 @@ func TestYieldFromTokens(t *testing.T) {
 
 	lexer := NewLexer([]byte(src))
 	lexer.WithHiddenTokens = true
-	lv := &lval{}
 
 	expected := []token.Token{
 		{
@@ -1515,8 +1480,8 @@ func TestYieldFromTokens(t *testing.T) {
 			Value: []byte("\n\t"),
 		},
 	}
-	lexer.Lex(lv)
-	actual := lv.Tkn.Hidden
+	tkn := lexer.Lex()
+	actual := tkn.Hidden
 	assert.DeepEqual(t, expected, actual)
 
 	expected = []token.Token{
@@ -1525,8 +1490,8 @@ func TestYieldFromTokens(t *testing.T) {
 			Value: []byte(" "),
 		},
 	}
-	lexer.Lex(lv)
-	actual = lv.Tkn.Hidden
+	tkn = lexer.Lex()
+	actual = tkn.Hidden
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -1534,51 +1499,48 @@ func TestVarNameByteChars(t *testing.T) {
 	src := "<?php $\x80 $\xff"
 
 	lexer := NewLexer([]byte(src))
-	lv := &lval{}
 
-	lexer.Lex(lv)
-	assert.Equal(t, "$\x80", string(lv.Tkn.Value))
+	tkn := lexer.Lex()
+	assert.Equal(t, "$\x80", string(tkn.Value))
 
-	lexer.Lex(lv)
-	assert.Equal(t, "$\xff", string(lv.Tkn.Value))
+	tkn = lexer.Lex()
+	assert.Equal(t, "$\xff", string(tkn.Value))
 }
 
 func TestStringVarNameByteChars(t *testing.T) {
 	src := "<?php \"$\x80 $\xff\""
 
 	lexer := NewLexer([]byte(src))
-	lv := &lval{}
 
-	lexer.Lex(lv)
-	assert.Equal(t, "\"", string(lv.Tkn.Value))
+	tkn := lexer.Lex()
+	assert.Equal(t, "\"", string(tkn.Value))
 
-	lexer.Lex(lv)
-	assert.Equal(t, "$\x80", string(lv.Tkn.Value))
+	tkn = lexer.Lex()
+	assert.Equal(t, "$\x80", string(tkn.Value))
 
-	lexer.Lex(lv)
-	assert.Equal(t, " ", string(lv.Tkn.Value))
+	tkn = lexer.Lex()
+	assert.Equal(t, " ", string(tkn.Value))
 
-	lexer.Lex(lv)
-	assert.Equal(t, "$\xff", string(lv.Tkn.Value))
+	tkn = lexer.Lex()
+	assert.Equal(t, "$\xff", string(tkn.Value))
 
-	lexer.Lex(lv)
-	assert.Equal(t, "\"", string(lv.Tkn.Value))
+	tkn = lexer.Lex()
+	assert.Equal(t, "\"", string(tkn.Value))
 }
 
 func TestIgnoreControllCharacters(t *testing.T) {
 	src := "<?php \004 echo $b;"
 
 	lexer := NewLexer([]byte(src))
-	lv := &lval{}
 
 	expected := "echo"
-	lexer.Lex(lv)
-	actual := string(lv.Tkn.Value)
+	tkn := lexer.Lex()
+	actual := string(tkn.Value)
 	assert.DeepEqual(t, expected, actual)
 
 	expected = "$b"
-	lexer.Lex(lv)
-	actual = string(lv.Tkn.Value)
+	tkn = lexer.Lex()
+	actual = string(tkn.Value)
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -1586,30 +1548,29 @@ func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 	src := "<?php \"$a[test\004]\";"
 
 	lexer := NewLexer([]byte(src))
-	lv := &lval{}
 
 	expected := "\""
-	lexer.Lex(lv)
-	actual := string(lv.Tkn.Value)
+	tkn := lexer.Lex()
+	actual := string(tkn.Value)
 	assert.DeepEqual(t, expected, actual)
 
 	expected = "$a"
-	lexer.Lex(lv)
-	actual = string(lv.Tkn.Value)
+	tkn = lexer.Lex()
+	actual = string(tkn.Value)
 	assert.DeepEqual(t, expected, actual)
 
 	expected = "["
-	lexer.Lex(lv)
-	actual = string(lv.Tkn.Value)
+	tkn = lexer.Lex()
+	actual = string(tkn.Value)
 	assert.DeepEqual(t, expected, actual)
 
 	expected = "test"
-	lexer.Lex(lv)
-	actual = string(lv.Tkn.Value)
+	tkn = lexer.Lex()
+	actual = string(tkn.Value)
 	assert.DeepEqual(t, expected, actual)
 
 	expected = "]"
-	lexer.Lex(lv)
-	actual = string(lv.Tkn.Value)
+	tkn = lexer.Lex()
+	actual = string(tkn.Value)
 	assert.DeepEqual(t, expected, actual)
 }

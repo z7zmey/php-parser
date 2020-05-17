@@ -11,18 +11,13 @@ import (
 )
 
 type Scanner interface {
-	Lex(lval Lval) int
+	Lex() *Token
 	ReturnTokenToPool(t *Token)
 	GetErrors() []*errors.Error
 	GetWithHiddenTokens() bool
 	SetWithHiddenTokens(bool)
 	AddError(e *errors.Error)
 	SetErrors(e []*errors.Error)
-}
-
-// Lval parsers yySymType must implement this interface
-type Lval interface {
-	Token(tkn *Token)
 }
 
 type Lexer struct {

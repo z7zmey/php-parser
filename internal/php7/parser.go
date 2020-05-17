@@ -36,9 +36,12 @@ func NewParser(src []byte, v string) *Parser {
 }
 
 func (l *Parser) Lex(lval *yySymType) int {
-	t := l.Lexer.Lex(lval)
-	l.currentToken = lval.token
-	return t
+	t := l.Lexer.Lex()
+
+	l.currentToken = t
+	lval.token = t
+
+	return int(t.ID)
 }
 
 func (l *Parser) Error(msg string) {
