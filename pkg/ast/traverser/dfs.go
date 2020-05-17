@@ -70,6 +70,12 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			return
 		}
 	case *ast.ArgumentList:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 		if nn.Arguments != nil {
 			t.visitor.Enter("Arguments", false)
 			for _, c := range nn.Arguments {
@@ -732,6 +738,12 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			return
 		}
 	case *ast.StmtIf:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 		if nn.Cond != nil {
 			t.visitor.Enter("Cond", true)
 			t.Traverse(nn.Cond)
@@ -2639,6 +2651,55 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			return
 		}
 	case *ast.ScalarString:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+	case *ast.NameName:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Parts != nil {
+			t.visitor.Enter("Parts", false)
+			for _, c := range nn.Parts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Parts", false)
+		}
+	case *ast.NameFullyQualified:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Parts != nil {
+			t.visitor.Enter("Parts", false)
+			for _, c := range nn.Parts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Parts", false)
+		}
+	case *ast.NameRelative:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Parts != nil {
+			t.visitor.Enter("Parts", false)
+			for _, c := range nn.Parts {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Parts", false)
+		}
+	case *ast.NameNamePart:
 		if nn == nil {
 			return
 		}
