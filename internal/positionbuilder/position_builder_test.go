@@ -14,11 +14,13 @@ func TestNewTokenPosition(t *testing.T) {
 	builder := positionbuilder.PositionBuilder{}
 
 	tkn := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 1,
-		EndLine:   1,
-		StartPos:  0,
-		EndPos:    3,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  0,
+			EndPos:    3,
+		},
 	}
 
 	pos := builder.NewTokenPosition(tkn)
@@ -32,18 +34,22 @@ func TestNewTokensPosition(t *testing.T) {
 	builder := positionbuilder.PositionBuilder{}
 
 	token1 := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 1,
-		EndLine:   1,
-		StartPos:  0,
-		EndPos:    3,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  0,
+			EndPos:    3,
+		},
 	}
 	token2 := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 2,
-		EndLine:   2,
-		StartPos:  4,
-		EndPos:    6,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 2,
+			EndLine:   2,
+			StartPos:  4,
+			EndPos:    6,
+		},
 	}
 
 	pos := builder.NewTokensPosition(token1, token2)
@@ -72,11 +78,13 @@ func TestNewNodePosition(t *testing.T) {
 
 func TestNewTokenNodePosition(t *testing.T) {
 	tkn := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 1,
-		EndLine:   1,
-		StartPos:  0,
-		EndPos:    3,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  0,
+			EndPos:    3,
+		},
 	}
 	n := &ast.Identifier{
 		Node: ast.Node{
@@ -109,11 +117,13 @@ func TestNewNodeTokenPosition(t *testing.T) {
 	}
 
 	tkn := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 2,
-		EndLine:   2,
-		StartPos:  10,
-		EndPos:    12,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 2,
+			EndLine:   2,
+			StartPos:  10,
+			EndPos:    12,
+		},
 	}
 
 	builder := positionbuilder.PositionBuilder{}
@@ -207,11 +217,13 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 	}
 
 	tkn := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 3,
-		EndLine:   3,
-		StartPos:  20,
-		EndPos:    22,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 3,
+			EndLine:   3,
+			StartPos:  20,
+			EndPos:    22,
+		},
 	}
 
 	builder := positionbuilder.PositionBuilder{}
@@ -223,11 +235,13 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 
 func TestNewTokenNodeListPosition(t *testing.T) {
 	tkn := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 1,
-		EndLine:   1,
-		StartPos:  0,
-		EndPos:    2,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  0,
+			EndPos:    2,
+		},
 	}
 
 	n1 := &ast.Identifier{
@@ -343,18 +357,22 @@ func TestNewOptionalListTokensPosition(t *testing.T) {
 	builder := positionbuilder.PositionBuilder{}
 
 	token1 := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 1,
-		EndLine:   1,
-		StartPos:  0,
-		EndPos:    3,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  0,
+			EndPos:    3,
+		},
 	}
 	token2 := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 2,
-		EndLine:   2,
-		StartPos:  4,
-		EndPos:    6,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 2,
+			EndLine:   2,
+			StartPos:  4,
+			EndPos:    6,
+		},
 	}
 
 	pos := builder.NewOptionalListTokensPosition(nil, token1, token2)
@@ -387,18 +405,22 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 	builder := positionbuilder.PositionBuilder{}
 
 	token1 := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 4,
-		EndLine:   4,
-		StartPos:  27,
-		EndPos:    29,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 4,
+			EndLine:   4,
+			StartPos:  27,
+			EndPos:    29,
+		},
 	}
 	token2 := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 5,
-		EndLine:   5,
-		StartPos:  30,
-		EndPos:    32,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 5,
+			EndLine:   5,
+			StartPos:  30,
+			EndPos:    32,
+		},
 	}
 
 	pos := builder.NewOptionalListTokensPosition([]ast.Vertex{n2, n3}, token1, token2)
@@ -435,11 +457,13 @@ func TestNilNodeListPos(t *testing.T) {
 
 func TestNilNodeListTokenPos(t *testing.T) {
 	token := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 1,
-		EndLine:   1,
-		StartPos:  0,
-		EndPos:    3,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  0,
+			EndPos:    3,
+		},
 	}
 
 	builder := positionbuilder.PositionBuilder{}
@@ -470,11 +494,13 @@ func TestEmptyNodeListPos(t *testing.T) {
 
 func TestEmptyNodeListTokenPos(t *testing.T) {
 	token := &scanner.Token{
-		Value:     []byte(`foo`),
-		StartLine: 1,
-		EndLine:   1,
-		StartPos:  0,
-		EndPos:    3,
+		Value: []byte(`foo`),
+		Position: position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  0,
+			EndPos:    3,
+		},
 	}
 
 	builder := positionbuilder.PositionBuilder{}

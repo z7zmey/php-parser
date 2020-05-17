@@ -78,10 +78,10 @@ func (l *Lexer) SetErrors(e []*errors.Error) {
 }
 
 func (lex *Lexer) setTokenPosition(token *Token) {
-	token.StartLine = lex.NewLines.GetLine(lex.ts)
-	token.EndLine = lex.NewLines.GetLine(lex.te - 1)
-	token.StartPos = lex.ts
-	token.EndPos = lex.te
+	token.Position.StartLine = lex.NewLines.GetLine(lex.ts)
+	token.Position.EndLine = lex.NewLines.GetLine(lex.te - 1)
+	token.Position.StartPos = lex.ts
+	token.Position.EndPos = lex.te
 }
 
 func (lex *Lexer) addToken(id TokenID, ps, pe int) {

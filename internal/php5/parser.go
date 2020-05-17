@@ -8,7 +8,6 @@ import (
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/errors"
-	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
 )
 
@@ -45,14 +44,9 @@ func (l *Parser) Lex(lval *yySymType) int {
 }
 
 func (l *Parser) Error(msg string) {
-	pos := &position.Position{
-		StartLine: l.currentToken.StartLine,
-		EndLine:   l.currentToken.EndLine,
-		StartPos:  l.currentToken.StartPos,
-		EndPos:    l.currentToken.EndPos,
-	}
+	var pos = l.currentToken.Position
 
-	l.Lexer.AddError(errors.NewError(msg, pos))
+	l.Lexer.AddError(errors.NewError(msg, &pos))
 }
 
 func (l *Parser) WithTokens() {
