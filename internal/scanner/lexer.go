@@ -31,7 +31,6 @@ type Lexer struct {
 	TokenPool        *TokenPool
 	HiddenTokens     []token.Token
 	WithHiddenTokens bool
-	lastToken        *Token
 	Errors           []*errors.Error
 	NewLines         NewLines
 	PHPVersion       string
