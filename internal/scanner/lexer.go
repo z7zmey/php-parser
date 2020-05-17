@@ -16,8 +16,8 @@ type Scanner interface {
 	GetPhpDocComment() string
 	SetPhpDocComment(string)
 	GetErrors() []*errors.Error
-	GetWithFreeFloating() bool
-	SetWithTokens(bool)
+	GetWithHiddenTokens() bool
+	SetWithHiddenTokens(bool)
 	AddError(e *errors.Error)
 	SetErrors(e []*errors.Error)
 }
@@ -35,14 +35,14 @@ type Lexer struct {
 	top          int
 	heredocLabel []byte
 
-	TokenPool     *TokenPool
-	Tokens        []token.Token
-	WithTokens    bool
-	PhpDocComment string
-	lastToken     *Token
-	Errors        []*errors.Error
-	NewLines      NewLines
-	PHPVersion    string
+	TokenPool        *TokenPool
+	HiddenTokens     []token.Token
+	WithHiddenTokens bool
+	PhpDocComment    string
+	lastToken        *Token
+	Errors           []*errors.Error
+	NewLines         NewLines
+	PHPVersion       string
 }
 
 func (l *Lexer) ReturnTokenToPool(t *Token) {
@@ -61,12 +61,12 @@ func (l *Lexer) GetErrors() []*errors.Error {
 	return l.Errors
 }
 
-func (l *Lexer) GetWithFreeFloating() bool {
-	return l.WithTokens
+func (l *Lexer) GetWithHiddenTokens() bool {
+	return l.WithHiddenTokens
 }
 
-func (l *Lexer) SetWithTokens(b bool) {
-	l.WithTokens = b
+func (l *Lexer) SetWithHiddenTokens(b bool) {
+	l.WithHiddenTokens = b
 }
 
 func (l *Lexer) AddError(e *errors.Error) {
@@ -85,11 +85,11 @@ func (lex *Lexer) setTokenPosition(token *Token) {
 }
 
 func (lex *Lexer) addToken(id TokenID, ps, pe int) {
-	if !lex.WithTokens {
+	if !lex.WithHiddenTokens {
 		return
 	}
 
-	lex.Tokens = append(lex.Tokens, token.Token{
+	lex.HiddenTokens = append(lex.HiddenTokens, token.Token{
 		ID:    token.ID(id),
 		Value: lex.data[ps:pe],
 	})

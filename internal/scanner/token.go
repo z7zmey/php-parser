@@ -9,6 +9,6 @@ import (
 type Token struct {
 	ID       TokenID
 	Value    []byte
-	Tokens   []token.Token
+	Hidden   []token.Token
 	Position position.Position
 }

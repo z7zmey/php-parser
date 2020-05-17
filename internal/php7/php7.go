@@ -2120,7 +2120,7 @@ yydefault:
 			// save position
 			yylex.(*Parser).rootNode.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list)
 
-			yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, token.End, yylex.(*Parser).currentToken.Tokens)
+			yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, token.End, yylex.(*Parser).currentToken.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2620,7 +2620,7 @@ yydefault:
 			namePart.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(namePart, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(namePart, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2635,8 +2635,8 @@ yydefault:
 			namePart.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(namePart, token.Start, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(namePart, token.Start, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2664,8 +2664,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Namespace, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Namespace, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2679,7 +2679,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2742,10 +2742,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.HaltCompiller, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.OpenParenthesisToken, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.CloseParenthesisToken, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.HaltCompiller, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.OpenParenthesisToken, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.CloseParenthesisToken, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2762,9 +2762,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2781,10 +2781,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[5].token.Tokens)
+			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[5].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2798,9 +2798,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Namespace, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Namespace, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2814,8 +2814,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseDeclarationList, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseDeclarationList, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2831,8 +2831,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseDeclarationList, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseDeclarationList, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2847,8 +2847,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseDeclarationList, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseDeclarationList, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2863,8 +2863,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseDeclarationList, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseDeclarationList, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2879,8 +2879,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2895,7 +2895,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2909,7 +2909,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2926,12 +2926,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yyDollar[3].token.Hidden)
 			if yyDollar[5].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, append(yyDollar[5].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token), yyDollar[6].token.Tokens...)...))
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, append(yyDollar[5].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token), yyDollar[6].token.Hidden...)...))
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[6].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[6].token.Hidden)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2948,14 +2948,14 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseType, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.UseType, yyDollar[1].token.Hidden)
 			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yyDollar[4].token.Hidden)
 			if yyDollar[6].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, append(yyDollar[6].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token), yyDollar[7].token.Tokens...)...))
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, append(yyDollar[6].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token), yyDollar[7].token.Hidden...)...))
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[7].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[7].token.Hidden)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2973,12 +2973,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yyDollar[3].token.Hidden)
 			if yyDollar[5].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, append(yyDollar[5].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token), yyDollar[6].token.Tokens...)...))
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, append(yyDollar[5].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token), yyDollar[6].token.Hidden...)...))
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[6].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[6].token.Hidden)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2995,14 +2995,14 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Use, append(yyDollar[1].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Use, append(yyDollar[1].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
 			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yyDollar[4].token.Hidden)
 			if yyDollar[6].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, append(yyDollar[6].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token), yyDollar[7].token.Tokens...)...))
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, append(yyDollar[6].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token), yyDollar[7].token.Hidden...)...))
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[7].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[7].token.Hidden)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3026,7 +3026,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3045,7 +3045,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3064,7 +3064,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3124,8 +3124,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(alias, token.Start, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(name, token.End, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(alias, token.Start, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3147,10 +3147,10 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3162,7 +3162,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3256,10 +3256,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.HaltCompiller, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.OpenParenthesisToken, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.CloseParenthesisToken, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.HaltCompiller, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.OpenParenthesisToken, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.CloseParenthesisToken, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3274,8 +3274,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3312,9 +3312,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.While, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.While, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3328,11 +3328,11 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.While, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[6].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[7].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.While, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[6].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[7].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[7].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3358,11 +3358,11 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.For, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.InitExpr, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.CondExpr, yyDollar[6].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.IncExpr, yyDollar[8].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.For, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.InitExpr, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.CondExpr, yyDollar[6].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.IncExpr, yyDollar[8].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3385,9 +3385,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Switch, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Switch, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3401,8 +3401,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3417,8 +3417,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3433,8 +3433,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3449,8 +3449,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3465,8 +3465,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3481,9 +3481,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Echo, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3498,7 +3498,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3513,7 +3513,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3528,14 +3528,14 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Unset, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Unset, yyDollar[2].token.Hidden)
 			if yyDollar[4].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, append(yyDollar[4].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token), yyDollar[5].token.Tokens...)...))
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, append(yyDollar[4].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token), yyDollar[5].token.Hidden...)...))
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, yyDollar[5].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, yyDollar[5].token.Hidden)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.CloseParenthesisToken, yyDollar[6].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.CloseParenthesisToken, yyDollar[6].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3559,10 +3559,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[7].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Foreach, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[6].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Foreach, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[6].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3587,11 +3587,11 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Foreach, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Key, yyDollar[6].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[8].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Foreach, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Key, yyDollar[6].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[8].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3606,9 +3606,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Declare, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ConstList, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Declare, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ConstList, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3622,7 +3622,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3640,9 +3640,9 @@ yydefault:
 			}
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Try, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Try, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3656,8 +3656,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3674,9 +3674,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(label, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Label, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(label, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Label, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3693,8 +3693,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Label, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Label, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3721,13 +3721,13 @@ yydefault:
 			catch.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[2].token, yyDollar[9].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(catch, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(catch, token.Catch, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(variable, token.Start, yyDollar[5].token.Tokens)
+			yylex.(*Parser).setFreeFloating(catch, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(catch, token.Catch, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(variable, token.Start, yyDollar[5].token.Hidden)
 			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(catch, token.Var, yyDollar[6].token.Tokens)
-			yylex.(*Parser).setFreeFloating(catch, token.Cond, yyDollar[7].token.Tokens)
-			yylex.(*Parser).setFreeFloating(catch, token.Stmts, yyDollar[9].token.Tokens)
+			yylex.(*Parser).setFreeFloating(catch, token.Var, yyDollar[6].token.Hidden)
+			yylex.(*Parser).setFreeFloating(catch, token.Cond, yyDollar[7].token.Hidden)
+			yylex.(*Parser).setFreeFloating(catch, token.Stmts, yyDollar[9].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3746,7 +3746,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3768,9 +3768,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Finally, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Finally, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3789,7 +3789,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3813,21 +3813,21 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[11].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[2].token.Tokens)
-				yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[3].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[2].token.Hidden)
+				yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[3].token.Hidden)
 			} else {
-				yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[3].token.Tokens)
+				yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[3].token.Hidden)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[5].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ParamList, yyDollar[7].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[5].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ParamList, yyDollar[7].token.Hidden)
 			if yyDollar[8].node != nil {
 				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Params, yyDollar[8].node.GetNode().Tokens[token.Colon])
 				delete(yyDollar[8].node.GetNode().Tokens, token.Colon)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ReturnType, yyDollar[9].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[11].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ReturnType, yyDollar[9].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[11].token.Hidden)
 
 			// normalize
 			if yyDollar[8].node == nil {
@@ -3874,10 +3874,10 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ModifierList, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[7].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[9].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ModifierList, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[7].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[9].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3893,10 +3893,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[6].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[8].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[6].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[8].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3926,7 +3926,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3940,7 +3940,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3956,10 +3956,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[6].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[6].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3975,10 +3975,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[5].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[7].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(name, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[5].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[7].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4000,7 +4000,7 @@ yydefault:
 			yyVAL.ClassExtends.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.ClassExtends, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.ClassExtends, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4022,7 +4022,7 @@ yydefault:
 			yyVAL.InterfaceExtends.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.InterfaceExtends, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.InterfaceExtends, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4044,7 +4044,7 @@ yydefault:
 			yyVAL.ClassImplements.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.ClassImplements, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.ClassImplements, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4066,7 +4066,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4080,9 +4080,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.List, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArrayPairList, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.List, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArrayPairList, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4096,8 +4096,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save commentsc
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArrayPairList, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArrayPairList, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4124,9 +4124,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4154,9 +4154,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4184,9 +4184,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4203,8 +4203,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(caseList, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(caseList, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4220,9 +4220,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(caseList, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(caseList, token.CaseListStart, append(yyDollar[2].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(caseList, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(caseList, token.CaseListStart, append(yyDollar[2].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
+			yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4238,9 +4238,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4258,10 +4258,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(caseList, token.CaseListStart, append(yyDollar[2].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[5].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(caseList, token.CaseListStart, append(yyDollar[2].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
+			yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[5].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4285,8 +4285,8 @@ yydefault:
 			_case.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[5].list)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_case, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(_case, token.Expr, append(yyDollar[4].token.Tokens))
+			yylex.(*Parser).setFreeFloating(_case, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(_case, token.Expr, append(yyDollar[4].token.Hidden))
 			yylex.(*Parser).setFreeFloating(_case, token.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4302,8 +4302,8 @@ yydefault:
 			_default.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[4].list)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_default, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(_default, token.Default, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(_default, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(_default, token.Default, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(_default, token.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4343,9 +4343,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4360,9 +4360,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.If, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.If, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4380,9 +4380,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[6].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_elseIf, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(_elseIf, token.ElseIf, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(_elseIf, token.Expr, yyDollar[5].token.Tokens)
+			yylex.(*Parser).setFreeFloating(_elseIf, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(_elseIf, token.ElseIf, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(_elseIf, token.Expr, yyDollar[5].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4408,7 +4408,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_else, token.Start, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(_else, token.Start, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4424,10 +4424,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[6].list)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.If, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[5].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.If, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[5].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4446,10 +4446,10 @@ yydefault:
 			_elseIf.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[7].list)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_elseIf, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(_elseIf, token.ElseIf, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(_elseIf, token.Expr, yyDollar[5].token.Tokens)
-			yylex.(*Parser).setFreeFloating(_elseIf, token.Cond, yyDollar[6].token.Tokens)
+			yylex.(*Parser).setFreeFloating(_elseIf, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(_elseIf, token.ElseIf, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(_elseIf, token.Expr, yyDollar[5].token.Hidden)
+			yylex.(*Parser).setFreeFloating(_elseIf, token.Cond, yyDollar[6].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4463,8 +4463,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[3].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4485,10 +4485,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_else, token.Start, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(_else, token.Else, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[5].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[6].token.Tokens)
+			yylex.(*Parser).setFreeFloating(_else, token.Start, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(_else, token.Else, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[5].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AltEnd, yyDollar[6].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4524,7 +4524,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4554,12 +4554,12 @@ yydefault:
 				yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
 			}
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.OptionalType, yyDollar[2].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.OptionalType, yyDollar[2].token.Hidden)
 			}
 			if yyDollar[3].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[3].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[3].token.Hidden)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Variadic, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Variadic, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).addDollarToken(variable)
 
@@ -4605,13 +4605,13 @@ yydefault:
 				yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
 			}
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.OptionalType, yyDollar[2].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.OptionalType, yyDollar[2].token.Hidden)
 			}
 			if yyDollar[3].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[3].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[3].token.Hidden)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Variadic, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[5].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Variadic, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[5].token.Hidden)
 
 			yylex.(*Parser).addDollarToken(variable)
 
@@ -4665,7 +4665,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4679,7 +4679,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4693,7 +4693,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4720,7 +4720,7 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Colon, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Colon, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4734,8 +4734,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArgumentList, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArgumentList, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4749,11 +4749,11 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			if yyDollar[3].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArgumentList, append(yyDollar[3].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token), yyDollar[4].token.Tokens...)...))
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArgumentList, append(yyDollar[3].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token), yyDollar[4].token.Hidden...)...))
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArgumentList, yyDollar[4].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArgumentList, yyDollar[4].token.Hidden)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4773,7 +4773,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4801,7 +4801,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4812,7 +4812,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4839,7 +4839,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4865,7 +4865,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).addDollarToken(variable)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4884,9 +4884,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4917,7 +4917,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.PropertyList, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.PropertyList, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4934,11 +4934,11 @@ yydefault:
 			// save comments
 			if len(yyDollar[1].list) > 0 {
 				yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.ModifierList, yyDollar[2].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.ModifierList, yyDollar[2].token.Hidden)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[2].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[2].token.Hidden)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ConstList, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ConstList, yyDollar[4].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4953,7 +4953,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -4975,18 +4975,18 @@ yydefault:
 			// save comments
 			if len(yyDollar[1].list) > 0 {
 				yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.ModifierList, yyDollar[2].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.ModifierList, yyDollar[2].token.Hidden)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[2].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[2].token.Hidden)
 			}
 			if yyDollar[3].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[4].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[4].token.Hidden)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[3].token.Tokens)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[4].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[3].token.Hidden)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[4].token.Hidden)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[6].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ParameterList, yyDollar[8].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[6].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ParameterList, yyDollar[8].token.Hidden)
 			if yyDollar[9].node != nil {
 				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Params, yyDollar[9].node.GetNode().Tokens[token.Colon])
 				delete(yyDollar[9].node.GetNode().Tokens, token.Colon)
@@ -5009,7 +5009,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5022,7 +5022,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -5036,8 +5036,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AdaptationList, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AdaptationList, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5050,8 +5050,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AdaptationList, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.AdaptationList, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5078,7 +5078,7 @@ yydefault:
 			yyVAL.node = yyDollar[1].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.NameList, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.NameList, yyDollar[2].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -5090,7 +5090,7 @@ yydefault:
 			yyVAL.node = yyDollar[1].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Alias, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Alias, yyDollar[2].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -5106,7 +5106,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5123,8 +5123,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(alias, token.Start, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(alias, token.Start, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5141,8 +5141,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(alias, token.Start, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(alias, token.Start, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5159,8 +5159,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(alias, token.Start, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(alias, token.Start, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5175,7 +5175,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ref, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5191,7 +5191,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5216,8 +5216,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(target, token.Start, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(target, token.Start, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5231,7 +5231,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -5246,8 +5246,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5270,7 +5270,7 @@ yydefault:
 			modifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(modifier, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(modifier, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5316,7 +5316,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5330,7 +5330,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5344,7 +5344,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5358,7 +5358,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5372,7 +5372,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5386,7 +5386,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5397,7 +5397,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5423,7 +5423,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).addDollarToken(variable)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -5442,9 +5442,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5455,7 +5455,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5479,8 +5479,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5496,8 +5496,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5508,7 +5508,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5551,7 +5551,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5577,9 +5577,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[6].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[8].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[6].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[8].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5596,7 +5596,7 @@ yydefault:
 			}
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5610,7 +5610,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5626,10 +5626,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(listNode, token.List, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[5].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(listNode, token.List, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[5].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5645,9 +5645,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(shortList, token.ArrayPairList, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(shortList, token.ArrayPairList, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5662,7 +5662,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5677,8 +5677,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Equal, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Equal, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5692,7 +5692,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5707,7 +5707,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5722,7 +5722,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5737,7 +5737,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5752,7 +5752,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5767,7 +5767,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5782,7 +5782,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5797,7 +5797,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5812,7 +5812,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5827,7 +5827,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5842,7 +5842,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5857,7 +5857,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5872,7 +5872,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5887,7 +5887,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5902,7 +5902,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5916,7 +5916,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5931,7 +5931,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5945,7 +5945,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5960,7 +5960,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5975,7 +5975,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5990,7 +5990,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6005,7 +6005,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6020,7 +6020,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6035,7 +6035,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6050,7 +6050,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6065,7 +6065,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6080,7 +6080,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6095,7 +6095,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6110,7 +6110,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6125,7 +6125,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6140,7 +6140,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6155,7 +6155,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6170,7 +6170,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6185,7 +6185,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6200,7 +6200,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6214,7 +6214,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6228,7 +6228,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6242,7 +6242,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6256,7 +6256,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6271,7 +6271,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6286,7 +6286,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6301,7 +6301,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6316,7 +6316,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Equal, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6332,7 +6332,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6347,7 +6347,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6362,7 +6362,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6377,7 +6377,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6392,7 +6392,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6407,7 +6407,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6418,8 +6418,8 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6442,8 +6442,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.True, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.True, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6458,8 +6458,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.True, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cond, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.True, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6474,7 +6474,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6496,7 +6496,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6511,7 +6511,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6526,7 +6526,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6541,7 +6541,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6556,7 +6556,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6571,7 +6571,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6586,7 +6586,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6616,7 +6616,7 @@ yydefault:
 			}
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6630,7 +6630,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6652,7 +6652,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6666,7 +6666,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6680,7 +6680,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6694,7 +6694,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6708,8 +6708,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6723,7 +6723,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6754,7 +6754,7 @@ yydefault:
 			// save comments
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Static, yyVAL.node.GetNode().Tokens[token.Start])
 			delete(yyVAL.node.GetNode().Tokens, token.Start)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6768,20 +6768,20 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[11].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			if yyDollar[2].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[4].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[4].token.Hidden)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[2].token.Tokens)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[4].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[2].token.Hidden)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[4].token.Hidden)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ParameterList, yyDollar[6].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ParameterList, yyDollar[6].token.Hidden)
 			if yyDollar[8].node != nil {
 				yylex.(*Parser).setFreeFloating(yyVAL.node, token.LexicalVars, yyDollar[8].node.GetNode().Tokens[token.Colon])
 				delete(yyDollar[8].node.GetNode().Tokens, token.Colon)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ReturnType, yyDollar[9].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[11].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ReturnType, yyDollar[9].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Stmts, yyDollar[11].token.Hidden)
 
 			// normalize
 			if yyDollar[8].node == nil {
@@ -6805,19 +6805,19 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			if yyDollar[2].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[3].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[3].token.Hidden)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[2].token.Tokens)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[3].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Function, yyDollar[2].token.Hidden)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Ampersand, yyDollar[3].token.Hidden)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ParameterList, yyDollar[5].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ParameterList, yyDollar[5].token.Hidden)
 			if yyDollar[6].node != nil {
 				yylex.(*Parser).setFreeFloating(yyVAL.node, token.Params, yyDollar[6].node.GetNode().Tokens[token.Colon])
 				delete(yyDollar[6].node.GetNode().Tokens, token.Colon)
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ReturnType, yyDollar[8].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ReturnType, yyDollar[8].token.Hidden)
 
 			// normalize
 			if yyDollar[6].node == nil {
@@ -6866,9 +6866,9 @@ yydefault:
 			yyVAL.ClosureUse.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, token.Use, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, token.LexicalVarList, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, token.Use, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, token.LexicalVarList, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6879,7 +6879,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6903,7 +6903,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).addDollarToken(yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6922,8 +6922,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(variable, token.Start, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(variable, token.Start, yyDollar[2].token.Hidden)
 			yylex.(*Parser).addDollarToken(variable)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6953,7 +6953,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6968,7 +6968,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6996,7 +6996,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7042,8 +7042,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Exit, append(yyDollar[1].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Exit, append(yyDollar[1].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7101,9 +7101,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Array, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArrayPairList, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Array, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArrayPairList, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7117,8 +7117,8 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArrayPairList, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.ArrayPairList, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7132,7 +7132,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7146,7 +7146,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7160,7 +7160,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7174,7 +7174,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7188,7 +7188,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7202,7 +7202,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7216,7 +7216,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7230,7 +7230,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7244,7 +7244,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7258,7 +7258,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7272,7 +7272,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7288,7 +7288,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7302,7 +7302,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7316,7 +7316,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7330,7 +7330,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7377,8 +7377,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(target, token.Start, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(target, token.Start, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7395,8 +7395,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(target, token.Start, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(target, token.Start, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7455,8 +7455,8 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7483,8 +7483,8 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7515,8 +7515,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7531,8 +7531,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7547,8 +7547,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7563,7 +7563,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7602,7 +7602,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7618,7 +7618,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).addDollarToken(yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -7633,10 +7633,10 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Dollar, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyDollar[3].node, token.Start, append(yyDollar[2].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token), yyDollar[3].node.GetNode().Tokens[token.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyDollar[3].node, token.End, append(yyDollar[3].node.GetNode().Tokens[token.End], append(yyDollar[4].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...)...))
+			yylex.(*Parser).setFreeFloating(yyDollar[3].node, token.Start, append(yyDollar[2].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token), yyDollar[3].node.GetNode().Tokens[token.Start]...)...))
+			yylex.(*Parser).setFreeFloating(yyDollar[3].node, token.End, append(yyDollar[3].node.GetNode().Tokens[token.End], append(yyDollar[4].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7650,7 +7650,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Dollar, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -7666,7 +7666,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7681,7 +7681,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Name, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7704,8 +7704,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7720,8 +7720,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7736,7 +7736,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7751,7 +7751,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7766,7 +7766,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7780,7 +7780,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7791,8 +7791,8 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7814,7 +7814,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7825,8 +7825,8 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, append(yyDollar[1].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), yyVAL.node.GetNode().Tokens[token.Start]...)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyVAL.node.GetNode().Tokens[token.End], append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7873,7 +7873,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7900,7 +7900,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7931,8 +7931,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(reference, token.Start, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(reference, token.Start, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7948,7 +7948,7 @@ yydefault:
 			reference.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7962,7 +7962,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -7980,10 +7980,10 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(listNode, token.Start, yyDollar[3].token.Tokens)
-			yylex.(*Parser).setFreeFloating(listNode, token.List, yyDollar[4].token.Tokens)
-			yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, yyDollar[6].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(listNode, token.Start, yyDollar[3].token.Hidden)
+			yylex.(*Parser).setFreeFloating(listNode, token.List, yyDollar[4].token.Hidden)
+			yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, yyDollar[6].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8000,9 +8000,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(listNode, token.List, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(listNode, token.List, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8025,7 +8025,7 @@ yydefault:
 			encapsed.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(encapsed, token.Start, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(encapsed, token.Start, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8048,7 +8048,7 @@ yydefault:
 			encapsed.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(encapsed, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(encapsed, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8064,7 +8064,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).addDollarToken(yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -8084,8 +8084,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[2].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[4].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8106,8 +8106,8 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(fetch, token.Start, yyDollar[3].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(fetch, token.Start, yyDollar[3].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8124,7 +8124,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8143,7 +8143,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8162,9 +8162,9 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[5].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyDollar[6].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Var, append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, append(yyDollar[5].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyDollar[6].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8176,7 +8176,7 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyDollar[3].token.Tokens, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.End, append(yyDollar[3].token.Hidden, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8190,7 +8190,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8209,7 +8209,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8237,7 +8237,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8253,7 +8253,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 			yylex.(*Parser).addDollarToken(yyVAL.node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -8268,12 +8268,12 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Isset, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Isset, yyDollar[2].token.Hidden)
 			if yyDollar[4].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, yyDollar[5].token.Tokens)
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, yyDollar[5].token.Hidden)
 			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, append(yyDollar[4].token.Tokens, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token), yyDollar[5].token.Tokens...)...))
+				yylex.(*Parser).setFreeFloating(yyVAL.node, token.VarList, append(yyDollar[4].token.Hidden, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token), yyDollar[5].token.Hidden...)...))
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -8288,9 +8288,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Empty, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Empty, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8304,7 +8304,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8318,7 +8318,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8332,9 +8332,9 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Eval, yyDollar[2].token.Tokens)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Eval, yyDollar[2].token.Hidden)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Expr, yyDollar[4].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8348,7 +8348,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8362,7 +8362,7 @@ yydefault:
 			yyVAL.node.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Tokens)
+			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8381,7 +8381,7 @@ yydefault:
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Tokens)
+			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), token.End, yyDollar[2].token.Hidden)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}

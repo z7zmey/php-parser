@@ -28,12 +28,12 @@ func NewLexer(data []byte) *Lexer {
 }
 
 func (lex *Lexer) Lex(lval Lval) int {
-    lex.Tokens = nil
+    lex.HiddenTokens = nil
     eof := lex.pe
     var tok TokenID
 
     token := lex.TokenPool.Get()
-    token.Tokens = lex.Tokens
+    token.Hidden = nil
     token.Value = lex.data[0:0]
 
     lblStart := 0
@@ -508,7 +508,7 @@ func (lex *Lexer) Lex(lval Lval) int {
         write exec;
     }%%
 
-    token.Tokens = lex.Tokens
+    token.Hidden = lex.HiddenTokens
 	token.Value = lex.data[lex.ts:lex.te]
 	token.ID = tok
 
