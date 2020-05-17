@@ -336,7 +336,6 @@ func (lex *Lexer) Lex(lval Lval) int {
                 }
 
                 if isDocComment {
-                    lex.PhpDocComment = string(lex.data[lex.ts:lex.te])
                     lex.addToken(T_DOC_COMMENT, lex.ts, lex.te)
                 } else {
                     lex.addToken(T_COMMENT, lex.ts, lex.te)
@@ -352,7 +351,7 @@ func (lex *Lexer) Lex(lval Lval) int {
             };
 
             "{"          => { lex.setTokenPosition(token); tok = TokenID(int('{')); lex.call(ftargs, fentry(php)); goto _out; };
-            "}"          => { lex.setTokenPosition(token); tok = TokenID(int('}')); lex.ret(1); lex.PhpDocComment = ""; goto _out;};
+            "}"          => { lex.setTokenPosition(token); tok = TokenID(int('}')); lex.ret(1); goto _out;};
             "$" varname  => { lex.setTokenPosition(token); tok = T_VARIABLE; fbreak; };
             varname      => { lex.setTokenPosition(token); tok = T_STRING;   fbreak; };
 

@@ -13,8 +13,6 @@ import (
 type Scanner interface {
 	Lex(lval Lval) int
 	ReturnTokenToPool(t *Token)
-	GetPhpDocComment() string
-	SetPhpDocComment(string)
 	GetErrors() []*errors.Error
 	GetWithHiddenTokens() bool
 	SetWithHiddenTokens(bool)
@@ -38,7 +36,6 @@ type Lexer struct {
 	TokenPool        *TokenPool
 	HiddenTokens     []token.Token
 	WithHiddenTokens bool
-	PhpDocComment    string
 	lastToken        *Token
 	Errors           []*errors.Error
 	NewLines         NewLines
@@ -47,14 +44,6 @@ type Lexer struct {
 
 func (l *Lexer) ReturnTokenToPool(t *Token) {
 	l.TokenPool.Put(t)
-}
-
-func (l *Lexer) GetPhpDocComment() string {
-	return l.PhpDocComment
-}
-
-func (l *Lexer) SetPhpDocComment(s string) {
-	l.PhpDocComment = s
 }
 
 func (l *Lexer) GetErrors() []*errors.Error {

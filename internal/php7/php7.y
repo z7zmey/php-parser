@@ -16,7 +16,6 @@ import (
     node             ast.Vertex
     token            *scanner.Token
     list             []ast.Vertex
-    str              string
 
     ClassExtends     *ast.StmtClassExtends
     ClassImplements  *ast.StmtClassImplements
@@ -284,8 +283,6 @@ import (
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
 %type <list> method_modifiers variable_modifiers
 %type <list> non_empty_member_modifiers name_list class_modifiers
-
-%type <str> backup_doc_comment
 
 %%
 
@@ -4234,12 +4231,6 @@ inline_function:
 
 backup_doc_comment:
         /* empty */
-            {
-                $$ = yylex.(*Parser).Lexer.GetPhpDocComment()
-                yylex.(*Parser).Lexer.SetPhpDocComment("")
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-            }
 ;
 
 returns_ref:
