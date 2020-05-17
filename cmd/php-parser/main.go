@@ -13,8 +13,8 @@ import (
 
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
-	"github.com/z7zmey/php-parser/pkg/parser"
 	"github.com/z7zmey/php-parser/pkg/ast/visitor"
+	"github.com/z7zmey/php-parser/pkg/parser"
 )
 
 var wg sync.WaitGroup

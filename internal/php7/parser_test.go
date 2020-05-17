@@ -982,7 +982,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 						EndPos:    51,
 					},
 				},
-				ReturnsRef:    false,
+				ReturnsRef: false,
 				FunctionName: &ast.Identifier{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -1183,7 +1183,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 								EndPos:    117,
 							},
 						},
-						ReturnsRef:    false,
+						ReturnsRef: false,
 						MethodName: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -1397,8 +1397,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 							EndPos:    162,
 						},
 					},
-					ReturnsRef:    false,
-					Static:        false,
+					ReturnsRef: false,
+					Static:     false,
 					Params: []ast.Vertex{
 						&ast.Parameter{
 							Node: ast.Node{
@@ -1577,8 +1577,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 							EndPos:    214,
 						},
 					},
-					Static:        true,
-					ReturnsRef:    false,
+					Static:     true,
+					ReturnsRef: false,
 					Params: []ast.Vertex{
 						&ast.Parameter{
 							Node: ast.Node{
@@ -4376,7 +4376,7 @@ func TestStmtClassMethod_SimpleClassMethod(t *testing.T) {
 								EndPos:    31,
 							},
 						},
-						ReturnsRef:    false,
+						ReturnsRef: false,
 						MethodName: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -4454,7 +4454,7 @@ func TestStmtClassMethod_PrivateProtectedClassMethod(t *testing.T) {
 								EndPos:    45,
 							},
 						},
-						ReturnsRef:    false,
+						ReturnsRef: false,
 						MethodName: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -4511,7 +4511,7 @@ func TestStmtClassMethod_PrivateProtectedClassMethod(t *testing.T) {
 								EndPos:    73,
 							},
 						},
-						ReturnsRef:    false,
+						ReturnsRef: false,
 						MethodName: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -4602,7 +4602,7 @@ func TestStmtClassMethod_Php7ClassMethod(t *testing.T) {
 								EndPos:    52,
 							},
 						},
-						ReturnsRef:    true,
+						ReturnsRef: true,
 						MethodName: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -4740,7 +4740,7 @@ func TestStmtClassMethod_AbstractClassMethod(t *testing.T) {
 								EndPos:    54,
 							},
 						},
-						ReturnsRef:    false,
+						ReturnsRef: false,
 						MethodName: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -4854,7 +4854,7 @@ func TestStmtClassMethod_Php7AbstractClassMethod(t *testing.T) {
 								EndPos:    51,
 							},
 						},
-						ReturnsRef:    false,
+						ReturnsRef: false,
 						MethodName: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -7300,7 +7300,7 @@ func TestStmtFunction(t *testing.T) {
 						EndPos:    20,
 					},
 				},
-				ReturnsRef:    false,
+				ReturnsRef: false,
 				FunctionName: &ast.Identifier{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -7345,7 +7345,7 @@ func TestStmtFunction_Return(t *testing.T) {
 						EndPos:    27,
 					},
 				},
-				ReturnsRef:    false,
+				ReturnsRef: false,
 				FunctionName: &ast.Identifier{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -7401,7 +7401,7 @@ func TestStmtFunction_ReturnVar(t *testing.T) {
 						EndPos:    51,
 					},
 				},
-				ReturnsRef:    false,
+				ReturnsRef: false,
 				FunctionName: &ast.Identifier{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -7568,7 +7568,7 @@ func TestStmtFunction_Ref(t *testing.T) {
 						EndPos:    30,
 					},
 				},
-				ReturnsRef:    true,
+				ReturnsRef: true,
 				FunctionName: &ast.Identifier{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -7635,7 +7635,7 @@ func TestStmtFunction_ReturnType(t *testing.T) {
 						EndPos:    27,
 					},
 				},
-				ReturnsRef:    true,
+				ReturnsRef: true,
 				FunctionName: &ast.Identifier{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -14535,8 +14535,8 @@ func TestExprArrowFunction(t *testing.T) {
 							EndPos:    13,
 						},
 					},
-					ReturnsRef:    false,
-					Static:        false,
+					ReturnsRef: false,
+					Static:     false,
 					Expr: &ast.ExprVariable{
 						Node: ast.Node{
 							Position: &position.Position{
@@ -14600,8 +14600,8 @@ func TestExprArrowFunction_ReturnType(t *testing.T) {
 							EndPos:    22,
 						},
 					},
-					Static:        false,
-					ReturnsRef:    true,
+					Static:     false,
+					ReturnsRef: true,
 					ReturnType: &ast.NameName{
 						Node: ast.Node{
 							Position: &position.Position{
@@ -15080,9 +15080,9 @@ func TestExprClosure(t *testing.T) {
 							EndPos:    15,
 						},
 					},
-					ReturnsRef:    false,
-					Static:        false,
-					Stmts:         []ast.Vertex{},
+					ReturnsRef: false,
+					Static:     false,
+					Stmts:      []ast.Vertex{},
 				},
 			},
 		},
@@ -15125,8 +15125,8 @@ func TestExprClosure_Use(t *testing.T) {
 							EndPos:    36,
 						},
 					},
-					ReturnsRef:    false,
-					Static:        false,
+					ReturnsRef: false,
+					Static:     false,
 					Params: []ast.Vertex{
 						&ast.Parameter{
 							Node: ast.Node{
@@ -15302,8 +15302,8 @@ func TestExprClosure_Use2(t *testing.T) {
 							EndPos:    36,
 						},
 					},
-					ReturnsRef:    false,
-					Static:        false,
+					ReturnsRef: false,
+					Static:     false,
 					Params: []ast.Vertex{
 						&ast.Parameter{
 							Node: ast.Node{
@@ -15479,8 +15479,8 @@ func TestExprClosure_ReturnType(t *testing.T) {
 							EndPos:    22,
 						},
 					},
-					ReturnsRef:    false,
-					Static:        false,
+					ReturnsRef: false,
+					Static:     false,
 					ReturnType: &ast.NameName{
 						Node: ast.Node{
 							Position: &position.Position{

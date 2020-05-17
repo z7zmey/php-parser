@@ -2,6 +2,7 @@ package php5
 
 import (
 	"bytes"
+	"fmt"
 
 	"github.com/z7zmey/php-parser/internal/positionbuilder"
 	"github.com/z7zmey/php-parser/internal/scanner"
@@ -132,10 +133,25 @@ func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
 		return []token.Token{}
 	}
 
-	tokens := make([]token.Token, len(t.Tokens))
-	copy(tokens, t.Tokens)
+	return []token.Token{
+		{
+			ID:    token.ID(t.ID),
+			Value: t.Value,
+		},
+	}
+}
 
-	return tokens
+func (l *Parser) addDollarToken(v ast.Vertex) {
+	if l.Lexer.GetWithFreeFloating() == false {
+		return
+	}
+
+	l.setFreeFloating(v, token.Dollar, []token.Token{
+		{
+			ID:    token.ID('$'),
+			Value: []byte("$"),
+		},
+	})
 }
 
 func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.Vertex) {
@@ -159,6 +175,8 @@ func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.
 	}
 
 	vlen := len(semiColon[0].Value)
+	fmt.Printf("vlen: %q\n", string(semiColon[0].Value))
+
 	tlen := 2
 	if bytes.HasSuffix(semiColon[0].Value, []byte("?>\n")) {
 		tlen = 3

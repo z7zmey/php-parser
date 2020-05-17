@@ -1431,6 +1431,7 @@ catch_statement:
                 yylex.(*Parser).setFreeFloating(catchNode, token.Start, $1.Tokens)
                 yylex.(*Parser).setFreeFloating(catchNode, token.Catch, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(catchNode, token.Var, $5.Tokens)
                 yylex.(*Parser).setFreeFloating(catchNode, token.Cond, $6.Tokens)
                 yylex.(*Parser).setFreeFloating(catchNode, token.Stmts, $8.Tokens)
@@ -1508,6 +1509,7 @@ additional_catch:
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.Catch, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating($$, token.Var, $5.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.Cond, $6.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.Stmts, $8.Tokens)
@@ -2309,6 +2311,7 @@ parameter:
                     yylex.(*Parser).setFreeFloating($$, token.Ampersand, $3.Tokens)
                 }
                 yylex.(*Parser).setFreeFloating($$, token.Variadic, $4.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
 
                 // normalize
                 if $3 == nil {
@@ -2354,6 +2357,7 @@ parameter:
                 }
                 yylex.(*Parser).setFreeFloating($$, token.Variadic, $4.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.Var, $5.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
 
                 // normalize
                 if $3 == nil {
@@ -2556,6 +2560,7 @@ global_var:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2605,6 +2610,7 @@ static_var_list:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Start, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2623,6 +2629,7 @@ static_var_list:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Start, $3.Tokens)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Var, $4.Tokens)
 
@@ -2641,6 +2648,7 @@ static_var_list:
                 staticVar.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
 
                 // save comments
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Start, $1.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2658,6 +2666,7 @@ static_var_list:
                 staticVar.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
 
                 // save comments
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Start, $1.Tokens)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Var, $2.Tokens)
 
@@ -3155,6 +3164,7 @@ class_variable_declaration:
                 property.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
 
                 // save comments
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(property, token.Start, $3.Tokens)
 
@@ -3174,6 +3184,7 @@ class_variable_declaration:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(property, token.Start, $3.Tokens)
                 yylex.(*Parser).setFreeFloating(property, token.Var, $4.Tokens)
 
@@ -3192,6 +3203,7 @@ class_variable_declaration:
                 property.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
 
                 // save comments
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(property, token.Start, $1.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3209,6 +3221,7 @@ class_variable_declaration:
                 property.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
 
                 // save comments
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(property, token.Start, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(property, token.Var, $2.Tokens)
 
@@ -4589,6 +4602,7 @@ lexical_var_list:
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $3.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4608,6 +4622,7 @@ lexical_var_list:
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(reference, token.Start, $3.Tokens)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4623,6 +4638,7 @@ lexical_var_list:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $1.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4641,6 +4657,7 @@ lexical_var_list:
                 // save comments
                 yylex.(*Parser).setFreeFloating(reference, token.Start, $1.Tokens)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $2.Tokens)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6381,6 +6398,7 @@ compound_variable:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6807,6 +6825,7 @@ encaps_var:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6822,6 +6841,7 @@ encaps_var:
                 $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
 
                 // save comments
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating($$, token.Var, append($2.Tokens, yylex.(*Parser).GetFreeFloatingToken($2)...))
                 yylex.(*Parser).setFreeFloating($$, token.Expr, append($4.Tokens, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
@@ -6841,6 +6861,7 @@ encaps_var:
                 $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
 
                 // save comments
+                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(fetch, token.Start, $3.Tokens)
 
@@ -6950,6 +6971,7 @@ encaps_var_offset:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

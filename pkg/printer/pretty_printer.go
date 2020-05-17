@@ -4,15 +4,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/z7zmey/php-parser/node/stmt"
-
-	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/node/expr/assign"
-	"github.com/z7zmey/php-parser/node/expr/binary"
-	"github.com/z7zmey/php-parser/node/expr/cast"
-	"github.com/z7zmey/php-parser/node/name"
-	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/pkg/ast"
 )
 
 type PrettyPrinter struct {
@@ -30,11 +22,11 @@ func NewPrettyPrinter(w io.Writer, indentStr string) *PrettyPrinter {
 	}
 }
 
-func (p *PrettyPrinter) Print(n node.Node) {
+func (p *PrettyPrinter) Print(n ast.Vertex) {
 	p.printNode(n)
 }
 
-func (p *PrettyPrinter) joinPrint(glue string, nn []node.Node) {
+func (p *PrettyPrinter) joinPrint(glue string, nn []ast.Vertex) {
 	for k, n := range nn {
 		if k > 0 {
 			io.WriteString(p.w, glue)
@@ -44,7 +36,7 @@ func (p *PrettyPrinter) joinPrint(glue string, nn []node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printNodes(nn []node.Node) {
+func (p *PrettyPrinter) printNodes(nn []ast.Vertex) {
 	p.indentDepth++
 	l := len(nn) - 1
 	for k, n := range nn {
@@ -63,367 +55,367 @@ func (p *PrettyPrinter) printIndent() {
 	}
 }
 
-func (p *PrettyPrinter) printNode(n node.Node) {
+func (p *PrettyPrinter) printNode(n ast.Vertex) {
 	switch n.(type) {
 
 	// node
 
-	case *node.Root:
+	case *ast.Root:
 		p.printNodeRoot(n)
-	case *node.Identifier:
+	case *ast.Identifier:
 		p.printNodeIdentifier(n)
-	case *node.Parameter:
+	case *ast.Parameter:
 		p.printNodeParameter(n)
-	case *node.Nullable:
+	case *ast.Nullable:
 		p.printNodeNullable(n)
-	case *node.Argument:
+	case *ast.Argument:
 		p.printNodeArgument(n)
 
 		// name
 
-	case *name.NamePart:
+	case *ast.NameNamePart:
 		p.printNameNamePart(n)
-	case *name.Name:
+	case *ast.NameName:
 		p.printNameName(n)
-	case *name.FullyQualified:
+	case *ast.NameFullyQualified:
 		p.printNameFullyQualified(n)
-	case *name.Relative:
+	case *ast.NameRelative:
 		p.printNameRelative(n)
 
 		// scalar
 
-	case *scalar.Lnumber:
+	case *ast.ScalarLnumber:
 		p.printScalarLNumber(n)
-	case *scalar.Dnumber:
+	case *ast.ScalarDnumber:
 		p.printScalarDNumber(n)
-	case *scalar.String:
+	case *ast.ScalarString:
 		p.printScalarString(n)
-	case *scalar.EncapsedStringPart:
+	case *ast.ScalarEncapsedStringPart:
 		p.printScalarEncapsedStringPart(n)
-	case *scalar.Encapsed:
+	case *ast.ScalarEncapsed:
 		p.printScalarEncapsed(n)
-	case *scalar.Heredoc:
+	case *ast.ScalarHeredoc:
 		p.printScalarHeredoc(n)
-	case *scalar.MagicConstant:
+	case *ast.ScalarMagicConstant:
 		p.printScalarMagicConstant(n)
 
 		// assign
 
-	case *assign.Assign:
-		p.printAssign(n)
-	case *assign.Reference:
-		p.printReference(n)
-	case *assign.BitwiseAnd:
+	case *ast.ExprAssign:
+		p.printAssignAssign(n)
+	case *ast.ExprAssignReference:
+		p.printAssignReference(n)
+	case *ast.ExprAssignBitwiseAnd:
 		p.printAssignBitwiseAnd(n)
-	case *assign.BitwiseOr:
+	case *ast.ExprAssignBitwiseOr:
 		p.printAssignBitwiseOr(n)
-	case *assign.BitwiseXor:
+	case *ast.ExprAssignBitwiseXor:
 		p.printAssignBitwiseXor(n)
-	case *assign.Concat:
+	case *ast.ExprAssignConcat:
 		p.printAssignConcat(n)
-	case *assign.Div:
+	case *ast.ExprAssignDiv:
 		p.printAssignDiv(n)
-	case *assign.Minus:
+	case *ast.ExprAssignMinus:
 		p.printAssignMinus(n)
-	case *assign.Mod:
+	case *ast.ExprAssignMod:
 		p.printAssignMod(n)
-	case *assign.Mul:
+	case *ast.ExprAssignMul:
 		p.printAssignMul(n)
-	case *assign.Plus:
+	case *ast.ExprAssignPlus:
 		p.printAssignPlus(n)
-	case *assign.Pow:
+	case *ast.ExprAssignPow:
 		p.printAssignPow(n)
-	case *assign.ShiftLeft:
+	case *ast.ExprAssignShiftLeft:
 		p.printAssignShiftLeft(n)
-	case *assign.ShiftRight:
+	case *ast.ExprAssignShiftRight:
 		p.printAssignShiftRight(n)
 
 		// binary
 
-	case *binary.BitwiseAnd:
+	case *ast.ExprBinaryBitwiseAnd:
 		p.printBinaryBitwiseAnd(n)
-	case *binary.BitwiseOr:
+	case *ast.ExprBinaryBitwiseOr:
 		p.printBinaryBitwiseOr(n)
-	case *binary.BitwiseXor:
+	case *ast.ExprBinaryBitwiseXor:
 		p.printBinaryBitwiseXor(n)
-	case *binary.BooleanAnd:
+	case *ast.ExprBinaryBooleanAnd:
 		p.printBinaryBooleanAnd(n)
-	case *binary.BooleanOr:
+	case *ast.ExprBinaryBooleanOr:
 		p.printBinaryBooleanOr(n)
-	case *binary.Coalesce:
+	case *ast.ExprBinaryCoalesce:
 		p.printBinaryCoalesce(n)
-	case *binary.Concat:
+	case *ast.ExprBinaryConcat:
 		p.printBinaryConcat(n)
-	case *binary.Div:
+	case *ast.ExprBinaryDiv:
 		p.printBinaryDiv(n)
-	case *binary.Equal:
+	case *ast.ExprBinaryEqual:
 		p.printBinaryEqual(n)
-	case *binary.GreaterOrEqual:
+	case *ast.ExprBinaryGreaterOrEqual:
 		p.printBinaryGreaterOrEqual(n)
-	case *binary.Greater:
+	case *ast.ExprBinaryGreater:
 		p.printBinaryGreater(n)
-	case *binary.Identical:
+	case *ast.ExprBinaryIdentical:
 		p.printBinaryIdentical(n)
-	case *binary.LogicalAnd:
+	case *ast.ExprBinaryLogicalAnd:
 		p.printBinaryLogicalAnd(n)
-	case *binary.LogicalOr:
+	case *ast.ExprBinaryLogicalOr:
 		p.printBinaryLogicalOr(n)
-	case *binary.LogicalXor:
+	case *ast.ExprBinaryLogicalXor:
 		p.printBinaryLogicalXor(n)
-	case *binary.Minus:
+	case *ast.ExprBinaryMinus:
 		p.printBinaryMinus(n)
-	case *binary.Mod:
+	case *ast.ExprBinaryMod:
 		p.printBinaryMod(n)
-	case *binary.Mul:
+	case *ast.ExprBinaryMul:
 		p.printBinaryMul(n)
-	case *binary.NotEqual:
+	case *ast.ExprBinaryNotEqual:
 		p.printBinaryNotEqual(n)
-	case *binary.NotIdentical:
+	case *ast.ExprBinaryNotIdentical:
 		p.printBinaryNotIdentical(n)
-	case *binary.Plus:
+	case *ast.ExprBinaryPlus:
 		p.printBinaryPlus(n)
-	case *binary.Pow:
+	case *ast.ExprBinaryPow:
 		p.printBinaryPow(n)
-	case *binary.ShiftLeft:
+	case *ast.ExprBinaryShiftLeft:
 		p.printBinaryShiftLeft(n)
-	case *binary.ShiftRight:
+	case *ast.ExprBinaryShiftRight:
 		p.printBinaryShiftRight(n)
-	case *binary.SmallerOrEqual:
+	case *ast.ExprBinarySmallerOrEqual:
 		p.printBinarySmallerOrEqual(n)
-	case *binary.Smaller:
+	case *ast.ExprBinarySmaller:
 		p.printBinarySmaller(n)
-	case *binary.Spaceship:
+	case *ast.ExprBinarySpaceship:
 		p.printBinarySpaceship(n)
 
 		// cast
 
-	case *cast.Array:
+	case *ast.ExprCastArray:
 		p.printArray(n)
-	case *cast.Bool:
+	case *ast.ExprCastBool:
 		p.printBool(n)
-	case *cast.Double:
+	case *ast.ExprCastDouble:
 		p.printDouble(n)
-	case *cast.Int:
+	case *ast.ExprCastInt:
 		p.printInt(n)
-	case *cast.Object:
+	case *ast.ExprCastObject:
 		p.printObject(n)
-	case *cast.String:
+	case *ast.ExprCastString:
 		p.printString(n)
-	case *cast.Unset:
+	case *ast.ExprCastUnset:
 		p.printUnset(n)
 
 		// expr
 
-	case *expr.ArrayDimFetch:
+	case *ast.ExprArrayDimFetch:
 		p.printExprArrayDimFetch(n)
-	case *expr.ArrayItem:
+	case *ast.ExprArrayItem:
 		p.printExprArrayItem(n)
-	case *expr.Array:
+	case *ast.ExprArray:
 		p.printExprArray(n)
-	case *expr.BitwiseNot:
+	case *ast.ExprBitwiseNot:
 		p.printExprBitwiseNot(n)
-	case *expr.BooleanNot:
+	case *ast.ExprBooleanNot:
 		p.printExprBooleanNot(n)
-	case *expr.ClassConstFetch:
+	case *ast.ExprClassConstFetch:
 		p.printExprClassConstFetch(n)
-	case *expr.Clone:
+	case *ast.ExprClone:
 		p.printExprClone(n)
-	case *expr.ClosureUse:
+	case *ast.ExprClosureUse:
 		p.printExprClosureUse(n)
-	case *expr.Closure:
+	case *ast.ExprClosure:
 		p.printExprClosure(n)
-	case *expr.ConstFetch:
+	case *ast.ExprConstFetch:
 		p.printExprConstFetch(n)
-	case *expr.Empty:
+	case *ast.ExprEmpty:
 		p.printExprEmpty(n)
-	case *expr.ErrorSuppress:
+	case *ast.ExprErrorSuppress:
 		p.printExprErrorSuppress(n)
-	case *expr.Eval:
+	case *ast.ExprEval:
 		p.printExprEval(n)
-	case *expr.Exit:
+	case *ast.ExprExit:
 		p.printExprExit(n)
-	case *expr.FunctionCall:
+	case *ast.ExprFunctionCall:
 		p.printExprFunctionCall(n)
-	case *expr.Include:
+	case *ast.ExprInclude:
 		p.printExprInclude(n)
-	case *expr.IncludeOnce:
+	case *ast.ExprIncludeOnce:
 		p.printExprIncludeOnce(n)
-	case *expr.InstanceOf:
+	case *ast.ExprInstanceOf:
 		p.printExprInstanceOf(n)
-	case *expr.Isset:
+	case *ast.ExprIsset:
 		p.printExprIsset(n)
-	case *expr.List:
+	case *ast.ExprList:
 		p.printExprList(n)
-	case *expr.MethodCall:
+	case *ast.ExprMethodCall:
 		p.printExprMethodCall(n)
-	case *expr.New:
+	case *ast.ExprNew:
 		p.printExprNew(n)
-	case *expr.PostDec:
+	case *ast.ExprPostDec:
 		p.printExprPostDec(n)
-	case *expr.PostInc:
+	case *ast.ExprPostInc:
 		p.printExprPostInc(n)
-	case *expr.PreDec:
+	case *ast.ExprPreDec:
 		p.printExprPreDec(n)
-	case *expr.PreInc:
+	case *ast.ExprPreInc:
 		p.printExprPreInc(n)
-	case *expr.Print:
+	case *ast.ExprPrint:
 		p.printExprPrint(n)
-	case *expr.PropertyFetch:
+	case *ast.ExprPropertyFetch:
 		p.printExprPropertyFetch(n)
-	case *expr.Reference:
+	case *ast.ExprReference:
 		p.printExprReference(n)
-	case *expr.Require:
+	case *ast.ExprRequire:
 		p.printExprRequire(n)
-	case *expr.RequireOnce:
+	case *ast.ExprRequireOnce:
 		p.printExprRequireOnce(n)
-	case *expr.ShellExec:
+	case *ast.ExprShellExec:
 		p.printExprShellExec(n)
-	case *expr.ShortArray:
+	case *ast.ExprShortArray:
 		p.printExprShortArray(n)
-	case *expr.ShortList:
+	case *ast.ExprShortList:
 		p.printExprShortList(n)
-	case *expr.StaticCall:
+	case *ast.ExprStaticCall:
 		p.printExprStaticCall(n)
-	case *expr.StaticPropertyFetch:
+	case *ast.ExprStaticPropertyFetch:
 		p.printExprStaticPropertyFetch(n)
-	case *expr.Ternary:
+	case *ast.ExprTernary:
 		p.printExprTernary(n)
-	case *expr.UnaryMinus:
+	case *ast.ExprUnaryMinus:
 		p.printExprUnaryMinus(n)
-	case *expr.UnaryPlus:
+	case *ast.ExprUnaryPlus:
 		p.printExprUnaryPlus(n)
-	case *expr.Variable:
+	case *ast.ExprVariable:
 		p.printExprVariable(n)
-	case *expr.YieldFrom:
+	case *ast.ExprYieldFrom:
 		p.printExprYieldFrom(n)
-	case *expr.Yield:
+	case *ast.ExprYield:
 		p.printExprYield(n)
 
 		// stmt
 
-	case *stmt.AltElseIf:
+	case *ast.StmtAltElseIf:
 		p.printStmtAltElseIf(n)
-	case *stmt.AltElse:
+	case *ast.StmtAltElse:
 		p.printStmtAltElse(n)
-	case *stmt.AltFor:
+	case *ast.StmtAltFor:
 		p.printStmtAltFor(n)
-	case *stmt.AltForeach:
+	case *ast.StmtAltForeach:
 		p.printStmtAltForeach(n)
-	case *stmt.AltIf:
+	case *ast.StmtAltIf:
 		p.printStmtAltIf(n)
-	case *stmt.AltSwitch:
+	case *ast.StmtAltSwitch:
 		p.printStmtAltSwitch(n)
-	case *stmt.AltWhile:
+	case *ast.StmtAltWhile:
 		p.printStmtAltWhile(n)
-	case *stmt.Break:
+	case *ast.StmtBreak:
 		p.printStmtBreak(n)
-	case *stmt.Case:
+	case *ast.StmtCase:
 		p.printStmtCase(n)
-	case *stmt.Catch:
+	case *ast.StmtCatch:
 		p.printStmtCatch(n)
-	case *stmt.ClassMethod:
+	case *ast.StmtClassMethod:
 		p.printStmtClassMethod(n)
-	case *stmt.Class:
+	case *ast.StmtClass:
 		p.printStmtClass(n)
-	case *stmt.ClassConstList:
+	case *ast.StmtClassConstList:
 		p.printStmtClassConstList(n)
-	case *stmt.Constant:
+	case *ast.StmtConstant:
 		p.printStmtConstant(n)
-	case *stmt.Continue:
+	case *ast.StmtContinue:
 		p.printStmtContinue(n)
-	case *stmt.Declare:
+	case *ast.StmtDeclare:
 		p.printStmtDeclare(n)
-	case *stmt.Default:
+	case *ast.StmtDefault:
 		p.printStmtDefault(n)
-	case *stmt.Do:
+	case *ast.StmtDo:
 		p.printStmtDo(n)
-	case *stmt.Echo:
+	case *ast.StmtEcho:
 		p.printStmtEcho(n)
-	case *stmt.ElseIf:
+	case *ast.StmtElseIf:
 		p.printStmtElseif(n)
-	case *stmt.Else:
+	case *ast.StmtElse:
 		p.printStmtElse(n)
-	case *stmt.Expression:
+	case *ast.StmtExpression:
 		p.printStmtExpression(n)
-	case *stmt.Finally:
+	case *ast.StmtFinally:
 		p.printStmtFinally(n)
-	case *stmt.For:
+	case *ast.StmtFor:
 		p.printStmtFor(n)
-	case *stmt.Foreach:
+	case *ast.StmtForeach:
 		p.printStmtForeach(n)
-	case *stmt.Function:
+	case *ast.StmtFunction:
 		p.printStmtFunction(n)
-	case *stmt.Global:
+	case *ast.StmtGlobal:
 		p.printStmtGlobal(n)
-	case *stmt.Goto:
+	case *ast.StmtGoto:
 		p.printStmtGoto(n)
-	case *stmt.GroupUse:
+	case *ast.StmtGroupUse:
 		p.printStmtGroupUse(n)
-	case *stmt.HaltCompiler:
+	case *ast.StmtHaltCompiler:
 		p.printStmtHaltCompiler(n)
-	case *stmt.If:
+	case *ast.StmtIf:
 		p.printStmtIf(n)
-	case *stmt.InlineHtml:
+	case *ast.StmtInlineHtml:
 		p.printStmtInlineHTML(n)
-	case *stmt.Interface:
+	case *ast.StmtInterface:
 		p.printStmtInterface(n)
-	case *stmt.Label:
+	case *ast.StmtLabel:
 		p.printStmtLabel(n)
-	case *stmt.Namespace:
+	case *ast.StmtNamespace:
 		p.printStmtNamespace(n)
-	case *stmt.Nop:
+	case *ast.StmtNop:
 		p.printStmtNop(n)
-	case *stmt.PropertyList:
+	case *ast.StmtPropertyList:
 		p.printStmtPropertyList(n)
-	case *stmt.Property:
+	case *ast.StmtProperty:
 		p.printStmtProperty(n)
-	case *stmt.Return:
+	case *ast.StmtReturn:
 		p.printStmtReturn(n)
-	case *stmt.StaticVar:
+	case *ast.StmtStaticVar:
 		p.printStmtStaticVar(n)
-	case *stmt.Static:
+	case *ast.StmtStatic:
 		p.printStmtStatic(n)
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		p.printStmtStmtList(n)
-	case *stmt.Switch:
+	case *ast.StmtSwitch:
 		p.printStmtSwitch(n)
-	case *stmt.Throw:
+	case *ast.StmtThrow:
 		p.printStmtThrow(n)
-	case *stmt.TraitMethodRef:
+	case *ast.StmtTraitMethodRef:
 		p.printStmtTraitMethodRef(n)
-	case *stmt.TraitUseAlias:
+	case *ast.StmtTraitUseAlias:
 		p.printStmtTraitUseAlias(n)
-	case *stmt.TraitUsePrecedence:
+	case *ast.StmtTraitUsePrecedence:
 		p.printStmtTraitUsePrecedence(n)
-	case *stmt.TraitUse:
+	case *ast.StmtTraitUse:
 		p.printStmtTraitUse(n)
-	case *stmt.Trait:
+	case *ast.StmtTrait:
 		p.printStmtTrait(n)
-	case *stmt.Try:
+	case *ast.StmtTry:
 		p.printStmtTry(n)
-	case *stmt.Unset:
+	case *ast.StmtUnset:
 		p.printStmtUnset(n)
-	case *stmt.UseList:
+	case *ast.StmtUseList:
 		p.printStmtUseList(n)
-	case *stmt.Use:
+	case *ast.StmtUse:
 		p.printStmtUse(n)
-	case *stmt.While:
+	case *ast.StmtWhile:
 		p.printStmtWhile(n)
 	}
 }
 
 // node
 
-func (p *PrettyPrinter) printNodeRoot(n node.Node) {
-	v := n.(*node.Root)
+func (p *PrettyPrinter) printNodeRoot(n ast.Vertex) {
+	v := n.(*ast.Root)
 
 	if len(v.Stmts) > 0 {
 		firstStmt := v.Stmts[0]
 		v.Stmts = v.Stmts[1:]
 
 		switch fs := firstStmt.(type) {
-		case *stmt.InlineHtml:
-			io.WriteString(p.w, fs.Value)
+		case *ast.StmtInlineHtml:
+			io.WriteString(p.w, string(fs.Value))
 			io.WriteString(p.w, "<?php\n")
 		default:
 			io.WriteString(p.w, "<?php\n")
@@ -437,16 +429,16 @@ func (p *PrettyPrinter) printNodeRoot(n node.Node) {
 	io.WriteString(p.w, "\n")
 }
 
-func (p *PrettyPrinter) printNodeIdentifier(n node.Node) {
-	v := n.(*node.Identifier).Value
+func (p *PrettyPrinter) printNodeIdentifier(n ast.Vertex) {
+	v := string(n.(*ast.Identifier).Value)
 	io.WriteString(p.w, v)
 }
 
-func (p *PrettyPrinter) printNodeParameter(n node.Node) {
-	nn := n.(*node.Parameter)
+func (p *PrettyPrinter) printNodeParameter(n ast.Vertex) {
+	nn := n.(*ast.Parameter)
 
-	if nn.VariableType != nil {
-		p.Print(nn.VariableType)
+	if nn.Type != nil {
+		p.Print(nn.Type)
 		io.WriteString(p.w, " ")
 	}
 
@@ -458,7 +450,7 @@ func (p *PrettyPrinter) printNodeParameter(n node.Node) {
 		io.WriteString(p.w, "...")
 	}
 
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 
 	if nn.DefaultValue != nil {
 		io.WriteString(p.w, " = ")
@@ -466,15 +458,15 @@ func (p *PrettyPrinter) printNodeParameter(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printNodeNullable(n node.Node) {
-	nn := n.(*node.Nullable)
+func (p *PrettyPrinter) printNodeNullable(n ast.Vertex) {
+	nn := n.(*ast.Nullable)
 
 	io.WriteString(p.w, "?")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printNodeArgument(n node.Node) {
-	nn := n.(*node.Argument)
+func (p *PrettyPrinter) printNodeArgument(n ast.Vertex) {
+	nn := n.(*ast.Argument)
 
 	if nn.IsReference {
 		io.WriteString(p.w, "&")
@@ -489,13 +481,13 @@ func (p *PrettyPrinter) printNodeArgument(n node.Node) {
 
 // name
 
-func (p *PrettyPrinter) printNameNamePart(n node.Node) {
-	v := n.(*name.NamePart).Value
+func (p *PrettyPrinter) printNameNamePart(n ast.Vertex) {
+	v := string(n.(*ast.NameNamePart).Value)
 	io.WriteString(p.w, v)
 }
 
-func (p *PrettyPrinter) printNameName(n node.Node) {
-	nn := n.(*name.Name)
+func (p *PrettyPrinter) printNameName(n ast.Vertex) {
+	nn := n.(*ast.NameName)
 
 	for k, part := range nn.Parts {
 		if k > 0 {
@@ -506,8 +498,8 @@ func (p *PrettyPrinter) printNameName(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printNameFullyQualified(n node.Node) {
-	nn := n.(*name.FullyQualified)
+func (p *PrettyPrinter) printNameFullyQualified(n ast.Vertex) {
+	nn := n.(*ast.NameFullyQualified)
 
 	for _, part := range nn.Parts {
 		io.WriteString(p.w, "\\")
@@ -515,8 +507,8 @@ func (p *PrettyPrinter) printNameFullyQualified(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printNameRelative(n node.Node) {
-	nn := n.(*name.Relative)
+func (p *PrettyPrinter) printNameRelative(n ast.Vertex) {
+	nn := n.(*ast.NameRelative)
 
 	io.WriteString(p.w, "namespace")
 	for _, part := range nn.Parts {
@@ -527,34 +519,34 @@ func (p *PrettyPrinter) printNameRelative(n node.Node) {
 
 // scalar
 
-func (p *PrettyPrinter) printScalarLNumber(n node.Node) {
-	v := n.(*scalar.Lnumber).Value
+func (p *PrettyPrinter) printScalarLNumber(n ast.Vertex) {
+	v := string(n.(*ast.ScalarLnumber).Value)
 	io.WriteString(p.w, v)
 }
 
-func (p *PrettyPrinter) printScalarDNumber(n node.Node) {
-	v := n.(*scalar.Dnumber).Value
+func (p *PrettyPrinter) printScalarDNumber(n ast.Vertex) {
+	v := string(n.(*ast.ScalarDnumber).Value)
 	io.WriteString(p.w, v)
 }
 
-func (p *PrettyPrinter) printScalarString(n node.Node) {
-	v := n.(*scalar.String).Value
+func (p *PrettyPrinter) printScalarString(n ast.Vertex) {
+	v := string(n.(*ast.ScalarString).Value)
 
 	io.WriteString(p.w, v)
 }
 
-func (p *PrettyPrinter) printScalarEncapsedStringPart(n node.Node) {
-	v := n.(*scalar.EncapsedStringPart).Value
+func (p *PrettyPrinter) printScalarEncapsedStringPart(n ast.Vertex) {
+	v := string(n.(*ast.ScalarEncapsedStringPart).Value)
 	io.WriteString(p.w, v)
 }
 
-func (p *PrettyPrinter) printScalarEncapsed(n node.Node) {
-	nn := n.(*scalar.Encapsed)
+func (p *PrettyPrinter) printScalarEncapsed(n ast.Vertex) {
+	nn := n.(*ast.ScalarEncapsed)
 	io.WriteString(p.w, "\"")
 
 	for _, part := range nn.Parts {
 		switch part.(type) {
-		case *scalar.EncapsedStringPart:
+		case *ast.ScalarEncapsedStringPart:
 			p.Print(part)
 		default:
 			io.WriteString(p.w, "{")
@@ -566,14 +558,14 @@ func (p *PrettyPrinter) printScalarEncapsed(n node.Node) {
 	io.WriteString(p.w, "\"")
 }
 
-func (p *PrettyPrinter) printScalarHeredoc(n node.Node) {
-	nn := n.(*scalar.Heredoc)
+func (p *PrettyPrinter) printScalarHeredoc(n ast.Vertex) {
+	nn := n.(*ast.ScalarHeredoc)
 
-	io.WriteString(p.w, nn.Label)
+	io.WriteString(p.w, string(nn.Label))
 
 	for _, part := range nn.Parts {
 		switch part.(type) {
-		case *scalar.EncapsedStringPart:
+		case *ast.ScalarEncapsedStringPart:
 			p.Print(part)
 		default:
 			io.WriteString(p.w, "{")
@@ -582,326 +574,326 @@ func (p *PrettyPrinter) printScalarHeredoc(n node.Node) {
 		}
 	}
 
-	io.WriteString(p.w, strings.Trim(nn.Label, "<\"'\n"))
+	io.WriteString(p.w, strings.Trim(string(nn.Label), "<\"'\n"))
 }
 
-func (p *PrettyPrinter) printScalarMagicConstant(n node.Node) {
-	v := n.(*scalar.MagicConstant).Value
+func (p *PrettyPrinter) printScalarMagicConstant(n ast.Vertex) {
+	v := string(n.(*ast.ScalarMagicConstant).Value)
 	io.WriteString(p.w, v)
 }
 
 // Assign
 
-func (p *PrettyPrinter) printAssign(n node.Node) {
-	nn := n.(*assign.Assign)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignAssign(n ast.Vertex) {
+	nn := n.(*ast.ExprAssign)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " = ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printReference(n node.Node) {
-	nn := n.(*assign.Reference)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignReference(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignReference)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " =& ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignBitwiseAnd(n node.Node) {
-	nn := n.(*assign.BitwiseAnd)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignBitwiseAnd(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignBitwiseAnd)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " &= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignBitwiseOr(n node.Node) {
-	nn := n.(*assign.BitwiseOr)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignBitwiseOr(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignBitwiseOr)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " |= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignBitwiseXor(n node.Node) {
-	nn := n.(*assign.BitwiseXor)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignBitwiseXor(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignBitwiseXor)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " ^= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignConcat(n node.Node) {
-	nn := n.(*assign.Concat)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignConcat(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignConcat)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " .= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignDiv(n node.Node) {
-	nn := n.(*assign.Div)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignDiv(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignDiv)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " /= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignMinus(n node.Node) {
-	nn := n.(*assign.Minus)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignMinus(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignMinus)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " -= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignMod(n node.Node) {
-	nn := n.(*assign.Mod)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignMod(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignMod)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " %= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignMul(n node.Node) {
-	nn := n.(*assign.Mul)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignMul(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignMul)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " *= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignPlus(n node.Node) {
-	nn := n.(*assign.Plus)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignPlus(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignPlus)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " += ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignPow(n node.Node) {
-	nn := n.(*assign.Pow)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignPow(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignPow)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " **= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignShiftLeft(n node.Node) {
-	nn := n.(*assign.ShiftLeft)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignShiftLeft(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignShiftLeft)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " <<= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printAssignShiftRight(n node.Node) {
-	nn := n.(*assign.ShiftRight)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printAssignShiftRight(n ast.Vertex) {
+	nn := n.(*ast.ExprAssignShiftRight)
+	p.Print(nn.Var)
 	io.WriteString(p.w, " >>= ")
-	p.Print(nn.Expression)
+	p.Print(nn.Expr)
 }
 
 // binary
 
-func (p *PrettyPrinter) printBinaryBitwiseAnd(n node.Node) {
-	nn := n.(*binary.BitwiseAnd)
+func (p *PrettyPrinter) printBinaryBitwiseAnd(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryBitwiseAnd)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " & ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryBitwiseOr(n node.Node) {
-	nn := n.(*binary.BitwiseOr)
+func (p *PrettyPrinter) printBinaryBitwiseOr(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryBitwiseOr)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " | ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryBitwiseXor(n node.Node) {
-	nn := n.(*binary.BitwiseXor)
+func (p *PrettyPrinter) printBinaryBitwiseXor(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryBitwiseXor)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " ^ ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryBooleanAnd(n node.Node) {
-	nn := n.(*binary.BooleanAnd)
+func (p *PrettyPrinter) printBinaryBooleanAnd(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryBooleanAnd)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " && ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryBooleanOr(n node.Node) {
-	nn := n.(*binary.BooleanOr)
+func (p *PrettyPrinter) printBinaryBooleanOr(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryBooleanOr)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " || ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryCoalesce(n node.Node) {
-	nn := n.(*binary.Coalesce)
+func (p *PrettyPrinter) printBinaryCoalesce(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryCoalesce)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " ?? ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryConcat(n node.Node) {
-	nn := n.(*binary.Concat)
+func (p *PrettyPrinter) printBinaryConcat(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryConcat)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " . ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryDiv(n node.Node) {
-	nn := n.(*binary.Div)
+func (p *PrettyPrinter) printBinaryDiv(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryDiv)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " / ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryEqual(n node.Node) {
-	nn := n.(*binary.Equal)
+func (p *PrettyPrinter) printBinaryEqual(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryEqual)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " == ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryGreaterOrEqual(n node.Node) {
-	nn := n.(*binary.GreaterOrEqual)
+func (p *PrettyPrinter) printBinaryGreaterOrEqual(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryGreaterOrEqual)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " >= ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryGreater(n node.Node) {
-	nn := n.(*binary.Greater)
+func (p *PrettyPrinter) printBinaryGreater(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryGreater)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " > ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryIdentical(n node.Node) {
-	nn := n.(*binary.Identical)
+func (p *PrettyPrinter) printBinaryIdentical(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryIdentical)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " === ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryLogicalAnd(n node.Node) {
-	nn := n.(*binary.LogicalAnd)
+func (p *PrettyPrinter) printBinaryLogicalAnd(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryLogicalAnd)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " and ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryLogicalOr(n node.Node) {
-	nn := n.(*binary.LogicalOr)
+func (p *PrettyPrinter) printBinaryLogicalOr(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryLogicalOr)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " or ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryLogicalXor(n node.Node) {
-	nn := n.(*binary.LogicalXor)
+func (p *PrettyPrinter) printBinaryLogicalXor(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryLogicalXor)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " xor ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryMinus(n node.Node) {
-	nn := n.(*binary.Minus)
+func (p *PrettyPrinter) printBinaryMinus(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryMinus)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " - ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryMod(n node.Node) {
-	nn := n.(*binary.Mod)
+func (p *PrettyPrinter) printBinaryMod(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryMod)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " % ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryMul(n node.Node) {
-	nn := n.(*binary.Mul)
+func (p *PrettyPrinter) printBinaryMul(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryMul)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " * ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryNotEqual(n node.Node) {
-	nn := n.(*binary.NotEqual)
+func (p *PrettyPrinter) printBinaryNotEqual(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryNotEqual)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " != ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryNotIdentical(n node.Node) {
-	nn := n.(*binary.NotIdentical)
+func (p *PrettyPrinter) printBinaryNotIdentical(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryNotIdentical)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " !== ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryPlus(n node.Node) {
-	nn := n.(*binary.Plus)
+func (p *PrettyPrinter) printBinaryPlus(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryPlus)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " + ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryPow(n node.Node) {
-	nn := n.(*binary.Pow)
+func (p *PrettyPrinter) printBinaryPow(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryPow)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " ** ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryShiftLeft(n node.Node) {
-	nn := n.(*binary.ShiftLeft)
+func (p *PrettyPrinter) printBinaryShiftLeft(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryShiftLeft)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " << ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinaryShiftRight(n node.Node) {
-	nn := n.(*binary.ShiftRight)
+func (p *PrettyPrinter) printBinaryShiftRight(n ast.Vertex) {
+	nn := n.(*ast.ExprBinaryShiftRight)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " >> ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinarySmallerOrEqual(n node.Node) {
-	nn := n.(*binary.SmallerOrEqual)
+func (p *PrettyPrinter) printBinarySmallerOrEqual(n ast.Vertex) {
+	nn := n.(*ast.ExprBinarySmallerOrEqual)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " <= ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinarySmaller(n node.Node) {
-	nn := n.(*binary.Smaller)
+func (p *PrettyPrinter) printBinarySmaller(n ast.Vertex) {
+	nn := n.(*ast.ExprBinarySmaller)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " < ")
 	p.Print(nn.Right)
 }
 
-func (p *PrettyPrinter) printBinarySpaceship(n node.Node) {
-	nn := n.(*binary.Spaceship)
+func (p *PrettyPrinter) printBinarySpaceship(n ast.Vertex) {
+	nn := n.(*ast.ExprBinarySpaceship)
 
 	p.Print(nn.Left)
 	io.WriteString(p.w, " <=> ")
@@ -910,50 +902,50 @@ func (p *PrettyPrinter) printBinarySpaceship(n node.Node) {
 
 // cast
 
-func (p *PrettyPrinter) printArray(n node.Node) {
-	nn := n.(*cast.Array)
+func (p *PrettyPrinter) printArray(n ast.Vertex) {
+	nn := n.(*ast.ExprCastArray)
 
 	io.WriteString(p.w, "(array)")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printBool(n node.Node) {
-	nn := n.(*cast.Bool)
+func (p *PrettyPrinter) printBool(n ast.Vertex) {
+	nn := n.(*ast.ExprCastBool)
 
 	io.WriteString(p.w, "(bool)")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printDouble(n node.Node) {
-	nn := n.(*cast.Double)
+func (p *PrettyPrinter) printDouble(n ast.Vertex) {
+	nn := n.(*ast.ExprCastDouble)
 
 	io.WriteString(p.w, "(float)")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printInt(n node.Node) {
-	nn := n.(*cast.Int)
+func (p *PrettyPrinter) printInt(n ast.Vertex) {
+	nn := n.(*ast.ExprCastInt)
 
 	io.WriteString(p.w, "(int)")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printObject(n node.Node) {
-	nn := n.(*cast.Object)
+func (p *PrettyPrinter) printObject(n ast.Vertex) {
+	nn := n.(*ast.ExprCastObject)
 
 	io.WriteString(p.w, "(object)")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printString(n node.Node) {
-	nn := n.(*cast.String)
+func (p *PrettyPrinter) printString(n ast.Vertex) {
+	nn := n.(*ast.ExprCastString)
 
 	io.WriteString(p.w, "(string)")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printUnset(n node.Node) {
-	nn := n.(*cast.Unset)
+func (p *PrettyPrinter) printUnset(n ast.Vertex) {
+	nn := n.(*ast.ExprCastUnset)
 
 	io.WriteString(p.w, "(unset)")
 	p.Print(nn.Expr)
@@ -961,16 +953,16 @@ func (p *PrettyPrinter) printUnset(n node.Node) {
 
 // expr
 
-func (p *PrettyPrinter) printExprArrayDimFetch(n node.Node) {
-	nn := n.(*expr.ArrayDimFetch)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printExprArrayDimFetch(n ast.Vertex) {
+	nn := n.(*ast.ExprArrayDimFetch)
+	p.Print(nn.Var)
 	io.WriteString(p.w, "[")
 	p.Print(nn.Dim)
 	io.WriteString(p.w, "]")
 }
 
-func (p *PrettyPrinter) printExprArrayItem(n node.Node) {
-	nn := n.(*expr.ArrayItem)
+func (p *PrettyPrinter) printExprArrayItem(n ast.Vertex) {
+	nn := n.(*ast.ExprArrayItem)
 
 	if nn.Key != nil {
 		p.Print(nn.Key)
@@ -980,51 +972,51 @@ func (p *PrettyPrinter) printExprArrayItem(n node.Node) {
 	p.Print(nn.Val)
 }
 
-func (p *PrettyPrinter) printExprArray(n node.Node) {
-	nn := n.(*expr.Array)
+func (p *PrettyPrinter) printExprArray(n ast.Vertex) {
+	nn := n.(*ast.ExprArray)
 
 	io.WriteString(p.w, "array(")
 	p.joinPrint(", ", nn.Items)
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprBitwiseNot(n node.Node) {
-	nn := n.(*expr.BitwiseNot)
+func (p *PrettyPrinter) printExprBitwiseNot(n ast.Vertex) {
+	nn := n.(*ast.ExprBitwiseNot)
 	io.WriteString(p.w, "~")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprBooleanNot(n node.Node) {
-	nn := n.(*expr.BooleanNot)
+func (p *PrettyPrinter) printExprBooleanNot(n ast.Vertex) {
+	nn := n.(*ast.ExprBooleanNot)
 	io.WriteString(p.w, "!")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprClassConstFetch(n node.Node) {
-	nn := n.(*expr.ClassConstFetch)
+func (p *PrettyPrinter) printExprClassConstFetch(n ast.Vertex) {
+	nn := n.(*ast.ExprClassConstFetch)
 
 	p.Print(nn.Class)
 	io.WriteString(p.w, "::")
-	io.WriteString(p.w, nn.ConstantName.(*node.Identifier).Value)
+	io.WriteString(p.w, string(nn.ConstantName.(*ast.Identifier).Value))
 }
 
-func (p *PrettyPrinter) printExprClone(n node.Node) {
-	nn := n.(*expr.Clone)
+func (p *PrettyPrinter) printExprClone(n ast.Vertex) {
+	nn := n.(*ast.ExprClone)
 
 	io.WriteString(p.w, "clone ")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprClosureUse(n node.Node) {
-	nn := n.(*expr.ClosureUse)
+func (p *PrettyPrinter) printExprClosureUse(n ast.Vertex) {
+	nn := n.(*ast.ExprClosureUse)
 
 	io.WriteString(p.w, "use (")
 	p.joinPrint(", ", nn.Uses)
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprClosure(n node.Node) {
-	nn := n.(*expr.Closure)
+func (p *PrettyPrinter) printExprClosure(n ast.Vertex) {
+	nn := n.(*ast.ExprClosure)
 
 	if nn.Static {
 		io.WriteString(p.w, "static ")
@@ -1057,37 +1049,37 @@ func (p *PrettyPrinter) printExprClosure(n node.Node) {
 	io.WriteString(p.w, "}")
 }
 
-func (p *PrettyPrinter) printExprConstFetch(n node.Node) {
-	nn := n.(*expr.ConstFetch)
+func (p *PrettyPrinter) printExprConstFetch(n ast.Vertex) {
+	nn := n.(*ast.ExprConstFetch)
 
-	p.Print(nn.Constant)
+	p.Print(nn.Const)
 }
 
-func (p *PrettyPrinter) printExprEmpty(n node.Node) {
-	nn := n.(*expr.Empty)
+func (p *PrettyPrinter) printExprEmpty(n ast.Vertex) {
+	nn := n.(*ast.ExprEmpty)
 
 	io.WriteString(p.w, "empty(")
 	p.Print(nn.Expr)
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprErrorSuppress(n node.Node) {
-	nn := n.(*expr.ErrorSuppress)
+func (p *PrettyPrinter) printExprErrorSuppress(n ast.Vertex) {
+	nn := n.(*ast.ExprErrorSuppress)
 
 	io.WriteString(p.w, "@")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprEval(n node.Node) {
-	nn := n.(*expr.Eval)
+func (p *PrettyPrinter) printExprEval(n ast.Vertex) {
+	nn := n.(*ast.ExprEval)
 
 	io.WriteString(p.w, "eval(")
 	p.Print(nn.Expr)
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprExit(n node.Node) {
-	nn := n.(*expr.Exit)
+func (p *PrettyPrinter) printExprExit(n ast.Vertex) {
+	nn := n.(*ast.ExprExit)
 
 	if nn.Die {
 		io.WriteString(p.w, "die(")
@@ -1098,8 +1090,8 @@ func (p *PrettyPrinter) printExprExit(n node.Node) {
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprFunctionCall(n node.Node) {
-	nn := n.(*expr.FunctionCall)
+func (p *PrettyPrinter) printExprFunctionCall(n ast.Vertex) {
+	nn := n.(*ast.ExprFunctionCall)
 
 	p.Print(nn.Function)
 	io.WriteString(p.w, "(")
@@ -1107,48 +1099,48 @@ func (p *PrettyPrinter) printExprFunctionCall(n node.Node) {
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprInclude(n node.Node) {
-	nn := n.(*expr.Include)
+func (p *PrettyPrinter) printExprInclude(n ast.Vertex) {
+	nn := n.(*ast.ExprInclude)
 
 	io.WriteString(p.w, "include ")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprIncludeOnce(n node.Node) {
-	nn := n.(*expr.IncludeOnce)
+func (p *PrettyPrinter) printExprIncludeOnce(n ast.Vertex) {
+	nn := n.(*ast.ExprIncludeOnce)
 
 	io.WriteString(p.w, "include_once ")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprInstanceOf(n node.Node) {
-	nn := n.(*expr.InstanceOf)
+func (p *PrettyPrinter) printExprInstanceOf(n ast.Vertex) {
+	nn := n.(*ast.ExprInstanceOf)
 
 	p.Print(nn.Expr)
 	io.WriteString(p.w, " instanceof ")
 	p.Print(nn.Class)
 }
 
-func (p *PrettyPrinter) printExprIsset(n node.Node) {
-	nn := n.(*expr.Isset)
+func (p *PrettyPrinter) printExprIsset(n ast.Vertex) {
+	nn := n.(*ast.ExprIsset)
 
 	io.WriteString(p.w, "isset(")
-	p.joinPrint(", ", nn.Variables)
+	p.joinPrint(", ", nn.Vars)
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprList(n node.Node) {
-	nn := n.(*expr.List)
+func (p *PrettyPrinter) printExprList(n ast.Vertex) {
+	nn := n.(*ast.ExprList)
 
 	io.WriteString(p.w, "list(")
 	p.joinPrint(", ", nn.Items)
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprMethodCall(n node.Node) {
-	nn := n.(*expr.MethodCall)
+func (p *PrettyPrinter) printExprMethodCall(n ast.Vertex) {
+	nn := n.(*ast.ExprMethodCall)
 
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 	io.WriteString(p.w, "->")
 	p.Print(nn.Method)
 	io.WriteString(p.w, "(")
@@ -1156,8 +1148,8 @@ func (p *PrettyPrinter) printExprMethodCall(n node.Node) {
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprNew(n node.Node) {
-	nn := n.(*expr.New)
+func (p *PrettyPrinter) printExprNew(n ast.Vertex) {
+	nn := n.(*ast.ExprNew)
 
 	io.WriteString(p.w, "new ")
 	p.Print(nn.Class)
@@ -1169,78 +1161,78 @@ func (p *PrettyPrinter) printExprNew(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printExprPostDec(n node.Node) {
-	nn := n.(*expr.PostDec)
+func (p *PrettyPrinter) printExprPostDec(n ast.Vertex) {
+	nn := n.(*ast.ExprPostDec)
 
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 	io.WriteString(p.w, "--")
 }
 
-func (p *PrettyPrinter) printExprPostInc(n node.Node) {
-	nn := n.(*expr.PostInc)
+func (p *PrettyPrinter) printExprPostInc(n ast.Vertex) {
+	nn := n.(*ast.ExprPostInc)
 
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 	io.WriteString(p.w, "++")
 }
 
-func (p *PrettyPrinter) printExprPreDec(n node.Node) {
-	nn := n.(*expr.PreDec)
+func (p *PrettyPrinter) printExprPreDec(n ast.Vertex) {
+	nn := n.(*ast.ExprPreDec)
 
 	io.WriteString(p.w, "--")
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 }
 
-func (p *PrettyPrinter) printExprPreInc(n node.Node) {
-	nn := n.(*expr.PreInc)
+func (p *PrettyPrinter) printExprPreInc(n ast.Vertex) {
+	nn := n.(*ast.ExprPreInc)
 
 	io.WriteString(p.w, "++")
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 }
 
-func (p *PrettyPrinter) printExprPrint(n node.Node) {
-	nn := n.(*expr.Print)
+func (p *PrettyPrinter) printExprPrint(n ast.Vertex) {
+	nn := n.(*ast.ExprPrint)
 
 	io.WriteString(p.w, "print(")
 	p.Print(nn.Expr)
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprPropertyFetch(n node.Node) {
-	nn := n.(*expr.PropertyFetch)
+func (p *PrettyPrinter) printExprPropertyFetch(n ast.Vertex) {
+	nn := n.(*ast.ExprPropertyFetch)
 
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 	io.WriteString(p.w, "->")
 	p.Print(nn.Property)
 }
 
-func (p *PrettyPrinter) printExprReference(n node.Node) {
-	nn := n.(*expr.Reference)
+func (p *PrettyPrinter) printExprReference(n ast.Vertex) {
+	nn := n.(*ast.ExprReference)
 
 	io.WriteString(p.w, "&")
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 }
 
-func (p *PrettyPrinter) printExprRequire(n node.Node) {
-	nn := n.(*expr.Require)
+func (p *PrettyPrinter) printExprRequire(n ast.Vertex) {
+	nn := n.(*ast.ExprRequire)
 
 	io.WriteString(p.w, "require ")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprRequireOnce(n node.Node) {
-	nn := n.(*expr.RequireOnce)
+func (p *PrettyPrinter) printExprRequireOnce(n ast.Vertex) {
+	nn := n.(*ast.ExprRequireOnce)
 
 	io.WriteString(p.w, "require_once ")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprShellExec(n node.Node) {
-	nn := n.(*expr.ShellExec)
+func (p *PrettyPrinter) printExprShellExec(n ast.Vertex) {
+	nn := n.(*ast.ExprShellExec)
 
 	io.WriteString(p.w, "`")
 	for _, part := range nn.Parts {
 		switch part.(type) {
-		case *scalar.EncapsedStringPart:
+		case *ast.ScalarEncapsedStringPart:
 			p.Print(part)
 		default:
 			io.WriteString(p.w, "{")
@@ -1251,24 +1243,24 @@ func (p *PrettyPrinter) printExprShellExec(n node.Node) {
 	io.WriteString(p.w, "`")
 }
 
-func (p *PrettyPrinter) printExprShortArray(n node.Node) {
-	nn := n.(*expr.ShortArray)
+func (p *PrettyPrinter) printExprShortArray(n ast.Vertex) {
+	nn := n.(*ast.ExprShortArray)
 
 	io.WriteString(p.w, "[")
 	p.joinPrint(", ", nn.Items)
 	io.WriteString(p.w, "]")
 }
 
-func (p *PrettyPrinter) printExprShortList(n node.Node) {
-	nn := n.(*expr.ShortList)
+func (p *PrettyPrinter) printExprShortList(n ast.Vertex) {
+	nn := n.(*ast.ExprShortList)
 
 	io.WriteString(p.w, "[")
 	p.joinPrint(", ", nn.Items)
 	io.WriteString(p.w, "]")
 }
 
-func (p *PrettyPrinter) printExprStaticCall(n node.Node) {
-	nn := n.(*expr.StaticCall)
+func (p *PrettyPrinter) printExprStaticCall(n ast.Vertex) {
+	nn := n.(*ast.ExprStaticCall)
 
 	p.Print(nn.Class)
 	io.WriteString(p.w, "::")
@@ -1278,16 +1270,16 @@ func (p *PrettyPrinter) printExprStaticCall(n node.Node) {
 	io.WriteString(p.w, ")")
 }
 
-func (p *PrettyPrinter) printExprStaticPropertyFetch(n node.Node) {
-	nn := n.(*expr.StaticPropertyFetch)
+func (p *PrettyPrinter) printExprStaticPropertyFetch(n ast.Vertex) {
+	nn := n.(*ast.ExprStaticPropertyFetch)
 
 	p.Print(nn.Class)
 	io.WriteString(p.w, "::")
 	p.Print(nn.Property)
 }
 
-func (p *PrettyPrinter) printExprTernary(n node.Node) {
-	nn := n.(*expr.Ternary)
+func (p *PrettyPrinter) printExprTernary(n ast.Vertex) {
+	nn := n.(*ast.ExprTernary)
 
 	p.Print(nn.Condition)
 	io.WriteString(p.w, " ?")
@@ -1302,35 +1294,35 @@ func (p *PrettyPrinter) printExprTernary(n node.Node) {
 	p.Print(nn.IfFalse)
 }
 
-func (p *PrettyPrinter) printExprUnaryMinus(n node.Node) {
-	nn := n.(*expr.UnaryMinus)
+func (p *PrettyPrinter) printExprUnaryMinus(n ast.Vertex) {
+	nn := n.(*ast.ExprUnaryMinus)
 
 	io.WriteString(p.w, "-")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprUnaryPlus(n node.Node) {
-	nn := n.(*expr.UnaryPlus)
+func (p *PrettyPrinter) printExprUnaryPlus(n ast.Vertex) {
+	nn := n.(*ast.ExprUnaryPlus)
 
 	io.WriteString(p.w, "+")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprVariable(n node.Node) {
-	nn := n.(*expr.Variable)
+func (p *PrettyPrinter) printExprVariable(n ast.Vertex) {
+	nn := n.(*ast.ExprVariable)
 	io.WriteString(p.w, "$")
 	p.Print(nn.VarName)
 }
 
-func (p *PrettyPrinter) printExprYieldFrom(n node.Node) {
-	nn := n.(*expr.YieldFrom)
+func (p *PrettyPrinter) printExprYieldFrom(n ast.Vertex) {
+	nn := n.(*ast.ExprYieldFrom)
 
 	io.WriteString(p.w, "yield from ")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printExprYield(n node.Node) {
-	nn := n.(*expr.Yield)
+func (p *PrettyPrinter) printExprYield(n ast.Vertex) {
+	nn := n.(*ast.ExprYield)
 
 	io.WriteString(p.w, "yield ")
 
@@ -1344,32 +1336,32 @@ func (p *PrettyPrinter) printExprYield(n node.Node) {
 
 // smtm
 
-func (p *PrettyPrinter) printStmtAltElseIf(n node.Node) {
-	nn := n.(*stmt.AltElseIf)
+func (p *PrettyPrinter) printStmtAltElseIf(n ast.Vertex) {
+	nn := n.(*ast.StmtAltElseIf)
 
 	io.WriteString(p.w, "elseif (")
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ") :")
 
-	if s := nn.Stmt.(*stmt.StmtList).Stmts; len(s) > 0 {
+	if s := nn.Stmt.(*ast.StmtStmtList).Stmts; len(s) > 0 {
 		io.WriteString(p.w, "\n")
 		p.printNodes(s)
 	}
 }
 
-func (p *PrettyPrinter) printStmtAltElse(n node.Node) {
-	nn := n.(*stmt.AltElse)
+func (p *PrettyPrinter) printStmtAltElse(n ast.Vertex) {
+	nn := n.(*ast.StmtAltElse)
 
 	io.WriteString(p.w, "else :")
 
-	if s := nn.Stmt.(*stmt.StmtList).Stmts; len(s) > 0 {
+	if s := nn.Stmt.(*ast.StmtStmtList).Stmts; len(s) > 0 {
 		io.WriteString(p.w, "\n")
 		p.printNodes(s)
 	}
 }
 
-func (p *PrettyPrinter) printStmtAltFor(n node.Node) {
-	nn := n.(*stmt.AltFor)
+func (p *PrettyPrinter) printStmtAltFor(n ast.Vertex) {
+	nn := n.(*ast.StmtAltFor)
 
 	io.WriteString(p.w, "for (")
 	p.joinPrint(", ", nn.Init)
@@ -1379,7 +1371,7 @@ func (p *PrettyPrinter) printStmtAltFor(n node.Node) {
 	p.joinPrint(", ", nn.Loop)
 	io.WriteString(p.w, ") :\n")
 
-	s := nn.Stmt.(*stmt.StmtList)
+	s := nn.Stmt.(*ast.StmtStmtList)
 	p.printNodes(s.Stmts)
 	io.WriteString(p.w, "\n")
 	p.printIndent()
@@ -1387,8 +1379,8 @@ func (p *PrettyPrinter) printStmtAltFor(n node.Node) {
 	io.WriteString(p.w, "endfor;")
 }
 
-func (p *PrettyPrinter) printStmtAltForeach(n node.Node) {
-	nn := n.(*stmt.AltForeach)
+func (p *PrettyPrinter) printStmtAltForeach(n ast.Vertex) {
+	nn := n.(*ast.StmtAltForeach)
 
 	io.WriteString(p.w, "foreach (")
 	p.Print(nn.Expr)
@@ -1399,11 +1391,11 @@ func (p *PrettyPrinter) printStmtAltForeach(n node.Node) {
 		io.WriteString(p.w, " => ")
 	}
 
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 
 	io.WriteString(p.w, ") :\n")
 
-	s := nn.Stmt.(*stmt.StmtList)
+	s := nn.Stmt.(*ast.StmtStmtList)
 	p.printNodes(s.Stmts)
 
 	io.WriteString(p.w, "\n")
@@ -1411,14 +1403,14 @@ func (p *PrettyPrinter) printStmtAltForeach(n node.Node) {
 	io.WriteString(p.w, "endforeach;")
 }
 
-func (p *PrettyPrinter) printStmtAltIf(n node.Node) {
-	nn := n.(*stmt.AltIf)
+func (p *PrettyPrinter) printStmtAltIf(n ast.Vertex) {
+	nn := n.(*ast.StmtAltIf)
 
 	io.WriteString(p.w, "if (")
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ") :\n")
 
-	s := nn.Stmt.(*stmt.StmtList)
+	s := nn.Stmt.(*ast.StmtStmtList)
 	p.printNodes(s.Stmts)
 
 	for _, elseif := range nn.ElseIf {
@@ -1438,8 +1430,8 @@ func (p *PrettyPrinter) printStmtAltIf(n node.Node) {
 	io.WriteString(p.w, "endif;")
 }
 
-func (p *PrettyPrinter) printStmtAltSwitch(n node.Node) {
-	nn := n.(*stmt.AltSwitch)
+func (p *PrettyPrinter) printStmtAltSwitch(n ast.Vertex) {
+	nn := n.(*ast.StmtAltSwitch)
 
 	io.WriteString(p.w, "switch (")
 	p.Print(nn.Cond)
@@ -1453,14 +1445,14 @@ func (p *PrettyPrinter) printStmtAltSwitch(n node.Node) {
 	io.WriteString(p.w, "endswitch;")
 }
 
-func (p *PrettyPrinter) printStmtAltWhile(n node.Node) {
-	nn := n.(*stmt.AltWhile)
+func (p *PrettyPrinter) printStmtAltWhile(n ast.Vertex) {
+	nn := n.(*ast.StmtAltWhile)
 
 	io.WriteString(p.w, "while (")
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ") :\n")
 
-	s := nn.Stmt.(*stmt.StmtList)
+	s := nn.Stmt.(*ast.StmtStmtList)
 	p.printNodes(s.Stmts)
 
 	io.WriteString(p.w, "\n")
@@ -1468,8 +1460,8 @@ func (p *PrettyPrinter) printStmtAltWhile(n node.Node) {
 	io.WriteString(p.w, "endwhile;")
 }
 
-func (p *PrettyPrinter) printStmtBreak(n node.Node) {
-	nn := n.(*stmt.Break)
+func (p *PrettyPrinter) printStmtBreak(n ast.Vertex) {
+	nn := n.(*ast.StmtBreak)
 
 	io.WriteString(p.w, "break")
 	if nn.Expr != nil {
@@ -1480,8 +1472,8 @@ func (p *PrettyPrinter) printStmtBreak(n node.Node) {
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtCase(n node.Node) {
-	nn := n.(*stmt.Case)
+func (p *PrettyPrinter) printStmtCase(n ast.Vertex) {
+	nn := n.(*ast.StmtCase)
 
 	io.WriteString(p.w, "case ")
 	p.Print(nn.Cond)
@@ -1493,13 +1485,13 @@ func (p *PrettyPrinter) printStmtCase(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtCatch(n node.Node) {
-	nn := n.(*stmt.Catch)
+func (p *PrettyPrinter) printStmtCatch(n ast.Vertex) {
+	nn := n.(*ast.StmtCatch)
 
 	io.WriteString(p.w, "catch (")
 	p.joinPrint(" | ", nn.Types)
 	io.WriteString(p.w, " ")
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 	io.WriteString(p.w, ") {\n")
 	p.printNodes(nn.Stmts)
 	io.WriteString(p.w, "\n")
@@ -1507,8 +1499,8 @@ func (p *PrettyPrinter) printStmtCatch(n node.Node) {
 	io.WriteString(p.w, "}")
 }
 
-func (p *PrettyPrinter) printStmtClassMethod(n node.Node) {
-	nn := n.(*stmt.ClassMethod)
+func (p *PrettyPrinter) printStmtClassMethod(n ast.Vertex) {
+	nn := n.(*ast.StmtClassMethod)
 
 	if nn.Modifiers != nil {
 		p.joinPrint(" ", nn.Modifiers)
@@ -1531,7 +1523,7 @@ func (p *PrettyPrinter) printStmtClassMethod(n node.Node) {
 	}
 
 	switch s := nn.Stmt.(type) {
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		io.WriteString(p.w, "\n")
 		p.printIndent()
 		io.WriteString(p.w, "{\n")
@@ -1544,8 +1536,8 @@ func (p *PrettyPrinter) printStmtClassMethod(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtClass(n node.Node) {
-	nn := n.(*stmt.Class)
+func (p *PrettyPrinter) printStmtClass(n ast.Vertex) {
+	nn := n.(*ast.StmtClass)
 
 	if nn.Modifiers != nil {
 		p.joinPrint(" ", nn.Modifiers)
@@ -1583,8 +1575,8 @@ func (p *PrettyPrinter) printStmtClass(n node.Node) {
 	io.WriteString(p.w, "}")
 }
 
-func (p *PrettyPrinter) printStmtClassConstList(n node.Node) {
-	nn := n.(*stmt.ClassConstList)
+func (p *PrettyPrinter) printStmtClassConstList(n ast.Vertex) {
+	nn := n.(*ast.StmtClassConstList)
 
 	if nn.Modifiers != nil {
 		p.joinPrint(" ", nn.Modifiers)
@@ -1597,16 +1589,16 @@ func (p *PrettyPrinter) printStmtClassConstList(n node.Node) {
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtConstant(n node.Node) {
-	nn := n.(*stmt.Constant)
+func (p *PrettyPrinter) printStmtConstant(n ast.Vertex) {
+	nn := n.(*ast.StmtConstant)
 
 	p.Print(nn.ConstantName)
 	io.WriteString(p.w, " = ")
 	p.Print(nn.Expr)
 }
 
-func (p *PrettyPrinter) printStmtContinue(n node.Node) {
-	nn := n.(*stmt.Continue)
+func (p *PrettyPrinter) printStmtContinue(n ast.Vertex) {
+	nn := n.(*ast.StmtContinue)
 
 	io.WriteString(p.w, "continue")
 	if nn.Expr != nil {
@@ -1617,18 +1609,18 @@ func (p *PrettyPrinter) printStmtContinue(n node.Node) {
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtDeclare(n node.Node) {
-	nn := n.(*stmt.Declare)
+func (p *PrettyPrinter) printStmtDeclare(n ast.Vertex) {
+	nn := n.(*ast.StmtDeclare)
 
 	io.WriteString(p.w, "declare(")
 	p.joinPrint(", ", nn.Consts)
 	io.WriteString(p.w, ")")
 
 	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
+	case *ast.StmtNop:
 		p.Print(s)
 		break
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		io.WriteString(p.w, " ")
 		p.Print(s)
 	default:
@@ -1640,8 +1632,8 @@ func (p *PrettyPrinter) printStmtDeclare(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtDefault(n node.Node) {
-	nn := n.(*stmt.Default)
+func (p *PrettyPrinter) printStmtDefault(n ast.Vertex) {
+	nn := n.(*ast.StmtDefault)
 	io.WriteString(p.w, "default:")
 
 	if len(nn.Stmts) > 0 {
@@ -1650,12 +1642,12 @@ func (p *PrettyPrinter) printStmtDefault(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtDo(n node.Node) {
-	nn := n.(*stmt.Do)
+func (p *PrettyPrinter) printStmtDo(n ast.Vertex) {
+	nn := n.(*ast.StmtDo)
 	io.WriteString(p.w, "do")
 
 	switch s := nn.Stmt.(type) {
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		io.WriteString(p.w, " ")
 		p.Print(s)
 		io.WriteString(p.w, " ")
@@ -1674,25 +1666,25 @@ func (p *PrettyPrinter) printStmtDo(n node.Node) {
 	io.WriteString(p.w, ");")
 }
 
-func (p *PrettyPrinter) printStmtEcho(n node.Node) {
-	nn := n.(*stmt.Echo)
+func (p *PrettyPrinter) printStmtEcho(n ast.Vertex) {
+	nn := n.(*ast.StmtEcho)
 	io.WriteString(p.w, "echo ")
 	p.joinPrint(", ", nn.Exprs)
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtElseif(n node.Node) {
-	nn := n.(*stmt.ElseIf)
+func (p *PrettyPrinter) printStmtElseif(n ast.Vertex) {
+	nn := n.(*ast.StmtElseIf)
 
 	io.WriteString(p.w, "elseif (")
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ")")
 
 	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
+	case *ast.StmtNop:
 		p.Print(s)
 		break
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		io.WriteString(p.w, " ")
 		p.Print(s)
 	default:
@@ -1704,16 +1696,16 @@ func (p *PrettyPrinter) printStmtElseif(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtElse(n node.Node) {
-	nn := n.(*stmt.Else)
+func (p *PrettyPrinter) printStmtElse(n ast.Vertex) {
+	nn := n.(*ast.StmtElse)
 
 	io.WriteString(p.w, "else")
 
 	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
+	case *ast.StmtNop:
 		p.Print(s)
 		break
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		io.WriteString(p.w, " ")
 		p.Print(s)
 	default:
@@ -1725,16 +1717,16 @@ func (p *PrettyPrinter) printStmtElse(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtExpression(n node.Node) {
-	nn := n.(*stmt.Expression)
+func (p *PrettyPrinter) printStmtExpression(n ast.Vertex) {
+	nn := n.(*ast.StmtExpression)
 
 	p.Print(nn.Expr)
 
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtFinally(n node.Node) {
-	nn := n.(*stmt.Finally)
+func (p *PrettyPrinter) printStmtFinally(n ast.Vertex) {
+	nn := n.(*ast.StmtFinally)
 
 	io.WriteString(p.w, "finally {\n")
 	p.printNodes(nn.Stmts)
@@ -1743,8 +1735,8 @@ func (p *PrettyPrinter) printStmtFinally(n node.Node) {
 	io.WriteString(p.w, "}")
 }
 
-func (p *PrettyPrinter) printStmtFor(n node.Node) {
-	nn := n.(*stmt.For)
+func (p *PrettyPrinter) printStmtFor(n ast.Vertex) {
+	nn := n.(*ast.StmtFor)
 
 	io.WriteString(p.w, "for (")
 	p.joinPrint(", ", nn.Init)
@@ -1755,10 +1747,10 @@ func (p *PrettyPrinter) printStmtFor(n node.Node) {
 	io.WriteString(p.w, ")")
 
 	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
+	case *ast.StmtNop:
 		p.Print(s)
 		break
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		io.WriteString(p.w, " ")
 		p.Print(s)
 	default:
@@ -1770,8 +1762,8 @@ func (p *PrettyPrinter) printStmtFor(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtForeach(n node.Node) {
-	nn := n.(*stmt.Foreach)
+func (p *PrettyPrinter) printStmtForeach(n ast.Vertex) {
+	nn := n.(*ast.StmtForeach)
 
 	io.WriteString(p.w, "foreach (")
 	p.Print(nn.Expr)
@@ -1782,14 +1774,14 @@ func (p *PrettyPrinter) printStmtForeach(n node.Node) {
 		io.WriteString(p.w, " => ")
 	}
 
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 	io.WriteString(p.w, ")")
 
 	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
+	case *ast.StmtNop:
 		p.Print(s)
 		break
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		io.WriteString(p.w, " ")
 		p.Print(s)
 	default:
@@ -1801,8 +1793,8 @@ func (p *PrettyPrinter) printStmtForeach(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtFunction(n node.Node) {
-	nn := n.(*stmt.Function)
+func (p *PrettyPrinter) printStmtFunction(n ast.Vertex) {
+	nn := n.(*ast.StmtFunction)
 
 	io.WriteString(p.w, "function ")
 
@@ -1828,24 +1820,24 @@ func (p *PrettyPrinter) printStmtFunction(n node.Node) {
 	io.WriteString(p.w, "}")
 }
 
-func (p *PrettyPrinter) printStmtGlobal(n node.Node) {
-	nn := n.(*stmt.Global)
+func (p *PrettyPrinter) printStmtGlobal(n ast.Vertex) {
+	nn := n.(*ast.StmtGlobal)
 
 	io.WriteString(p.w, "global ")
 	p.joinPrint(", ", nn.Vars)
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtGoto(n node.Node) {
-	nn := n.(*stmt.Goto)
+func (p *PrettyPrinter) printStmtGoto(n ast.Vertex) {
+	nn := n.(*ast.StmtGoto)
 
 	io.WriteString(p.w, "goto ")
 	p.Print(nn.Label)
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtGroupUse(n node.Node) {
-	nn := n.(*stmt.GroupUse)
+func (p *PrettyPrinter) printStmtGroupUse(n ast.Vertex) {
+	nn := n.(*ast.StmtGroupUse)
 
 	io.WriteString(p.w, "use ")
 
@@ -1860,22 +1852,22 @@ func (p *PrettyPrinter) printStmtGroupUse(n node.Node) {
 	io.WriteString(p.w, "};")
 }
 
-func (p *PrettyPrinter) printStmtHaltCompiler(n node.Node) {
+func (p *PrettyPrinter) printStmtHaltCompiler(n ast.Vertex) {
 	io.WriteString(p.w, "__halt_compiler();")
 }
 
-func (p *PrettyPrinter) printStmtIf(n node.Node) {
-	nn := n.(*stmt.If)
+func (p *PrettyPrinter) printStmtIf(n ast.Vertex) {
+	nn := n.(*ast.StmtIf)
 
 	io.WriteString(p.w, "if (")
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ")")
 
 	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
+	case *ast.StmtNop:
 		p.Print(s)
 		break
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		io.WriteString(p.w, " ")
 		p.Print(s)
 	default:
@@ -1900,16 +1892,16 @@ func (p *PrettyPrinter) printStmtIf(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtInlineHTML(n node.Node) {
-	nn := n.(*stmt.InlineHtml)
+func (p *PrettyPrinter) printStmtInlineHTML(n ast.Vertex) {
+	nn := n.(*ast.StmtInlineHtml)
 
 	io.WriteString(p.w, "?>")
-	io.WriteString(p.w, nn.Value)
+	io.WriteString(p.w, string(nn.Value))
 	io.WriteString(p.w, "<?php")
 }
 
-func (p *PrettyPrinter) printStmtInterface(n node.Node) {
-	nn := n.(*stmt.Interface)
+func (p *PrettyPrinter) printStmtInterface(n ast.Vertex) {
+	nn := n.(*ast.StmtInterface)
 
 	io.WriteString(p.w, "interface")
 
@@ -1932,15 +1924,15 @@ func (p *PrettyPrinter) printStmtInterface(n node.Node) {
 	io.WriteString(p.w, "}")
 }
 
-func (p *PrettyPrinter) printStmtLabel(n node.Node) {
-	nn := n.(*stmt.Label)
+func (p *PrettyPrinter) printStmtLabel(n ast.Vertex) {
+	nn := n.(*ast.StmtLabel)
 
 	p.Print(nn.LabelName)
 	io.WriteString(p.w, ":")
 }
 
-func (p *PrettyPrinter) printStmtNamespace(n node.Node) {
-	nn := n.(*stmt.Namespace)
+func (p *PrettyPrinter) printStmtNamespace(n ast.Vertex) {
+	nn := n.(*ast.StmtNamespace)
 
 	io.WriteString(p.w, "namespace")
 
@@ -1960,12 +1952,12 @@ func (p *PrettyPrinter) printStmtNamespace(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtNop(n node.Node) {
+func (p *PrettyPrinter) printStmtNop(n ast.Vertex) {
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtPropertyList(n node.Node) {
-	nn := n.(*stmt.PropertyList)
+func (p *PrettyPrinter) printStmtPropertyList(n ast.Vertex) {
+	nn := n.(*ast.StmtPropertyList)
 
 	p.joinPrint(" ", nn.Modifiers)
 	io.WriteString(p.w, " ")
@@ -1973,10 +1965,10 @@ func (p *PrettyPrinter) printStmtPropertyList(n node.Node) {
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtProperty(n node.Node) {
-	nn := n.(*stmt.Property)
+func (p *PrettyPrinter) printStmtProperty(n ast.Vertex) {
+	nn := n.(*ast.StmtProperty)
 
-	p.Print(nn.Variable)
+	p.Print(nn.Var)
 
 	if nn.Expr != nil {
 		io.WriteString(p.w, " = ")
@@ -1984,17 +1976,17 @@ func (p *PrettyPrinter) printStmtProperty(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtReturn(n node.Node) {
-	nn := n.(*stmt.Return)
+func (p *PrettyPrinter) printStmtReturn(n ast.Vertex) {
+	nn := n.(*ast.StmtReturn)
 
 	io.WriteString(p.w, "return ")
 	p.Print(nn.Expr)
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtStaticVar(n node.Node) {
-	nn := n.(*stmt.StaticVar)
-	p.Print(nn.Variable)
+func (p *PrettyPrinter) printStmtStaticVar(n ast.Vertex) {
+	nn := n.(*ast.StmtStaticVar)
+	p.Print(nn.Var)
 
 	if nn.Expr != nil {
 		io.WriteString(p.w, " = ")
@@ -2002,16 +1994,16 @@ func (p *PrettyPrinter) printStmtStaticVar(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtStatic(n node.Node) {
-	nn := n.(*stmt.Static)
+func (p *PrettyPrinter) printStmtStatic(n ast.Vertex) {
+	nn := n.(*ast.StmtStatic)
 
 	io.WriteString(p.w, "static ")
 	p.joinPrint(", ", nn.Vars)
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtStmtList(n node.Node) {
-	nn := n.(*stmt.StmtList)
+func (p *PrettyPrinter) printStmtStmtList(n ast.Vertex) {
+	nn := n.(*ast.StmtStmtList)
 
 	io.WriteString(p.w, "{\n")
 	p.printNodes(nn.Stmts)
@@ -2020,8 +2012,8 @@ func (p *PrettyPrinter) printStmtStmtList(n node.Node) {
 	io.WriteString(p.w, "}")
 }
 
-func (p *PrettyPrinter) printStmtSwitch(n node.Node) {
-	nn := n.(*stmt.Switch)
+func (p *PrettyPrinter) printStmtSwitch(n ast.Vertex) {
+	nn := n.(*ast.StmtSwitch)
 
 	io.WriteString(p.w, "switch (")
 	p.Print(nn.Cond)
@@ -2034,24 +2026,24 @@ func (p *PrettyPrinter) printStmtSwitch(n node.Node) {
 	io.WriteString(p.w, "}")
 }
 
-func (p *PrettyPrinter) printStmtThrow(n node.Node) {
-	nn := n.(*stmt.Throw)
+func (p *PrettyPrinter) printStmtThrow(n ast.Vertex) {
+	nn := n.(*ast.StmtThrow)
 
 	io.WriteString(p.w, "throw ")
 	p.Print(nn.Expr)
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtTraitMethodRef(n node.Node) {
-	nn := n.(*stmt.TraitMethodRef)
+func (p *PrettyPrinter) printStmtTraitMethodRef(n ast.Vertex) {
+	nn := n.(*ast.StmtTraitMethodRef)
 
 	p.Print(nn.Trait)
 	io.WriteString(p.w, "::")
 	p.Print(nn.Method)
 }
 
-func (p *PrettyPrinter) printStmtTraitUseAlias(n node.Node) {
-	nn := n.(*stmt.TraitUseAlias)
+func (p *PrettyPrinter) printStmtTraitUseAlias(n ast.Vertex) {
+	nn := n.(*ast.StmtTraitUseAlias)
 
 	p.Print(nn.Ref)
 	io.WriteString(p.w, " as")
@@ -2069,8 +2061,8 @@ func (p *PrettyPrinter) printStmtTraitUseAlias(n node.Node) {
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtTraitUsePrecedence(n node.Node) {
-	nn := n.(*stmt.TraitUsePrecedence)
+func (p *PrettyPrinter) printStmtTraitUsePrecedence(n ast.Vertex) {
+	nn := n.(*ast.StmtTraitUsePrecedence)
 
 	p.Print(nn.Ref)
 	io.WriteString(p.w, " insteadof ")
@@ -2079,13 +2071,13 @@ func (p *PrettyPrinter) printStmtTraitUsePrecedence(n node.Node) {
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtTraitUse(n node.Node) {
-	nn := n.(*stmt.TraitUse)
+func (p *PrettyPrinter) printStmtTraitUse(n ast.Vertex) {
+	nn := n.(*ast.StmtTraitUse)
 
 	io.WriteString(p.w, "use ")
 	p.joinPrint(", ", nn.Traits)
 
-	if adaptationList, ok := nn.TraitAdaptationList.(*stmt.TraitAdaptationList); ok {
+	if adaptationList, ok := nn.TraitAdaptationList.(*ast.StmtTraitAdaptationList); ok {
 		adaptations := adaptationList.Adaptations
 		io.WriteString(p.w, " {\n")
 		p.printNodes(adaptations)
@@ -2097,8 +2089,8 @@ func (p *PrettyPrinter) printStmtTraitUse(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtTrait(n node.Node) {
-	nn := n.(*stmt.Trait)
+func (p *PrettyPrinter) printStmtTrait(n ast.Vertex) {
+	nn := n.(*ast.StmtTrait)
 
 	io.WriteString(p.w, "trait ")
 	p.Print(nn.TraitName)
@@ -2112,8 +2104,8 @@ func (p *PrettyPrinter) printStmtTrait(n node.Node) {
 	io.WriteString(p.w, "}")
 }
 
-func (p *PrettyPrinter) printStmtTry(n node.Node) {
-	nn := n.(*stmt.Try)
+func (p *PrettyPrinter) printStmtTry(n ast.Vertex) {
+	nn := n.(*ast.StmtTry)
 
 	io.WriteString(p.w, "try {\n")
 	p.printNodes(nn.Stmts)
@@ -2135,16 +2127,16 @@ func (p *PrettyPrinter) printStmtTry(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtUnset(n node.Node) {
-	nn := n.(*stmt.Unset)
+func (p *PrettyPrinter) printStmtUnset(n ast.Vertex) {
+	nn := n.(*ast.StmtUnset)
 
 	io.WriteString(p.w, "unset(")
 	p.joinPrint(", ", nn.Vars)
 	io.WriteString(p.w, ");")
 }
 
-func (p *PrettyPrinter) printStmtUseList(n node.Node) {
-	nn := n.(*stmt.UseList)
+func (p *PrettyPrinter) printStmtUseList(n ast.Vertex) {
+	nn := n.(*ast.StmtUseList)
 
 	io.WriteString(p.w, "use ")
 
@@ -2157,8 +2149,8 @@ func (p *PrettyPrinter) printStmtUseList(n node.Node) {
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtUse(n node.Node) {
-	nn := n.(*stmt.Use)
+func (p *PrettyPrinter) printStmtUse(n ast.Vertex) {
+	nn := n.(*ast.StmtUse)
 
 	if nn.UseType != nil {
 		p.Print(nn.UseType)
@@ -2173,18 +2165,18 @@ func (p *PrettyPrinter) printStmtUse(n node.Node) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtWhile(n node.Node) {
-	nn := n.(*stmt.While)
+func (p *PrettyPrinter) printStmtWhile(n ast.Vertex) {
+	nn := n.(*ast.StmtWhile)
 
 	io.WriteString(p.w, "while (")
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ")")
 
 	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
+	case *ast.StmtNop:
 		p.Print(s)
 		break
-	case *stmt.StmtList:
+	case *ast.StmtStmtList:
 		io.WriteString(p.w, " ")
 		p.Print(s)
 	default:

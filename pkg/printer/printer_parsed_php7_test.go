@@ -2,14 +2,12 @@ package printer_test
 
 import (
 	"bytes"
+	"github.com/z7zmey/php-parser/pkg/ast"
 	"os"
 	"testing"
 
-	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/node/name"
-	"github.com/z7zmey/php-parser/node/stmt"
-	"github.com/z7zmey/php-parser/php7"
-	"github.com/z7zmey/php-parser/printer"
+	"github.com/z7zmey/php-parser/internal/php7"
+	"github.com/z7zmey/php-parser/pkg/printer"
 )
 
 func ExamplePrinter() {
@@ -30,15 +28,15 @@ abstract class Bar extends Baz
 	// parse
 
 	php7parser := php7.NewParser([]byte(src), "7.4")
-	php7parser.WithFreeFloating()
+	php7parser.WithTokens()
 	php7parser.Parse()
 
 	rootNode := php7parser.GetRootNode()
 
 	// change namespace
 
-	parts := &rootNode.(*node.Root).Stmts[0].(*stmt.Namespace).NamespaceName.(*name.Name).Parts
-	*parts = append(*parts, &name.NamePart{Value: "Quuz"})
+	parts := &rootNode.(*ast.Root).Stmts[0].(*ast.StmtNamespace).NamespaceName.(*ast.NameName).Parts
+	*parts = append(*parts, &ast.NameNamePart{Value: []byte("Quuz")})
 
 	// print
 
@@ -60,15 +58,15 @@ abstract class Bar extends Baz
 	// }
 }
 
-func parse(src string) node.Node {
+func parse(src string) ast.Vertex {
 	php7parser := php7.NewParser([]byte(src), "7.4")
-	php7parser.WithFreeFloating()
+	php7parser.WithTokens()
 	php7parser.Parse()
 
 	return php7parser.GetRootNode()
 }
 
-func print(n node.Node) string {
+func print(n ast.Vertex) string {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)

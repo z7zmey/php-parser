@@ -2,22 +2,22 @@ package printer_test
 
 import (
 	"bytes"
+	"github.com/z7zmey/php-parser/pkg/ast"
 	"testing"
 
-	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/php5"
-	"github.com/z7zmey/php-parser/printer"
+	"github.com/z7zmey/php-parser/internal/php5"
+	"github.com/z7zmey/php-parser/pkg/printer"
 )
 
-func parsePhp5(src string) node.Node {
+func parsePhp5(src string) ast.Vertex {
 	php5parser := php5.NewParser([]byte(src), "5.6")
-	php5parser.WithFreeFloating()
+	php5parser.WithTokens()
 	php5parser.Parse()
 
 	return php5parser.GetRootNode()
 }
 
-func printPhp5(n node.Node) string {
+func printPhp5(n ast.Vertex) string {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)

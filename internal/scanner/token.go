@@ -6,6 +6,7 @@ import (
 
 // Token value returned by lexer
 type Token struct {
+	ID        TokenID
 	Value     []byte
 	Tokens    []token.Token
 	StartLine int

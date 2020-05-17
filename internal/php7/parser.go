@@ -131,10 +131,25 @@ func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
 		return []token.Token{}
 	}
 
-	tokens := make([]token.Token, len(t.Tokens))
-	copy(tokens, t.Tokens)
+	return []token.Token{
+		{
+			ID:    token.ID(t.ID),
+			Value: t.Value,
+		},
+	}
+}
 
-	return tokens
+func (l *Parser) addDollarToken(v ast.Vertex) {
+	if l.Lexer.GetWithFreeFloating() == false {
+		return
+	}
+
+	l.setFreeFloating(v, token.Dollar, []token.Token{
+		{
+			ID:    token.ID('$'),
+			Value: []byte("$"),
+		},
+	})
 }
 
 func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.Vertex) {

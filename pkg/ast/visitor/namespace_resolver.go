@@ -27,7 +27,7 @@ func NewNamespaceResolver() *NamespaceResolver {
 
 func (nsr *NamespaceResolver) EnterNode(n ast.Vertex) bool {
 	n.Accept(nsr)
-	
+
 	if !nsr.goDeep {
 		nsr.goDeep = true
 		return false
@@ -54,7 +54,7 @@ func (nsr *NamespaceResolver) StmtUseList(n *ast.StmtUseList) {
 	for _, nn := range n.Uses {
 		nsr.AddAlias(useType, nn, nil)
 	}
-	
+
 	nsr.goDeep = false
 }
 

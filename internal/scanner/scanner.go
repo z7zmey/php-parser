@@ -22867,6 +22867,7 @@ func (lex *Lexer) Lex(lval Lval) int {
 
 	token.Tokens = lex.Tokens
 	token.Value = lex.data[lex.ts:lex.te]
+	token.ID = tok
 
 	lval.Token(token)
 

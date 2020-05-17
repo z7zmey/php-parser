@@ -194,8 +194,8 @@ func TestResolveInstanceCatch(t *testing.T) {
 							nameBC,
 							nameF,
 						},
-						Var: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
-						Stmts:    []ast.Vertex{},
+						Var:   &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+						Stmts: []ast.Vertex{},
 					},
 				},
 			},
@@ -407,7 +407,7 @@ func TestResolveClassName(t *testing.T) {
 	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
 
 	class := &ast.StmtClass{
-		ClassName:     &ast.Identifier{Value: []byte("A")},
+		ClassName: &ast.Identifier{Value: []byte("A")},
 		Extends: &ast.StmtClassExtends{
 			ClassName: nameAB,
 		},
@@ -472,8 +472,8 @@ func TestResolveInterfaceName(t *testing.T) {
 
 func TestResolveTraitName(t *testing.T) {
 	traitNode := &ast.StmtTrait{
-		TraitName:     &ast.Identifier{Value: []byte("A")},
-		Stmts:         []ast.Vertex{},
+		TraitName: &ast.Identifier{Value: []byte("A")},
+		Stmts:     []ast.Vertex{},
 	}
 
 	stxTree := &ast.StmtStmtList{
@@ -498,14 +498,14 @@ func TestResolveFunctionName(t *testing.T) {
 	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
 
 	functionNode := &ast.StmtFunction{
-		ReturnsRef:    false,
-		FunctionName:  &ast.Identifier{Value: []byte("A")},
+		ReturnsRef:   false,
+		FunctionName: &ast.Identifier{Value: []byte("A")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:        false,
-				Variadic:     false,
-				Type: nameAB,
-				Var:     &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				ByRef:    false,
+				Variadic: false,
+				Type:     nameAB,
+				Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
 		ReturnType: &ast.Nullable{Expr: nameBC},
@@ -536,14 +536,14 @@ func TestResolveMethodName(t *testing.T) {
 	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
 
 	methodNode := &ast.StmtClassMethod{
-		ReturnsRef:    false,
-		MethodName:    &ast.Identifier{Value: []byte("A")},
+		ReturnsRef: false,
+		MethodName: &ast.Identifier{Value: []byte("A")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:        false,
-				Variadic:     false,
-				Type: nameAB,
-				Var:     &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				ByRef:    false,
+				Variadic: false,
+				Type:     nameAB,
+				Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
 		ReturnType: &ast.Nullable{Expr: nameBC},
@@ -569,14 +569,14 @@ func TestResolveClosureName(t *testing.T) {
 	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
 
 	closureNode := &ast.ExprClosure{
-		ReturnsRef:    false,
-		Static:        false,
+		ReturnsRef: false,
+		Static:     false,
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:        false,
-				Variadic:     false,
-				Type: nameAB,
-				Var:     &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				ByRef:    false,
+				Variadic: false,
+				Type:     nameAB,
+				Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
 		ClosureUse: nil,
@@ -600,12 +600,12 @@ func TestResolveConstantsName(t *testing.T) {
 	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
 
 	constantB := &ast.StmtConstant{
-		ConstantName:  &ast.Identifier{Value: []byte("B")},
-		Expr:          &ast.ScalarLnumber{Value: []byte("1")},
+		ConstantName: &ast.Identifier{Value: []byte("B")},
+		Expr:         &ast.ScalarLnumber{Value: []byte("1")},
 	}
 	constantC := &ast.StmtConstant{
-		ConstantName:  &ast.Identifier{Value: []byte("C")},
-		Expr:          &ast.ScalarLnumber{Value: []byte("1")},
+		ConstantName: &ast.Identifier{Value: []byte("C")},
+		Expr:         &ast.ScalarLnumber{Value: []byte("1")},
 	}
 
 	stxTree := &ast.StmtStmtList{
@@ -644,12 +644,12 @@ func TestResolveNamespaces(t *testing.T) {
 	relativeNameCE := &ast.NameRelative{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("C")}, &ast.NameNamePart{Value: []byte("E")}}}
 
 	constantB := &ast.StmtConstant{
-		ConstantName:  &ast.Identifier{Value: []byte("B")},
-		Expr:          &ast.ScalarLnumber{Value: []byte("1")},
+		ConstantName: &ast.Identifier{Value: []byte("B")},
+		Expr:         &ast.ScalarLnumber{Value: []byte("1")},
 	}
 	constantC := &ast.StmtConstant{
-		ConstantName:  &ast.Identifier{Value: []byte("C")},
-		Expr:          &ast.ScalarLnumber{Value: []byte("1")},
+		ConstantName: &ast.Identifier{Value: []byte("C")},
+		Expr:         &ast.ScalarLnumber{Value: []byte("1")},
 	}
 
 	stxTree := &ast.StmtStmtList{

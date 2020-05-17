@@ -2,8 +2,6 @@ package token
 
 type Position int
 
-type Collection map[Position][]Token
-
 //go:generate stringer -type=Position -output ./position_string.go
 const (
 	Start Position = iota
@@ -86,3 +84,14 @@ const (
 	OpenParenthesisToken
 	CloseParenthesisToken
 )
+
+type Collection map[Position][]Token
+
+func (c Collection) IsEmpty() bool {
+	for _, v := range c {
+		if len(v) > 0 {
+			return false
+		}
+	}
+	return true
+}

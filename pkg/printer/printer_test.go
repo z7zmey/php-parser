@@ -2,56 +2,49 @@ package printer_test
 
 import (
 	"bytes"
+	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/token"
 	"testing"
 
-	"github.com/z7zmey/php-parser/freefloating"
-	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/node/expr/assign"
-	"github.com/z7zmey/php-parser/node/expr/binary"
-	"github.com/z7zmey/php-parser/node/expr/cast"
-	"github.com/z7zmey/php-parser/node/name"
-	"github.com/z7zmey/php-parser/node/scalar"
-	"github.com/z7zmey/php-parser/node/stmt"
-	"github.com/z7zmey/php-parser/printer"
+	"github.com/z7zmey/php-parser/pkg/printer"
 )
 
 func TestPrinterPrintFile(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&node.Root{
-		Stmts: []node.Node{
-			&stmt.Namespace{
-				NamespaceName: &name.Name{
-					Parts: []node.Node{
-						&name.NamePart{Value: "Foo"},
+	p.Print(&ast.Root{
+		Stmts: []ast.Vertex{
+			&ast.StmtNamespace{
+				NamespaceName: &ast.NameName{
+					Parts: []ast.Vertex{
+						&ast.NameNamePart{Value: []byte("Foo")},
 					},
 				},
 			},
-			&stmt.Class{
-				Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
-				ClassName: &name.Name{
-					Parts: []node.Node{
-						&name.NamePart{Value: "Bar"},
+			&ast.StmtClass{
+				Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("abstract")}},
+				ClassName: &ast.NameName{
+					Parts: []ast.Vertex{
+						&ast.NameNamePart{Value: []byte("Bar")},
 					},
 				},
-				Extends: &stmt.ClassExtends{
-					ClassName: &name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "Baz"},
+				Extends: &ast.StmtClassExtends{
+					ClassName: &ast.NameName{
+						Parts: []ast.Vertex{
+							&ast.NameNamePart{Value: []byte("Baz")},
 						},
 					},
 				},
-				Stmts: []node.Node{
-					&stmt.ClassMethod{
-						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
-						MethodName: &node.Identifier{Value: "greet"},
-						Stmt: &stmt.StmtList{
-							Stmts: []node.Node{
-								&stmt.Echo{
-									Exprs: []node.Node{
-										&scalar.String{Value: "'Hello world'"},
+				Stmts: []ast.Vertex{
+					&ast.StmtClassMethod{
+						Modifiers:  []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
+						MethodName: &ast.Identifier{Value: []byte("greet")},
+						Stmt: &ast.StmtStmtList{
+							Stmts: []ast.Vertex{
+								&ast.StmtEcho{
+									Exprs: []ast.Vertex{
+										&ast.ScalarString{Value: []byte("'Hello world'")},
 									},
 								},
 							},
@@ -74,37 +67,41 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&node.Root{
-		Stmts: []node.Node{
-			&stmt.InlineHtml{Value: "<div>HTML</div>"},
-			&stmt.Expression{
-				Expr: &expr.Variable{
-					FreeFloating: freefloating.Collection{
-						freefloating.Start: []freefloating.String{
-							{
-								StringType: freefloating.TokenType,
-								Value:      "$",
+	p.Print(&ast.Root{
+		Stmts: []ast.Vertex{
+			&ast.StmtInlineHtml{Value: []byte("<div>HTML</div>")},
+			&ast.StmtExpression{
+				Expr: &ast.ExprVariable{
+					Node: ast.Node{
+						Tokens: token.Collection{
+							token.Start: []token.Token{
+								{
+									ID:    token.ID('$'),
+									Value: []byte("$"),
+								},
 							},
 						},
 					},
-					VarName: &node.Identifier{
-						Value: "a",
+					VarName: &ast.Identifier{
+						Value: []byte("a"),
 					},
 				},
 			},
-			&stmt.InlineHtml{Value: "<div>HTML</div>"},
-			&stmt.Expression{
-				Expr: &expr.Variable{
-					FreeFloating: freefloating.Collection{
-						freefloating.Start: []freefloating.String{
-							{
-								StringType: freefloating.TokenType,
-								Value:      "$",
+			&ast.StmtInlineHtml{Value: []byte("<div>HTML</div>")},
+			&ast.StmtExpression{
+				Expr: &ast.ExprVariable{
+					Node: ast.Node{
+						Tokens: token.Collection{
+							token.Start: []token.Token{
+								{
+									ID:    token.ID('$'),
+									Value: []byte("$"),
+								},
 							},
 						},
 					},
-					VarName: &node.Identifier{
-						Value: "a",
+					VarName: &ast.Identifier{
+						Value: []byte("a"),
 					},
 				},
 			},
@@ -125,8 +122,8 @@ func TestPrinterPrintIdentifier(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	n := &node.Identifier{
-		Value: "test",
+	n := &ast.Identifier{
+		Value: []byte("test"),
 	}
 	p.Print(n)
 
@@ -142,21 +139,21 @@ func TestPrinterPrintParameter(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&node.Parameter{
+	p.Print(&ast.Parameter{
 		ByRef:    false,
 		Variadic: true,
-		VariableType: &name.FullyQualified{
-			Parts: []node.Node{
-				&name.NamePart{
-					Value: "Foo",
+		Type: &ast.NameFullyQualified{
+			Parts: []ast.Vertex{
+				&ast.NameNamePart{
+					Value: []byte("Foo"),
 				},
 			},
 		},
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
-		DefaultValue: &scalar.String{
-			Value: "'default'",
+		DefaultValue: &ast.ScalarString{
+			Value: []byte("'default'"),
 		},
 	})
 
@@ -172,24 +169,24 @@ func TestPrinterPrintNullable(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&node.Nullable{
-		Expr: &node.Parameter{
+	p.Print(&ast.Nullable{
+		Expr: &ast.Parameter{
 			ByRef:    true,
 			Variadic: false,
-			VariableType: &name.FullyQualified{
-				Parts: []node.Node{
-					&name.NamePart{
-						Value: "Foo",
+			Type: &ast.NameFullyQualified{
+				Parts: []ast.Vertex{
+					&ast.NameNamePart{
+						Value: []byte("Foo"),
 					},
 				},
 			},
-			Variable: &expr.Variable{
-				VarName: &node.Identifier{
-					Value: "var",
+			Var: &ast.ExprVariable{
+				VarName: &ast.Identifier{
+					Value: []byte("var"),
 				},
 			},
-			DefaultValue: &scalar.String{
-				Value: "'default'",
+			DefaultValue: &ast.ScalarString{
+				Value: []byte("'default'"),
 			},
 		},
 	})
@@ -206,12 +203,12 @@ func TestPrinterPrintArgument(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&node.Argument{
+	p.Print(&ast.Argument{
 		IsReference: false,
 		Variadic:    true,
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{
-				Value: "var",
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{
+				Value: []byte("var"),
 			},
 		},
 	})
@@ -227,12 +224,12 @@ func TestPrinterPrintArgumentByRef(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&node.Argument{
+	p.Print(&ast.Argument{
 		IsReference: true,
 		Variadic:    false,
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{
-				Value: "var",
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{
+				Value: []byte("var"),
 			},
 		},
 	})
@@ -251,8 +248,8 @@ func TestPrinterPrintNameNamePart(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&name.NamePart{
-		Value: "foo",
+	p.Print(&ast.NameNamePart{
+		Value: []byte("foo"),
 	})
 
 	expected := "foo"
@@ -267,13 +264,13 @@ func TestPrinterPrintNameName(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&name.Name{
-		Parts: []node.Node{
-			&name.NamePart{
-				Value: "Foo",
+	p.Print(&ast.NameName{
+		Parts: []ast.Vertex{
+			&ast.NameNamePart{
+				Value: []byte("Foo"),
 			},
-			&name.NamePart{
-				Value: "Bar",
+			&ast.NameNamePart{
+				Value: []byte("Bar"),
 			},
 		},
 	})
@@ -290,13 +287,13 @@ func TestPrinterPrintNameFullyQualified(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&name.FullyQualified{
-		Parts: []node.Node{
-			&name.NamePart{
-				Value: "Foo",
+	p.Print(&ast.NameFullyQualified{
+		Parts: []ast.Vertex{
+			&ast.NameNamePart{
+				Value: []byte("Foo"),
 			},
-			&name.NamePart{
-				Value: "Bar",
+			&ast.NameNamePart{
+				Value: []byte("Bar"),
 			},
 		},
 	})
@@ -313,13 +310,13 @@ func TestPrinterPrintNameRelative(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&name.Relative{
-		Parts: []node.Node{
-			&name.NamePart{
-				Value: "Foo",
+	p.Print(&ast.NameRelative{
+		Parts: []ast.Vertex{
+			&ast.NameNamePart{
+				Value: []byte("Foo"),
 			},
-			&name.NamePart{
-				Value: "Bar",
+			&ast.NameNamePart{
+				Value: []byte("Bar"),
 			},
 		},
 	})
@@ -338,8 +335,8 @@ func TestPrinterPrintScalarLNumber(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&scalar.Lnumber{
-		Value: "1",
+	p.Print(&ast.ScalarLnumber{
+		Value: []byte("1"),
 	})
 
 	expected := "1"
@@ -354,8 +351,8 @@ func TestPrinterPrintScalarDNumber(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&scalar.Dnumber{
-		Value: ".1",
+	p.Print(&ast.ScalarDnumber{
+		Value: []byte(".1"),
 	})
 
 	expected := ".1"
@@ -370,8 +367,8 @@ func TestPrinterPrintScalarString(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&scalar.String{
-		Value: "'hello world'",
+	p.Print(&ast.ScalarString{
+		Value: []byte("'hello world'"),
 	})
 
 	expected := `'hello world'`
@@ -386,8 +383,8 @@ func TestPrinterPrintScalarEncapsedStringPart(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&scalar.EncapsedStringPart{
-		Value: "hello world",
+	p.Print(&ast.ScalarEncapsedStringPart{
+		Value: []byte("hello world"),
 	})
 
 	expected := `hello world`
@@ -402,13 +399,13 @@ func TestPrinterPrintScalarEncapsed(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&scalar.Encapsed{
-		Parts: []node.Node{
-			&scalar.EncapsedStringPart{Value: "hello "},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ScalarEncapsed{
+		Parts: []ast.Vertex{
+			&ast.ScalarEncapsedStringPart{Value: []byte("hello ")},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("var")},
 			},
-			&scalar.EncapsedStringPart{Value: " world"},
+			&ast.ScalarEncapsedStringPart{Value: []byte(" world")},
 		},
 	})
 
@@ -424,14 +421,14 @@ func TestPrinterPrintScalarHeredoc(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&scalar.Heredoc{
-		Label: "<<<LBL\n",
-		Parts: []node.Node{
-			&scalar.EncapsedStringPart{Value: "hello "},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ScalarHeredoc{
+		Label: []byte("<<<LBL\n"),
+		Parts: []ast.Vertex{
+			&ast.ScalarEncapsedStringPart{Value: []byte("hello ")},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("var")},
 			},
-			&scalar.EncapsedStringPart{Value: " world\n"},
+			&ast.ScalarEncapsedStringPart{Value: []byte(" world\n")},
 		},
 	})
 
@@ -449,10 +446,10 @@ func TestPrinterPrintScalarNowdoc(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&scalar.Heredoc{
-		Label: "<<<'LBL'\n",
-		Parts: []node.Node{
-			&scalar.EncapsedStringPart{Value: "hello world\n"},
+	p.Print(&ast.ScalarHeredoc{
+		Label: []byte("<<<'LBL'\n"),
+		Parts: []ast.Vertex{
+			&ast.ScalarEncapsedStringPart{Value: []byte("hello world\n")},
 		},
 	})
 
@@ -470,8 +467,8 @@ func TestPrinterPrintScalarMagicConstant(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&scalar.MagicConstant{
-		Value: "__DIR__",
+	p.Print(&ast.ScalarMagicConstant{
+		Value: []byte("__DIR__"),
 	})
 
 	if o.String() != `__DIR__` {
@@ -485,12 +482,12 @@ func TestPrinterPrintAssign(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Assign{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssign{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -506,12 +503,12 @@ func TestPrinterPrintReference(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Reference{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignReference{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -527,12 +524,12 @@ func TestPrinterPrintAssignBitwiseAnd(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.BitwiseAnd{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignBitwiseAnd{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -548,12 +545,12 @@ func TestPrinterPrintAssignBitwiseOr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.BitwiseOr{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignBitwiseOr{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -569,12 +566,12 @@ func TestPrinterPrintAssignBitwiseXor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.BitwiseXor{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignBitwiseXor{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -590,12 +587,12 @@ func TestPrinterPrintAssignCoalesce(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Coalesce{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignCoalesce{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -611,12 +608,12 @@ func TestPrinterPrintAssignConcat(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Concat{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignConcat{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -632,12 +629,12 @@ func TestPrinterPrintAssignDiv(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Div{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignDiv{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -653,12 +650,12 @@ func TestPrinterPrintAssignMinus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Minus{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignMinus{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -674,12 +671,12 @@ func TestPrinterPrintAssignMod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Mod{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignMod{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -695,12 +692,12 @@ func TestPrinterPrintAssignMul(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Mul{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignMul{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -716,12 +713,12 @@ func TestPrinterPrintAssignPlus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Plus{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignPlus{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -737,12 +734,12 @@ func TestPrinterPrintAssignPow(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.Pow{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignPow{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -758,12 +755,12 @@ func TestPrinterPrintAssignShiftLeft(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.ShiftLeft{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignShiftLeft{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -779,12 +776,12 @@ func TestPrinterPrintAssignShiftRight(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&assign.ShiftRight{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprAssignShiftRight{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expression: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -802,12 +799,12 @@ func TestPrinterPrintBinaryBitwiseAnd(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.BitwiseAnd{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryBitwiseAnd{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -823,12 +820,12 @@ func TestPrinterPrintBinaryBitwiseOr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.BitwiseOr{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryBitwiseOr{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -844,12 +841,12 @@ func TestPrinterPrintBinaryBitwiseXor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.BitwiseXor{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryBitwiseXor{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -865,12 +862,12 @@ func TestPrinterPrintBinaryBooleanAnd(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.BooleanAnd{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryBooleanAnd{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -886,12 +883,12 @@ func TestPrinterPrintBinaryBooleanOr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.BooleanOr{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryBooleanOr{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -907,12 +904,12 @@ func TestPrinterPrintBinaryCoalesce(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Coalesce{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryCoalesce{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -928,12 +925,12 @@ func TestPrinterPrintBinaryConcat(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Concat{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryConcat{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -949,12 +946,12 @@ func TestPrinterPrintBinaryDiv(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Div{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryDiv{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -970,12 +967,12 @@ func TestPrinterPrintBinaryEqual(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Equal{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryEqual{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -991,12 +988,12 @@ func TestPrinterPrintBinaryGreaterOrEqual(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.GreaterOrEqual{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryGreaterOrEqual{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1012,12 +1009,12 @@ func TestPrinterPrintBinaryGreater(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Greater{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryGreater{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1033,12 +1030,12 @@ func TestPrinterPrintBinaryIdentical(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Identical{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryIdentical{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1054,12 +1051,12 @@ func TestPrinterPrintBinaryLogicalAnd(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.LogicalAnd{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryLogicalAnd{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1075,12 +1072,12 @@ func TestPrinterPrintBinaryLogicalOr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.LogicalOr{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryLogicalOr{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1096,12 +1093,12 @@ func TestPrinterPrintBinaryLogicalXor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.LogicalXor{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryLogicalXor{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1117,12 +1114,12 @@ func TestPrinterPrintBinaryMinus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Minus{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryMinus{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1138,12 +1135,12 @@ func TestPrinterPrintBinaryMod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Mod{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryMod{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1159,12 +1156,12 @@ func TestPrinterPrintBinaryMul(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Mul{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryMul{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1180,12 +1177,12 @@ func TestPrinterPrintBinaryNotEqual(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.NotEqual{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryNotEqual{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1201,12 +1198,12 @@ func TestPrinterPrintBinaryNotIdentical(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.NotIdentical{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryNotIdentical{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1222,12 +1219,12 @@ func TestPrinterPrintBinaryPlus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Plus{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryPlus{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1243,12 +1240,12 @@ func TestPrinterPrintBinaryPow(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Pow{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryPow{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1264,12 +1261,12 @@ func TestPrinterPrintBinaryShiftLeft(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.ShiftLeft{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryShiftLeft{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1285,12 +1282,12 @@ func TestPrinterPrintBinaryShiftRight(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.ShiftRight{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinaryShiftRight{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1306,12 +1303,12 @@ func TestPrinterPrintBinarySmallerOrEqual(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.SmallerOrEqual{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinarySmallerOrEqual{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1327,12 +1324,12 @@ func TestPrinterPrintBinarySmaller(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Smaller{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinarySmaller{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1348,12 +1345,12 @@ func TestPrinterPrintBinarySpaceship(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&binary.Spaceship{
-		Left: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprBinarySpaceship{
+		Left: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Right: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		Right: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -1371,9 +1368,9 @@ func TestPrinterPrintArray(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&cast.Array{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprCastArray{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1389,9 +1386,9 @@ func TestPrinterPrintBool(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&cast.Bool{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprCastBool{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1407,9 +1404,9 @@ func TestPrinterPrintDouble(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&cast.Double{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprCastDouble{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1425,9 +1422,9 @@ func TestPrinterPrintInt(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&cast.Int{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprCastInt{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1443,9 +1440,9 @@ func TestPrinterPrintObject(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&cast.Object{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprCastObject{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1461,9 +1458,9 @@ func TestPrinterPrintString(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&cast.String{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprCastString{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1479,9 +1476,9 @@ func TestPrinterPrintUnset(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&cast.Unset{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprCastUnset{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1499,11 +1496,11 @@ func TestPrinterPrintExprArrayDimFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ArrayDimFetch{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprArrayDimFetch{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
-		Dim: &scalar.Lnumber{Value: "1"},
+		Dim: &ast.ScalarLnumber{Value: []byte("1")},
 	})
 
 	expected := `$var[1]`
@@ -1518,10 +1515,10 @@ func TestPrinterPrintExprArrayItemWithKey(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ArrayItem{
-		Key: &scalar.String{Value: "'Hello'"},
-		Val: &expr.Variable{
-			VarName: &node.Identifier{Value: "world"},
+	p.Print(&ast.ExprArrayItem{
+		Key: &ast.ScalarString{Value: []byte("'Hello'")},
+		Val: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("world")},
 		},
 	})
 
@@ -1537,9 +1534,9 @@ func TestPrinterPrintExprArrayItem(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ArrayItem{
-		Val: &expr.Reference{Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "world"},
+	p.Print(&ast.ExprArrayItem{
+		Val: &ast.ExprReference{Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("world")},
 		}},
 	})
 
@@ -1555,10 +1552,10 @@ func TestPrinterPrintExprArrayItemUnpack(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ArrayItem{
+	p.Print(&ast.ExprArrayItem{
 		Unpack: true,
-		Val: &expr.Variable{
-			VarName: &node.Identifier{Value: "world"},
+		Val: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("world")},
 		},
 	})
 
@@ -1574,23 +1571,23 @@ func TestPrinterPrintExprArray(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Array{
-		Items: []node.Node{
-			&expr.ArrayItem{
-				Key: &scalar.String{Value: "'Hello'"},
-				Val: &expr.Variable{
-					VarName: &node.Identifier{Value: "world"},
+	p.Print(&ast.ExprArray{
+		Items: []ast.Vertex{
+			&ast.ExprArrayItem{
+				Key: &ast.ScalarString{Value: []byte("'Hello'")},
+				Val: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("world")},
 				},
 			},
-			&expr.ArrayItem{
-				Key: &scalar.Lnumber{Value: "2"},
-				Val: &expr.Reference{Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "var"},
+			&ast.ExprArrayItem{
+				Key: &ast.ScalarLnumber{Value: []byte("2")},
+				Val: &ast.ExprReference{Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("var")},
 				}},
 			},
-			&expr.ArrayItem{
-				Val: &expr.Variable{
-					VarName: &node.Identifier{Value: "var"},
+			&ast.ExprArrayItem{
+				Val: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("var")},
 				},
 			},
 		},
@@ -1608,9 +1605,9 @@ func TestPrinterPrintExprBitwiseNot(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.BitwiseNot{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprBitwiseNot{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1626,9 +1623,9 @@ func TestPrinterPrintExprBooleanNot(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.BooleanNot{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprBooleanNot{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1644,12 +1641,12 @@ func TestPrinterPrintExprClassConstFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ClassConstFetch{
-		Class: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprClassConstFetch{
+		Class: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
-		ConstantName: &node.Identifier{
-			Value: "CONST",
+		ConstantName: &ast.Identifier{
+			Value: []byte("CONST"),
 		},
 	})
 
@@ -1665,9 +1662,9 @@ func TestPrinterPrintExprClone(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Clone{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprClone{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1683,13 +1680,13 @@ func TestPrinterPrintExprClosureUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ClosureUse{
-		Uses: []node.Node{
-			&expr.Reference{Variable: &expr.Variable{
-				VarName: &node.Identifier{Value: "foo"},
+	p.Print(&ast.ExprClosureUse{
+		Uses: []ast.Vertex{
+			&ast.ExprReference{Var: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("foo")},
 			}},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "bar"},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("bar")},
 			},
 		},
 	})
@@ -1706,34 +1703,34 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Closure{
+	p.Print(&ast.ExprClosure{
 		Static:     true,
 		ReturnsRef: true,
-		Params: []node.Node{
-			&node.Parameter{
+		Params: []ast.Vertex{
+			&ast.Parameter{
 				ByRef:    true,
 				Variadic: false,
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "var"},
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("var")},
 				},
 			},
 		},
-		ClosureUse: &expr.ClosureUse{
-			Uses: []node.Node{
-				&expr.Reference{Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+		ClosureUse: &ast.ExprClosureUse{
+			Uses: []ast.Vertex{
+				&ast.ExprReference{Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				}},
-				&expr.Variable{
-					VarName: &node.Identifier{Value: "b"},
+				&ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("b")},
 				},
 			},
 		},
-		ReturnType: &name.FullyQualified{
-			Parts: []node.Node{&name.NamePart{Value: "Foo"}},
+		ReturnType: &ast.NameFullyQualified{
+			Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}},
 		},
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+		Stmts: []ast.Vertex{
+			&ast.StmtExpression{Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			}},
 		},
 	})
@@ -1750,24 +1747,24 @@ func TestPrinterPrintExprArrowFunction(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Expression{
-		Expr: &expr.ArrowFunction{
+	p.Print(&ast.StmtExpression{
+		Expr: &ast.ExprArrowFunction{
 			Static:     true,
 			ReturnsRef: true,
-			Params: []node.Node{
-				&node.Parameter{
+			Params: []ast.Vertex{
+				&ast.Parameter{
 					ByRef:    true,
 					Variadic: false,
-					Variable: &expr.Variable{
-						VarName: &node.Identifier{Value: "var"},
+					Var: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("var")},
 					},
 				},
 			},
-			ReturnType: &name.FullyQualified{
-				Parts: []node.Node{&name.NamePart{Value: "Foo"}},
+			ReturnType: &ast.NameFullyQualified{
+				Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}},
 			},
-			Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+			Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			},
 		},
 	})
@@ -1784,8 +1781,8 @@ func TestPrinterPrintExprConstFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ConstFetch{
-		Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}},
+	p.Print(&ast.ExprConstFetch{
+		Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}},
 	})
 
 	expected := "null"
@@ -1800,9 +1797,9 @@ func TestPrinterPrintEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Empty{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprEmpty{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1818,9 +1815,9 @@ func TestPrinterPrettyPrinterrorSuppress(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ErrorSuppress{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprErrorSuppress{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1836,9 +1833,9 @@ func TestPrinterPrintEval(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Eval{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprEval{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1854,10 +1851,10 @@ func TestPrinterPrintExit(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Exit{
+	p.Print(&ast.ExprExit{
 		Die: false,
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1873,10 +1870,10 @@ func TestPrinterPrintDie(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Exit{
+	p.Print(&ast.ExprExit{
 		Die: true,
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -1892,27 +1889,27 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.FunctionCall{
-		Function: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprFunctionCall{
+		Function: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
-		ArgumentList: &node.ArgumentList{
-			Arguments: []node.Node{
-				&node.Argument{
+		ArgumentList: &ast.ArgumentList{
+			Arguments: []ast.Vertex{
+				&ast.Argument{
 					IsReference: true,
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "a"},
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("a")},
 					},
 				},
-				&node.Argument{
+				&ast.Argument{
 					Variadic: true,
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					},
 				},
-				&node.Argument{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "c"},
+				&ast.Argument{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("c")},
 					},
 				},
 			},
@@ -1931,8 +1928,8 @@ func TestPrinterPrintInclude(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Include{
-		Expr: &scalar.String{Value: "'path'"},
+	p.Print(&ast.ExprInclude{
+		Expr: &ast.ScalarString{Value: []byte("'path'")},
 	})
 
 	expected := `include 'path'`
@@ -1947,8 +1944,8 @@ func TestPrinterPrintIncludeOnce(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.IncludeOnce{
-		Expr: &scalar.String{Value: "'path'"},
+	p.Print(&ast.ExprIncludeOnce{
+		Expr: &ast.ScalarString{Value: []byte("'path'")},
 	})
 
 	expected := `include_once 'path'`
@@ -1963,11 +1960,11 @@ func TestPrinterPrintInstanceOf(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.InstanceOf{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprInstanceOf{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
-		Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		Class: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
 	})
 
 	expected := `$var instanceof Foo`
@@ -1982,13 +1979,13 @@ func TestPrinterPrintIsset(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Isset{
-		Variables: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprIsset{
+		Vars: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "b"},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("b")},
 			},
 		},
 	})
@@ -2005,24 +2002,24 @@ func TestPrinterPrintList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.List{
-		Items: []node.Node{
-			&expr.ArrayItem{
-				Val: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprList{
+		Items: []ast.Vertex{
+			&ast.ExprArrayItem{
+				Val: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				},
 			},
-			&expr.ArrayItem{
-				Val: &expr.List{
-					Items: []node.Node{
-						&expr.ArrayItem{
-							Val: &expr.Variable{
-								VarName: &node.Identifier{Value: "b"},
+			&ast.ExprArrayItem{
+				Val: &ast.ExprList{
+					Items: []ast.Vertex{
+						&ast.ExprArrayItem{
+							Val: &ast.ExprVariable{
+								VarName: &ast.Identifier{Value: []byte("b")},
 							},
 						},
-						&expr.ArrayItem{
-							Val: &expr.Variable{
-								VarName: &node.Identifier{Value: "c"},
+						&ast.ExprArrayItem{
+							Val: &ast.ExprVariable{
+								VarName: &ast.Identifier{Value: []byte("c")},
 							},
 						},
 					},
@@ -2043,21 +2040,21 @@ func TestPrinterPrintMethodCall(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.MethodCall{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "foo"},
+	p.Print(&ast.ExprMethodCall{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("foo")},
 		},
-		Method: &node.Identifier{Value: "bar"},
-		ArgumentList: &node.ArgumentList{
-			Arguments: []node.Node{
-				&node.Argument{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "a"},
+		Method: &ast.Identifier{Value: []byte("bar")},
+		ArgumentList: &ast.ArgumentList{
+			Arguments: []ast.Vertex{
+				&ast.Argument{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("a")},
 					},
 				},
-				&node.Argument{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+				&ast.Argument{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					},
 				},
 			},
@@ -2076,24 +2073,24 @@ func TestPrinterPrintNew(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.New{
-		Class: &name.Name{
-			Parts: []node.Node{
-				&name.NamePart{
-					Value: "Foo",
+	p.Print(&ast.ExprNew{
+		Class: &ast.NameName{
+			Parts: []ast.Vertex{
+				&ast.NameNamePart{
+					Value: []byte("Foo"),
 				},
 			},
 		},
-		ArgumentList: &node.ArgumentList{
-			Arguments: []node.Node{
-				&node.Argument{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "a"},
+		ArgumentList: &ast.ArgumentList{
+			Arguments: []ast.Vertex{
+				&ast.Argument{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("a")},
 					},
 				},
-				&node.Argument{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+				&ast.Argument{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					},
 				},
 			},
@@ -2112,9 +2109,9 @@ func TestPrinterPrintPostDec(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.PostDec{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprPostDec{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2130,9 +2127,9 @@ func TestPrinterPrintPostInc(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.PostInc{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprPostInc{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2148,9 +2145,9 @@ func TestPrinterPrintPreDec(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.PreDec{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprPreDec{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2166,9 +2163,9 @@ func TestPrinterPrintPreInc(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.PreInc{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprPreInc{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2184,9 +2181,9 @@ func TestPrinterPrintPrint(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Print{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprPrint{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2202,11 +2199,11 @@ func TestPrinterPrintPropertyFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.PropertyFetch{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "foo"},
+	p.Print(&ast.ExprPropertyFetch{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("foo")},
 		},
-		Property: &node.Identifier{Value: "bar"},
+		Property: &ast.Identifier{Value: []byte("bar")},
 	})
 
 	expected := `$foo->bar`
@@ -2221,9 +2218,9 @@ func TestPrinterPrintExprReference(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Reference{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "foo"},
+	p.Print(&ast.ExprReference{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("foo")},
 		},
 	})
 
@@ -2239,8 +2236,8 @@ func TestPrinterPrintRequire(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Require{
-		Expr: &scalar.String{Value: "'path'"},
+	p.Print(&ast.ExprRequire{
+		Expr: &ast.ScalarString{Value: []byte("'path'")},
 	})
 
 	expected := `require 'path'`
@@ -2255,8 +2252,8 @@ func TestPrinterPrintRequireOnce(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.RequireOnce{
-		Expr: &scalar.String{Value: "'path'"},
+	p.Print(&ast.ExprRequireOnce{
+		Expr: &ast.ScalarString{Value: []byte("'path'")},
 	})
 
 	expected := `require_once 'path'`
@@ -2271,13 +2268,13 @@ func TestPrinterPrintShellExec(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ShellExec{
-		Parts: []node.Node{
-			&scalar.EncapsedStringPart{Value: "hello "},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "world"},
+	p.Print(&ast.ExprShellExec{
+		Parts: []ast.Vertex{
+			&ast.ScalarEncapsedStringPart{Value: []byte("hello ")},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("world")},
 			},
-			&scalar.EncapsedStringPart{Value: "!"},
+			&ast.ScalarEncapsedStringPart{Value: []byte("!")},
 		},
 	})
 
@@ -2293,23 +2290,23 @@ func TestPrinterPrintExprShortArray(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ShortArray{
-		Items: []node.Node{
-			&expr.ArrayItem{
-				Key: &scalar.String{Value: "'Hello'"},
-				Val: &expr.Variable{
-					VarName: &node.Identifier{Value: "world"},
+	p.Print(&ast.ExprShortArray{
+		Items: []ast.Vertex{
+			&ast.ExprArrayItem{
+				Key: &ast.ScalarString{Value: []byte("'Hello'")},
+				Val: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("world")},
 				},
 			},
-			&expr.ArrayItem{
-				Key: &scalar.Lnumber{Value: "2"},
-				Val: &expr.Reference{Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "var"},
+			&ast.ExprArrayItem{
+				Key: &ast.ScalarLnumber{Value: []byte("2")},
+				Val: &ast.ExprReference{Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("var")},
 				}},
 			},
-			&expr.ArrayItem{
-				Val: &expr.Variable{
-					VarName: &node.Identifier{Value: "var"},
+			&ast.ExprArrayItem{
+				Val: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("var")},
 				},
 			},
 		},
@@ -2327,24 +2324,24 @@ func TestPrinterPrintShortList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.ShortList{
-		Items: []node.Node{
-			&expr.ArrayItem{
-				Val: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprShortList{
+		Items: []ast.Vertex{
+			&ast.ExprArrayItem{
+				Val: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				},
 			},
-			&expr.ArrayItem{
-				Val: &expr.List{
-					Items: []node.Node{
-						&expr.ArrayItem{
-							Val: &expr.Variable{
-								VarName: &node.Identifier{Value: "b"},
+			&ast.ExprArrayItem{
+				Val: &ast.ExprList{
+					Items: []ast.Vertex{
+						&ast.ExprArrayItem{
+							Val: &ast.ExprVariable{
+								VarName: &ast.Identifier{Value: []byte("b")},
 							},
 						},
-						&expr.ArrayItem{
-							Val: &expr.Variable{
-								VarName: &node.Identifier{Value: "c"},
+						&ast.ExprArrayItem{
+							Val: &ast.ExprVariable{
+								VarName: &ast.Identifier{Value: []byte("c")},
 							},
 						},
 					},
@@ -2365,19 +2362,19 @@ func TestPrinterPrintStaticCall(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.StaticCall{
-		Class: &node.Identifier{Value: "Foo"},
-		Call:  &node.Identifier{Value: "bar"},
-		ArgumentList: &node.ArgumentList{
-			Arguments: []node.Node{
-				&node.Argument{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprStaticCall{
+		Class: &ast.Identifier{Value: []byte("Foo")},
+		Call:  &ast.Identifier{Value: []byte("bar")},
+		ArgumentList: &ast.ArgumentList{
+			Arguments: []ast.Vertex{
+				&ast.Argument{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("a")},
 					},
 				},
-				&node.Argument{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+				&ast.Argument{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					},
 				},
 			},
@@ -2396,10 +2393,10 @@ func TestPrinterPrintStaticPropertyFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.StaticPropertyFetch{
-		Class: &node.Identifier{Value: "Foo"},
-		Property: &expr.Variable{
-			VarName: &node.Identifier{Value: "bar"},
+	p.Print(&ast.ExprStaticPropertyFetch{
+		Class: &ast.Identifier{Value: []byte("Foo")},
+		Property: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("bar")},
 		},
 	})
 
@@ -2415,12 +2412,12 @@ func TestPrinterPrintTernary(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Ternary{
-		Condition: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprTernary{
+		Condition: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		IfFalse: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		IfFalse: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
 	})
 
@@ -2436,15 +2433,15 @@ func TestPrinterPrintTernaryFull(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Ternary{
-		Condition: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.ExprTernary{
+		Condition: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		IfTrue: &expr.Variable{
-			VarName: &node.Identifier{Value: "b"},
+		IfTrue: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("b")},
 		},
-		IfFalse: &expr.Variable{
-			VarName: &node.Identifier{Value: "c"},
+		IfFalse: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("c")},
 		},
 	})
 
@@ -2460,9 +2457,9 @@ func TestPrinterPrintUnaryMinus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.UnaryMinus{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprUnaryMinus{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2478,9 +2475,9 @@ func TestPrinterPrintUnaryPlus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.UnaryPlus{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprUnaryPlus{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2496,9 +2493,9 @@ func TestPrinterPrintVariable(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Variable{
-		VarName: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprVariable{
+		VarName: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2514,9 +2511,9 @@ func TestPrinterPrintYieldFrom(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.YieldFrom{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprYieldFrom{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2532,9 +2529,9 @@ func TestPrinterPrintYield(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Yield{
-		Value: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.ExprYield{
+		Value: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2550,12 +2547,12 @@ func TestPrinterPrintYieldFull(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&expr.Yield{
-		Key: &expr.Variable{
-			VarName: &node.Identifier{Value: "k"},
+	p.Print(&ast.ExprYield{
+		Key: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("k")},
 		},
-		Value: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+		Value: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -2573,14 +2570,14 @@ func TestPrinterPrintAltElseIf(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.AltElseIf{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtAltElseIf{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "b"},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("b")},
 				}},
 			},
 		},
@@ -2598,11 +2595,11 @@ func TestPrinterPrintAltElseIfEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.AltElseIf{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtAltElseIf{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.StmtList{},
+		Stmt: &ast.StmtStmtList{},
 	})
 
 	expected := `elseif($a):`
@@ -2617,11 +2614,11 @@ func TestPrinterPrintAltElse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.AltElse{
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "b"},
+	p.Print(&ast.StmtAltElse{
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("b")},
 				}},
 			},
 		},
@@ -2639,8 +2636,8 @@ func TestPrinterPrintAltElseEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.AltElse{
-		Stmt: &stmt.StmtList{},
+	p.Print(&ast.StmtAltElse{
+		Stmt: &ast.StmtStmtList{},
 	})
 
 	expected := `else:`
@@ -2655,26 +2652,26 @@ func TestPrinterPrintAltFor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.AltFor{
-		Init: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtAltFor{
+		Init: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			},
 		},
-		Cond: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "b"},
+		Cond: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("b")},
 			},
 		},
-		Loop: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "c"},
+		Loop: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("c")},
 			},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "d"},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("d")},
 				}},
 			},
 		},
@@ -2692,20 +2689,20 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.AltForeach{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.StmtAltForeach{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
-		Key: &expr.Variable{
-			VarName: &node.Identifier{Value: "key"},
+		Key: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("key")},
 		},
-		Variable: &expr.Reference{Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "val"},
+		Var: &ast.ExprReference{Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("val")},
 		}},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "d"},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("d")},
 				}},
 			},
 		},
@@ -2723,42 +2720,42 @@ func TestPrinterPrintAltIf(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.AltIf{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtAltIf{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "d"},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("d")},
 				}},
 			},
 		},
-		ElseIf: []node.Node{
-			&stmt.AltElseIf{
-				Cond: &expr.Variable{
-					VarName: &node.Identifier{Value: "b"},
+		ElseIf: []ast.Vertex{
+			&ast.StmtAltElseIf{
+				Cond: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("b")},
 				},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{
-							VarName: &node.Identifier{Value: "b"},
+				Stmt: &ast.StmtStmtList{
+					Stmts: []ast.Vertex{
+						&ast.StmtExpression{Expr: &ast.ExprVariable{
+							VarName: &ast.Identifier{Value: []byte("b")},
 						}},
 					},
 				},
 			},
-			&stmt.AltElseIf{
-				Cond: &expr.Variable{
-					VarName: &node.Identifier{Value: "c"},
+			&ast.StmtAltElseIf{
+				Cond: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("c")},
 				},
-				Stmt: &stmt.StmtList{},
+				Stmt: &ast.StmtStmtList{},
 			},
 		},
-		Else: &stmt.AltElse{
-			Stmt: &stmt.StmtList{
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+		Else: &ast.StmtAltElse{
+			Stmt: &ast.StmtStmtList{
+				Stmts: []ast.Vertex{
+					&ast.StmtExpression{Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					}},
 				},
 			},
@@ -2777,25 +2774,25 @@ func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.AltSwitch{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.StmtAltSwitch{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
-		CaseList: &stmt.CaseList{
-			Cases: []node.Node{
-				&stmt.Case{
-					Cond: &scalar.String{Value: "'a'"},
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{
-							VarName: &node.Identifier{Value: "a"},
+		CaseList: &ast.StmtCaseList{
+			Cases: []ast.Vertex{
+				&ast.StmtCase{
+					Cond: &ast.ScalarString{Value: []byte("'a'")},
+					Stmts: []ast.Vertex{
+						&ast.StmtExpression{Expr: &ast.ExprVariable{
+							VarName: &ast.Identifier{Value: []byte("a")},
 						}},
 					},
 				},
-				&stmt.Case{
-					Cond: &scalar.String{Value: "'b'"},
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{
-							VarName: &node.Identifier{Value: "b"},
+				&ast.StmtCase{
+					Cond: &ast.ScalarString{Value: []byte("'b'")},
+					Stmts: []ast.Vertex{
+						&ast.StmtExpression{Expr: &ast.ExprVariable{
+							VarName: &ast.Identifier{Value: []byte("b")},
 						}},
 					},
 				},
@@ -2815,14 +2812,14 @@ func TestPrinterPrintAltWhile(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.AltWhile{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtAltWhile{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "b"},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("b")},
 				}},
 			},
 		},
@@ -2840,9 +2837,9 @@ func TestPrinterPrintStmtBreak(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Break{
-		Expr: &scalar.Lnumber{
-			Value: "1",
+	p.Print(&ast.StmtBreak{
+		Expr: &ast.ScalarLnumber{
+			Value: []byte("1"),
 		},
 	})
 
@@ -2858,13 +2855,13 @@ func TestPrinterPrintStmtCase(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Case{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtCase{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+		Stmts: []ast.Vertex{
+			&ast.StmtExpression{Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			}},
 		},
 	})
@@ -2881,11 +2878,11 @@ func TestPrinterPrintStmtCaseEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Case{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtCase{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmts: []node.Node{},
+		Stmts: []ast.Vertex{},
 	})
 
 	expected := "case $a:"
@@ -2900,17 +2897,17 @@ func TestPrinterPrintStmtCatch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Catch{
-		Types: []node.Node{
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
-			&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
+	p.Print(&ast.StmtCatch{
+		Types: []ast.Vertex{
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Exception")}}},
+			&ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("RuntimeException")}}},
 		},
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "e"},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("e")},
 		},
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+		Stmts: []ast.Vertex{
+			&ast.StmtExpression{Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			}},
 		},
 	})
@@ -2927,33 +2924,33 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.ClassMethod{
-		Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+	p.Print(&ast.StmtClassMethod{
+		Modifiers:  []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
 		ReturnsRef: true,
-		MethodName: &node.Identifier{Value: "foo"},
-		Params: []node.Node{
-			&node.Parameter{
-				ByRef:        true,
-				VariableType: &node.Nullable{Expr: &name.Name{Parts: []node.Node{&name.NamePart{Value: "int"}}}},
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+		MethodName: &ast.Identifier{Value: []byte("foo")},
+		Params: []ast.Vertex{
+			&ast.Parameter{
+				ByRef: true,
+				Type:  &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				},
-				DefaultValue: &expr.ConstFetch{Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}}},
+				DefaultValue: &ast.ExprConstFetch{Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}}},
 			},
-			&node.Parameter{
+			&ast.Parameter{
 				Variadic: true,
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "b"},
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("b")},
 				},
 			},
 		},
-		ReturnType: &name.Name{
-			Parts: []node.Node{&name.NamePart{Value: "void"}},
+		ReturnType: &ast.NameName{
+			Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("void")}},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				}},
 			},
 		},
@@ -2971,33 +2968,33 @@ func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.ClassMethod{
-		Modifiers: []node.Node{
-			&node.Identifier{Value: "public"},
-			&node.Identifier{Value: "static"},
+	p.Print(&ast.StmtClassMethod{
+		Modifiers: []ast.Vertex{
+			&ast.Identifier{Value: []byte("public")},
+			&ast.Identifier{Value: []byte("static")},
 		},
 		ReturnsRef: true,
-		MethodName: &node.Identifier{Value: "foo"},
-		Params: []node.Node{
-			&node.Parameter{
-				ByRef:        true,
-				VariableType: &node.Nullable{Expr: &name.Name{Parts: []node.Node{&name.NamePart{Value: "int"}}}},
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+		MethodName: &ast.Identifier{Value: []byte("foo")},
+		Params: []ast.Vertex{
+			&ast.Parameter{
+				ByRef: true,
+				Type:  &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				},
-				DefaultValue: &expr.ConstFetch{Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}}},
+				DefaultValue: &ast.ExprConstFetch{Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}}},
 			},
-			&node.Parameter{
+			&ast.Parameter{
 				Variadic: true,
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "b"},
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("b")},
 				},
 			},
 		},
-		ReturnType: &name.Name{
-			Parts: []node.Node{&name.NamePart{Value: "void"}},
+		ReturnType: &ast.NameName{
+			Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("void")}},
 		},
-		Stmt: &stmt.Nop{},
+		Stmt: &ast.StmtNop{},
 	})
 
 	expected := `public static function &foo(?int&$a=null,...$b):void;`
@@ -3012,28 +3009,28 @@ func TestPrinterPrintStmtClass(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Class{
-		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
-		ClassName: &node.Identifier{Value: "Foo"},
-		Extends: &stmt.ClassExtends{
-			ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+	p.Print(&ast.StmtClass{
+		Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("abstract")}},
+		ClassName: &ast.Identifier{Value: []byte("Foo")},
+		Extends: &ast.StmtClassExtends{
+			ClassName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
 		},
-		Implements: &stmt.ClassImplements{
-			InterfaceNames: []node.Node{
-				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+		Implements: &ast.StmtClassImplements{
+			InterfaceNames: []ast.Vertex{
+				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
 			},
 		},
-		Stmts: []node.Node{
-			&stmt.ClassConstList{
-				Modifiers: []node.Node{
-					&node.Identifier{Value: "public"},
-					&node.Identifier{Value: "static"},
+		Stmts: []ast.Vertex{
+			&ast.StmtClassConstList{
+				Modifiers: []ast.Vertex{
+					&ast.Identifier{Value: []byte("public")},
+					&ast.Identifier{Value: []byte("static")},
 				},
-				Consts: []node.Node{
-					&stmt.Constant{
-						ConstantName: &node.Identifier{Value: "FOO"},
-						Expr:         &scalar.String{Value: "'bar'"},
+				Consts: []ast.Vertex{
+					&ast.StmtConstant{
+						ConstantName: &ast.Identifier{Value: []byte("FOO")},
+						Expr:         &ast.ScalarString{Value: []byte("'bar'")},
 					},
 				},
 			},
@@ -3052,38 +3049,38 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Class{
-		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
-		ArgumentList: &node.ArgumentList{
-			Arguments: []node.Node{
-				&node.Argument{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtClass{
+		Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("abstract")}},
+		ArgumentList: &ast.ArgumentList{
+			Arguments: []ast.Vertex{
+				&ast.Argument{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("a")},
 					},
 				},
-				&node.Argument{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+				&ast.Argument{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					},
 				},
 			},
 		},
-		Extends: &stmt.ClassExtends{
-			ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+		Extends: &ast.StmtClassExtends{
+			ClassName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
 		},
-		Implements: &stmt.ClassImplements{
-			InterfaceNames: []node.Node{
-				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+		Implements: &ast.StmtClassImplements{
+			InterfaceNames: []ast.Vertex{
+				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
 			},
 		},
-		Stmts: []node.Node{
-			&stmt.ClassConstList{
-				Modifiers: []node.Node{&node.Identifier{Value: "public"}},
-				Consts: []node.Node{
-					&stmt.Constant{
-						ConstantName: &node.Identifier{Value: "FOO"},
-						Expr:         &scalar.String{Value: "'bar'"},
+		Stmts: []ast.Vertex{
+			&ast.StmtClassConstList{
+				Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
+				Consts: []ast.Vertex{
+					&ast.StmtConstant{
+						ConstantName: &ast.Identifier{Value: []byte("FOO")},
+						Expr:         &ast.ScalarString{Value: []byte("'bar'")},
 					},
 				},
 			},
@@ -3102,16 +3099,16 @@ func TestPrinterPrintStmtClassConstList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.ClassConstList{
-		Modifiers: []node.Node{&node.Identifier{Value: "public"}},
-		Consts: []node.Node{
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "'a'"},
+	p.Print(&ast.StmtClassConstList{
+		Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
+		Consts: []ast.Vertex{
+			&ast.StmtConstant{
+				ConstantName: &ast.Identifier{Value: []byte("FOO")},
+				Expr:         &ast.ScalarString{Value: []byte("'a'")},
 			},
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "BAR"},
-				Expr:         &scalar.String{Value: "'b'"},
+			&ast.StmtConstant{
+				ConstantName: &ast.Identifier{Value: []byte("BAR")},
+				Expr:         &ast.ScalarString{Value: []byte("'b'")},
 			},
 		},
 	})
@@ -3128,15 +3125,15 @@ func TestPrinterPrintStmtConstList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.ConstList{
-		Consts: []node.Node{
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "'a'"},
+	p.Print(&ast.StmtConstList{
+		Consts: []ast.Vertex{
+			&ast.StmtConstant{
+				ConstantName: &ast.Identifier{Value: []byte("FOO")},
+				Expr:         &ast.ScalarString{Value: []byte("'a'")},
 			},
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "BAR"},
-				Expr:         &scalar.String{Value: "'b'"},
+			&ast.StmtConstant{
+				ConstantName: &ast.Identifier{Value: []byte("BAR")},
+				Expr:         &ast.ScalarString{Value: []byte("'b'")},
 			},
 		},
 	})
@@ -3153,9 +3150,9 @@ func TestPrinterPrintStmtConstant(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Constant{
-		ConstantName: &node.Identifier{Value: "FOO"},
-		Expr:         &scalar.String{Value: "'BAR'"},
+	p.Print(&ast.StmtConstant{
+		ConstantName: &ast.Identifier{Value: []byte("FOO")},
+		Expr:         &ast.ScalarString{Value: []byte("'BAR'")},
 	})
 
 	expected := "FOO='BAR'"
@@ -3170,9 +3167,9 @@ func TestPrinterPrintStmtContinue(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Continue{
-		Expr: &scalar.Lnumber{
-			Value: "1",
+	p.Print(&ast.StmtContinue{
+		Expr: &ast.ScalarLnumber{
+			Value: []byte("1"),
 		},
 	})
 
@@ -3188,16 +3185,16 @@ func TestPrinterPrintStmtDeclareStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Declare{
-		Consts: []node.Node{
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "'bar'"},
+	p.Print(&ast.StmtDeclare{
+		Consts: []ast.Vertex{
+			&ast.StmtConstant{
+				ConstantName: &ast.Identifier{Value: []byte("FOO")},
+				Expr:         &ast.ScalarString{Value: []byte("'bar'")},
 			},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtNop{},
 			},
 		},
 	})
@@ -3214,14 +3211,14 @@ func TestPrinterPrintStmtDeclareExpr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Declare{
-		Consts: []node.Node{
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "'bar'"},
+	p.Print(&ast.StmtDeclare{
+		Consts: []ast.Vertex{
+			&ast.StmtConstant{
+				ConstantName: &ast.Identifier{Value: []byte("FOO")},
+				Expr:         &ast.ScalarString{Value: []byte("'bar'")},
 			},
 		},
-		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
+		Stmt: &ast.StmtExpression{Expr: &ast.ScalarString{Value: []byte("'bar'")}},
 	})
 
 	expected := `declare(FOO='bar')'bar';`
@@ -3236,14 +3233,14 @@ func TestPrinterPrintStmtDeclareNop(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Declare{
-		Consts: []node.Node{
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "'bar'"},
+	p.Print(&ast.StmtDeclare{
+		Consts: []ast.Vertex{
+			&ast.StmtConstant{
+				ConstantName: &ast.Identifier{Value: []byte("FOO")},
+				Expr:         &ast.ScalarString{Value: []byte("'bar'")},
 			},
 		},
-		Stmt: &stmt.Nop{},
+		Stmt: &ast.StmtNop{},
 	})
 
 	expected := `declare(FOO='bar');`
@@ -3258,10 +3255,10 @@ func TestPrinterPrintStmtDefalut(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Default{
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtDefault{
+		Stmts: []ast.Vertex{
+			&ast.StmtExpression{Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			}},
 		},
 	})
@@ -3278,8 +3275,8 @@ func TestPrinterPrintStmtDefalutEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Default{
-		Stmts: []node.Node{},
+	p.Print(&ast.StmtDefault{
+		Stmts: []ast.Vertex{},
 	})
 
 	expected := `default:`
@@ -3294,11 +3291,11 @@ func TestPrinterPrintStmtDo_Expression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Do{
-		Cond: &scalar.Lnumber{Value: "1"},
-		Stmt: &stmt.Expression{
-			Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtDo{
+		Cond: &ast.ScalarLnumber{Value: []byte("1")},
+		Stmt: &ast.StmtExpression{
+			Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			},
 		},
 	})
@@ -3315,12 +3312,12 @@ func TestPrinterPrintStmtDo_StmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Do{
-		Cond: &scalar.Lnumber{Value: "1"},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtDo{
+		Cond: &ast.ScalarLnumber{Value: []byte("1")},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				}},
 			},
 		},
@@ -3338,15 +3335,15 @@ func TestPrinterPrintStmtEchoHtmlState(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&node.Root{
-		Stmts: []node.Node{
-			&stmt.Echo{
-				Exprs: []node.Node{
-					&expr.Variable{
-						VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.Root{
+		Stmts: []ast.Vertex{
+			&ast.StmtEcho{
+				Exprs: []ast.Vertex{
+					&ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("a")},
 					},
-					&expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+					&ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					},
 				},
 			},
@@ -3365,13 +3362,13 @@ func TestPrinterPrintStmtEchoPhpState(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Echo{
-		Exprs: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtEcho{
+		Exprs: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "b"},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("b")},
 			},
 		},
 	})
@@ -3388,13 +3385,13 @@ func TestPrinterPrintStmtElseIfStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.ElseIf{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtElseIf{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtNop{},
 			},
 		},
 	})
@@ -3411,11 +3408,11 @@ func TestPrinterPrintStmtElseIfExpr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.ElseIf{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtElseIf{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
+		Stmt: &ast.StmtExpression{Expr: &ast.ScalarString{Value: []byte("'bar'")}},
 	})
 
 	expected := `elseif($a)'bar';`
@@ -3430,11 +3427,11 @@ func TestPrinterPrintStmtElseIfNop(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.ElseIf{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtElseIf{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.Nop{},
+		Stmt: &ast.StmtNop{},
 	})
 
 	expected := `elseif($a);`
@@ -3449,10 +3446,10 @@ func TestPrinterPrintStmtElseStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Else{
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+	p.Print(&ast.StmtElse{
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtNop{},
 			},
 		},
 	})
@@ -3469,8 +3466,8 @@ func TestPrinterPrintStmtElseExpr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Else{
-		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
+	p.Print(&ast.StmtElse{
+		Stmt: &ast.StmtExpression{Expr: &ast.ScalarString{Value: []byte("'bar'")}},
 	})
 
 	expected := `else 'bar';`
@@ -3485,8 +3482,8 @@ func TestPrinterPrintStmtElseNop(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Else{
-		Stmt: &stmt.Nop{},
+	p.Print(&ast.StmtElse{
+		Stmt: &ast.StmtNop{},
 	})
 
 	expected := `else ;`
@@ -3501,9 +3498,9 @@ func TestPrinterPrintExpression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Expression{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtExpression{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
 	})
 
@@ -3519,9 +3516,9 @@ func TestPrinterPrintStmtFinally(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Finally{
-		Stmts: []node.Node{
-			&stmt.Nop{},
+	p.Print(&ast.StmtFinally{
+		Stmts: []ast.Vertex{
+			&ast.StmtNop{},
 		},
 	})
 
@@ -3537,34 +3534,34 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.For{
-		Init: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtFor{
+		Init: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "b"},
-			},
-		},
-		Cond: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "c"},
-			},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "d"},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("b")},
 			},
 		},
-		Loop: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "e"},
+		Cond: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("c")},
 			},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "f"},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("d")},
 			},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+		Loop: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("e")},
+			},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("f")},
+			},
+		},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtNop{},
 			},
 		},
 	})
@@ -3581,19 +3578,19 @@ func TestPrinterPrintStmtForeach(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Foreach{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtForeach{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Key: &expr.Variable{
-			VarName: &node.Identifier{Value: "k"},
+		Key: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("k")},
 		},
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "v"},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("v")},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtNop{},
 			},
 		},
 	})
@@ -3610,23 +3607,23 @@ func TestPrinterPrintStmtFunction(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Function{
+	p.Print(&ast.StmtFunction{
 		ReturnsRef:   true,
-		FunctionName: &node.Identifier{Value: "foo"},
-		Params: []node.Node{
-			&node.Parameter{
+		FunctionName: &ast.Identifier{Value: []byte("foo")},
+		Params: []ast.Vertex{
+			&ast.Parameter{
 				ByRef:    true,
 				Variadic: false,
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "var"},
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("var")},
 				},
 			},
 		},
-		ReturnType: &name.FullyQualified{
-			Parts: []node.Node{&name.NamePart{Value: "Foo"}},
+		ReturnType: &ast.NameFullyQualified{
+			Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}},
 		},
-		Stmts: []node.Node{
-			&stmt.Nop{},
+		Stmts: []ast.Vertex{
+			&ast.StmtNop{},
 		},
 	})
 
@@ -3642,13 +3639,13 @@ func TestPrinterPrintStmtGlobal(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Global{
-		Vars: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtGlobal{
+		Vars: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "b"},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("b")},
 			},
 		},
 	})
@@ -3665,8 +3662,8 @@ func TestPrinterPrintStmtGoto(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Goto{
-		Label: &node.Identifier{Value: "FOO"},
+	p.Print(&ast.StmtGoto{
+		Label: &ast.Identifier{Value: []byte("FOO")},
 	})
 
 	expected := `goto FOO;`
@@ -3681,16 +3678,16 @@ func TestPrinterPrintStmtGroupUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.GroupUse{
-		UseType: &node.Identifier{Value: "function"},
-		Prefix:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-		UseList: []node.Node{
-			&stmt.Use{
-				Use:   &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-				Alias: &node.Identifier{Value: "Baz"},
+	p.Print(&ast.StmtGroupUse{
+		UseType: &ast.Identifier{Value: []byte("function")},
+		Prefix:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		UseList: []ast.Vertex{
+			&ast.StmtUse{
+				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+				Alias: &ast.Identifier{Value: []byte("Baz")},
 			},
-			&stmt.Use{
-				Use: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+			&ast.StmtUse{
+				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
 			},
 		},
 	})
@@ -3707,7 +3704,7 @@ func TestPrinterPrintHaltCompiler(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.HaltCompiler{})
+	p.Print(&ast.StmtHaltCompiler{})
 
 	expected := `__halt_compiler();`
 	actual := o.String()
@@ -3721,41 +3718,41 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.If{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtIf{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.Expression{
-			Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "b"},
+		Stmt: &ast.StmtExpression{
+			Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("b")},
 			},
 		},
-		ElseIf: []node.Node{
-			&stmt.ElseIf{
-				Cond: &expr.Variable{
-					VarName: &node.Identifier{Value: "c"},
+		ElseIf: []ast.Vertex{
+			&ast.StmtElseIf{
+				Cond: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("c")},
 				},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Expression{
-							Expr: &expr.Variable{
-								VarName: &node.Identifier{Value: "d"},
+				Stmt: &ast.StmtStmtList{
+					Stmts: []ast.Vertex{
+						&ast.StmtExpression{
+							Expr: &ast.ExprVariable{
+								VarName: &ast.Identifier{Value: []byte("d")},
 							},
 						},
 					},
 				},
 			},
-			&stmt.ElseIf{
-				Cond: &expr.Variable{
-					VarName: &node.Identifier{Value: "e"},
+			&ast.StmtElseIf{
+				Cond: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("e")},
 				},
-				Stmt: &stmt.Nop{},
+				Stmt: &ast.StmtNop{},
 			},
 		},
-		Else: &stmt.Else{
-			Stmt: &stmt.Expression{
-				Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "f"},
+		Else: &ast.StmtElse{
+			Stmt: &ast.StmtExpression{
+				Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("f")},
 				},
 			},
 		},
@@ -3773,15 +3770,15 @@ func TestPrinterPrintIfStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.If{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtIf{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{
-					Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{
+					Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					},
 				},
 			},
@@ -3800,11 +3797,11 @@ func TestPrinterPrintIfNop(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.If{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtIf{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.Nop{},
+		Stmt: &ast.StmtNop{},
 	})
 
 	expected := `if($a);`
@@ -3819,10 +3816,10 @@ func TestPrinterPrintInlineHtml(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&node.Root{
-		Stmts: []node.Node{
-			&stmt.InlineHtml{
-				Value: "test",
+	p.Print(&ast.Root{
+		Stmts: []ast.Vertex{
+			&ast.StmtInlineHtml{
+				Value: []byte("test"),
 			},
 		},
 	})
@@ -3839,23 +3836,23 @@ func TestPrinterPrintInterface(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Interface{
-		InterfaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-		Extends: &stmt.InterfaceExtends{
-			InterfaceNames: []node.Node{
-				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+	p.Print(&ast.StmtInterface{
+		InterfaceName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Extends: &ast.StmtInterfaceExtends{
+			InterfaceNames: []ast.Vertex{
+				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
 			},
 		},
-		Stmts: []node.Node{
-			&stmt.ClassMethod{
-				Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
-				MethodName: &node.Identifier{Value: "foo"},
-				Params:     []node.Node{},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{
-							VarName: &node.Identifier{Value: "a"},
+		Stmts: []ast.Vertex{
+			&ast.StmtClassMethod{
+				Modifiers:  []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
+				MethodName: &ast.Identifier{Value: []byte("foo")},
+				Params:     []ast.Vertex{},
+				Stmt: &ast.StmtStmtList{
+					Stmts: []ast.Vertex{
+						&ast.StmtExpression{Expr: &ast.ExprVariable{
+							VarName: &ast.Identifier{Value: []byte("a")},
 						}},
 					},
 				},
@@ -3875,8 +3872,8 @@ func TestPrinterPrintLabel(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Label{
-		LabelName: &node.Identifier{Value: "FOO"},
+	p.Print(&ast.StmtLabel{
+		LabelName: &ast.Identifier{Value: []byte("FOO")},
 	})
 
 	expected := `FOO:`
@@ -3891,8 +3888,8 @@ func TestPrinterPrintNamespace(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Namespace{
-		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+	p.Print(&ast.StmtNamespace{
+		NamespaceName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
 	})
 
 	expected := `namespace Foo;`
@@ -3907,11 +3904,11 @@ func TestPrinterPrintNamespaceWithStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Namespace{
-		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtNamespace{
+		NamespaceName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Stmts: []ast.Vertex{
+			&ast.StmtExpression{Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			}},
 		},
 	})
@@ -3928,7 +3925,7 @@ func TestPrinterPrintNop(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Nop{})
+	p.Print(&ast.StmtNop{})
 
 	expected := `;`
 	actual := o.String()
@@ -3942,28 +3939,28 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.PropertyList{
-		Modifiers: []node.Node{
-			&node.Identifier{Value: "public"},
-			&node.Identifier{Value: "static"},
+	p.Print(&ast.StmtPropertyList{
+		Modifiers: []ast.Vertex{
+			&ast.Identifier{Value: []byte("public")},
+			&ast.Identifier{Value: []byte("static")},
 		},
-		Type: &name.Name{
-			Parts: []node.Node{
-				&name.NamePart{
-					Value: "Foo",
+		Type: &ast.NameName{
+			Parts: []ast.Vertex{
+				&ast.NameNamePart{
+					Value: []byte("Foo"),
 				},
 			},
 		},
-		Properties: []node.Node{
-			&stmt.Property{
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+		Properties: []ast.Vertex{
+			&ast.StmtProperty{
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				},
-				Expr: &scalar.String{Value: "'a'"},
+				Expr: &ast.ScalarString{Value: []byte("'a'")},
 			},
-			&stmt.Property{
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "b"},
+			&ast.StmtProperty{
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("b")},
 				},
 			},
 		},
@@ -3981,19 +3978,21 @@ func TestPrinterPrintProperty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Property{
-		Variable: &expr.Variable{
-			FreeFloating: freefloating.Collection{
-				freefloating.Start: []freefloating.String{
-					{
-						StringType: freefloating.TokenType,
-						Value:      "$",
+	p.Print(&ast.StmtProperty{
+		Var: &ast.ExprVariable{
+			Node: ast.Node{
+				Tokens: token.Collection{
+					token.Start: []token.Token{
+						{
+							ID:    token.ID('$'),
+							Value: []byte("$"),
+						},
 					},
 				},
 			},
-			VarName: &node.Identifier{Value: "a"},
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expr: &scalar.Lnumber{Value: "1"},
+		Expr: &ast.ScalarLnumber{Value: []byte("1")},
 	})
 
 	expected := `$a=1`
@@ -4008,8 +4007,8 @@ func TestPrinterPrintReturn(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Return{
-		Expr: &scalar.Lnumber{Value: "1"},
+	p.Print(&ast.StmtReturn{
+		Expr: &ast.ScalarLnumber{Value: []byte("1")},
 	})
 
 	expected := `return 1;`
@@ -4024,11 +4023,11 @@ func TestPrinterPrintStaticVar(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.StaticVar{
-		Variable: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtStaticVar{
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Expr: &scalar.Lnumber{Value: "1"},
+		Expr: &ast.ScalarLnumber{Value: []byte("1")},
 	})
 
 	expected := `$a=1`
@@ -4043,16 +4042,16 @@ func TestPrinterPrintStatic(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Static{
-		Vars: []node.Node{
-			&stmt.StaticVar{
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtStatic{
+		Vars: []ast.Vertex{
+			&ast.StmtStaticVar{
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				},
 			},
-			&stmt.StaticVar{
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "b"},
+			&ast.StmtStaticVar{
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("b")},
 				},
 			},
 		},
@@ -4070,13 +4069,13 @@ func TestPrinterPrintStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.StmtList{
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtStmtList{
+		Stmts: []ast.Vertex{
+			&ast.StmtExpression{Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			}},
-			&stmt.Expression{Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "b"},
+			&ast.StmtExpression{Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("b")},
 			}},
 		},
 	})
@@ -4093,20 +4092,20 @@ func TestPrinterPrintStmtListNested(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.StmtList{
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtStmtList{
+		Stmts: []ast.Vertex{
+			&ast.StmtExpression{Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			}},
-			&stmt.StmtList{
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+			&ast.StmtStmtList{
+				Stmts: []ast.Vertex{
+					&ast.StmtExpression{Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					}},
-					&stmt.StmtList{
-						Stmts: []node.Node{
-							&stmt.Expression{Expr: &expr.Variable{
-								VarName: &node.Identifier{Value: "c"},
+					&ast.StmtStmtList{
+						Stmts: []ast.Vertex{
+							&ast.StmtExpression{Expr: &ast.ExprVariable{
+								VarName: &ast.Identifier{Value: []byte("c")},
 							}},
 						},
 					},
@@ -4127,25 +4126,25 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Switch{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.StmtSwitch{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
-		CaseList: &stmt.CaseList{
-			Cases: []node.Node{
-				&stmt.Case{
-					Cond: &scalar.String{Value: "'a'"},
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{
-							VarName: &node.Identifier{Value: "a"},
+		CaseList: &ast.StmtCaseList{
+			Cases: []ast.Vertex{
+				&ast.StmtCase{
+					Cond: &ast.ScalarString{Value: []byte("'a'")},
+					Stmts: []ast.Vertex{
+						&ast.StmtExpression{Expr: &ast.ExprVariable{
+							VarName: &ast.Identifier{Value: []byte("a")},
 						}},
 					},
 				},
-				&stmt.Case{
-					Cond: &scalar.String{Value: "'b'"},
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{
-							VarName: &node.Identifier{Value: "b"},
+				&ast.StmtCase{
+					Cond: &ast.ScalarString{Value: []byte("'b'")},
+					Stmts: []ast.Vertex{
+						&ast.StmtExpression{Expr: &ast.ExprVariable{
+							VarName: &ast.Identifier{Value: []byte("b")},
 						}},
 					},
 				},
@@ -4165,9 +4164,9 @@ func TestPrinterPrintStmtThrow(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Throw{
-		Expr: &expr.Variable{
-			VarName: &node.Identifier{Value: "var"},
+	p.Print(&ast.StmtThrow{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("var")},
 		},
 	})
 
@@ -4183,14 +4182,14 @@ func TestPrinterPrintStmtTraitAdaptationList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.TraitAdaptationList{
-		Adaptations: []node.Node{
-			&stmt.TraitUseAlias{
-				Ref: &stmt.TraitMethodRef{
-					Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-					Method: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtTraitAdaptationList{
+		Adaptations: []ast.Vertex{
+			&ast.StmtTraitUseAlias{
+				Ref: &ast.StmtTraitMethodRef{
+					Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+					Method: &ast.Identifier{Value: []byte("a")},
 				},
-				Alias: &node.Identifier{Value: "b"},
+				Alias: &ast.Identifier{Value: []byte("b")},
 			},
 		},
 	})
@@ -4207,8 +4206,8 @@ func TestPrinterPrintStmtTraitMethodRef(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.TraitMethodRef{
-		Method: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtTraitMethodRef{
+		Method: &ast.Identifier{Value: []byte("a")},
 	})
 
 	expected := `a`
@@ -4223,9 +4222,9 @@ func TestPrinterPrintStmtTraitMethodRefFull(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.TraitMethodRef{
-		Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-		Method: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtTraitMethodRef{
+		Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Method: &ast.Identifier{Value: []byte("a")},
 	})
 
 	expected := `Foo::a`
@@ -4240,13 +4239,13 @@ func TestPrinterPrintStmtTraitUseAlias(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.TraitUseAlias{
-		Ref: &stmt.TraitMethodRef{
-			Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-			Method: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtTraitUseAlias{
+		Ref: &ast.StmtTraitMethodRef{
+			Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+			Method: &ast.Identifier{Value: []byte("a")},
 		},
-		Modifier: &node.Identifier{Value: "public"},
-		Alias:    &node.Identifier{Value: "b"},
+		Modifier: &ast.Identifier{Value: []byte("public")},
+		Alias:    &ast.Identifier{Value: []byte("b")},
 	})
 
 	expected := `Foo::a as public b;`
@@ -4261,14 +4260,14 @@ func TestPrinterPrintStmtTraitUsePrecedence(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.TraitUsePrecedence{
-		Ref: &stmt.TraitMethodRef{
-			Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-			Method: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtTraitUsePrecedence{
+		Ref: &ast.StmtTraitMethodRef{
+			Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+			Method: &ast.Identifier{Value: []byte("a")},
 		},
-		Insteadof: []node.Node{
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+		Insteadof: []ast.Vertex{
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
 		},
 	})
 
@@ -4284,12 +4283,12 @@ func TestPrinterPrintStmtTraitUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.TraitUse{
-		Traits: []node.Node{
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+	p.Print(&ast.StmtTraitUse{
+		Traits: []ast.Vertex{
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
 		},
-		TraitAdaptationList: &stmt.Nop{},
+		TraitAdaptationList: &ast.StmtNop{},
 	})
 
 	expected := `use Foo,Bar;`
@@ -4304,19 +4303,19 @@ func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.TraitUse{
-		Traits: []node.Node{
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+	p.Print(&ast.StmtTraitUse{
+		Traits: []ast.Vertex{
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
 		},
-		TraitAdaptationList: &stmt.TraitAdaptationList{
-			Adaptations: []node.Node{
-				&stmt.TraitUseAlias{
-					Ref: &stmt.TraitMethodRef{
-						Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-						Method: &node.Identifier{Value: "a"},
+		TraitAdaptationList: &ast.StmtTraitAdaptationList{
+			Adaptations: []ast.Vertex{
+				&ast.StmtTraitUseAlias{
+					Ref: &ast.StmtTraitMethodRef{
+						Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+						Method: &ast.Identifier{Value: []byte("a")},
 					},
-					Alias: &node.Identifier{Value: "b"},
+					Alias: &ast.Identifier{Value: []byte("b")},
 				},
 			},
 		},
@@ -4334,17 +4333,17 @@ func TestPrinterPrintTrait(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Trait{
-		TraitName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-		Stmts: []node.Node{
-			&stmt.ClassMethod{
-				Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
-				MethodName: &node.Identifier{Value: "foo"},
-				Params:     []node.Node{},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{
-							VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtTrait{
+		TraitName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Stmts: []ast.Vertex{
+			&ast.StmtClassMethod{
+				Modifiers:  []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
+				MethodName: &ast.Identifier{Value: []byte("foo")},
+				Params:     []ast.Vertex{},
+				Stmt: &ast.StmtStmtList{
+					Stmts: []ast.Vertex{
+						&ast.StmtExpression{Expr: &ast.ExprVariable{
+							VarName: &ast.Identifier{Value: []byte("a")},
 						}},
 					},
 				},
@@ -4364,31 +4363,31 @@ func TestPrinterPrintStmtTry(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Try{
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtTry{
+		Stmts: []ast.Vertex{
+			&ast.StmtExpression{Expr: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			}},
 		},
-		Catches: []node.Node{
-			&stmt.Catch{
-				Types: []node.Node{
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
-					&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
+		Catches: []ast.Vertex{
+			&ast.StmtCatch{
+				Types: []ast.Vertex{
+					&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Exception")}}},
+					&ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("RuntimeException")}}},
 				},
-				Variable: &expr.Variable{
-					VarName: &node.Identifier{Value: "e"},
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("e")},
 				},
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{
-						VarName: &node.Identifier{Value: "b"},
+				Stmts: []ast.Vertex{
+					&ast.StmtExpression{Expr: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("b")},
 					}},
 				},
 			},
 		},
-		Finally: &stmt.Finally{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+		Finally: &ast.StmtFinally{
+			Stmts: []ast.Vertex{
+				&ast.StmtNop{},
 			},
 		},
 	})
@@ -4405,13 +4404,13 @@ func TestPrinterPrintStmtUnset(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Unset{
-		Vars: []node.Node{
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtUnset{
+		Vars: []ast.Vertex{
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("a")},
 			},
-			&expr.Variable{
-				VarName: &node.Identifier{Value: "b"},
+			&ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("b")},
 			},
 		},
 	})
@@ -4428,15 +4427,15 @@ func TestPrinterPrintStmtUseList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.UseList{
-		UseType: &node.Identifier{Value: "function"},
-		Uses: []node.Node{
-			&stmt.Use{
-				Use:   &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-				Alias: &node.Identifier{Value: "Bar"},
+	p.Print(&ast.StmtUseList{
+		UseType: &ast.Identifier{Value: []byte("function")},
+		Uses: []ast.Vertex{
+			&ast.StmtUse{
+				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+				Alias: &ast.Identifier{Value: []byte("Bar")},
 			},
-			&stmt.Use{
-				Use: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+			&ast.StmtUse{
+				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
 			},
 		},
 	})
@@ -4453,10 +4452,10 @@ func TestPrinterPrintUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.Use{
-		UseType: &node.Identifier{Value: "function"},
-		Use:     &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-		Alias:   &node.Identifier{Value: "Bar"},
+	p.Print(&ast.StmtUse{
+		UseType: &ast.Identifier{Value: []byte("function")},
+		Use:     &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Alias:   &ast.Identifier{Value: []byte("Bar")},
 	})
 
 	expected := `function Foo as Bar`
@@ -4471,14 +4470,14 @@ func TestPrinterPrintWhileStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&stmt.While{
-		Cond: &expr.Variable{
-			VarName: &node.Identifier{Value: "a"},
+	p.Print(&ast.StmtWhile{
+		Cond: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("a")},
 		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{
-					VarName: &node.Identifier{Value: "a"},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("a")},
 				}},
 			},
 		},
