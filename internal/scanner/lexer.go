@@ -10,11 +10,6 @@ import (
 	"github.com/z7zmey/php-parser/pkg/token"
 )
 
-type Scanner interface {
-	Lex() *Token
-	ReturnTokenToPool(t *Token)
-}
-
 type Config struct {
 	WithHiddenTokens bool
 	ErrHandlerFunc   func(*errors.Error)

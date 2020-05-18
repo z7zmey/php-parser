@@ -11,13 +11,9 @@ import (
 	"github.com/z7zmey/php-parser/pkg/token"
 )
 
-func (lval *yySymType) Token(t *scanner.Token) {
-	lval.token = t
-}
-
 // Parser structure
 type Parser struct {
-	Lexer           scanner.Scanner
+	Lexer           *scanner.Lexer
 	currentToken    *scanner.Token
 	positionBuilder *positionbuilder.PositionBuilder
 	rootNode        ast.Vertex
