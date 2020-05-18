@@ -413,7 +413,7 @@ CAD;
 	`
 
 	for n := 0; n < b.N; n++ {
-		php5parser := php5.NewParser([]byte(src), "5.6")
+		php5parser := php5.NewParser([]byte(src), "5.6", false)
 		php5parser.Parse()
 	}
 }

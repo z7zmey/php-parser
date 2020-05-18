@@ -19633,7 +19633,7 @@ func TestPhp7(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src), "7.4")
+	php7parser := php7.NewParser([]byte(src), "7.4", false)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19770,7 +19770,7 @@ func TestPhp5Strings(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src), "7.4")
+	php7parser := php7.NewParser([]byte(src), "7.4", false)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19996,7 +19996,7 @@ CAD;
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src), "7.4")
+	php7parser := php7.NewParser([]byte(src), "7.4", false)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20016,7 +20016,7 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src), "7.4")
+	php7parser := php7.NewParser([]byte(src), "7.4", false)
 	php7parser.Parse()
 	actual := php7parser.GetErrors()
 	assert.DeepEqual(t, expected, actual)

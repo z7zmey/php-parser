@@ -13,37 +13,42 @@ import (
 type Scanner interface {
 	Lex() *Token
 	ReturnTokenToPool(t *Token)
-	GetWithHiddenTokens() bool
-	SetWithHiddenTokens(bool)
+}
+
+type Config struct {
+	WithHiddenTokens bool
+	ErrHandlerFunc   func(*errors.Error)
 }
 
 type Lexer struct {
-	data           []byte
-	errHandlerFunc func(*errors.Error)
+	data             []byte
+	phpVersion       string
+	withHiddenTokens bool
+	errHandlerFunc   func(*errors.Error)
 
-	p, pe, cs    int
-	ts, te, act  int
-	stack        []int
-	top          int
+	p, pe, cs   int
+	ts, te, act int
+	stack       []int
+	top         int
+
 	heredocLabel []byte
-
-	TokenPool        *TokenPool
-	HiddenTokens     []token.Token
-	WithHiddenTokens bool
-	NewLines         NewLines
-	PHPVersion       string
+	tokenPool    *TokenPool
+	hiddenTokens []token.Token
+	newLines     NewLines
 }
 
-func NewLexer(data []byte, errHandlerFunc func(*errors.Error)) *Lexer {
+func NewLexer(data []byte, phpVersion string, config Config) *Lexer {
 	lex := &Lexer{
-		data:           data,
-		errHandlerFunc: errHandlerFunc,
+		data:             data,
+		phpVersion:       phpVersion,
+		errHandlerFunc:   config.ErrHandlerFunc,
+		withHiddenTokens: config.WithHiddenTokens,
 
 		pe:    len(data),
 		stack: make([]int, 0),
 
-		TokenPool: &TokenPool{},
-		NewLines:  NewLines{make([]int, 0, 128)},
+		tokenPool: &TokenPool{},
+		newLines:  NewLines{make([]int, 0, 128)},
 	}
 
 	initLexer(lex)
@@ -51,31 +56,23 @@ func NewLexer(data []byte, errHandlerFunc func(*errors.Error)) *Lexer {
 	return lex
 }
 
-func (l *Lexer) ReturnTokenToPool(t *Token) {
-	l.TokenPool.Put(t)
-}
-
-func (l *Lexer) GetWithHiddenTokens() bool {
-	return l.WithHiddenTokens
-}
-
-func (l *Lexer) SetWithHiddenTokens(b bool) {
-	l.WithHiddenTokens = b
+func (lex *Lexer) ReturnTokenToPool(t *Token) {
+	lex.tokenPool.Put(t)
 }
 
 func (lex *Lexer) setTokenPosition(token *Token) {
-	token.Position.StartLine = lex.NewLines.GetLine(lex.ts)
-	token.Position.EndLine = lex.NewLines.GetLine(lex.te - 1)
+	token.Position.StartLine = lex.newLines.GetLine(lex.ts)
+	token.Position.EndLine = lex.newLines.GetLine(lex.te - 1)
 	token.Position.StartPos = lex.ts
 	token.Position.EndPos = lex.te
 }
 
-func (lex *Lexer) addToken(id TokenID, ps, pe int) {
-	if !lex.WithHiddenTokens {
+func (lex *Lexer) addHiddenToken(id TokenID, ps, pe int) {
+	if !lex.withHiddenTokens {
 		return
 	}
 
-	lex.HiddenTokens = append(lex.HiddenTokens, token.Token{
+	lex.hiddenTokens = append(lex.hiddenTokens, token.Token{
 		ID:    token.ID(id),
 		Value: lex.data[ps:pe],
 	})
@@ -112,7 +109,7 @@ func (lex *Lexer) isNotStringEnd(s byte) bool {
 }
 
 func (lex *Lexer) isHeredocEnd(p int) bool {
-	r, err := version.Compare(lex.PHPVersion, "7.3")
+	r, err := version.Compare(lex.phpVersion, "7.3")
 	if err != nil {
 		return lex.isHeredocEndSince73(p)
 	}
@@ -239,8 +236,8 @@ func (lex *Lexer) error(msg string) {
 	}
 
 	pos := position.NewPosition(
-		lex.NewLines.GetLine(lex.ts),
-		lex.NewLines.GetLine(lex.te-1),
+		lex.newLines.GetLine(lex.ts),
+		lex.newLines.GetLine(lex.te-1),
 		lex.ts,
 		lex.te,
 	)

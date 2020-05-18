@@ -108,13 +108,9 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 			return
 		}
 
-		parserWorker, err := parser.NewParser(f.content, phpVersion)
+		parserWorker, err := parser.NewParser(f.content, phpVersion, *withFreeFloating)
 		if err != nil {
 			panic(err.Error())
-		}
-
-		if *withFreeFloating {
-			parserWorker.WithTokens()
 		}
 
 		parserWorker.Parse()

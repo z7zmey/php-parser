@@ -22,17 +22,23 @@ type Parser struct {
 	positionBuilder *positionbuilder.PositionBuilder
 	rootNode        ast.Vertex
 	errors          []*errors.Error
+	withTokens      bool
 }
 
 // NewParser creates and returns new Parser
-func NewParser(src []byte, v string) *Parser {
-	parser := &Parser{}
+func NewParser(src []byte, v string, withTokens bool) *Parser {
+	parser := &Parser{
+		withTokens: withTokens,
+	}
 
-	lexer := scanner.NewLexer(src, func(e *errors.Error) {
-		parser.errors = append(parser.errors, e)
-	})
-	lexer.PHPVersion = v
+	scannerConfig := scanner.Config{
+		WithHiddenTokens: withTokens,
+		ErrHandlerFunc: func(e *errors.Error) {
+			parser.errors = append(parser.errors, e)
+		},
+	}
 
+	lexer := scanner.NewLexer(src, v, scannerConfig)
 	parser.Lexer = lexer
 
 	return parser
@@ -57,10 +63,6 @@ func (l *Parser) Error(msg string) {
 // GetErrors returns errors list
 func (l *Parser) GetErrors() []*errors.Error {
 	return l.errors
-}
-
-func (l *Parser) WithTokens() {
-	l.Lexer.SetWithHiddenTokens(true)
 }
 
 // Parse the php7 Parser entrypoint
@@ -98,7 +100,7 @@ func isDollar(r rune) bool {
 }
 
 func (l *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
-	if l.Lexer.GetWithHiddenTokens() == false {
+	if l.withTokens == false {
 		return
 	}
 
@@ -111,7 +113,7 @@ func (l *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
 }
 
 func (l *Parser) setFreeFloating(dst ast.Vertex, p token.Position, strings []token.Token) {
-	if l.Lexer.GetWithHiddenTokens() == false {
+	if l.withTokens == false {
 		return
 	}
 
@@ -128,7 +130,7 @@ func (l *Parser) setFreeFloating(dst ast.Vertex, p token.Position, strings []tok
 }
 
 func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
-	if l.Lexer.GetWithHiddenTokens() == false {
+	if l.withTokens == false {
 		return []token.Token{}
 	}
 
@@ -141,7 +143,7 @@ func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
 }
 
 func (l *Parser) addDollarToken(v ast.Vertex) {
-	if l.Lexer.GetWithHiddenTokens() == false {
+	if l.withTokens == false {
 		return
 	}
 
@@ -154,7 +156,7 @@ func (l *Parser) addDollarToken(v ast.Vertex) {
 }
 
 func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.Vertex) {
-	if l.Lexer.GetWithHiddenTokens() == false {
+	if l.withTokens == false {
 		return
 	}
 

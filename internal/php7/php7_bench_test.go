@@ -381,7 +381,7 @@ CAD;
 	`
 
 	for n := 0; n < b.N; n++ {
-		php7parser := php7.NewParser([]byte(src), "7.4")
+		php7parser := php7.NewParser([]byte(src), "7.4", false)
 		php7parser.Parse()
 	}
 }

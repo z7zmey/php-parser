@@ -13,10 +13,9 @@ type Parser interface {
 	Parse() int
 	GetRootNode() ast.Vertex
 	GetErrors() []*errors.Error
-	WithTokens()
 }
 
-func NewParser(src []byte, v string) (Parser, error) {
+func NewParser(src []byte, v string, withTokens bool) (Parser, error) {
 	var parser Parser
 
 	r, err := version.Compare(v, "7.0")
@@ -25,9 +24,9 @@ func NewParser(src []byte, v string) (Parser, error) {
 	}
 
 	if r == -1 {
-		parser = php5.NewParser(src, v)
+		parser = php5.NewParser(src, v, withTokens)
 	} else {
-		parser = php7.NewParser(src, v)
+		parser = php7.NewParser(src, v, withTokens)
 	}
 
 	return parser, nil

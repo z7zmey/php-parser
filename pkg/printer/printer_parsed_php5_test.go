@@ -10,8 +10,7 @@ import (
 )
 
 func parsePhp5(src string) ast.Vertex {
-	php5parser := php5.NewParser([]byte(src), "5.6")
-	php5parser.WithTokens()
+	php5parser := php5.NewParser([]byte(src), "5.6", true)
 	php5parser.Parse()
 
 	return php5parser.GetRootNode()
