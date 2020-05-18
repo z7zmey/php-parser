@@ -1,9 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
-	"github.com/z7zmey/php-parser/pkg/ast/traverser"
 	"io/ioutil"
 	"log"
 	"os"
@@ -13,8 +13,11 @@ import (
 
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
+
+	"github.com/z7zmey/php-parser/pkg/ast/traverser"
 	"github.com/z7zmey/php-parser/pkg/ast/visitor"
 	"github.com/z7zmey/php-parser/pkg/parser"
+	"github.com/z7zmey/php-parser/pkg/printer"
 )
 
 var wg sync.WaitGroup
@@ -138,14 +141,14 @@ func printerWorker(r <-chan result) {
 			fmt.Fprintf(os.Stdout, "==> %s\n", e)
 		}
 
-		//if *printBack {
-		//	o := bytes.NewBuffer([]byte{})
-		//	p := printer.NewPrinter(o)
-		//	p.Print(res.parser.GetRootNode())
-		//
-		//	err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
-		//	checkErr(err)
-		//}
+		if *printBack {
+			o := bytes.NewBuffer([]byte{})
+			p := printer.NewPrinter(o)
+			p.Print(res.parser.GetRootNode())
+
+			err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
+			checkErr(err)
+		}
 
 		if *showResolvedNs {
 			v := visitor.NewNamespaceResolver()
