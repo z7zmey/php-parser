@@ -42,17 +42,17 @@ func Compare(a string, b string) (int, error) {
 }
 
 func parse(v string) (version, error) {
-	parts := strings.Split(v, ".")
-	if len(parts) != 2 {
+	i := strings.Index(v, ".")
+	if i == -1 {
 		return version{}, errors.New("version must contain major and minor parts")
 	}
 
-	major, err := strconv.Atoi(parts[0])
+	major, err := strconv.Atoi(v[:i])
 	if err != nil {
 		return version{}, err
 	}
 
-	minor, err := strconv.Atoi(parts[1])
+	minor, err := strconv.Atoi(v[i+1:])
 	if err != nil {
 		return version{}, err
 	}
