@@ -20,6 +20,8 @@ type Config struct {
 	ErrHandlerFunc   func(*errors.Error)
 }
 
+var DefaultConfig = Config{}
+
 type Lexer struct {
 	data             []byte
 	phpVersion       string
