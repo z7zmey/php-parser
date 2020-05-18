@@ -1,6 +1,8 @@
 package scanner
 
 import (
+	"github.com/z7zmey/php-parser/pkg/errors"
+	"github.com/z7zmey/php-parser/pkg/position"
 	"testing"
 
 	"github.com/z7zmey/php-parser/pkg/token"
@@ -351,7 +353,7 @@ func TestTokens(t *testing.T) {
 		T_UNSET_CAST.String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -379,7 +381,7 @@ func TestShebang(t *testing.T) {
 		"\n",
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -399,7 +401,7 @@ func TestShebangHtml(t *testing.T) {
 0.1
 `
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	tkn := lexer.Lex()
@@ -449,7 +451,7 @@ func TestNumberTokens(t *testing.T) {
 		T_DNUMBER.String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -506,7 +508,7 @@ func TestConstantStrings(t *testing.T) {
 		T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -553,7 +555,7 @@ func TestSingleQuoteStringTokens(t *testing.T) {
 		T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	actual := []string{}
 
 	for {
@@ -640,7 +642,7 @@ func TestTeplateStringTokens(t *testing.T) {
 		TokenID(int('"')).String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -725,7 +727,7 @@ func TestBackquoteStringTokens(t *testing.T) {
 		TokenID(int('`')).String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -819,7 +821,7 @@ CAT;
 		TokenID(int(';')).String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -892,7 +894,7 @@ CAT
 		T_END_HEREDOC.String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -931,7 +933,7 @@ CAT;
 		TokenID(int(';')).String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -962,7 +964,7 @@ func TestHereDocTokens73(t *testing.T) {
 		T_VARIABLE.String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -992,7 +994,7 @@ CAT;`
 		TokenID(int(';')).String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.PHPVersion = "7.2"
 	lexer.WithHiddenTokens = true
 	actual := []string{}
@@ -1025,7 +1027,7 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 		T_INLINE_HTML.String(),
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 	actual := []string{}
 
@@ -1060,7 +1062,7 @@ func TestStringTokensAfterVariable(t *testing.T) {
 		"\"",
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	actual := []string{}
 	actualTokens := []string{}
 
@@ -1093,7 +1095,7 @@ func TestSlashAfterVariable(t *testing.T) {
 		"3",
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	actual := []string{}
 	actualTokens := []string{}
 
@@ -1130,7 +1132,7 @@ func TestCommentEnd(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	lexer.Lex()
@@ -1159,7 +1161,7 @@ func TestCommentNewLine(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	tkn := lexer.Lex()
@@ -1188,7 +1190,7 @@ func TestCommentNewLine1(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	tkn := lexer.Lex()
@@ -1217,7 +1219,7 @@ func TestCommentNewLine2(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	tkn := lexer.Lex()
@@ -1247,7 +1249,7 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	tkn := lexer.Lex()
@@ -1277,7 +1279,7 @@ func TestInlineComment(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	tkn := lexer.Lex()
@@ -1307,7 +1309,7 @@ func TestInlineComment2(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	lexer.Lex()
@@ -1341,7 +1343,7 @@ func TestEmptyInlineComment(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	lexer.Lex()
@@ -1371,7 +1373,7 @@ func TestEmptyInlineComment2(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	tkn := lexer.Lex()
@@ -1385,7 +1387,7 @@ func TestMethodCallTokens(t *testing.T) {
 	src := `<?php
 	$a -> bar ( '' ) ;`
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	expected := []token.Token{
@@ -1467,7 +1469,7 @@ func TestYieldFromTokens(t *testing.T) {
 	src := `<?php
 	yield from $a`
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 	lexer.WithHiddenTokens = true
 
 	expected := []token.Token{
@@ -1498,7 +1500,7 @@ func TestYieldFromTokens(t *testing.T) {
 func TestVarNameByteChars(t *testing.T) {
 	src := "<?php $\x80 $\xff"
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 
 	tkn := lexer.Lex()
 	assert.Equal(t, "$\x80", string(tkn.Value))
@@ -1510,7 +1512,7 @@ func TestVarNameByteChars(t *testing.T) {
 func TestStringVarNameByteChars(t *testing.T) {
 	src := "<?php \"$\x80 $\xff\""
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 
 	tkn := lexer.Lex()
 	assert.Equal(t, "\"", string(tkn.Value))
@@ -1531,7 +1533,12 @@ func TestStringVarNameByteChars(t *testing.T) {
 func TestIgnoreControllCharacters(t *testing.T) {
 	src := "<?php \004 echo $b;"
 
-	lexer := NewLexer([]byte(src))
+	var actualErr *errors.Error
+	errHandler := func(e *errors.Error) {
+		actualErr = e
+	}
+
+	lexer := NewLexer([]byte(src), errHandler)
 
 	expected := "echo"
 	tkn := lexer.Lex()
@@ -1542,12 +1549,18 @@ func TestIgnoreControllCharacters(t *testing.T) {
 	tkn = lexer.Lex()
 	actual = string(tkn.Value)
 	assert.DeepEqual(t, expected, actual)
+
+	expectedErr := &errors.Error{
+		Msg: "WARNING: Unexpected character in input: '\x04' (ASCII=4)",
+		Pos: &position.Position{StartLine: 1, EndLine: 1, StartPos: 6, EndPos: 7},
+	}
+	assert.DeepEqual(t, expectedErr, actualErr)
 }
 
 func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 	src := "<?php \"$a[test\004]\";"
 
-	lexer := NewLexer([]byte(src))
+	lexer := NewLexer([]byte(src), nil)
 
 	expected := "\""
 	tkn := lexer.Lex()

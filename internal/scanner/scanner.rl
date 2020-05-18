@@ -14,17 +14,8 @@ import (
     variable pe lex.pe;
 }%%
 
-func NewLexer(data []byte) *Lexer {
-    lex := &Lexer{ 
-        data: data,
-        pe: len(data),
-        stack: make([]int, 0),
-
-        TokenPool: &TokenPool{},
-        NewLines: NewLines{make([]int, 0, 128)},
-    }
+func initLexer(lex *Lexer)  {
     %% write init;
-    return lex
 }
 
 func (lex *Lexer) Lex() *Token {
@@ -382,7 +373,7 @@ func (lex *Lexer) Lex() *Token {
 
             any_line => {
                 c := lex.data[lex.p]
-                lex.Error(fmt.Sprintf("WARNING: Unexpected character in input: '%c' (ASCII=%d)", c, c));
+                lex.error(fmt.Sprintf("WARNING: Unexpected character in input: '%c' (ASCII=%d)", c, c));
             };
         *|;
 
@@ -473,7 +464,7 @@ func (lex *Lexer) Lex() *Token {
             ']'       > (svi, 2)     => {lex.setTokenPosition(token); tok = TokenID(int(']')); lex.ret(2); goto _out;};
             any_line => {
                 c := lex.data[lex.p]
-                lex.Error(fmt.Sprintf("WARNING: Unexpected character in input: '%c' (ASCII=%d)", c, c));
+                lex.error(fmt.Sprintf("WARNING: Unexpected character in input: '%c' (ASCII=%d)", c, c));
             };
         *|;
 

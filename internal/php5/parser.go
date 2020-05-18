@@ -21,19 +21,21 @@ type Parser struct {
 	currentToken    *scanner.Token
 	positionBuilder *positionbuilder.PositionBuilder
 	rootNode        ast.Vertex
+	errors          []*errors.Error
 }
 
 // NewParser creates and returns new Parser
 func NewParser(src []byte, v string) *Parser {
-	lexer := scanner.NewLexer(src)
+	parser := &Parser{}
+
+	lexer := scanner.NewLexer(src, func(e *errors.Error) {
+		parser.errors = append(parser.errors, e)
+	})
 	lexer.PHPVersion = v
 
-	return &Parser{
-		lexer,
-		nil,
-		nil,
-		nil,
-	}
+	parser.Lexer = lexer
+
+	return parser
 }
 
 // Lex proxy to scanner Lex
@@ -49,7 +51,12 @@ func (l *Parser) Lex(lval *yySymType) int {
 func (l *Parser) Error(msg string) {
 	var pos = l.currentToken.Position
 
-	l.Lexer.AddError(errors.NewError(msg, &pos))
+	l.errors = append(l.errors, errors.NewError(msg, &pos))
+}
+
+// GetErrors returns errors list
+func (l *Parser) GetErrors() []*errors.Error {
+	return l.errors
 }
 
 func (l *Parser) WithTokens() {
@@ -59,7 +66,7 @@ func (l *Parser) WithTokens() {
 // Parse the php7 Parser entrypoint
 func (l *Parser) Parse() int {
 	// init
-	l.Lexer.SetErrors(nil)
+	l.errors = nil
 	l.rootNode = nil
 	l.positionBuilder = &positionbuilder.PositionBuilder{}
 
@@ -71,11 +78,6 @@ func (l *Parser) Parse() int {
 // GetRootNode returns root node
 func (l *Parser) GetRootNode() ast.Vertex {
 	return l.rootNode
-}
-
-// GetErrors returns errors list
-func (l *Parser) GetErrors() []*errors.Error {
-	return l.Lexer.GetErrors()
 }
 
 // helpers

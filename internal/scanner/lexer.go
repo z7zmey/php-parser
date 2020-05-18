@@ -13,15 +13,14 @@ import (
 type Scanner interface {
 	Lex() *Token
 	ReturnTokenToPool(t *Token)
-	GetErrors() []*errors.Error
 	GetWithHiddenTokens() bool
 	SetWithHiddenTokens(bool)
-	AddError(e *errors.Error)
-	SetErrors(e []*errors.Error)
 }
 
 type Lexer struct {
-	data         []byte
+	data           []byte
+	errHandlerFunc func(*errors.Error)
+
 	p, pe, cs    int
 	ts, te, act  int
 	stack        []int
@@ -31,17 +30,29 @@ type Lexer struct {
 	TokenPool        *TokenPool
 	HiddenTokens     []token.Token
 	WithHiddenTokens bool
-	Errors           []*errors.Error
 	NewLines         NewLines
 	PHPVersion       string
 }
 
-func (l *Lexer) ReturnTokenToPool(t *Token) {
-	l.TokenPool.Put(t)
+func NewLexer(data []byte, errHandlerFunc func(*errors.Error)) *Lexer {
+	lex := &Lexer{
+		data:           data,
+		errHandlerFunc: errHandlerFunc,
+
+		pe:    len(data),
+		stack: make([]int, 0),
+
+		TokenPool: &TokenPool{},
+		NewLines:  NewLines{make([]int, 0, 128)},
+	}
+
+	initLexer(lex)
+
+	return lex
 }
 
-func (l *Lexer) GetErrors() []*errors.Error {
-	return l.Errors
+func (l *Lexer) ReturnTokenToPool(t *Token) {
+	l.TokenPool.Put(t)
 }
 
 func (l *Lexer) GetWithHiddenTokens() bool {
@@ -50,14 +61,6 @@ func (l *Lexer) GetWithHiddenTokens() bool {
 
 func (l *Lexer) SetWithHiddenTokens(b bool) {
 	l.WithHiddenTokens = b
-}
-
-func (l *Lexer) AddError(e *errors.Error) {
-	l.Errors = append(l.Errors, e)
-}
-
-func (l *Lexer) SetErrors(e []*errors.Error) {
-	l.Errors = e
 }
 
 func (lex *Lexer) setTokenPosition(token *Token) {
@@ -230,7 +233,11 @@ func (lex *Lexer) ungetCnt(n int) {
 	lex.te = lex.te - n
 }
 
-func (lex *Lexer) Error(msg string) {
+func (lex *Lexer) error(msg string) {
+	if lex.errHandlerFunc == nil {
+		return
+	}
+
 	pos := position.NewPosition(
 		lex.NewLines.GetLine(lex.ts),
 		lex.NewLines.GetLine(lex.te-1),
@@ -238,7 +245,7 @@ func (lex *Lexer) Error(msg string) {
 		lex.te,
 	)
 
-	lex.Errors = append(lex.Errors, errors.NewError(msg, pos))
+	lex.errHandlerFunc(errors.NewError(msg, pos))
 }
 
 func isValidVarNameStart(r byte) bool {
