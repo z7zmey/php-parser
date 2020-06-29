@@ -85,10 +85,6 @@ func lastNode(nn []ast.Vertex) ast.Vertex {
 	return nn[len(nn)-1]
 }
 
-func firstNode(nn []ast.Vertex) ast.Vertex {
-	return nn[0]
-}
-
 func isDollar(r rune) bool {
 	return r == '$'
 }
@@ -106,8 +102,8 @@ func (l *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
 	delete(src.GetNode().Tokens, token.Start)
 }
 
-func (l *Parser) setFreeFloating(dst ast.Vertex, p token.Position, strings []token.Token) {
-	if l.withTokens == false {
+func (p *Parser) setFreeFloating(dst ast.Vertex, pos token.Position, strings []token.Token) {
+	if p.withTokens == false {
 		return
 	}
 
@@ -120,7 +116,7 @@ func (l *Parser) setFreeFloating(dst ast.Vertex, p token.Position, strings []tok
 		*dstCollection = make(token.Collection)
 	}
 
-	(*dstCollection)[p] = strings
+	(*dstCollection)[pos] = strings
 }
 
 func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {

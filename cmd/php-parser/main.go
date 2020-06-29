@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"sync"
+	"time"
 
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
@@ -28,6 +29,7 @@ var withFreeFloating *bool
 var showResolvedNs *bool
 var printBack *bool
 var printPath *bool
+var printExecTime *bool
 
 type file struct {
 	path    string
@@ -40,6 +42,9 @@ type result struct {
 }
 
 func main() {
+	start := time.Now()
+
+	printExecTime = flag.Bool("time", false, "print execution time")
 	withFreeFloating = flag.Bool("ff", false, "parse and show free floating strings")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
@@ -84,6 +89,11 @@ func main() {
 	wg.Wait()
 	close(fileCh)
 	close(resultCh)
+
+	elapsed := time.Since(start)
+	if *printExecTime {
+		log.Printf("took: %s", elapsed)
+	}
 }
 
 func processPath(pathList []string, fileCh chan<- *file) {
