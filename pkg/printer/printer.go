@@ -1,10 +1,11 @@
 package printer
 
 import (
-	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/token"
 	"io"
 	"strings"
+
+	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/token"
 )
 
 type printerState int
@@ -1860,7 +1861,7 @@ func (p *Printer) printExprVariable(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	p.printFreeFloating(nn, token.Dollar)
-	if nn.GetNode().Tokens.IsEmpty() {
+	if _, ok := nn.VarName.(*ast.Identifier); !ok {
 		io.WriteString(p.w, "$")
 	}
 

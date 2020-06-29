@@ -1418,7 +1418,7 @@ catch_statement:
             }
     |   T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}' additional_catches
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($4.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $4.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 catchNode := &ast.StmtCatch{ast.Node{}, []ast.Vertex{$3}, variable, $7}
                 $$ = append([]ast.Vertex{catchNode}, $9...)
@@ -1432,7 +1432,6 @@ catch_statement:
                 yylex.(*Parser).setFreeFloating(catchNode, token.Start, $1.Hidden)
                 yylex.(*Parser).setFreeFloating(catchNode, token.Catch, $2.Hidden)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(catchNode, token.Var, $5.Hidden)
                 yylex.(*Parser).setFreeFloating(catchNode, token.Cond, $6.Hidden)
                 yylex.(*Parser).setFreeFloating(catchNode, token.Stmts, $8.Hidden)
@@ -1497,7 +1496,7 @@ non_empty_additional_catches:
 additional_catch:
         T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}'
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($4.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $4.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 $$ = &ast.StmtCatch{ast.Node{}, []ast.Vertex{$3}, variable, $7}
 
@@ -1510,7 +1509,6 @@ additional_catch:
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
                 yylex.(*Parser).setFreeFloating($$, token.Catch, $2.Hidden)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating($$, token.Var, $5.Hidden)
                 yylex.(*Parser).setFreeFloating($$, token.Cond, $6.Hidden)
                 yylex.(*Parser).setFreeFloating($$, token.Stmts, $8.Hidden)
@@ -2284,7 +2282,7 @@ non_empty_parameter_list:
 parameter:
         optional_class_type is_reference is_variadic T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($4.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $4.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 $$ = &ast.Parameter{ast.Node{}, $2 != nil, $3 != nil, $1, variable, nil}
 
@@ -2312,7 +2310,6 @@ parameter:
                     yylex.(*Parser).setFreeFloating($$, token.Ampersand, $3.Hidden)
                 }
                 yylex.(*Parser).setFreeFloating($$, token.Variadic, $4.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
 
                 // normalize
                 if $3 == nil {
@@ -2329,7 +2326,7 @@ parameter:
             }
     |   optional_class_type is_reference is_variadic T_VARIABLE '=' static_scalar
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($4.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $4.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 $$ = &ast.Parameter{ast.Node{}, $2 != nil, $3 != nil, $1, variable, $6}
 
@@ -2358,7 +2355,6 @@ parameter:
                 }
                 yylex.(*Parser).setFreeFloating($$, token.Variadic, $4.Hidden)
                 yylex.(*Parser).setFreeFloating($$, token.Var, $5.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
 
                 // normalize
                 if $3 == nil {
@@ -2552,7 +2548,7 @@ global_var_list:
 global_var:
         T_VARIABLE
             {
-                name := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                name := &ast.Identifier{ast.Node{}, $1.Value}
                 $$ = &ast.ExprVariable{ast.Node{}, name}
 
                 // save position
@@ -2561,7 +2557,6 @@ global_var:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
-                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2574,7 +2569,6 @@ global_var:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
-                yylex.(*Parser).setFreeFloating($$, token.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2587,7 +2581,6 @@ global_var:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
-                yylex.(*Parser).setFreeFloating($$, token.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
                 yylex.(*Parser).setFreeFloating($3, token.Start, append($2.Hidden, append(yylex.(*Parser).GetFreeFloatingToken($2), $3.GetNode().Tokens[token.Start]...)...))
                 yylex.(*Parser).setFreeFloating($3, token.End, append($3.GetNode().Tokens[token.End], append($4.Hidden, yylex.(*Parser).GetFreeFloatingToken($4)...)...))
 
@@ -2599,7 +2592,7 @@ global_var:
 static_var_list:
         static_var_list ',' T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($3.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $3.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 staticVar := &ast.StmtStaticVar{ast.Node{}, variable, nil}
                 $$ = append($1, staticVar)
@@ -2611,14 +2604,13 @@ static_var_list:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Start, $3.Hidden)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_var_list ',' T_VARIABLE '=' static_scalar
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($3.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $3.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 staticVar := &ast.StmtStaticVar{ast.Node{}, variable, $5}
                 $$ = append($1, staticVar)
@@ -2630,7 +2622,6 @@ static_var_list:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Start, $3.Hidden)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Var, $4.Hidden)
 
@@ -2638,7 +2629,7 @@ static_var_list:
             }
     |   T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 staticVar := &ast.StmtStaticVar{ast.Node{}, variable, nil}
                 $$ = []ast.Vertex{staticVar}
@@ -2649,14 +2640,13 @@ static_var_list:
                 staticVar.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Start, $1.Hidden)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE '=' static_scalar
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 staticVar := &ast.StmtStaticVar{ast.Node{}, variable, $3}
                 $$ = []ast.Vertex{staticVar}
@@ -2667,7 +2657,6 @@ static_var_list:
                 staticVar.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Start, $1.Hidden)
                 yylex.(*Parser).setFreeFloating(staticVar, token.Var, $2.Hidden)
 
@@ -3154,7 +3143,7 @@ member_modifier:
 class_variable_declaration:
         class_variable_declaration ',' T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($3.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $3.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 property := &ast.StmtProperty{ast.Node{}, variable, nil}
                 $$ = append($1, property)
@@ -3165,7 +3154,6 @@ class_variable_declaration:
                 property.GetNode().Position = position.NewTokenPosition($3)
 
                 // save comments
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
                 yylex.(*Parser).setFreeFloating(property, token.Start, $3.Hidden)
 
@@ -3173,7 +3161,7 @@ class_variable_declaration:
             }
     |   class_variable_declaration ',' T_VARIABLE '=' static_scalar
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($3.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $3.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 property := &ast.StmtProperty{ast.Node{}, variable, $5}
                 $$ = append($1, property)
@@ -3185,7 +3173,6 @@ class_variable_declaration:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(property, token.Start, $3.Hidden)
                 yylex.(*Parser).setFreeFloating(property, token.Var, $4.Hidden)
 
@@ -3193,7 +3180,7 @@ class_variable_declaration:
             }
     |   T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 property := &ast.StmtProperty{ast.Node{}, variable, nil}
                 $$ = []ast.Vertex{property}
@@ -3204,14 +3191,13 @@ class_variable_declaration:
                 property.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(property, token.Start, $1.Hidden)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE '=' static_scalar
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 property := &ast.StmtProperty{ast.Node{}, variable, $3}
                 $$ = []ast.Vertex{property}
@@ -3222,7 +3208,6 @@ class_variable_declaration:
                 property.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating(property, token.Start, $2.Hidden)
                 yylex.(*Parser).setFreeFloating(property, token.Var, $2.Hidden)
 
@@ -4592,7 +4577,7 @@ lexical_vars:
 lexical_var_list:
         lexical_var_list ',' T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($3.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $3.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 $$ = append($1, variable)
 
@@ -4603,13 +4588,12 @@ lexical_var_list:
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $3.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   lexical_var_list ',' '&' T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($4.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $4.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 reference := &ast.ExprReference{ast.Node{}, variable}
                 $$ = append($1, reference)
@@ -4623,13 +4607,12 @@ lexical_var_list:
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
                 yylex.(*Parser).setFreeFloating(reference, token.Start, $3.Hidden)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 $$ = []ast.Vertex{variable}
 
@@ -4639,13 +4622,12 @@ lexical_var_list:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $1.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '&' T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($2.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $2.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 reference := &ast.ExprReference{ast.Node{}, variable}
                 $$ = []ast.Vertex{reference}
@@ -4658,7 +4640,6 @@ lexical_var_list:
                 // save comments
                 yylex.(*Parser).setFreeFloating(reference, token.Start, $1.Hidden)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $2.Hidden)
-                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6390,7 +6371,7 @@ reference_variable:
 compound_variable:
         T_VARIABLE
             {
-                name := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                name := &ast.Identifier{ast.Node{}, $1.Value}
                 $$ = &ast.ExprVariable{ast.Node{}, name}
 
                 // save position
@@ -6399,7 +6380,6 @@ compound_variable:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
-                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6412,7 +6392,6 @@ compound_variable:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
-                yylex.(*Parser).setFreeFloating($$, token.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
                 yylex.(*Parser).setFreeFloating($3, token.Start, append($2.Hidden, append(yylex.(*Parser).GetFreeFloatingToken($2), $3.GetNode().Tokens[token.Start]...)...))
                 yylex.(*Parser).setFreeFloating($3, token.End, append($3.GetNode().Tokens[token.End], append($4.Hidden, yylex.(*Parser).GetFreeFloatingToken($4)...)...))
 
@@ -6535,7 +6514,6 @@ simple_indirect_reference:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(n, token.Start, $1.Hidden)
-                yylex.(*Parser).setFreeFloating(n, token.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6553,9 +6531,8 @@ simple_indirect_reference:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(n, token.Start, $2.Hidden)
-                yylex.(*Parser).setFreeFloating(n, token.Dollar, yylex.(*Parser).GetFreeFloatingToken($2))
 
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL) 
             }
 ;
 
@@ -6817,7 +6794,7 @@ encaps_list:
 encaps_var:
         T_VARIABLE
             {
-                name := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                name := &ast.Identifier{ast.Node{}, $1.Value}
                 $$ = &ast.ExprVariable{ast.Node{}, name}
 
                 // save position
@@ -6826,13 +6803,12 @@ encaps_var:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
-                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, variable, $3}
 
@@ -6842,7 +6818,6 @@ encaps_var:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating($$, token.Var, append($2.Hidden, yylex.(*Parser).GetFreeFloatingToken($2)...))
                 yylex.(*Parser).setFreeFloating($$, token.Expr, append($4.Hidden, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
@@ -6850,7 +6825,7 @@ encaps_var:
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
                 fetch := &ast.Identifier{ast.Node{}, $3.Value}
                 $$ = &ast.ExprPropertyFetch{ast.Node{}, variable, fetch}
@@ -6862,7 +6837,6 @@ encaps_var:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).addDollarToken(variable)
                 yylex.(*Parser).setFreeFloating($$, token.Var, $2.Hidden)
                 yylex.(*Parser).setFreeFloating(fetch, token.Start, $3.Hidden)
 
@@ -6963,7 +6937,7 @@ encaps_var_offset:
             }
     |   T_VARIABLE
             {
-                identifier := &ast.Identifier{ast.Node{}, bytes.TrimLeftFunc($1.Value, isDollar)}
+                identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 $$ = &ast.ExprVariable{ast.Node{}, identifier}
 
                 // save position
@@ -6972,7 +6946,6 @@ encaps_var_offset:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
-                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

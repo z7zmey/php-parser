@@ -2,7 +2,6 @@ package php5
 
 import (
 	"bytes"
-	"fmt"
 
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
@@ -63,10 +62,6 @@ func lastNode(nn []ast.Vertex) ast.Vertex {
 	return nn[len(nn)-1]
 }
 
-func isDollar(r rune) bool {
-	return r == '$'
-}
-
 func (p *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
 	if p.withTokens == false {
 		return
@@ -110,19 +105,6 @@ func (p *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
 	}
 }
 
-func (p *Parser) addDollarToken(v ast.Vertex) {
-	if p.withTokens == false {
-		return
-	}
-
-	p.setFreeFloating(v, token.Dollar, []token.Token{
-		{
-			ID:    token.ID('$'),
-			Value: []byte("$"),
-		},
-	})
-}
-
 func (p *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.Vertex) {
 	if p.withTokens == false {
 		return
@@ -144,7 +126,6 @@ func (p *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.
 	}
 
 	vlen := len(semiColon[0].Value)
-	fmt.Printf("vlen: %q\n", string(semiColon[0].Value))
 
 	tlen := 2
 	if bytes.HasSuffix(semiColon[0].Value, []byte("?>\n")) {

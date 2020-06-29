@@ -62,10 +62,6 @@ func lastNode(nn []ast.Vertex) ast.Vertex {
 	return nn[len(nn)-1]
 }
 
-func isDollar(r rune) bool {
-	return r == '$'
-}
-
 func (p *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
 	if p.withTokens == false {
 		return
@@ -107,19 +103,6 @@ func (p *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
 			Value: t.Value,
 		},
 	}
-}
-
-func (p *Parser) addDollarToken(v ast.Vertex) {
-	if p.withTokens == false {
-		return
-	}
-
-	p.setFreeFloating(v, token.Dollar, []token.Token{
-		{
-			ID:    token.ID('$'),
-			Value: []byte("$"),
-		},
-	})
 }
 
 func (p *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.Vertex) {

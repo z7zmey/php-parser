@@ -1084,7 +1084,7 @@ func TestParseAndPrintPhp5Shebang(t *testing.T) {
 	<?php
 	$a;?>test<? `
 
-	actual := print(parse(src))
+	actual := printPhp5(parsePhp5(src))
 
 	if src != actual {
 		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)
