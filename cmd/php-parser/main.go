@@ -15,8 +15,10 @@ import (
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
 
+	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/ast/traverser"
 	"github.com/z7zmey/php-parser/pkg/ast/visitor"
+	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/parser"
 	"github.com/z7zmey/php-parser/pkg/printer"
 )
@@ -37,8 +39,9 @@ type file struct {
 }
 
 type result struct {
-	path   string
-	parser parser.Parser
+	path     string
+	rootNode ast.Vertex
+	errors   []*errors.Error
 }
 
 func main() {
@@ -121,14 +124,18 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 			return
 		}
 
-		parserWorker, err := parser.NewParser(f.content, phpVersion, *withFreeFloating)
+		parserErrors := []*errors.Error{}
+		cfg := parser.Config{
+			ErrorHandlerFunc: func(e *errors.Error) {
+				parserErrors = append(parserErrors, e)
+			},
+		}
+		rootNode, err := parser.Parse(f.content, phpVersion, cfg)
 		if err != nil {
 			panic(err.Error())
 		}
 
-		parserWorker.Parse()
-
-		r <- result{path: f.path, parser: parserWorker}
+		r <- result{path: f.path, rootNode: rootNode, errors: parserErrors}
 	}
 }
 
@@ -147,14 +154,14 @@ func printerWorker(r <-chan result) {
 			fmt.Fprintf(os.Stdout, "==> [%d] %s\n", counter, res.path)
 		}
 
-		for _, e := range res.parser.GetErrors() {
+		for _, e := range res.errors {
 			fmt.Fprintf(os.Stdout, "==> %s\n", e)
 		}
 
 		if *printBack {
 			o := bytes.NewBuffer([]byte{})
 			p := printer.NewPrinter(o)
-			p.Print(res.parser.GetRootNode())
+			p.Print(res.rootNode)
 
 			err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
 			checkErr(err)
@@ -163,14 +170,14 @@ func printerWorker(r <-chan result) {
 		if *showResolvedNs {
 			v := visitor.NewNamespaceResolver()
 			t := traverser.NewDFS(v)
-			t.Traverse(res.parser.GetRootNode())
+			t.Traverse(res.rootNode)
 			fmt.Printf("%+v", v.ResolvedNames)
 		}
 
 		if *dump == true {
 			v := visitor.NewDump(os.Stdout)
 			t := traverser.NewDFS(v)
-			t.Traverse(res.parser.GetRootNode())
+			t.Traverse(res.rootNode)
 		}
 
 		wg.Done()

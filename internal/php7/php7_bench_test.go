@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/internal/php7"
+	"github.com/z7zmey/php-parser/internal/scanner"
 )
 
 func BenchmarkPhp7(b *testing.B) {
@@ -381,7 +382,8 @@ CAD;
 	`
 
 	for n := 0; n < b.N; n++ {
-		php7parser := php7.NewParser([]byte(src), "7.4", false)
+		lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
+		php7parser := php7.NewParser(lexer, false, nil)
 		php7parser.Parse()
 	}
 }

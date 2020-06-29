@@ -6,6 +6,7 @@ import (
 	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/internal/php7"
+	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
@@ -19633,7 +19634,8 @@ func TestPhp7(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src), "7.4", false)
+	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
+	php7parser := php7.NewParser(lexer, false, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19770,7 +19772,8 @@ func TestPhp5Strings(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src), "7.4", false)
+	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
+	php7parser := php7.NewParser(lexer, false, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19996,7 +19999,8 @@ CAD;
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src), "7.4", false)
+	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
+	php7parser := php7.NewParser(lexer, false, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20016,8 +20020,13 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src), "7.4", false)
+	parserErrors := []*errors.Error{}
+	errorHandlerFunc := func(e *errors.Error) {
+		parserErrors = append(parserErrors, e)
+	}
+
+	lexer := scanner.NewLexer([]byte(src), "7.4", false, errorHandlerFunc)
+	php7parser := php7.NewParser(lexer, false, errorHandlerFunc)
 	php7parser.Parse()
-	actual := php7parser.GetErrors()
-	assert.DeepEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, parserErrors)
 }

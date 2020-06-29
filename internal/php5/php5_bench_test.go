@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/internal/php5"
+	"github.com/z7zmey/php-parser/internal/scanner"
 )
 
 func BenchmarkPhp5(b *testing.B) {
@@ -413,7 +414,8 @@ CAD;
 	`
 
 	for n := 0; n < b.N; n++ {
-		php5parser := php5.NewParser([]byte(src), "5.6", false)
+		lexer := scanner.NewLexer([]byte(src), "5.6", false, nil)
+		php5parser := php5.NewParser(lexer, false, nil)
 		php5parser.Parse()
 	}
 }

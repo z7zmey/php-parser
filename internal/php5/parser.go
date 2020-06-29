@@ -12,25 +12,20 @@ import (
 
 // Parser structure
 type Parser struct {
-	Lexer        *scanner.Lexer
-	currentToken *scanner.Token
-	rootNode     ast.Vertex
-	errors       []*errors.Error
-	withTokens   bool
+	Lexer          *scanner.Lexer
+	currentToken   *scanner.Token
+	rootNode       ast.Vertex
+	withTokens     bool
+	errHandlerFunc func(*errors.Error)
 }
 
 // NewParser creates and returns new Parser
-func NewParser(src []byte, v string, withTokens bool) *Parser {
-	parser := &Parser{
-		withTokens: withTokens,
+func NewParser(lexer *scanner.Lexer, withTokens bool, errHandlerFunc func(*errors.Error)) *Parser {
+	return &Parser{
+		withTokens:     withTokens,
+		Lexer:          lexer,
+		errHandlerFunc: errHandlerFunc,
 	}
-
-	lexer := scanner.NewLexer(src, v, withTokens, func(e *errors.Error) {
-		parser.errors = append(parser.errors, e)
-	})
-	parser.Lexer = lexer
-
-	return parser
 }
 
 // Lex proxy to scanner Lex
@@ -45,23 +40,12 @@ func (p *Parser) Lex(lval *yySymType) int {
 
 func (p *Parser) Error(msg string) {
 	var pos = p.currentToken.Position
-
-	p.errors = append(p.errors, errors.NewError(msg, &pos))
-}
-
-// GetErrors returns errors list
-func (p *Parser) GetErrors() []*errors.Error {
-	return p.errors
+	p.errHandlerFunc(errors.NewError(msg, &pos))
 }
 
 // Parse the php7 Parser entrypoint
 func (p *Parser) Parse() int {
-	// init
-	p.errors = nil
 	p.rootNode = nil
-
-	// parse
-
 	return yyParse(p)
 }
 

@@ -2,11 +2,13 @@ package printer_test
 
 import (
 	"bytes"
-	"github.com/z7zmey/php-parser/pkg/ast"
 	"os"
 	"testing"
 
+	"github.com/z7zmey/php-parser/pkg/ast"
+
 	"github.com/z7zmey/php-parser/internal/php7"
+	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/printer"
 )
 
@@ -27,7 +29,8 @@ abstract class Bar extends Baz
 
 	// parse
 
-	php7parser := php7.NewParser([]byte(src), "7.4", true)
+	lexer := scanner.NewLexer([]byte(src), "7.4", true, nil)
+	php7parser := php7.NewParser(lexer, true, nil)
 	php7parser.Parse()
 
 	rootNode := php7parser.GetRootNode()
@@ -58,7 +61,8 @@ abstract class Bar extends Baz
 }
 
 func parse(src string) ast.Vertex {
-	php7parser := php7.NewParser([]byte(src), "7.4", true)
+	lexer := scanner.NewLexer([]byte(src), "7.4", true, nil)
+	php7parser := php7.NewParser(lexer, true, nil)
 	php7parser.Parse()
 
 	return php7parser.GetRootNode()

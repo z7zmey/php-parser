@@ -2,15 +2,18 @@ package printer_test
 
 import (
 	"bytes"
-	"github.com/z7zmey/php-parser/pkg/ast"
 	"testing"
 
+	"github.com/z7zmey/php-parser/pkg/ast"
+
 	"github.com/z7zmey/php-parser/internal/php5"
+	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/printer"
 )
 
 func parsePhp5(src string) ast.Vertex {
-	php5parser := php5.NewParser([]byte(src), "5.6", true)
+	lexer := scanner.NewLexer([]byte(src), "5.6", true, nil)
+	php5parser := php5.NewParser(lexer, true, nil)
 	php5parser.Parse()
 
 	return php5parser.GetRootNode()

@@ -1,10 +1,12 @@
 package php5_test
 
 import (
-	"gotest.tools/assert"
 	"testing"
 
+	"gotest.tools/assert"
+
 	"github.com/z7zmey/php-parser/internal/php5"
+	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
@@ -22455,7 +22457,8 @@ func TestPhp5(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src), "5.6", false)
+	lexer := scanner.NewLexer([]byte(src), "5.6", false, nil)
+	php5parser := php5.NewParser(lexer, false, nil)
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22592,7 +22595,8 @@ func TestPhp5Strings(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src), "5.6", false)
+	lexer := scanner.NewLexer([]byte(src), "5.6", false, nil)
+	php5parser := php5.NewParser(lexer, false, nil)
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22818,7 +22822,8 @@ CAD;
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src), "5.6", false)
+	lexer := scanner.NewLexer([]byte(src), "5.6", false, nil)
+	php5parser := php5.NewParser(lexer, false, nil)
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22838,8 +22843,13 @@ func TestPhp5ControlCharsErrors(t *testing.T) {
 		},
 	}
 
-	php5parser := php5.NewParser([]byte(src), "5.6", false)
+	parserErrors := []*errors.Error{}
+	errorHandlerFunc := func(e *errors.Error) {
+		parserErrors = append(parserErrors, e)
+	}
+
+	lexer := scanner.NewLexer([]byte(src), "5.6", false, errorHandlerFunc)
+	php5parser := php5.NewParser(lexer, false, errorHandlerFunc)
 	php5parser.Parse()
-	actual := php5parser.GetErrors()
-	assert.DeepEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, parserErrors)
 }
