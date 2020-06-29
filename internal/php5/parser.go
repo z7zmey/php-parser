@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/z7zmey/php-parser/internal/positionbuilder"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/errors"
@@ -13,12 +12,11 @@ import (
 
 // Parser structure
 type Parser struct {
-	Lexer           *scanner.Lexer
-	currentToken    *scanner.Token
-	positionBuilder *positionbuilder.PositionBuilder
-	rootNode        ast.Vertex
-	errors          []*errors.Error
-	withTokens      bool
+	Lexer        *scanner.Lexer
+	currentToken *scanner.Token
+	rootNode     ast.Vertex
+	errors       []*errors.Error
+	withTokens   bool
 }
 
 // NewParser creates and returns new Parser
@@ -66,7 +64,6 @@ func (p *Parser) Parse() int {
 	// init
 	p.errors = nil
 	p.rootNode = nil
-	p.positionBuilder = &positionbuilder.PositionBuilder{}
 
 	// parse
 

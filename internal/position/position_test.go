@@ -1,18 +1,16 @@
-package positionbuilder_test
+package position_test
 
 import (
 	"gotest.tools/assert"
 	"testing"
 
-	"github.com/z7zmey/php-parser/internal/positionbuilder"
+	builder "github.com/z7zmey/php-parser/internal/position"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/position"
 )
 
 func TestNewTokenPosition(t *testing.T) {
-	builder := positionbuilder.PositionBuilder{}
-
 	tkn := &scanner.Token{
 		Value: []byte(`foo`),
 		Position: position.Position{
@@ -31,8 +29,6 @@ func TestNewTokenPosition(t *testing.T) {
 }
 
 func TestNewTokensPosition(t *testing.T) {
-	builder := positionbuilder.PositionBuilder{}
-
 	token1 := &scanner.Token{
 		Value: []byte(`foo`),
 		Position: position.Position{
@@ -69,8 +65,6 @@ func TestNewNodePosition(t *testing.T) {
 		},
 	}
 
-	builder := positionbuilder.PositionBuilder{}
-
 	pos := builder.NewNodePosition(n)
 
 	assert.DeepEqual(t, &position.Position{1, 1, 0, 3}, pos)
@@ -96,8 +90,6 @@ func TestNewTokenNodePosition(t *testing.T) {
 			},
 		},
 	}
-
-	builder := positionbuilder.PositionBuilder{}
 
 	pos := builder.NewTokenNodePosition(tkn, n)
 
@@ -125,8 +117,6 @@ func TestNewNodeTokenPosition(t *testing.T) {
 			EndPos:    12,
 		},
 	}
-
-	builder := positionbuilder.PositionBuilder{}
 
 	pos := builder.NewNodeTokenPosition(n, tkn)
 
@@ -156,8 +146,6 @@ func TestNewNodeListPosition(t *testing.T) {
 		},
 	}
 
-	builder := positionbuilder.PositionBuilder{}
-
 	pos := builder.NewNodeListPosition([]ast.Vertex{n1, n2})
 
 	assert.DeepEqual(t, &position.Position{1, 2, 0, 19}, pos)
@@ -185,8 +173,6 @@ func TestNewNodesPosition(t *testing.T) {
 			},
 		},
 	}
-
-	builder := positionbuilder.PositionBuilder{}
 
 	pos := builder.NewNodesPosition(n1, n2)
 
@@ -226,8 +212,6 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 		},
 	}
 
-	builder := positionbuilder.PositionBuilder{}
-
 	pos := builder.NewNodeListTokenPosition([]ast.Vertex{n1, n2}, tkn)
 
 	assert.DeepEqual(t, &position.Position{1, 3, 0, 22}, pos)
@@ -265,8 +249,6 @@ func TestNewTokenNodeListPosition(t *testing.T) {
 			},
 		},
 	}
-
-	builder := positionbuilder.PositionBuilder{}
 
 	pos := builder.NewTokenNodeListPosition(tkn, []ast.Vertex{n1, n2})
 
@@ -307,8 +289,6 @@ func TestNewNodeNodeListPosition(t *testing.T) {
 		},
 	}
 
-	builder := positionbuilder.PositionBuilder{}
-
 	pos := builder.NewNodeNodeListPosition(n1, []ast.Vertex{n2, n3})
 
 	assert.DeepEqual(t, &position.Position{1, 3, 0, 26}, pos)
@@ -346,16 +326,12 @@ func TestNewNodeListNodePosition(t *testing.T) {
 		},
 	}
 
-	builder := positionbuilder.PositionBuilder{}
-
 	pos := builder.NewNodeListNodePosition([]ast.Vertex{n1, n2}, n3)
 
 	assert.DeepEqual(t, &position.Position{1, 3, 0, 26}, pos)
 }
 
 func TestNewOptionalListTokensPosition(t *testing.T) {
-	builder := positionbuilder.PositionBuilder{}
-
 	token1 := &scanner.Token{
 		Value: []byte(`foo`),
 		Position: position.Position{
@@ -402,8 +378,6 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 		},
 	}
 
-	builder := positionbuilder.PositionBuilder{}
-
 	token1 := &scanner.Token{
 		Value: []byte(`foo`),
 		Position: position.Position{
@@ -429,8 +403,6 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 }
 
 func TestNilNodePos(t *testing.T) {
-	builder := positionbuilder.PositionBuilder{}
-
 	pos := builder.NewNodesPosition(nil, nil)
 
 	assert.DeepEqual(t, &position.Position{-1, -1, -1, -1}, pos)
@@ -448,8 +420,6 @@ func TestNilNodeListPos(t *testing.T) {
 		},
 	}
 
-	builder := positionbuilder.PositionBuilder{}
-
 	pos := builder.NewNodeNodeListPosition(n1, nil)
 
 	assert.DeepEqual(t, &position.Position{1, -1, 0, -1}, pos)
@@ -465,8 +435,6 @@ func TestNilNodeListTokenPos(t *testing.T) {
 			EndPos:    3,
 		},
 	}
-
-	builder := positionbuilder.PositionBuilder{}
 
 	pos := builder.NewNodeListTokenPosition(nil, token)
 
@@ -485,8 +453,6 @@ func TestEmptyNodeListPos(t *testing.T) {
 		},
 	}
 
-	builder := positionbuilder.PositionBuilder{}
-
 	pos := builder.NewNodeNodeListPosition(n1, []ast.Vertex{})
 
 	assert.DeepEqual(t, &position.Position{1, -1, 0, -1}, pos)
@@ -502,8 +468,6 @@ func TestEmptyNodeListTokenPos(t *testing.T) {
 			EndPos:    3,
 		},
 	}
-
-	builder := positionbuilder.PositionBuilder{}
 
 	pos := builder.NewNodeListTokenPosition([]ast.Vertex{}, token)
 

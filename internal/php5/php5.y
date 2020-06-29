@@ -5,9 +5,10 @@ import (
     "bytes"
     "strconv"
 
-    "github.com/z7zmey/php-parser/pkg/token"
-    "github.com/z7zmey/php-parser/internal/scanner"
-    "github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/internal/position"
+	"github.com/z7zmey/php-parser/internal/scanner"
+	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/token"
 )
 
 %}
@@ -275,7 +276,7 @@ start:
         top_statement_list
             {
                 yylex.(*Parser).rootNode = &ast.Root{ast.Node{}, $1}
-                yylex.(*Parser).rootNode.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
+                yylex.(*Parser).rootNode.GetNode().Position = position.NewNodeListPosition($1)
 
                 yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, token.End, yylex.(*Parser).currentToken.Hidden)
 
@@ -312,7 +313,7 @@ namespace_name:
                 $$ = []ast.Vertex{namePart}
 
                 // save position
-                namePart.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                namePart.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(namePart, token.Start, $1.Hidden)
@@ -325,7 +326,7 @@ namespace_name:
                 $$ = append($1, namePart)
 
                 // save position
-                namePart.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
+                namePart.GetNode().Position = position.NewTokenPosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -366,7 +367,7 @@ top_statement:
                 $$ = &ast.StmtHaltCompiler{ast.Node{}, }
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -383,8 +384,8 @@ top_statement:
                 $$ = &ast.StmtNamespace{ast.Node{}, name, nil}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                name.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -400,8 +401,8 @@ top_statement:
                 $$ = &ast.StmtNamespace{ast.Node{}, name, $4}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5)
+                name.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -416,7 +417,7 @@ top_statement:
                 $$ = &ast.StmtNamespace{ast.Node{}, nil, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -430,7 +431,7 @@ top_statement:
                 $$ = &ast.StmtUseList{ast.Node{}, nil, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -445,8 +446,8 @@ top_statement:
                 $$ = &ast.StmtUseList{ast.Node{}, useType, $3}
 
                 // save position
-                useType.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                useType.GetNode().Position = position.NewTokenPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -462,8 +463,8 @@ top_statement:
                 $$ = &ast.StmtUseList{ast.Node{}, useType, $3}
 
                 // save position
-                useType.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                useType.GetNode().Position = position.NewTokenPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -478,7 +479,7 @@ top_statement:
                 $$ = $1
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Stmts, $2.Hidden)
@@ -513,8 +514,8 @@ use_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
+                name.GetNode().Position = position.NewNodeListPosition($1)
+                $$.GetNode().Position = position.NewNodeListPosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -528,9 +529,9 @@ use_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
-                alias.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3)
+                name.GetNode().Position = position.NewNodeListPosition($1)
+                alias.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -545,8 +546,8 @@ use_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
+                name.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewNodeListPosition($2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -562,9 +563,9 @@ use_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                alias.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4)
+                name.GetNode().Position = position.NewNodeListPosition($2)
+                alias.GetNode().Position = position.NewTokenPosition($4)
+                $$.GetNode().Position = position.NewNodeListTokenPosition($2, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -602,8 +603,8 @@ use_function_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
+                name.GetNode().Position = position.NewNodeListPosition($1)
+                $$.GetNode().Position = position.NewNodeListPosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -617,9 +618,9 @@ use_function_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
-                alias.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3)
+                name.GetNode().Position = position.NewNodeListPosition($1)
+                alias.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -634,8 +635,8 @@ use_function_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
+                name.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewNodeListPosition($2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -651,9 +652,9 @@ use_function_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                alias.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4)
+                name.GetNode().Position = position.NewNodeListPosition($2)
+                alias.GetNode().Position = position.NewTokenPosition($4)
+                $$.GetNode().Position = position.NewNodeListTokenPosition($2, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -691,8 +692,8 @@ use_const_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
+                name.GetNode().Position = position.NewNodeListPosition($1)
+                $$.GetNode().Position = position.NewNodeListPosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -706,9 +707,9 @@ use_const_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
-                alias.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3)
+                name.GetNode().Position = position.NewNodeListPosition($1)
+                alias.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -723,8 +724,8 @@ use_const_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
+                name.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewNodeListPosition($2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -740,9 +741,9 @@ use_const_declaration:
                 $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                alias.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4)
+                name.GetNode().Position = position.NewNodeListPosition($2)
+                alias.GetNode().Position = position.NewTokenPosition($4)
+                $$.GetNode().Position = position.NewNodeListTokenPosition($2, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -766,9 +767,9 @@ constant_declaration:
                 $$ = $1
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                constant.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, constList.Consts)
+                name.GetNode().Position = position.NewTokenPosition($3)
+                constant.GetNode().Position = position.NewTokenNodePosition($3, $5)
+                $$.GetNode().Position = position.NewNodeNodeListPosition($1, constList.Consts)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastConst, token.End, $2.Hidden)
@@ -785,9 +786,9 @@ constant_declaration:
                 $$ = &ast.StmtConstList{ast.Node{}, constList}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                constant.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, constList)
+                name.GetNode().Position = position.NewTokenPosition($2)
+                constant.GetNode().Position = position.NewTokenNodePosition($2, $4)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, constList)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -852,7 +853,7 @@ inner_statement:
                 $$ = &ast.StmtHaltCompiler{ast.Node{}, }
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -879,8 +880,8 @@ statement:
                 $$ = &ast.StmtLabel{ast.Node{}, label}
 
                 // save position
-                label.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                label.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -896,7 +897,7 @@ unticked_statement:
                 $$ = &ast.StmtStmtList{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -910,11 +911,11 @@ unticked_statement:
 
                 // save position
                 if $5 != nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5)
+                    $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
                 } else if len($4) > 0 {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $4)
+                    $$.GetNode().Position = position.NewTokenNodeListPosition($1, $4)
                 } else {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
+                    $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
                 }
 
                 // save comments
@@ -934,8 +935,8 @@ unticked_statement:
                 $$ = &ast.StmtAltIf{ast.Node{}, $2, stmts, $5, $6}
 
                 // save position
-                stmts.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8)
+                stmts.GetNode().Position = position.NewNodeListPosition($4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $8)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -964,7 +965,7 @@ unticked_statement:
                 $$ = $3
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -982,7 +983,7 @@ unticked_statement:
                 $$ = &ast.StmtDo{ast.Node{}, $2, $4}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5)
+                $$.GetNode().Position = position.NewTokensPosition($1, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1014,7 +1015,7 @@ unticked_statement:
                 $$ = $9
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $9)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1039,7 +1040,7 @@ unticked_statement:
                 $$ = $3
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1057,7 +1058,7 @@ unticked_statement:
                 $$ = &ast.StmtBreak{ast.Node{}, nil}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1071,7 +1072,7 @@ unticked_statement:
                 $$ = &ast.StmtBreak{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1085,7 +1086,7 @@ unticked_statement:
                 $$ = &ast.StmtContinue{ast.Node{}, nil}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1099,7 +1100,7 @@ unticked_statement:
                 $$ = &ast.StmtContinue{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1113,7 +1114,7 @@ unticked_statement:
                 $$ = &ast.StmtReturn{ast.Node{}, nil}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1127,7 +1128,7 @@ unticked_statement:
                 $$ = &ast.StmtReturn{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1141,7 +1142,7 @@ unticked_statement:
                 $$ = &ast.StmtReturn{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1155,7 +1156,7 @@ unticked_statement:
                 $$ = &ast.StmtExpression{ast.Node{}, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -1169,7 +1170,7 @@ unticked_statement:
                 $$ = &ast.StmtGlobal{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1183,7 +1184,7 @@ unticked_statement:
                 $$ = &ast.StmtStatic{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1197,7 +1198,7 @@ unticked_statement:
                 $$ = &ast.StmtEcho{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1212,7 +1213,7 @@ unticked_statement:
                 $$ = &ast.StmtInlineHtml{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1224,7 +1225,7 @@ unticked_statement:
                 $$ = &ast.StmtExpression{ast.Node{}, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -1238,7 +1239,7 @@ unticked_statement:
                 $$ = &ast.StmtUnset{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5)
+                $$.GetNode().Position = position.NewTokensPosition($1, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1276,7 +1277,7 @@ unticked_statement:
                 $$ = $8
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $8)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1316,7 +1317,7 @@ unticked_statement:
                 // save position
                 $$ = $8
 
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $8)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1335,7 +1336,7 @@ unticked_statement:
                 $$.(*ast.StmtDeclare).Consts = $3
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1349,7 +1350,7 @@ unticked_statement:
                 $$ = &ast.StmtNop{ast.Node{}, }
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1363,9 +1364,9 @@ unticked_statement:
 
                 // save position
                 if $6 == nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $5)
+                    $$.GetNode().Position = position.NewTokenNodeListPosition($1, $5)
                 } else {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6)
+                    $$.GetNode().Position = position.NewTokenNodePosition($1, $6)
                 }
 
                 // save comments
@@ -1380,7 +1381,7 @@ unticked_statement:
                 $$ = &ast.StmtThrow{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1395,8 +1396,8 @@ unticked_statement:
                 $$ = &ast.StmtGoto{ast.Node{}, label}
 
                 // save position
-                label.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                label.GetNode().Position = position.NewTokenPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1423,9 +1424,9 @@ catch_statement:
                 $$ = append([]ast.Vertex{catchNode}, $9...)
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                catchNode.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8)
+                identifier.GetNode().Position = position.NewTokenPosition($4)
+                variable.GetNode().Position = position.NewTokenPosition($4)
+                catchNode.GetNode().Position = position.NewTokensPosition($1, $8)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(catchNode, token.Start, $1.Hidden)
@@ -1452,7 +1453,7 @@ finally_statement:
                 $$ = &ast.StmtFinally{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1501,9 +1502,9 @@ additional_catch:
                 $$ = &ast.StmtCatch{ast.Node{}, []ast.Vertex{$3}, variable, $7}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8)
+                identifier.GetNode().Position = position.NewTokenPosition($4)
+                variable.GetNode().Position = position.NewTokenPosition($4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $8)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1592,8 +1593,8 @@ unticked_function_declaration_statement:
                 $$ = &ast.StmtFunction{ast.Node{}, $2 != nil, name, $5, nil, $8}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9)
+                name.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $9)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1631,8 +1632,8 @@ unticked_class_declaration_statement:
                 $$ = $1
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $7)
+                name.GetNode().Position = position.NewTokenPosition($2)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $7)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(name, token.Start, $2.Hidden)
@@ -1647,8 +1648,8 @@ unticked_class_declaration_statement:
                 $$ = &ast.StmtInterface{ast.Node{}, name, $3, $5}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6)
+                name.GetNode().Position = position.NewTokenPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $6)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1667,7 +1668,7 @@ class_entry_type:
                 $$ = &ast.StmtClass{ast.Node{}, nil, nil, nil, nil, nil, nil}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1680,8 +1681,8 @@ class_entry_type:
                 $$ = &ast.StmtClass{ast.Node{}, nil, []ast.Vertex{classModifier}, nil, nil, nil, nil}
 
                 // save position
-                classModifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                classModifier.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1694,7 +1695,7 @@ class_entry_type:
                 $$ = &ast.StmtTrait{ast.Node{}, nil, nil}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1707,8 +1708,8 @@ class_entry_type:
                 $$ = &ast.StmtClass{ast.Node{}, nil, []ast.Vertex{classModifier}, nil, nil, nil, nil}
 
                 // save position
-                classModifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                classModifier.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1730,7 +1731,7 @@ extends_from:
                 $$ = &ast.StmtClassExtends{ast.Node{}, $2};
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1758,7 +1759,7 @@ interface_extends_list:
                 $$ = &ast.StmtInterfaceExtends{ast.Node{}, $2};
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1779,7 +1780,7 @@ implements_list:
                 $$ = &ast.StmtClassImplements{ast.Node{}, $2};
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1836,7 +1837,7 @@ foreach_variable:
                 $$ = &ast.ExprReference{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1848,7 +1849,7 @@ foreach_variable:
                 $$ = &ast.ExprList{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -1865,7 +1866,7 @@ for_statement:
                 $$ = &ast.StmtFor{ast.Node{}, nil, nil, nil, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                $$.GetNode().Position = position.NewNodePosition($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1875,8 +1876,8 @@ for_statement:
                 $$ = &ast.StmtAltFor{ast.Node{}, nil, nil, nil, stmtList}
 
                 // save position
-                stmtList.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                stmtList.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Hidden)
@@ -1894,7 +1895,7 @@ foreach_statement:
                 $$ = &ast.StmtForeach{ast.Node{}, nil, nil, nil, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                $$.GetNode().Position = position.NewNodePosition($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1904,8 +1905,8 @@ foreach_statement:
                 $$ = &ast.StmtAltForeach{ast.Node{}, nil, nil, nil, stmtList}
 
                 // save position
-                stmtList.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                stmtList.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Hidden)
@@ -1924,7 +1925,7 @@ declare_statement:
                 $$ = &ast.StmtDeclare{ast.Node{}, false, nil, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                $$.GetNode().Position = position.NewNodePosition($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1934,8 +1935,8 @@ declare_statement:
                 $$ = &ast.StmtDeclare{ast.Node{}, true, nil, stmtList}
 
                 // save position
-                stmtList.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                stmtList.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Hidden)
@@ -1956,8 +1957,8 @@ declare_list:
                 $$ = []ast.Vertex{constant}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                constant.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
+                name.GetNode().Position = position.NewTokenPosition($1)
+                constant.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(constant, token.Start, $1.Hidden)
@@ -1972,8 +1973,8 @@ declare_list:
                 $$ = append($1, constant)
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                constant.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5)
+                name.GetNode().Position = position.NewTokenPosition($3)
+                constant.GetNode().Position = position.NewTokenNodePosition($3, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -1992,8 +1993,8 @@ switch_case_list:
                 $$ = &ast.StmtSwitch{ast.Node{}, nil, caseList}
 
                 // save position
-                caseList.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                caseList.GetNode().Position = position.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(caseList, token.Start, $1.Hidden)
@@ -2007,8 +2008,8 @@ switch_case_list:
                 $$ = &ast.StmtSwitch{ast.Node{}, nil, caseList}
 
                 // save position
-                caseList.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                caseList.GetNode().Position = position.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(caseList, token.Start, $1.Hidden)
@@ -2023,8 +2024,8 @@ switch_case_list:
                 $$ = &ast.StmtAltSwitch{ast.Node{}, nil, caseList}
 
                 // save position
-                caseList.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                caseList.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Hidden)
@@ -2041,8 +2042,8 @@ switch_case_list:
                 $$ = &ast.StmtAltSwitch{ast.Node{}, nil, caseList}
 
                 // save position
-                caseList.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5)
+                caseList.GetNode().Position = position.NewNodeListPosition($3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Hidden)
@@ -2069,7 +2070,7 @@ case_list:
                 $$ = append($1, _case)
 
                 // save position
-                _case.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5)
+                _case.GetNode().Position = position.NewTokenNodeListPosition($2, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(_case, token.Start, $2.Hidden)
@@ -2084,7 +2085,7 @@ case_list:
                 $$ = append($1, _default)
 
                 // save position
-                _default.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $4)
+                _default.GetNode().Position = position.NewTokenNodeListPosition($2, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(_default, token.Start, $2.Hidden)
@@ -2114,7 +2115,7 @@ while_statement:
                 $$ = &ast.StmtWhile{ast.Node{}, nil, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                $$.GetNode().Position = position.NewNodePosition($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2124,8 +2125,8 @@ while_statement:
                 $$ = &ast.StmtAltWhile{ast.Node{}, nil, stmtList}
 
                 // save position
-                stmtList.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                stmtList.GetNode().Position = position.NewNodeListPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Hidden)
@@ -2152,7 +2153,7 @@ elseif_list:
                 $$ = append($1, _elseIf)
 
                 // save position
-                _elseIf.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4)
+                _elseIf.GetNode().Position = position.NewTokenNodePosition($2, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.Hidden)
@@ -2182,8 +2183,8 @@ new_elseif_list:
                 $$ = append($1, _elseIf)
 
                 // save position
-                stmts.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($5)
-                _elseIf.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5)
+                stmts.GetNode().Position = position.NewNodeListPosition($5)
+                _elseIf.GetNode().Position = position.NewTokenNodeListPosition($2, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.Hidden)
@@ -2212,7 +2213,7 @@ else_single:
                 $$ = &ast.StmtElse{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2235,8 +2236,8 @@ new_else_single:
                 $$ = &ast.StmtAltElse{ast.Node{}, stmts}
 
                 // save position
-                stmts.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3)
+                stmts.GetNode().Position = position.NewNodeListPosition($3)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2288,16 +2289,16 @@ parameter:
                 $$ = &ast.Parameter{ast.Node{}, $2 != nil, $3 != nil, $1, variable, nil}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
+                identifier.GetNode().Position = position.NewTokenPosition($4)
+                variable.GetNode().Position = position.NewTokenPosition($4)
                 if $1 != nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                    $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
                 } else if $2 != nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($2, $4)
+                    $$.GetNode().Position = position.NewTokensPosition($2, $4)
                 } else if $3 != nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($3, $4)
+                    $$.GetNode().Position = position.NewTokensPosition($3, $4)
                 } else {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
+                    $$.GetNode().Position = position.NewTokenPosition($4)
                 }
 
                 // save comments
@@ -2333,16 +2334,16 @@ parameter:
                 $$ = &ast.Parameter{ast.Node{}, $2 != nil, $3 != nil, $1, variable, $6}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
+                identifier.GetNode().Position = position.NewTokenPosition($4)
+                variable.GetNode().Position = position.NewTokenPosition($4)
                 if $1 != nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6)
+                    $$.GetNode().Position = position.NewNodesPosition($1, $6)
                 } else if $2 != nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $6)
+                    $$.GetNode().Position = position.NewTokenNodePosition($2, $6)
                 } else if $3 != nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $6)
+                    $$.GetNode().Position = position.NewTokenNodePosition($3, $6)
                 } else {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $6)
+                    $$.GetNode().Position = position.NewTokenNodePosition($4, $6)
                 }
 
                 // save comments
@@ -2387,7 +2388,7 @@ optional_class_type:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2399,7 +2400,7 @@ optional_class_type:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2421,7 +2422,7 @@ function_call_parameter_list:
                 $$ = &ast.ArgumentList{ast.Node{}, nil}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2434,7 +2435,7 @@ function_call_parameter_list:
                 $$ = &ast.ArgumentList{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2448,8 +2449,8 @@ function_call_parameter_list:
                 $$ = &ast.ArgumentList{ast.Node{}, []ast.Vertex{arg}}
 
                 // save position
-                arg.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                arg.GetNode().Position = position.NewNodePosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2484,7 +2485,7 @@ function_call_parameter:
                 $$ = &ast.Argument{ast.Node{}, false, false, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                $$.GetNode().Position = position.NewNodePosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -2496,7 +2497,7 @@ function_call_parameter:
                 $$ = &ast.Argument{ast.Node{}, false, false, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                $$.GetNode().Position = position.NewNodePosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -2508,7 +2509,7 @@ function_call_parameter:
                 $$ = &ast.Argument{ast.Node{}, false, true, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($2)
+                $$.GetNode().Position = position.NewNodePosition($2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2520,7 +2521,7 @@ function_call_parameter:
                 $$ = &ast.Argument{ast.Node{}, true, false, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2555,8 +2556,8 @@ global_var:
                 $$ = &ast.ExprVariable{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                name.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2569,7 +2570,7 @@ global_var:
                 $$ = &ast.ExprVariable{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2582,7 +2583,7 @@ global_var:
                 $$ = &ast.ExprVariable{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2604,9 +2605,9 @@ static_var_list:
                 $$ = append($1, staticVar)
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                staticVar.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
+                identifier.GetNode().Position = position.NewTokenPosition($3)
+                variable.GetNode().Position = position.NewTokenPosition($3)
+                staticVar.GetNode().Position = position.NewTokenPosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -2623,9 +2624,9 @@ static_var_list:
                 $$ = append($1, staticVar)
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                staticVar.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5)
+                identifier.GetNode().Position = position.NewTokenPosition($3)
+                variable.GetNode().Position = position.NewTokenPosition($3)
+                staticVar.GetNode().Position = position.NewTokenNodePosition($3, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -2643,9 +2644,9 @@ static_var_list:
                 $$ = []ast.Vertex{staticVar}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                staticVar.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                identifier.GetNode().Position = position.NewTokenPosition($1)
+                variable.GetNode().Position = position.NewTokenPosition($1)
+                staticVar.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).addDollarToken(variable)
@@ -2661,9 +2662,9 @@ static_var_list:
                 $$ = []ast.Vertex{staticVar}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                staticVar.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
+                identifier.GetNode().Position = position.NewTokenPosition($1)
+                variable.GetNode().Position = position.NewTokenPosition($1)
+                staticVar.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).addDollarToken(variable)
@@ -2697,7 +2698,7 @@ class_statement:
                 $$ = &ast.StmtPropertyList{ast.Node{}, $1, nil, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3)
+                $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -2711,7 +2712,7 @@ class_statement:
                 $$ = $1
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.ConstList, $2.Hidden)
@@ -2731,11 +2732,11 @@ class_statement:
                 $$ = &ast.StmtClassMethod{ast.Node{}, $3 != nil, name, $1, $6, nil, $8}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
+                name.GetNode().Position = position.NewTokenPosition($4)
                 if $1 == nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $8)
+                    $$.GetNode().Position = position.NewTokenNodePosition($2, $8)
                 } else {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListNodePosition($1, $8)
+                    $$.GetNode().Position = position.NewNodeListNodePosition($1, $8)
                 }
 
                 // save comments
@@ -2764,7 +2765,7 @@ trait_use_statement:
                 $$ = &ast.StmtTraitUse{ast.Node{}, $2, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2796,7 +2797,7 @@ trait_adaptations:
             {
                 $$ = &ast.StmtNop{ast.Node{}, }
 
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2808,7 +2809,7 @@ trait_adaptations:
             {
                 $$ = &ast.StmtTraitAdaptationList{ast.Node{}, $2}
 
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2877,7 +2878,7 @@ trait_precedence:
                 $$ = &ast.StmtTraitUsePrecedence{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, $3)
+                $$.GetNode().Position = position.NewNodeNodeListPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -2912,8 +2913,8 @@ trait_method_reference:
                 $$ = &ast.StmtTraitMethodRef{ast.Node{}, nil, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                name.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -2935,8 +2936,8 @@ trait_method_reference_fully_qualified:
                 $$ = &ast.StmtTraitMethodRef{ast.Node{}, $1, target}
 
                 // save position
-                target.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3)
+                target.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -2954,8 +2955,8 @@ trait_alias:
                 $$ = &ast.StmtTraitUseAlias{ast.Node{}, $1, $3, alias}
 
                 // save position
-                alias.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                alias.GetNode().Position = position.NewTokenPosition($4)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -2969,7 +2970,7 @@ trait_alias:
                 $$ = &ast.StmtTraitUseAlias{ast.Node{}, $1, $3, nil}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3000,7 +3001,7 @@ method_body:
                 $$ = &ast.StmtNop{ast.Node{}, }
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3013,7 +3014,7 @@ method_body:
                 $$ = &ast.StmtStmtList{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3036,7 +3037,7 @@ variable_modifiers:
                 $$ = []ast.Vertex{modifier}
 
                 // save position
-                modifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                modifier.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(modifier, token.Start, $1.Hidden)
@@ -3081,7 +3082,7 @@ member_modifier:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3093,7 +3094,7 @@ member_modifier:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3105,7 +3106,7 @@ member_modifier:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3117,7 +3118,7 @@ member_modifier:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3129,7 +3130,7 @@ member_modifier:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3141,7 +3142,7 @@ member_modifier:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3159,9 +3160,9 @@ class_variable_declaration:
                 $$ = append($1, property)
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                property.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
+                identifier.GetNode().Position = position.NewTokenPosition($3)
+                variable.GetNode().Position = position.NewTokenPosition($3)
+                property.GetNode().Position = position.NewTokenPosition($3)
 
                 // save comments
                 yylex.(*Parser).addDollarToken(variable)
@@ -3178,9 +3179,9 @@ class_variable_declaration:
                 $$ = append($1, property)
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                property.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5)
+                identifier.GetNode().Position = position.NewTokenPosition($3)
+                variable.GetNode().Position = position.NewTokenPosition($3)
+                property.GetNode().Position = position.NewTokenNodePosition($3, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -3198,9 +3199,9 @@ class_variable_declaration:
                 $$ = []ast.Vertex{property}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                property.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                identifier.GetNode().Position = position.NewTokenPosition($1)
+                variable.GetNode().Position = position.NewTokenPosition($1)
+                property.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).addDollarToken(variable)
@@ -3216,9 +3217,9 @@ class_variable_declaration:
                 $$ = []ast.Vertex{property}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                property.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
+                identifier.GetNode().Position = position.NewTokenPosition($1)
+                variable.GetNode().Position = position.NewTokenPosition($1)
+                property.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).addDollarToken(variable)
@@ -3240,9 +3241,9 @@ class_constant_declaration:
                 $$ = $1
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                constant.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5)
-                $1.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5)
+                name.GetNode().Position = position.NewTokenPosition($3)
+                constant.GetNode().Position = position.NewTokenNodePosition($3, $5)
+                $1.GetNode().Position = position.NewNodesPosition($1, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastConst, token.End, $2.Hidden)
@@ -3258,9 +3259,9 @@ class_constant_declaration:
                 $$ = &ast.StmtClassConstList{ast.Node{}, nil, []ast.Vertex{constant}}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                constant.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4)
+                name.GetNode().Position = position.NewTokenPosition($2)
+                constant.GetNode().Position = position.NewTokenNodePosition($2, $4)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3345,7 +3346,7 @@ chaining_dereference:
                 $$ = append($1, fetch)
 
                 // save position
-                fetch.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($3)
+                fetch.GetNode().Position = position.NewNodePosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(fetch, token.Var, append($2.Hidden, yylex.(*Parser).GetFreeFloatingToken($2)...))
@@ -3359,7 +3360,7 @@ chaining_dereference:
                 $$ = []ast.Vertex{fetch}
 
                 // save position
-                fetch.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($2)
+                fetch.GetNode().Position = position.NewNodePosition($2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(fetch, token.Var, append($1.Hidden, yylex.(*Parser).GetFreeFloatingToken($1)...))
@@ -3411,10 +3412,10 @@ new_expr:
 
                 if $3 != nil {
                     $$ = &ast.ExprNew{ast.Node{}, $2, $3.(*ast.ArgumentList)}
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3)
+                    $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
                 } else {
                     $$ = &ast.ExprNew{ast.Node{}, $2, nil}
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                    $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
                 }
 
                 // save comments
@@ -3431,8 +3432,8 @@ expr_without_variable:
                 $$ = &ast.ExprAssign{ast.Node{}, listNode, $6}
 
                 // save position
-                listNode.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6)
+                listNode.GetNode().Position = position.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $6)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3447,7 +3448,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssign{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3460,7 +3461,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignReference{ast.Node{}, $1, $4}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4)
+                $$.GetNode().Position = position.NewNodesPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3482,11 +3483,11 @@ expr_without_variable:
 
                 // save position
                 if $6 != nil {
-                    _new.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $6)
+                    _new.GetNode().Position = position.NewTokenNodePosition($4, $6)
                 } else {
-                    _new.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $5)
+                    _new.GetNode().Position = position.NewTokenNodePosition($4, $5)
                 }
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, _new)
+                $$.GetNode().Position = position.NewNodesPosition($1, _new)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3501,7 +3502,7 @@ expr_without_variable:
                 $$ = &ast.ExprClone{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3513,7 +3514,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignPlus{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 yylex.(*Parser).MoveFreeFloating($1, $$)
                 yylex.(*Parser).setFreeFloating($$, token.Var, $2.Hidden)
@@ -3525,7 +3526,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignMinus{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3538,7 +3539,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignMul{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3551,7 +3552,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignPow{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3564,7 +3565,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignDiv{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3577,7 +3578,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignConcat{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3590,7 +3591,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignMod{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3603,7 +3604,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignBitwiseAnd{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3616,7 +3617,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignBitwiseOr{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3629,7 +3630,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignBitwiseXor{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3642,7 +3643,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignShiftLeft{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3655,7 +3656,7 @@ expr_without_variable:
                 $$ = &ast.ExprAssignShiftRight{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3668,7 +3669,7 @@ expr_without_variable:
                 $$ = &ast.ExprPostInc{ast.Node{}, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3681,7 +3682,7 @@ expr_without_variable:
                 $$ = &ast.ExprPreInc{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3693,7 +3694,7 @@ expr_without_variable:
                 $$ = &ast.ExprPostDec{ast.Node{}, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3706,7 +3707,7 @@ expr_without_variable:
                 $$ = &ast.ExprPreDec{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3718,7 +3719,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryBooleanOr{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3731,7 +3732,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryBooleanAnd{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3744,7 +3745,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryLogicalOr{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3757,7 +3758,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryLogicalAnd{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3770,7 +3771,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryLogicalXor{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3783,7 +3784,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryBitwiseOr{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3796,7 +3797,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryBitwiseAnd{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3809,7 +3810,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryBitwiseXor{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3822,7 +3823,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryConcat{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3835,7 +3836,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryPlus{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3848,7 +3849,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryMinus{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3861,7 +3862,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryMul{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3874,7 +3875,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryPow{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3887,7 +3888,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryDiv{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3900,7 +3901,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryMod{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3913,7 +3914,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryShiftLeft{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3926,7 +3927,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryShiftRight{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3939,7 +3940,7 @@ expr_without_variable:
                 $$ = &ast.ExprUnaryPlus{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3951,7 +3952,7 @@ expr_without_variable:
                 $$ = &ast.ExprUnaryMinus{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3963,7 +3964,7 @@ expr_without_variable:
                 $$ = &ast.ExprBooleanNot{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3975,7 +3976,7 @@ expr_without_variable:
                 $$ = &ast.ExprBitwiseNot{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -3987,7 +3988,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryIdentical{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4000,7 +4001,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryNotIdentical{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4013,7 +4014,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryEqual{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4026,7 +4027,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryNotEqual{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4040,7 +4041,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinarySmaller{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4053,7 +4054,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinarySmallerOrEqual{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4066,7 +4067,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryGreater{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4079,7 +4080,7 @@ expr_without_variable:
                 $$ = &ast.ExprBinaryGreaterOrEqual{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4092,7 +4093,7 @@ expr_without_variable:
                 $$ = &ast.ExprInstanceOf{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4142,7 +4143,7 @@ expr_without_variable:
                     }
 
                     // save position
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, n)
+                    $$.GetNode().Position = position.NewNodesPosition($$, n)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4152,7 +4153,7 @@ expr_without_variable:
                 $$ = &ast.ExprTernary{ast.Node{}, $1, $3, $5}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5)
+                $$.GetNode().Position = position.NewNodesPosition($1, $5)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4166,7 +4167,7 @@ expr_without_variable:
                 $$ = &ast.ExprTernary{ast.Node{}, $1, nil, $4}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4)
+                $$.GetNode().Position = position.NewNodesPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4186,7 +4187,7 @@ expr_without_variable:
                 $$ = &ast.ExprCastInt{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4199,7 +4200,7 @@ expr_without_variable:
                 $$ = &ast.ExprCastDouble{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4212,7 +4213,7 @@ expr_without_variable:
                 $$ = &ast.ExprCastString{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4225,7 +4226,7 @@ expr_without_variable:
                 $$ = &ast.ExprCastArray{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4238,7 +4239,7 @@ expr_without_variable:
                 $$ = &ast.ExprCastObject{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4251,7 +4252,7 @@ expr_without_variable:
                 $$ = &ast.ExprCastBool{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4264,7 +4265,7 @@ expr_without_variable:
                 $$ = &ast.ExprCastUnset{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4283,9 +4284,9 @@ expr_without_variable:
 
                 // save position
                 if $2.GetNode().Position == nil {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                    $$.GetNode().Position = position.NewTokenPosition($1)
                 } else {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                    $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
                 }
 
                 // save comments
@@ -4298,7 +4299,7 @@ expr_without_variable:
                 $$ = &ast.ExprErrorSuppress{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4328,7 +4329,7 @@ expr_without_variable:
                 $$ = &ast.ExprShellExec{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4340,7 +4341,7 @@ expr_without_variable:
                 $$ = &ast.ExprPrint{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4352,7 +4353,7 @@ expr_without_variable:
                 $$ = &ast.ExprYield{ast.Node{}, nil, nil}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4364,7 +4365,7 @@ expr_without_variable:
                 $$ = &ast.ExprClosure{ast.Node{}, $2 != nil, false, $4, $6, nil, $8}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9)
+                $$.GetNode().Position = position.NewTokensPosition($1, $9)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4390,7 +4391,7 @@ expr_without_variable:
                 $$ = &ast.ExprClosure{ast.Node{}, $3 != nil, true, $5, $7, nil, $9}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $10)
+                $$.GetNode().Position = position.NewTokensPosition($1, $10)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4420,7 +4421,7 @@ yield_expr:
                 $$ = &ast.ExprYield{ast.Node{}, nil, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4432,7 +4433,7 @@ yield_expr:
                 $$ = &ast.ExprYield{ast.Node{}, nil, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4444,7 +4445,7 @@ yield_expr:
                 $$ = &ast.ExprYield{ast.Node{}, $2, $4}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4457,7 +4458,7 @@ yield_expr:
                 $$ = &ast.ExprYield{ast.Node{}, $2, $4}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4473,7 +4474,7 @@ combined_scalar_offset:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4487,7 +4488,7 @@ combined_scalar_offset:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4502,8 +4503,8 @@ combined_scalar_offset:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, str, $3}
 
                 // save position
-                str.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition(str, $4)
+                str.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewNodeTokenPosition(str, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4517,7 +4518,7 @@ combined_scalar_offset:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4534,7 +4535,7 @@ combined_scalar:
                 $$ = &ast.ExprArray{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4548,7 +4549,7 @@ combined_scalar:
                 $$ = &ast.ExprShortArray{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4577,7 +4578,7 @@ lexical_vars:
                 $$ = &ast.ExprClosureUse{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4596,8 +4597,8 @@ lexical_var_list:
                 $$ = append($1, variable)
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
+                identifier.GetNode().Position = position.NewTokenPosition($3)
+                variable.GetNode().Position = position.NewTokenPosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -4614,9 +4615,9 @@ lexical_var_list:
                 $$ = append($1, reference)
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($4)
-                reference.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($3, $4)
+                identifier.GetNode().Position = position.NewTokenPosition($4)
+                variable.GetNode().Position = position.NewTokenPosition($4)
+                reference.GetNode().Position = position.NewTokensPosition($3, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -4633,8 +4634,8 @@ lexical_var_list:
                 $$ = []ast.Vertex{variable}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                identifier.GetNode().Position = position.NewTokenPosition($1)
+                variable.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $1.Hidden)
@@ -4650,9 +4651,9 @@ lexical_var_list:
                 $$ = []ast.Vertex{reference}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                reference.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                identifier.GetNode().Position = position.NewTokenPosition($2)
+                variable.GetNode().Position = position.NewTokenPosition($2)
+                reference.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(reference, token.Start, $1.Hidden)
@@ -4670,8 +4671,8 @@ function_call:
                 $$ = &ast.ExprFunctionCall{ast.Node{}, name, $2.(*ast.ArgumentList)}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition(name, $2)
+                name.GetNode().Position = position.NewNodeListPosition($1)
+                $$.GetNode().Position = position.NewNodesPosition(name, $2)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -4684,8 +4685,8 @@ function_call:
                 $$ = &ast.ExprFunctionCall{ast.Node{}, funcName, $4.(*ast.ArgumentList)}
 
                 // save position
-                funcName.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition(funcName, $4)
+                funcName.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition(funcName, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4699,8 +4700,8 @@ function_call:
                 $$ = &ast.ExprFunctionCall{ast.Node{}, funcName, $3.(*ast.ArgumentList)}
 
                 // save position
-                funcName.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition(funcName, $3)
+                funcName.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
+                $$.GetNode().Position = position.NewNodesPosition(funcName, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4712,7 +4713,7 @@ function_call:
                 $$ = &ast.ExprStaticCall{ast.Node{}, $1, $3, $4.(*ast.ArgumentList)}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4)
+                $$.GetNode().Position = position.NewNodesPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4725,7 +4726,7 @@ function_call:
                 $$ = &ast.ExprStaticCall{ast.Node{}, $1, $3, $4.(*ast.ArgumentList)}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4)
+                $$.GetNode().Position = position.NewNodesPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4738,7 +4739,7 @@ function_call:
                 $$ = &ast.ExprStaticCall{ast.Node{}, $1, $3, $4.(*ast.ArgumentList)}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4)
+                $$.GetNode().Position = position.NewNodesPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4751,7 +4752,7 @@ function_call:
                 $$ = &ast.ExprStaticCall{ast.Node{}, $1, $3, $4.(*ast.ArgumentList)}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4)
+                $$.GetNode().Position = position.NewNodesPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4764,7 +4765,7 @@ function_call:
                 $$ = &ast.ExprFunctionCall{ast.Node{}, $1, $2.(*ast.ArgumentList)}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $2)
+                $$.GetNode().Position = position.NewNodesPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4779,7 +4780,7 @@ class_name:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4791,7 +4792,7 @@ class_name:
                 $$ = &ast.NameName{ast.Node{}, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
+                $$.GetNode().Position = position.NewNodeListPosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -4803,7 +4804,7 @@ class_name:
                 $$ = &ast.NameRelative{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4816,7 +4817,7 @@ class_name:
                 $$ = &ast.NameFullyQualified{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4831,7 +4832,7 @@ fully_qualified_class_name:
                 $$ = &ast.NameName{ast.Node{}, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
+                $$.GetNode().Position = position.NewNodeListPosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -4843,7 +4844,7 @@ fully_qualified_class_name:
                 $$ = &ast.NameRelative{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4856,7 +4857,7 @@ fully_qualified_class_name:
                 $$ = &ast.NameFullyQualified{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -4892,13 +4893,13 @@ dynamic_class_name_reference:
                     switch nn := n.(type) {
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            $$.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            $$.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
                     }
@@ -4908,13 +4909,13 @@ dynamic_class_name_reference:
                     switch nn := n.(type) {
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            $$.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            $$.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
                     }
@@ -4971,7 +4972,7 @@ exit_expr:
                 $$ = &ast.ExprExit{ast.Node{}, false, nil};
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Exit, append($1.Hidden, yylex.(*Parser).GetFreeFloatingToken($1)...))
@@ -4985,9 +4986,9 @@ exit_expr:
 
                 // save position
                 if bytes.Compare(yylex.(*Parser).currentToken.Value, []byte(")")) == 0 {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition(yylex.(*Parser).currentToken)
+                    $$.GetNode().Position = position.NewTokenPosition(yylex.(*Parser).currentToken)
                 } else {
-                    $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                    $$.GetNode().Position = position.NewNodePosition($1)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -5011,7 +5012,7 @@ backticks_expr:
                 $$ = []ast.Vertex{part}
 
                 // save position
-                part.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                part.GetNode().Position = position.NewTokenPosition($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5044,7 +5045,7 @@ common_scalar:
                 $$ = &ast.ScalarLnumber{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5056,7 +5057,7 @@ common_scalar:
                 $$ = &ast.ScalarDnumber{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5068,7 +5069,7 @@ common_scalar:
                 $$ = &ast.ScalarString{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5080,7 +5081,7 @@ common_scalar:
                 $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5092,7 +5093,7 @@ common_scalar:
                 $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5104,7 +5105,7 @@ common_scalar:
                 $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5116,7 +5117,7 @@ common_scalar:
                 $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5128,7 +5129,7 @@ common_scalar:
                 $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5140,7 +5141,7 @@ common_scalar:
                 $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5152,7 +5153,7 @@ common_scalar:
                 $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5165,8 +5166,8 @@ common_scalar:
                 $$ = &ast.ScalarHeredoc{ast.Node{}, $1.Value, []ast.Vertex{encapsed}}
 
                 // save position
-                encapsed.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                encapsed.GetNode().Position = position.NewTokenPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5178,7 +5179,7 @@ common_scalar:
                 $$ = &ast.ScalarHeredoc{ast.Node{}, $1.Value, nil}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5194,8 +5195,8 @@ static_class_constant:
                 $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
 
                 // save position
-                target.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3)
+                target.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5234,8 +5235,8 @@ static_scalar_value:
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition(name)
+                name.GetNode().Position = position.NewNodeListPosition($1)
+                $$.GetNode().Position = position.NewNodePosition(name)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -5248,8 +5249,8 @@ static_scalar_value:
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3)
+                name.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5263,8 +5264,8 @@ static_scalar_value:
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2)
+                name.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5276,7 +5277,7 @@ static_scalar_value:
                 $$ = &ast.ExprArray{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5290,7 +5291,7 @@ static_scalar_value:
                 $$ = &ast.ExprShortArray{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5309,7 +5310,7 @@ static_scalar_value:
                 $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5330,7 +5331,7 @@ static_operation:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5344,7 +5345,7 @@ static_operation:
                 $$ = &ast.ExprBinaryPlus{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5357,7 +5358,7 @@ static_operation:
                 $$ = &ast.ExprBinaryMinus{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5370,7 +5371,7 @@ static_operation:
                 $$ = &ast.ExprBinaryMul{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5383,7 +5384,7 @@ static_operation:
                 $$ = &ast.ExprBinaryPow{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5396,7 +5397,7 @@ static_operation:
                 $$ = &ast.ExprBinaryDiv{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5409,7 +5410,7 @@ static_operation:
                 $$ = &ast.ExprBinaryMod{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5422,7 +5423,7 @@ static_operation:
                 $$ = &ast.ExprBooleanNot{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5434,7 +5435,7 @@ static_operation:
                 $$ = &ast.ExprBitwiseNot{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5446,7 +5447,7 @@ static_operation:
                 $$ = &ast.ExprBinaryBitwiseOr{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5459,7 +5460,7 @@ static_operation:
                 $$ = &ast.ExprBinaryBitwiseAnd{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5472,7 +5473,7 @@ static_operation:
                 $$ = &ast.ExprBinaryBitwiseXor{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5485,7 +5486,7 @@ static_operation:
                 $$ = &ast.ExprBinaryShiftLeft{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5498,7 +5499,7 @@ static_operation:
                 $$ = &ast.ExprBinaryShiftRight{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5511,7 +5512,7 @@ static_operation:
                 $$ = &ast.ExprBinaryConcat{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5524,7 +5525,7 @@ static_operation:
                 $$ = &ast.ExprBinaryLogicalXor{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5537,7 +5538,7 @@ static_operation:
                 $$ = &ast.ExprBinaryLogicalAnd{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5550,7 +5551,7 @@ static_operation:
                 $$ = &ast.ExprBinaryLogicalOr{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5563,7 +5564,7 @@ static_operation:
                 $$ = &ast.ExprBinaryBooleanAnd{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5576,7 +5577,7 @@ static_operation:
                 $$ = &ast.ExprBinaryBooleanOr{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5589,7 +5590,7 @@ static_operation:
                 $$ = &ast.ExprBinaryIdentical{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5602,7 +5603,7 @@ static_operation:
                 $$ = &ast.ExprBinaryNotIdentical{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5615,7 +5616,7 @@ static_operation:
                 $$ = &ast.ExprBinaryEqual{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5628,7 +5629,7 @@ static_operation:
                 $$ = &ast.ExprBinaryNotEqual{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5642,7 +5643,7 @@ static_operation:
                 $$ = &ast.ExprBinarySmaller{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5655,7 +5656,7 @@ static_operation:
                 $$ = &ast.ExprBinaryGreater{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5668,7 +5669,7 @@ static_operation:
                 $$ = &ast.ExprBinarySmallerOrEqual{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5681,7 +5682,7 @@ static_operation:
                 $$ = &ast.ExprBinaryGreaterOrEqual{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5694,7 +5695,7 @@ static_operation:
                 $$ = &ast.ExprTernary{ast.Node{}, $1, nil, $4}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4)
+                $$.GetNode().Position = position.NewNodesPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5708,7 +5709,7 @@ static_operation:
                 $$ = &ast.ExprTernary{ast.Node{}, $1, $3, $5}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5)
+                $$.GetNode().Position = position.NewNodesPosition($1, $5)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5722,7 +5723,7 @@ static_operation:
                 $$ = &ast.ExprUnaryPlus{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5734,7 +5735,7 @@ static_operation:
                 $$ = &ast.ExprUnaryMinus{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5766,8 +5767,8 @@ general_constant:
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeListPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition(name)
+                name.GetNode().Position = position.NewNodeListPosition($1)
+                $$.GetNode().Position = position.NewNodePosition(name)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -5780,8 +5781,8 @@ general_constant:
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition(name)
+                name.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
+                $$.GetNode().Position = position.NewNodePosition(name)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5795,8 +5796,8 @@ general_constant:
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition(name)
+                name.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
+                $$.GetNode().Position = position.NewNodePosition(name)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5812,8 +5813,8 @@ scalar:
                 $$ = &ast.ExprVariable{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                name.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5843,7 +5844,7 @@ scalar:
                 $$ = &ast.ScalarEncapsed{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5855,7 +5856,7 @@ scalar:
                  $$ = &ast.ScalarHeredoc{ast.Node{}, $1.Value, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5867,7 +5868,7 @@ scalar:
                 $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -5914,7 +5915,7 @@ non_empty_static_array_pair_list:
                 $$ = append($1, arrayItem)
 
                 // save position
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($3, $5)
+                arrayItem.GetNode().Position = position.NewNodesPosition($3, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -5929,7 +5930,7 @@ non_empty_static_array_pair_list:
                 $$ = append($1, arrayItem)
 
                 // save position
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($3)
+                arrayItem.GetNode().Position = position.NewNodePosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -5943,7 +5944,7 @@ non_empty_static_array_pair_list:
                 $$ = []ast.Vertex{arrayItem}
 
                 // save position
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                arrayItem.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, arrayItem)
@@ -5957,7 +5958,7 @@ non_empty_static_array_pair_list:
                 $$ = []ast.Vertex{arrayItem}
 
                 // save position
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                arrayItem.GetNode().Position = position.NewNodePosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, arrayItem)
@@ -6062,19 +6063,19 @@ variable:
                     switch nn := n.(type) {
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            nn.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            nn.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprMethodCall:
                             nn.Var = $$
-                            nn.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
                     }
@@ -6084,19 +6085,19 @@ variable:
                     switch nn := n.(type) {
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            nn.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            nn.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprMethodCall:
                             nn.Var = $$
-                            nn.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn)
+                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                             yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
                     }
@@ -6152,7 +6153,7 @@ array_method_dereference:
                 $$ = append($1, fetch)
 
                 // save position
-                fetch.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($3)
+                fetch.GetNode().Position = position.NewNodePosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(fetch, token.Var, append($2.Hidden, yylex.(*Parser).GetFreeFloatingToken($2)...))
@@ -6166,7 +6167,7 @@ array_method_dereference:
                 $$ = []ast.Vertex{$1, fetch}
 
                 // save position
-                fetch.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($3)
+                fetch.GetNode().Position = position.NewNodePosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(fetch, token.Var, append($2.Hidden, yylex.(*Parser).GetFreeFloatingToken($2)...))
@@ -6182,7 +6183,7 @@ method:
                 $$ = &ast.ExprMethodCall{ast.Node{}, nil, nil, $1.(*ast.ArgumentList)}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                $$.GetNode().Position = position.NewNodePosition($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6221,7 +6222,7 @@ variable_without_objects:
                 $1.last.VarName = $2
 
                 for _, n := range($1.all) {
-                    n.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition(n, $2)
+                    n.GetNode().Position = position.NewNodesPosition(n, $2)
                 }
 
                 $$ = $1.all[0]
@@ -6236,7 +6237,7 @@ static_member:
                 $$ = &ast.ExprStaticPropertyFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6249,7 +6250,7 @@ static_member:
                 $$ = &ast.ExprStaticPropertyFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6274,7 +6275,7 @@ array_function_dereference:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6288,7 +6289,7 @@ array_function_dereference:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6333,7 +6334,7 @@ base_variable:
                 $1.last.VarName = $2
 
                 for _, n := range($1.all) {
-                    n.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition(n, $2)
+                    n.GetNode().Position = position.NewNodesPosition(n, $2)
                 }
 
                 $$ = $1.all[0]
@@ -6354,7 +6355,7 @@ reference_variable:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6368,7 +6369,7 @@ reference_variable:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6393,8 +6394,8 @@ compound_variable:
                 $$ = &ast.ExprVariable{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                name.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -6407,7 +6408,7 @@ compound_variable:
                 $$ = &ast.ExprVariable{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -6448,7 +6449,7 @@ object_property:
                 $$ = []ast.Vertex{fetch}
 
                 // save position
-                fetch.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                fetch.GetNode().Position = position.NewNodePosition($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6461,7 +6462,7 @@ object_dim_list:
                 $$ = append($1, fetch)
 
                 // save position
-                fetch.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($3)
+                fetch.GetNode().Position = position.NewNodePosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(fetch, token.Var, append($2.Hidden, yylex.(*Parser).GetFreeFloatingToken($2)...))
@@ -6475,7 +6476,7 @@ object_dim_list:
                 $$ = append($1, fetch)
 
                 // save position
-                fetch.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($3)
+                fetch.GetNode().Position = position.NewNodePosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(fetch, token.Var, append($2.Hidden, yylex.(*Parser).GetFreeFloatingToken($2)...))
@@ -6489,7 +6490,7 @@ object_dim_list:
                 $$ = []ast.Vertex{fetch}
 
                 // save position
-                fetch.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                fetch.GetNode().Position = position.NewNodePosition($1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6501,7 +6502,7 @@ variable_name:
                 $$ = &ast.Identifier{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -6513,7 +6514,7 @@ variable_name:
                 $$ = $2
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, append($1.Hidden, append(yylex.(*Parser).GetFreeFloatingToken($1), $$.GetNode().Tokens[token.Start]...)...))
@@ -6530,7 +6531,7 @@ simple_indirect_reference:
                 $$ = simpleIndirectReference{[]*ast.ExprVariable{n}, n}
 
                 // save position
-                n.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                n.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(n, token.Start, $1.Hidden)
@@ -6548,7 +6549,7 @@ simple_indirect_reference:
                 $$ = $1
 
                 // save position
-                n.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
+                n.GetNode().Position = position.NewTokenPosition($2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(n, token.Start, $2.Hidden)
@@ -6591,7 +6592,7 @@ assignment_list_element:
                 $$ = &ast.ExprArrayItem{ast.Node{}, false, nil, $1}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                $$.GetNode().Position = position.NewNodePosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6604,8 +6605,8 @@ assignment_list_element:
                 $$ = &ast.ExprArrayItem{ast.Node{}, false, nil, listNode}
 
                 // save position
-                listNode.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition(listNode)
+                listNode.GetNode().Position = position.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewNodePosition(listNode)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -6654,7 +6655,7 @@ non_empty_array_pair_list:
                 $$ = append($1, arrayItem)
 
                 // save position
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($3, $5)
+                arrayItem.GetNode().Position = position.NewNodesPosition($3, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -6669,7 +6670,7 @@ non_empty_array_pair_list:
                 $$ = append($1, arrayItem)
 
                 // save position
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($3)
+                arrayItem.GetNode().Position = position.NewNodePosition($3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -6683,7 +6684,7 @@ non_empty_array_pair_list:
                 $$ = []ast.Vertex{arrayItem}
 
                 // save position
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3)
+                arrayItem.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, arrayItem)
@@ -6697,7 +6698,7 @@ non_empty_array_pair_list:
                 $$ = []ast.Vertex{arrayItem}
 
                 // save position
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodePosition($1)
+                arrayItem.GetNode().Position = position.NewNodePosition($1)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, arrayItem)
@@ -6711,8 +6712,8 @@ non_empty_array_pair_list:
                 $$ = append($1, arrayItem)
 
                 // save position
-                reference.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($5, $6)
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($3, $6)
+                reference.GetNode().Position = position.NewTokenNodePosition($5, $6)
+                arrayItem.GetNode().Position = position.NewNodesPosition($3, $6)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -6729,8 +6730,8 @@ non_empty_array_pair_list:
                 $$ = append($1, arrayItem)
 
                 // save position
-                reference.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $4)
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $4)
+                reference.GetNode().Position = position.NewTokenNodePosition($3, $4)
+                arrayItem.GetNode().Position = position.NewTokenNodePosition($3, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Hidden)
@@ -6745,8 +6746,8 @@ non_empty_array_pair_list:
                 $$ = []ast.Vertex{arrayItem}
 
                 // save position
-                reference.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $4)
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4)
+                reference.GetNode().Position = position.NewTokenNodePosition($3, $4)
+                arrayItem.GetNode().Position = position.NewNodesPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, arrayItem)
@@ -6762,8 +6763,8 @@ non_empty_array_pair_list:
                 $$ = []ast.Vertex{arrayItem}
 
                 // save position
-                reference.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
-                arrayItem.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                reference.GetNode().Position = position.NewTokenNodePosition($1, $2)
+                arrayItem.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(arrayItem, token.Start, $1.Hidden)
@@ -6785,7 +6786,7 @@ encaps_list:
                 $$ = append($1, encapsed)
 
                 // save position
-                encapsed.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
+                encapsed.GetNode().Position = position.NewTokenPosition($2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(encapsed, token.Start, $2.Hidden)
@@ -6804,7 +6805,7 @@ encaps_list:
                 $$ = []ast.Vertex{encapsed, $2}
 
                 // save position
-                encapsed.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                encapsed.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(encapsed, token.Start, $1.Hidden)
@@ -6820,8 +6821,8 @@ encaps_var:
                 $$ = &ast.ExprVariable{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                name.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -6836,9 +6837,9 @@ encaps_var:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, variable, $3}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                identifier.GetNode().Position = position.NewTokenPosition($1)
+                variable.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).addDollarToken(variable)
@@ -6855,10 +6856,10 @@ encaps_var:
                 $$ = &ast.ExprPropertyFetch{ast.Node{}, variable, fetch}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                fetch.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                identifier.GetNode().Position = position.NewTokenPosition($1)
+                variable.GetNode().Position = position.NewTokenPosition($1)
+                fetch.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).addDollarToken(variable)
@@ -6874,7 +6875,7 @@ encaps_var:
                 $$ = variable
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, yylex.(*Parser).GetFreeFloatingToken($1))
@@ -6890,8 +6891,8 @@ encaps_var:
                 $$ = variable
 
                 // save position
-                name.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3)
+                name.GetNode().Position = position.NewTokenPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, yylex.(*Parser).GetFreeFloatingToken($1))
@@ -6906,9 +6907,9 @@ encaps_var:
                 $$ = &ast.ExprArrayDimFetch{ast.Node{}, variable, $4}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                variable.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($2)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6)
+                identifier.GetNode().Position = position.NewTokenPosition($2)
+                variable.GetNode().Position = position.NewTokenPosition($2)
+                $$.GetNode().Position = position.NewTokensPosition($1, $6)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, yylex.(*Parser).GetFreeFloatingToken($1))
@@ -6936,7 +6937,7 @@ encaps_var_offset:
                 $$ = &ast.ScalarString{ast.Node{}, $1.Value}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -6953,7 +6954,7 @@ encaps_var_offset:
                 }
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -6966,8 +6967,8 @@ encaps_var_offset:
                 $$ = &ast.ExprVariable{ast.Node{}, identifier}
 
                 // save position
-                identifier.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($1)
+                identifier.GetNode().Position = position.NewTokenPosition($1)
+                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -6983,7 +6984,7 @@ internal_functions_in_yacc:
                 $$ = &ast.ExprIsset{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -6997,7 +6998,7 @@ internal_functions_in_yacc:
                 $$ = &ast.ExprEmpty{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -7011,7 +7012,7 @@ internal_functions_in_yacc:
                 $$ = &ast.ExprEmpty{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -7025,7 +7026,7 @@ internal_functions_in_yacc:
                 $$ = &ast.ExprInclude{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -7037,7 +7038,7 @@ internal_functions_in_yacc:
                 $$ = &ast.ExprIncludeOnce{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -7049,7 +7050,7 @@ internal_functions_in_yacc:
                 $$ = &ast.ExprEval{ast.Node{}, $3}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4)
+                $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -7063,7 +7064,7 @@ internal_functions_in_yacc:
                 $$ = &ast.ExprRequire{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -7075,7 +7076,7 @@ internal_functions_in_yacc:
                 $$ = &ast.ExprRequireOnce{ast.Node{}, $2}
 
                 // save position
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Hidden)
@@ -7124,8 +7125,8 @@ class_constant:
                 $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
 
                 // save position
-                target.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3)
+                target.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7140,8 +7141,8 @@ class_constant:
                 $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
 
                 // save position
-                target.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3)
+                target.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7159,8 +7160,8 @@ static_class_name_scalar:
                 $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
 
                 // save position
-                target.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3)
+                target.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7178,8 +7179,8 @@ class_name_scalar:
                 $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
 
                 // save position
-                target.GetNode().Position = yylex.(*Parser).positionBuilder.NewTokenPosition($3)
-                $$.GetNode().Position = yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3)
+                target.GetNode().Position = position.NewTokenPosition($3)
+                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
