@@ -10,13 +10,6 @@ import (
 	"github.com/z7zmey/php-parser/pkg/token"
 )
 
-type Config struct {
-	WithHiddenTokens bool
-	ErrHandlerFunc   func(*errors.Error)
-}
-
-var DefaultConfig = Config{}
-
 type Lexer struct {
 	data             []byte
 	phpVersion       string
@@ -34,12 +27,12 @@ type Lexer struct {
 	newLines     NewLines
 }
 
-func NewLexer(data []byte, phpVersion string, config Config) *Lexer {
+func NewLexer(data []byte, phpVersion string, withHiddenTokens bool, errHandlerFunc func(*errors.Error)) *Lexer {
 	lex := &Lexer{
 		data:             data,
 		phpVersion:       phpVersion,
-		errHandlerFunc:   config.ErrHandlerFunc,
-		withHiddenTokens: config.WithHiddenTokens,
+		withHiddenTokens: withHiddenTokens,
+		errHandlerFunc:   errHandlerFunc,
 
 		pe:    len(data),
 		stack: make([]int, 0),

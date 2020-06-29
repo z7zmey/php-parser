@@ -24,53 +24,48 @@ func NewParser(src []byte, v string, withTokens bool) *Parser {
 		withTokens: withTokens,
 	}
 
-	scannerConfig := scanner.Config{
-		WithHiddenTokens: withTokens,
-		ErrHandlerFunc: func(e *errors.Error) {
-			parser.errors = append(parser.errors, e)
-		},
-	}
-
-	lexer := scanner.NewLexer(src, v, scannerConfig)
+	lexer := scanner.NewLexer(src, v, withTokens, func(e *errors.Error) {
+		parser.errors = append(parser.errors, e)
+	})
 	parser.Lexer = lexer
 
 	return parser
 }
 
-func (l *Parser) Lex(lval *yySymType) int {
-	t := l.Lexer.Lex()
+func (p *Parser) Lex(lval *yySymType) int {
+	t := p.Lexer.Lex()
 
-	l.currentToken = t
+	p.currentToken = t
 	lval.token = t
 
 	return int(t.ID)
 }
 
-func (l *Parser) Error(msg string) {
-	var pos = l.currentToken.Position
+func (p *Parser) Error(msg string) {
+	var pos = p.currentToken.Position
 
-	l.errors = append(l.errors, errors.NewError(msg, &pos))
+	p.errors = append(p.errors, errors.NewError(msg, &pos))
 }
 
 // GetErrors returns errors list
-func (l *Parser) GetErrors() []*errors.Error {
-	return l.errors
+func (p *Parser) GetErrors() []*errors.Error {
+	return p.errors
 }
 
 // Parse the php7 Parser entrypoint
-func (l *Parser) Parse() int {
+func (p *Parser) Parse() int {
 	// init
-	l.errors = nil
-	l.rootNode = nil
+	p.errors = nil
+	p.rootNode = nil
 
 	// parse
 
-	return yyParse(l)
+	return yyParse(p)
 }
 
 // GetRootNode returns root node
-func (l *Parser) GetRootNode() ast.Vertex {
-	return l.rootNode
+func (p *Parser) GetRootNode() ast.Vertex {
+	return p.rootNode
 }
 
 // helpers
@@ -86,8 +81,8 @@ func isDollar(r rune) bool {
 	return r == '$'
 }
 
-func (l *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
-	if l.withTokens == false {
+func (p *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
+	if p.withTokens == false {
 		return
 	}
 
@@ -95,7 +90,7 @@ func (l *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
 		return
 	}
 
-	l.setFreeFloating(dst, token.Start, src.GetNode().Tokens[token.Start])
+	p.setFreeFloating(dst, token.Start, src.GetNode().Tokens[token.Start])
 	delete(src.GetNode().Tokens, token.Start)
 }
 
@@ -116,8 +111,8 @@ func (p *Parser) setFreeFloating(dst ast.Vertex, pos token.Position, strings []t
 	(*dstCollection)[pos] = strings
 }
 
-func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
-	if l.withTokens == false {
+func (p *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
+	if p.withTokens == false {
 		return []token.Token{}
 	}
 
@@ -129,12 +124,12 @@ func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
 	}
 }
 
-func (l *Parser) addDollarToken(v ast.Vertex) {
-	if l.withTokens == false {
+func (p *Parser) addDollarToken(v ast.Vertex) {
+	if p.withTokens == false {
 		return
 	}
 
-	l.setFreeFloating(v, token.Dollar, []token.Token{
+	p.setFreeFloating(v, token.Dollar, []token.Token{
 		{
 			ID:    token.ID('$'),
 			Value: []byte("$"),
@@ -142,8 +137,8 @@ func (l *Parser) addDollarToken(v ast.Vertex) {
 	})
 }
 
-func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.Vertex) {
-	if l.withTokens == false {
+func (p *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.Vertex) {
+	if p.withTokens == false {
 		return
 	}
 
@@ -154,7 +149,7 @@ func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.
 	}
 
 	if semiColon[0].Value[0] == ';' {
-		l.setFreeFloating(prevNode, token.SemiColon, []token.Token{
+		p.setFreeFloating(prevNode, token.SemiColon, []token.Token{
 			{
 				ID:    token.ID(';'),
 				Value: semiColon[0].Value[0:1],
@@ -181,7 +176,7 @@ func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.
 		Value: semiColon[0].Value[vlen-tlen:],
 	})
 
-	l.setFreeFloating(htmlNode, token.Start, append(phpCloseTag, htmlNode.GetNode().Tokens[token.Start]...))
+	p.setFreeFloating(htmlNode, token.Start, append(phpCloseTag, htmlNode.GetNode().Tokens[token.Start]...))
 }
 
 func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {

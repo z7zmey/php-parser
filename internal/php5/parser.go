@@ -25,14 +25,9 @@ func NewParser(src []byte, v string, withTokens bool) *Parser {
 		withTokens: withTokens,
 	}
 
-	scannerConfig := scanner.Config{
-		WithHiddenTokens: withTokens,
-		ErrHandlerFunc: func(e *errors.Error) {
-			parser.errors = append(parser.errors, e)
-		},
-	}
-
-	lexer := scanner.NewLexer(src, v, scannerConfig)
+	lexer := scanner.NewLexer(src, v, withTokens, func(e *errors.Error) {
+		parser.errors = append(parser.errors, e)
+	})
 	parser.Lexer = lexer
 
 	return parser
