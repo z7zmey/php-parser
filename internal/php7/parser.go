@@ -14,14 +14,12 @@ type Parser struct {
 	Lexer          *scanner.Lexer
 	currentToken   *scanner.Token
 	rootNode       ast.Vertex
-	withTokens     bool
 	errHandlerFunc func(*errors.Error)
 }
 
 // NewParser creates and returns new Parser
-func NewParser(lexer *scanner.Lexer, withTokens bool, errHandlerFunc func(*errors.Error)) *Parser {
+func NewParser(lexer *scanner.Lexer, errHandlerFunc func(*errors.Error)) *Parser {
 	return &Parser{
-		withTokens:     withTokens,
 		Lexer:          lexer,
 		errHandlerFunc: errHandlerFunc,
 	}
@@ -63,24 +61,11 @@ func lastNode(nn []ast.Vertex) ast.Vertex {
 }
 
 func (p *Parser) MoveFreeFloating(src ast.Vertex, dst ast.Vertex) {
-	if p.withTokens == false {
+	if _, ok := src.GetNode().Tokens[token.Start]; !ok {
 		return
 	}
 
 	if src.GetNode().Tokens == nil {
-		return
-	}
-
-	p.setFreeFloating(dst, token.Start, src.GetNode().Tokens[token.Start])
-	delete(src.GetNode().Tokens, token.Start)
-}
-
-func (p *Parser) setFreeFloating(dst ast.Vertex, pos token.Position, strings []token.Token) {
-	if p.withTokens == false {
-		return
-	}
-
-	if len(strings) == 0 {
 		return
 	}
 
@@ -89,24 +74,59 @@ func (p *Parser) setFreeFloating(dst ast.Vertex, pos token.Position, strings []t
 		*dstCollection = make(token.Collection)
 	}
 
-	(*dstCollection)[pos] = strings
+	(*dstCollection)[token.Start] = src.GetNode().Tokens[token.Start]
+	delete(src.GetNode().Tokens, token.Start)
 }
 
-func (p *Parser) GetFreeFloatingToken(t *scanner.Token) []token.Token {
-	if p.withTokens == false {
-		return []token.Token{}
+func (p *Parser) setFreeFloating(dst ast.Vertex, pos token.Position, tokens []token.Token) {
+	if len(tokens) == 0 {
+		return
 	}
 
-	return []token.Token{
-		{
-			ID:    token.ID(t.ID),
-			Value: t.Value,
-		},
+	dstCollection := &dst.GetNode().Tokens
+	if *dstCollection == nil {
+		*dstCollection = make(token.Collection)
 	}
+
+	l := len(tokens)
+	for _, v := range tokens[0 : l-1] {
+		(*dstCollection)[pos] = append((*dstCollection)[pos], v)
+	}
+}
+
+func (p *Parser) setFreeFloatingTokens(dst ast.Vertex, pos token.Position, tokens []token.Token) {
+	if len(tokens) == 0 {
+		return
+	}
+
+	dstCollection := &dst.GetNode().Tokens
+	if *dstCollection == nil {
+		*dstCollection = make(token.Collection)
+	}
+
+	(*dstCollection)[pos] = make([]token.Token, 0)
+
+	for _, v := range tokens {
+		(*dstCollection)[pos] = append((*dstCollection)[pos], v)
+	}
+}
+
+func (p *Parser) setToken(dst ast.Vertex, pos token.Position, tokens []token.Token) {
+	if len(tokens) == 0 {
+		return
+	}
+
+	dstCollection := &dst.GetNode().Tokens
+	if *dstCollection == nil {
+		*dstCollection = make(token.Collection)
+	}
+
+	l := len(tokens)
+	(*dstCollection)[pos] = append((*dstCollection)[pos], tokens[l-1])
 }
 
 func (p *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.Vertex) {
-	if p.withTokens == false {
+	if _, ok := prevNode.GetNode().Tokens[token.SemiColon]; !ok {
 		return
 	}
 
@@ -117,7 +137,7 @@ func (p *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.
 	}
 
 	if semiColon[0].Value[0] == ';' {
-		p.setFreeFloating(prevNode, token.SemiColon, []token.Token{
+		p.setFreeFloatingTokens(prevNode, token.SemiColon, []token.Token{
 			{
 				ID:    token.ID(';'),
 				Value: semiColon[0].Value[0:1],
@@ -144,7 +164,7 @@ func (p *Parser) splitSemiColonAndPhpCloseTag(htmlNode ast.Vertex, prevNode ast.
 		Value: semiColon[0].Value[vlen-tlen:],
 	})
 
-	p.setFreeFloating(htmlNode, token.Start, append(phpCloseTag, htmlNode.GetNode().Tokens[token.Start]...))
+	p.setFreeFloatingTokens(htmlNode, token.Start, append(phpCloseTag, htmlNode.GetNode().Tokens[token.Start]...))
 }
 
 func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {

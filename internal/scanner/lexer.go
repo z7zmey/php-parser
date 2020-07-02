@@ -11,10 +11,10 @@ import (
 )
 
 type Lexer struct {
-	data             []byte
-	phpVersion       string
-	withHiddenTokens bool
-	errHandlerFunc   func(*errors.Error)
+	data           []byte
+	phpVersion     string
+	withTokens     bool
+	errHandlerFunc func(*errors.Error)
 
 	p, pe, cs   int
 	ts, te, act int
@@ -23,16 +23,15 @@ type Lexer struct {
 
 	heredocLabel []byte
 	tokenPool    *TokenPool
-	hiddenTokens []token.Token
 	newLines     NewLines
 }
 
-func NewLexer(data []byte, phpVersion string, withHiddenTokens bool, errHandlerFunc func(*errors.Error)) *Lexer {
+func NewLexer(data []byte, phpVersion string, withTokens bool, errHandlerFunc func(*errors.Error)) *Lexer {
 	lex := &Lexer{
-		data:             data,
-		phpVersion:       phpVersion,
-		withHiddenTokens: withHiddenTokens,
-		errHandlerFunc:   errHandlerFunc,
+		data:           data,
+		phpVersion:     phpVersion,
+		withTokens:     withTokens,
+		errHandlerFunc: errHandlerFunc,
 
 		pe:    len(data),
 		stack: make([]int, 0),
@@ -57,12 +56,12 @@ func (lex *Lexer) setTokenPosition(token *Token) {
 	token.Position.EndPos = lex.te
 }
 
-func (lex *Lexer) addHiddenToken(id TokenID, ps, pe int) {
-	if !lex.withHiddenTokens {
+func (lex *Lexer) addHiddenToken(t *Token, id TokenID, ps, pe int) {
+	if !lex.withTokens {
 		return
 	}
 
-	lex.hiddenTokens = append(lex.hiddenTokens, token.Token{
+	t.Tokens = append(t.Tokens, token.Token{
 		ID:    token.ID(id),
 		Value: lex.data[ps:pe],
 	})
@@ -236,9 +235,9 @@ func (lex *Lexer) error(msg string) {
 }
 
 func isValidVarNameStart(r byte) bool {
-	return (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || r == '_' || (r >= 0x80 && r <= 0xff)
+	return (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || r == '_' || r >= 0x80
 }
 
 func isValidVarName(r byte) bool {
-	return (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '_' || (r >= 0x80 && r <= 0xff)
+	return (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '_' || r >= 0x80
 }

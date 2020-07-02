@@ -59,7 +59,7 @@ func TestIdentifier(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -953,7 +953,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -1747,7 +1747,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -1769,7 +1769,7 @@ func TestCommentEndFile(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -1847,7 +1847,7 @@ func TestName(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -1923,7 +1923,7 @@ func TestFullyQualified(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -1999,7 +1999,7 @@ func TestRelative(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2078,7 +2078,7 @@ func TestScalarEncapsed_SimpleVar(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2155,7 +2155,7 @@ func TestScalarEncapsed_SimpleVarOneChar(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2243,7 +2243,7 @@ func TestScalarEncapsed_SimpleVarEndsEcapsed(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2341,7 +2341,7 @@ func TestScalarEncapsed_StringVarCurveOpen(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2450,7 +2450,7 @@ func TestScalarEncapsed_SimpleVarPropertyFetch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2527,7 +2527,7 @@ func TestScalarEncapsed_DollarOpenCurlyBraces(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2625,7 +2625,7 @@ func TestScalarEncapsed_DollarOpenCurlyBracesDimNumber(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2733,7 +2733,7 @@ func TestScalarEncapsed_CurlyOpenMethodCall(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2825,7 +2825,7 @@ LBL;
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2917,7 +2917,7 @@ LBL;
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -2977,7 +2977,7 @@ LBL;
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3023,7 +3023,7 @@ CAD;
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3083,7 +3083,7 @@ CAD;
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3128,7 +3128,7 @@ func TestScalarMagicConstant(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3172,7 +3172,7 @@ func TestScalarNumber_LNumber(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3216,7 +3216,7 @@ func TestScalarNumber_DNumber(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3260,7 +3260,7 @@ func TestScalarNumber_Float(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3304,7 +3304,7 @@ func TestScalarNumber_BinaryLNumber(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3348,7 +3348,7 @@ func TestScalarNumber_BinaryDNumber(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3392,7 +3392,7 @@ func TestScalarNumber_HLNumber(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3436,7 +3436,7 @@ func TestScalarNumber_HDNumber(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3480,7 +3480,7 @@ func TestScalarString_DoubleQuotedScalarString(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3524,7 +3524,7 @@ func TestScalarString_DoubleQuotedScalarStringWithEscapedVar(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3570,7 +3570,7 @@ func TestScalarString_MultilineDoubleQuotedScalarString(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3614,7 +3614,7 @@ func TestScalarString_SingleQuotedScalarString(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3660,7 +3660,7 @@ func TestScalarString_MultilineSingleQuotedScalarString(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3730,7 +3730,7 @@ func TestStmtAltIf_AltIf(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3843,7 +3843,7 @@ func TestStmtAltIf_AltElseIf(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -3933,7 +3933,7 @@ func TestStmtAltIf_AltElse(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -4111,7 +4111,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -4246,7 +4246,7 @@ func TestStmtClassConstList(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -4368,7 +4368,7 @@ func TestStmtClassConstList_WithoutModifiers(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -4447,7 +4447,7 @@ func TestStmtClassMethod_SimpleClassMethod(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -4596,7 +4596,7 @@ func TestStmtClassMethod_PrivateProtectedClassMethod(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -4722,7 +4722,7 @@ func TestStmtClassMethod_Php7ClassMethod(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -4837,7 +4837,7 @@ func TestStmtClassMethod_AbstractClassMethod(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -4964,7 +4964,7 @@ func TestStmtClassMethod_Php7AbstractClassMethod(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5009,7 +5009,7 @@ func TestStmtClass_SimpleClass(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5067,7 +5067,7 @@ func TestStmtClass_AbstractClass(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5158,7 +5158,7 @@ func TestStmtClass_ClassExtends(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5251,7 +5251,7 @@ func TestStmtClass_ClassImplement(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5367,7 +5367,7 @@ func TestStmtClass_ClassImplements(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5522,7 +5522,7 @@ func TestStmtClass_AnonimousClass(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5621,7 +5621,7 @@ func TestStmtConstList(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5687,7 +5687,7 @@ func TestStmtContinue_Empty(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5764,7 +5764,7 @@ func TestStmtContinue_Light(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5841,7 +5841,7 @@ func TestStmtContinue(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -5918,7 +5918,7 @@ func TestStmtDeclare(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6028,7 +6028,7 @@ func TestStmtDeclare_Stmts(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6107,7 +6107,7 @@ func TestStmtDeclare_Alt(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6162,7 +6162,7 @@ func TestStmtDo(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6229,7 +6229,7 @@ func TestStmtEcho(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6285,7 +6285,7 @@ func TestStmtEcho_Parenthesis(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6329,7 +6329,7 @@ func TestStmtExpression(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6525,7 +6525,7 @@ func TestStmtFor(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6646,7 +6646,7 @@ func TestStmtFor_Alt(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6732,7 +6732,7 @@ func TestStmtForeach(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6808,7 +6808,7 @@ func TestStmtForeach_Expr(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -6894,7 +6894,7 @@ func TestStmtForeach_Alt(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7001,7 +7001,7 @@ func TestStmtForeach_WithKey(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7098,7 +7098,7 @@ func TestStmtForeach_ExprWithKey(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7215,7 +7215,7 @@ func TestStmtForeach_WithRef(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7344,7 +7344,7 @@ func TestStmtForeach_WithList(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7390,7 +7390,7 @@ func TestStmtFunction(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7447,7 +7447,7 @@ func TestStmtFunction_Return(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7615,7 +7615,7 @@ func TestStmtFunction_ReturnVar(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7683,7 +7683,7 @@ func TestStmtFunction_Ref(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7752,7 +7752,7 @@ func TestStmtFunction_ReturnType(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7808,7 +7808,7 @@ func TestStmtGlobal(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -7969,7 +7969,7 @@ func TestStmtGlobal_Vars(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8034,7 +8034,7 @@ func TestStmtGotoLabel(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8067,7 +8067,7 @@ func TestStmtHaltCompiler(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8132,7 +8132,7 @@ func TestStmtIf(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8241,7 +8241,7 @@ func TestStmtIf_ElseIf(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8327,7 +8327,7 @@ func TestStmtIf_Else(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8499,7 +8499,7 @@ func TestStmtIf_ElseElseIf(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8681,7 +8681,7 @@ func TestStmtIf_ElseIfElseIfElse(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8725,7 +8725,7 @@ func TestStmtInlineHtml(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8770,7 +8770,7 @@ func TestStmtInterface(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8850,7 +8850,7 @@ func TestStmtInterface_Extend(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -8953,7 +8953,7 @@ func TestStmtInterface_Extends(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9009,7 +9009,7 @@ func TestStmtNamespace(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9066,7 +9066,7 @@ func TestStmtNamespace_Stmts(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9100,7 +9100,7 @@ func TestStmtNamespace_Anonymous(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9202,7 +9202,7 @@ func TestStmtProperty(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9357,7 +9357,7 @@ func TestStmtProperty_Properties(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9512,7 +9512,7 @@ func TestStmtProperty_Properties2(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9637,7 +9637,7 @@ func TestStmtProperty_PropertyType(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9703,7 +9703,7 @@ func TestStmtStaticVar(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9811,7 +9811,7 @@ func TestStmtStaticVar_Vars(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -9919,7 +9919,7 @@ func TestStmtStaticVar_Vars2(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10046,7 +10046,7 @@ func TestStmtSwitch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10173,7 +10173,7 @@ func TestStmtSwitch_Semicolon(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10290,7 +10290,7 @@ func TestStmtSwitch_Alt(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10395,7 +10395,7 @@ func TestStmtSwitch_AltSemicolon(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10449,7 +10449,7 @@ func TestStmtThrow(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10494,7 +10494,7 @@ func TestStmtTrait(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10585,7 +10585,7 @@ func TestStmtTraitUse(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10699,7 +10699,7 @@ func TestStmtTraitUse_Uses(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10813,7 +10813,7 @@ func TestStmtTraitUse_EmptyAdaptations(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -10971,7 +10971,7 @@ func TestStmtTraitUse_Modifier(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -11140,7 +11140,7 @@ func TestStmtTraitUse_AliasModifier(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -11423,7 +11423,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -11460,7 +11460,7 @@ func TestStmtTry_Try(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -11555,7 +11555,7 @@ func TestStmtTry_TryCatch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -11673,7 +11673,7 @@ func TestStmtTry_Php7TryCatch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -11825,7 +11825,7 @@ func TestStmtTry_TryCatchCatch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -11931,7 +11931,7 @@ func TestStmtTry_TryCatchFinally(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12138,7 +12138,7 @@ func TestStmtTry_TryCatchCatchCatch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12194,7 +12194,7 @@ func TestStmtUnset(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12271,7 +12271,7 @@ func TestStmtUnset_Vars(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12348,7 +12348,7 @@ func TestStmtUnset_TrailingComma(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12416,7 +12416,7 @@ func TestStmtUse(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12484,7 +12484,7 @@ func TestStmtUse_FullyQualified(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12563,7 +12563,7 @@ func TestStmtUse_FullyQualifiedAlias(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12664,7 +12664,7 @@ func TestStmtUse_List(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12776,7 +12776,7 @@ func TestStmtUse_ListAlias(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -12888,7 +12888,7 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -13022,7 +13022,7 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -13134,7 +13134,7 @@ func TestStmtUse_ListConstType(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -13268,7 +13268,7 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -13392,7 +13392,7 @@ func TestStmtUse_GroupUse(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -13527,7 +13527,7 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -13662,7 +13662,7 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -13797,7 +13797,7 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -13943,7 +13943,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14009,7 +14009,7 @@ func TestStmtBreak_Empty(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14086,7 +14086,7 @@ func TestStmtBreak_Light(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14163,7 +14163,7 @@ func TestStmtBreak(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14240,7 +14240,7 @@ func TestExprArrayDimFetch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14336,7 +14336,7 @@ func TestExprArrayDimFetch_Nested(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14380,7 +14380,7 @@ func TestExprArray(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14446,7 +14446,7 @@ func TestExprArray_Item(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14565,7 +14565,7 @@ func TestExprArray_Items(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14642,7 +14642,7 @@ func TestExprArray_ItemUnpack(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14708,7 +14708,7 @@ func TestExprArrowFunction(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14797,7 +14797,7 @@ func TestExprArrowFunction_ReturnType(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14861,7 +14861,7 @@ func TestExprBitwiseNot(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -14925,7 +14925,7 @@ func TestExprBooleanNot(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15002,7 +15002,7 @@ func TestExprClassConstFetch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15067,7 +15067,7 @@ func TestExprClassConstFetch_Static(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15131,7 +15131,7 @@ func TestExprClone_Brackets(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15195,7 +15195,7 @@ func TestExprClone(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15241,7 +15241,7 @@ func TestExprClosure(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15419,7 +15419,7 @@ func TestExprClosure_Use(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15597,7 +15597,7 @@ func TestExprClosure_Use2(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15666,7 +15666,7 @@ func TestExprClosure_ReturnType(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15732,7 +15732,7 @@ func TestExprConstFetch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15798,7 +15798,7 @@ func TestExprConstFetch_Relative(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15864,7 +15864,7 @@ func TestExprConstFetch_FullyQualified(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15928,7 +15928,7 @@ func TestExprEmpty(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -15992,7 +15992,7 @@ func TestExprErrorSuppress(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16056,7 +16056,7 @@ func TestExprEval(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16100,7 +16100,7 @@ func TestExprExit(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16144,7 +16144,7 @@ func TestExprExit_Empty(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16209,7 +16209,7 @@ func TestExprExit_Expr(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16253,7 +16253,7 @@ func TestExprDie(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16297,7 +16297,7 @@ func TestExprDie_Empty(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16362,7 +16362,7 @@ func TestExprDie_Expr(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16438,7 +16438,7 @@ func TestExprFunctionCall(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16514,7 +16514,7 @@ func TestExprFunctionCall_Relative(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16615,7 +16615,7 @@ func TestExprFunctionCall_FullyQualified(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16734,7 +16734,7 @@ func TestExprFunctionCall_Var(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16866,7 +16866,7 @@ func TestExprFunctionCall_ExprArg(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16930,7 +16930,7 @@ func TestExprPostDec(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16994,7 +16994,7 @@ func TestExprPostInc(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17058,7 +17058,7 @@ func TestExprPreDec(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17122,7 +17122,7 @@ func TestExprPreInc(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17186,7 +17186,7 @@ func TestExprInclude(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17250,7 +17250,7 @@ func TestExprInclude_Once(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17314,7 +17314,7 @@ func TestExprRequire(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17378,7 +17378,7 @@ func TestExprRequire_Once(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17465,7 +17465,7 @@ func TestExprInstanceOf(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17552,7 +17552,7 @@ func TestExprInstanceOf_Relative(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17639,7 +17639,7 @@ func TestExprInstanceOf_FullyQualified(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17705,7 +17705,7 @@ func TestExprIsset(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17792,7 +17792,7 @@ func TestExprIsset_Variables(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17867,7 +17867,7 @@ func TestExprList_Empty(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -17974,7 +17974,7 @@ func TestExprList(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18091,7 +18091,7 @@ func TestExprList_ArrayIndex(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18220,7 +18220,7 @@ func TestExprList_List(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18328,7 +18328,7 @@ func TestExprList_EmptyItem(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18438,7 +18438,7 @@ func TestExprList_EmptyItems(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18523,7 +18523,7 @@ func TestExprMethodCall(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18589,7 +18589,7 @@ func TestExprNew(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18665,7 +18665,7 @@ func TestExprNew_Relative(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18741,7 +18741,7 @@ func TestExprNew_FullyQualified(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18873,7 +18873,7 @@ func TestExprNew_Anonymous(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -18937,7 +18937,7 @@ func TestExprPrint(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19012,7 +19012,7 @@ func TestExprPropertyFetch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19130,7 +19130,7 @@ func TestExprReference_ForeachWithRef(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19207,7 +19207,7 @@ func TestExprShellExec(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19251,7 +19251,7 @@ func TestExprShortArray(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19317,7 +19317,7 @@ func TestExprShortArray_Item(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19436,7 +19436,7 @@ func TestExprShortArray_Items(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19543,7 +19543,7 @@ func TestExprShortList(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19660,7 +19660,7 @@ func TestExprShortList_ArrayIndex(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19789,7 +19789,7 @@ func TestExprShortList_List(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19876,7 +19876,7 @@ func TestExprStaticCall(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19963,7 +19963,7 @@ func TestExprStaticCall_Relative(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20050,7 +20050,7 @@ func TestExprStaticCall_FullyQualified(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20147,7 +20147,7 @@ func TestExprStaticCall_Var(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20242,7 +20242,7 @@ func TestExprStaticCall_VarVar(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20329,7 +20329,7 @@ func TestExprStaticPropertyFetch(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20416,7 +20416,7 @@ func TestExprStaticPropertyFetch_Relative(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20503,7 +20503,7 @@ func TestExprStaticPropertyFetch_FullyQualified(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20609,7 +20609,7 @@ func TestExprTernary(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20694,7 +20694,7 @@ func TestExprTernary_Simple(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20852,7 +20852,7 @@ func TestExprTernary_NestedTrue(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21010,7 +21010,7 @@ func TestExprTernary_NestedCond(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21074,7 +21074,7 @@ func TestExprUnaryMinus(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21138,7 +21138,7 @@ func TestExprUnaryPlus(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21192,7 +21192,7 @@ func TestExprVariable(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21256,7 +21256,7 @@ func TestExprVariable_Variable(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21299,7 +21299,7 @@ func TestExprYield(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21363,7 +21363,7 @@ func TestExprYield_Val(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21448,7 +21448,7 @@ func TestExprYield_KeyVal(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21502,7 +21502,7 @@ func TestExprYield_Expr(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21577,7 +21577,7 @@ func TestExprYield_KeyExpr(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21641,7 +21641,7 @@ func TestExprYieldFrom(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21728,7 +21728,7 @@ func TestExprAssign_Assign(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21813,7 +21813,7 @@ func TestExprAssign_Reference(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -21910,7 +21910,7 @@ func TestExprAssign_ReferenceNew(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22052,7 +22052,7 @@ func TestExprAssign_ReferenceArgs(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22137,7 +22137,7 @@ func TestExprAssign_BitwiseAnd(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22222,7 +22222,7 @@ func TestExprAssign_BitwiseOr(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22307,7 +22307,7 @@ func TestExprAssign_BitwiseXor(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22392,7 +22392,7 @@ func TestExprAssign_Concat(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22477,7 +22477,7 @@ func TestExprAssign_Div(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22562,7 +22562,7 @@ func TestExprAssign_Minus(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22647,7 +22647,7 @@ func TestExprAssign_Mod(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22732,7 +22732,7 @@ func TestExprAssign_Mul(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22817,7 +22817,7 @@ func TestExprAssign_Plus(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22902,7 +22902,7 @@ func TestExprAssign_Pow(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -22987,7 +22987,7 @@ func TestExprAssign_ShiftLeft(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23072,7 +23072,7 @@ func TestExprAssign_ShiftRight(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23157,7 +23157,7 @@ func TestExprAssign_Coalesce(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23244,7 +23244,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23329,7 +23329,7 @@ func TestExprBinary_BitwiseOr(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23414,7 +23414,7 @@ func TestExprBinary_BitwiseXor(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23499,7 +23499,7 @@ func TestExprBinary_BooleanAnd(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23584,7 +23584,7 @@ func TestExprBinary_BooleanOr(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23669,7 +23669,7 @@ func TestExprBinary_Coalesce(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23754,7 +23754,7 @@ func TestExprBinary_Concat(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23839,7 +23839,7 @@ func TestExprBinary_Div(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -23924,7 +23924,7 @@ func TestExprBinary_Equal(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24009,7 +24009,7 @@ func TestExprBinary_GreaterOrEqual(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24094,7 +24094,7 @@ func TestExprBinary_Greater(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24179,7 +24179,7 @@ func TestExprBinary_Identical(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24264,7 +24264,7 @@ func TestExprBinary_LogicalAnd(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24349,7 +24349,7 @@ func TestExprBinary_LogicalOr(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24434,7 +24434,7 @@ func TestExprBinary_LogicalXor(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24519,7 +24519,7 @@ func TestExprBinary_Minus(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24604,7 +24604,7 @@ func TestExprBinary_Mod(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24689,7 +24689,7 @@ func TestExprBinary_Mul(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24774,7 +24774,7 @@ func TestExprBinary_NotEqual(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24859,7 +24859,7 @@ func TestExprBinary_NotIdentical(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -24944,7 +24944,7 @@ func TestExprBinary_Plus(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25029,7 +25029,7 @@ func TestExprBinary_Pow(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25114,7 +25114,7 @@ func TestExprBinary_ShiftLeft(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25199,7 +25199,7 @@ func TestExprBinary_ShiftRight(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25284,7 +25284,7 @@ func TestExprBinary_SmallerOrEqual(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25369,7 +25369,7 @@ func TestExprBinary_Smaller(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25454,7 +25454,7 @@ func TestExprBinary_Spaceship(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25520,7 +25520,7 @@ func TestExprCast_Array(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25584,7 +25584,7 @@ func TestExprCast_Bool(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25648,7 +25648,7 @@ func TestExprCast_BoolShort(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25712,7 +25712,7 @@ func TestExprCast_Double(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25776,7 +25776,7 @@ func TestExprCast_CastFloat(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25840,7 +25840,7 @@ func TestExprCast_Int(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25904,7 +25904,7 @@ func TestExprCast_IntShort(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -25968,7 +25968,7 @@ func TestExprCast_Object(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -26032,7 +26032,7 @@ func TestExprCast_String(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -26096,7 +26096,7 @@ func TestExprCast_BinaryString(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -26160,7 +26160,7 @@ func TestExprCast_Unset(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

@@ -13,7 +13,7 @@ import (
 
 func parsePhp5(src string) ast.Vertex {
 	lexer := scanner.NewLexer([]byte(src), "5.6", true, nil)
-	php5parser := php5.NewParser(lexer, true, nil)
+	php5parser := php5.NewParser(lexer, nil)
 	php5parser.Parse()
 
 	return php5parser.GetRootNode()
@@ -832,7 +832,8 @@ func TestParseAndPrintPhp5Break(t *testing.T) {
 	break ( 2 ) ;
 `
 
-	actual := printPhp5(parsePhp5(src))
+	root := parsePhp5(src)
+	actual := printPhp5(root)
 
 	if src != actual {
 		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)

@@ -383,7 +383,7 @@ CAD;
 
 	for n := 0; n < b.N; n++ {
 		lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-		php7parser := php7.NewParser(lexer, false, nil)
+		php7parser := php7.NewParser(lexer, nil)
 		php7parser.Parse()
 	}
 }

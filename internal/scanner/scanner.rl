@@ -19,12 +19,11 @@ func initLexer(lex *Lexer)  {
 }
 
 func (lex *Lexer) Lex() *Token {
-    lex.hiddenTokens = nil
     eof := lex.pe
     var tok TokenID
 
     token := lex.tokenPool.Get()
-    token.Hidden = nil
+	token.Tokens = token.Tokens[:0]
     token.Value = lex.data[0:0]
 
     lblStart := 0
@@ -125,7 +124,7 @@ func (lex *Lexer) Lex() *Token {
 
         main := |*
             "#!" any* :>> newline => {
-                lex.addHiddenToken(T_COMMENT, lex.ts, lex.te)
+                lex.addHiddenToken(token, T_COMMENT, lex.ts, lex.te)
             };
             any => {
                 fnext html;
@@ -141,12 +140,12 @@ func (lex *Lexer) Lex() *Token {
                 fbreak;
             };
             '<?' => {
-                lex.addHiddenToken(T_OPEN_TAG, lex.ts, lex.te)
+                lex.addHiddenToken(token, T_OPEN_TAG, lex.ts, lex.te)
                 fnext php;
             };
             '<?php'i ( [ \t] | newline ) => {
                 lex.ungetCnt(lex.te - lex.ts - 5)
-                lex.addHiddenToken(T_OPEN_TAG, lex.ts, lex.ts+5)
+                lex.addHiddenToken(token, T_OPEN_TAG, lex.ts, lex.ts+5)
                 fnext php;
             };
             '<?='i => {
@@ -158,7 +157,7 @@ func (lex *Lexer) Lex() *Token {
         *|;
 
         php := |*
-            whitespace_line*                   => {lex.addHiddenToken(T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line*                   => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
             '?>' newline?                      => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext html; fbreak;};
             ';' whitespace_line* '?>' newline? => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext html; fbreak;};
 
@@ -318,7 +317,7 @@ func (lex *Lexer) Lex() *Token {
 
             ('#' | '//') any_line* when is_not_comment_end => {
                 lex.ungetStr("?>")
-                lex.addHiddenToken(T_COMMENT, lex.ts, lex.te)
+                lex.addHiddenToken(token, T_COMMENT, lex.ts, lex.te)
             };
             '/*' any_line* :>> '*/' {
                 isDocComment := false;
@@ -327,9 +326,9 @@ func (lex *Lexer) Lex() *Token {
                 }
 
                 if isDocComment {
-                    lex.addHiddenToken(T_DOC_COMMENT, lex.ts, lex.te)
+                    lex.addHiddenToken(token, T_DOC_COMMENT, lex.ts, lex.te)
                 } else {
-                    lex.addHiddenToken(T_COMMENT, lex.ts, lex.te)
+                    lex.addHiddenToken(token, T_COMMENT, lex.ts, lex.te)
                 }
             };
 
@@ -378,7 +377,7 @@ func (lex *Lexer) Lex() *Token {
         *|;
 
         property := |*
-            whitespace_line* => {lex.addHiddenToken(T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line* => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
             "->"             => {lex.setTokenPosition(token); tok = T_OBJECT_OPERATOR; fbreak;};
             varname          => {lex.setTokenPosition(token); tok = T_STRING; fnext php; fbreak;};
             any              => {lex.ungetCnt(1); fgoto php;};
@@ -474,33 +473,33 @@ func (lex *Lexer) Lex() *Token {
         *|;
 
         halt_compiller_open_parenthesis := |*
-            whitespace_line* => {lex.addHiddenToken(T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line* => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
             "("              => {lex.setTokenPosition(token); tok = TokenID(int('(')); fnext halt_compiller_close_parenthesis; fbreak;};
             any              => {lex.ungetCnt(1); fnext php;};
         *|;
 
         halt_compiller_close_parenthesis := |*
-            whitespace_line* => {lex.addHiddenToken(T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line* => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
             ")"              => {lex.setTokenPosition(token); tok = TokenID(int(')')); fnext halt_compiller_close_semicolon; fbreak;};
             any              => {lex.ungetCnt(1); fnext php;};
         *|;
 
         halt_compiller_close_semicolon := |*
-            whitespace_line* => {lex.addHiddenToken(T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line* => {lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)};
             ";"              => {lex.setTokenPosition(token); tok = TokenID(int(';')); fnext halt_compiller_end; fbreak;};
             any              => {lex.ungetCnt(1); fnext php;};
         *|;
 
         halt_compiller_end := |*
-            any_line* => { lex.addHiddenToken(T_HALT_COMPILER, lex.ts, lex.te); };
+            any_line* => { lex.addHiddenToken(token, T_HALT_COMPILER, lex.ts, lex.te); };
         *|;
 
         write exec;
     }%%
 
-    token.Hidden = lex.hiddenTokens
 	token.Value = lex.data[lex.ts:lex.te]
 	token.ID = tok
+	lex.addHiddenToken(token, tok, lex.ts, lex.te);
 
 	return token
 }

@@ -32,9 +32,9 @@ func Parse(src []byte, ver string, cfg Config) (ast.Vertex, error) {
 	lexer := scanner.NewLexer(src, ver, cfg.WithTokens, cfg.ErrorHandlerFunc)
 
 	if r == -1 {
-		parser = php5.NewParser(lexer, cfg.WithTokens, cfg.ErrorHandlerFunc)
+		parser = php5.NewParser(lexer, cfg.ErrorHandlerFunc)
 	} else {
-		parser = php7.NewParser(lexer, cfg.WithTokens, cfg.ErrorHandlerFunc)
+		parser = php7.NewParser(lexer, cfg.ErrorHandlerFunc)
 	}
 
 	parser.Parse()

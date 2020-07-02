@@ -19635,7 +19635,7 @@ func TestPhp7(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -19773,7 +19773,7 @@ func TestPhp5Strings(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20000,7 +20000,7 @@ CAD;
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
-	php7parser := php7.NewParser(lexer, false, nil)
+	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -20026,7 +20026,7 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, errorHandlerFunc)
-	php7parser := php7.NewParser(lexer, false, errorHandlerFunc)
+	php7parser := php7.NewParser(lexer, errorHandlerFunc)
 	php7parser.Parse()
 	assert.DeepEqual(t, expected, parserErrors)
 }
