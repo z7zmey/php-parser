@@ -1,0 +1,6 @@
+internal/php5/php5.go       -diff -merge
+internal/php5/php5.go       linguist-generated=true
+internal/php7/php7.go       -diff -merge
+internal/php7/php7.go       linguist-generated=true
+internal/scanner/scanner.go -diff -merge
+internal/scanner/scanner.go linguist-generated=true
