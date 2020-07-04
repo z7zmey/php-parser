@@ -196,7 +196,7 @@ func (v *Dump) Identifier(n *ast.Identifier) {
 	v.print("&ast.Identifier{\n")
 
 	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
+	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 
 	v.printNode(n.GetNode())
 }
@@ -490,7 +490,7 @@ func (v *Dump) StmtInlineHtml(n *ast.StmtInlineHtml) {
 	v.print("&ast.StmtInlineHtml{\n")
 
 	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
+	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 
 	v.printNode(n.GetNode())
 }
@@ -1342,7 +1342,7 @@ func (v *Dump) ScalarDnumber(n *ast.ScalarDnumber) {
 	v.print("&ast.ScalarDnumber{\n")
 
 	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
+	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 
 	v.printNode(n.GetNode())
 }
@@ -1359,7 +1359,7 @@ func (v *Dump) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 	v.print("&ast.ScalarEncapsedStringPart{\n")
 
 	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
+	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 
 	v.printNode(n.GetNode())
 }
@@ -1379,7 +1379,7 @@ func (v *Dump) ScalarLnumber(n *ast.ScalarLnumber) {
 	v.print("&ast.ScalarLnumber{\n")
 
 	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
+	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 
 	v.printNode(n.GetNode())
 }
@@ -1389,7 +1389,7 @@ func (v *Dump) ScalarMagicConstant(n *ast.ScalarMagicConstant) {
 	v.print("&ast.ScalarMagicConstant{\n")
 
 	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
+	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 
 	v.printNode(n.GetNode())
 }
@@ -1399,7 +1399,7 @@ func (v *Dump) ScalarString(n *ast.ScalarString) {
 	v.print("&ast.ScalarString{\n")
 
 	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
+	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 
 	v.printNode(n.GetNode())
 }
@@ -1430,7 +1430,7 @@ func (v *Dump) NameNamePart(n *ast.NameNamePart) {
 	v.print("&ast.NameNamePart{\n")
 
 	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: %q,\n", n.Value))
+	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 
 	v.printNode(n.GetNode())
 }

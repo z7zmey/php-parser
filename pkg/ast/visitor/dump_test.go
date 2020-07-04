@@ -61,7 +61,7 @@ func ExampleDump() {
 	//	},
 	//	Stmts: []ast.Vertex{
 	//		&ast.Identifier{
-	//			Value: "",
+	//			Value: []byte(""),
 	//		},
 	//		&ast.Parameter{
 	//			Variadic: true,
@@ -69,7 +69,7 @@ func ExampleDump() {
 	//			},
 	//		},
 	//		&ast.StmtInlineHtml{
-	//			Value: "foo",
+	//			Value: []byte("foo"),
 	//		},
 	//	},
 	//}
