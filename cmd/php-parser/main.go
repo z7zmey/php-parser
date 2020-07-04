@@ -3,12 +3,13 @@ package main
 import (
 	"bytes"
 	"flag"
-	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"sync"
 	"time"
 
@@ -31,6 +32,7 @@ var withFreeFloating *bool
 var showResolvedNs *bool
 var printBack *bool
 var printPath *bool
+var printErrors *bool
 var printExecTime *bool
 
 type file struct {
@@ -52,6 +54,7 @@ func main() {
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
 	printPath = flag.Bool("p", false, "print filepath")
+	printErrors = flag.Bool("e", false, "print errors")
 	dump = flag.Bool("d", false, "dump")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
 	flag.StringVar(&phpVersion, "phpver", "7.4", "php version")
@@ -151,11 +154,13 @@ func printerWorker(r <-chan result) {
 		counter++
 
 		if *printPath {
-			fmt.Fprintf(os.Stdout, "==> [%d] %s\n", counter, res.path)
+			_, _ = io.WriteString(os.Stderr, "==> [" + strconv.Itoa(counter) + "] " + res.path + "\n")
 		}
 
-		for _, e := range res.errors {
-			fmt.Fprintf(os.Stdout, "==> %s\n", e)
+		if *printErrors {
+			for _, e := range res.errors {
+				_, _ = io.WriteString(os.Stderr, "==> " + e.String() + "\n")
+			}
 		}
 
 		if *printBack {
@@ -171,7 +176,9 @@ func printerWorker(r <-chan result) {
 			v := visitor.NewNamespaceResolver()
 			t := traverser.NewDFS(v)
 			t.Traverse(res.rootNode)
-			fmt.Printf("%+v", v.ResolvedNames)
+			for _, n := range v.ResolvedNames {
+				_, _ = io.WriteString(os.Stderr, "===> " + n + "\n")
+			}
 		}
 
 		if *dump == true {
