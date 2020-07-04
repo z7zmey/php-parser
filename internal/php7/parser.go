@@ -38,7 +38,7 @@ func (p *Parser) Error(msg string) {
 	if p.errHandlerFunc == nil {
 		return
 	}
-	
+
 	var pos = p.currentToken.Position
 	p.errHandlerFunc(errors.NewError(msg, &pos))
 }
