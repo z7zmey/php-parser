@@ -129,6 +129,7 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 
 		parserErrors := []*errors.Error{}
 		cfg := parser.Config{
+			WithTokens: *withFreeFloating,
 			ErrorHandlerFunc: func(e *errors.Error) {
 				parserErrors = append(parserErrors, e)
 			},
@@ -154,12 +155,12 @@ func printerWorker(r <-chan result) {
 		counter++
 
 		if *printPath {
-			_, _ = io.WriteString(os.Stderr, "==> [" + strconv.Itoa(counter) + "] " + res.path + "\n")
+			_, _ = io.WriteString(os.Stderr, "==> ["+strconv.Itoa(counter)+"] "+res.path+"\n")
 		}
 
 		if *printErrors {
 			for _, e := range res.errors {
-				_, _ = io.WriteString(os.Stderr, "==> " + e.String() + "\n")
+				_, _ = io.WriteString(os.Stderr, "==> "+e.String()+"\n")
 			}
 		}
 
@@ -177,7 +178,7 @@ func printerWorker(r <-chan result) {
 			t := traverser.NewDFS(v)
 			t.Traverse(res.rootNode)
 			for _, n := range v.ResolvedNames {
-				_, _ = io.WriteString(os.Stderr, "===> " + n + "\n")
+				_, _ = io.WriteString(os.Stderr, "===> "+n+"\n")
 			}
 		}
 
