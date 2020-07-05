@@ -960,7 +960,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 }
 
 func TestPhp7ParameterNode(t *testing.T) {
-	src := `<? 
+	src := `<?
 		function foo(?bar $bar=null, baz &...$baz) {}
 		class foo {public function foo(?bar $bar=null, baz &...$baz) {}}
 		function(?bar $bar=null, baz &...$baz) {};
@@ -972,8 +972,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 			Position: &position.Position{
 				StartLine: 2,
 				EndLine:   5,
-				StartPos:  6,
-				EndPos:    215,
+				StartPos:  5,
+				EndPos:    214,
 			},
 		},
 		Stmts: []ast.Vertex{
@@ -982,18 +982,17 @@ func TestPhp7ParameterNode(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 2,
 						EndLine:   2,
-						StartPos:  6,
-						EndPos:    51,
+						StartPos:  5,
+						EndPos:    50,
 					},
 				},
-				ReturnsRef: false,
 				FunctionName: &ast.Identifier{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 2,
 							EndLine:   2,
-							StartPos:  15,
-							EndPos:    18,
+							StartPos:  14,
+							EndPos:    17,
 						},
 					},
 					Value: []byte("foo"),
@@ -1004,19 +1003,17 @@ func TestPhp7ParameterNode(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 2,
 								EndLine:   2,
-								StartPos:  19,
-								EndPos:    33,
+								StartPos:  18,
+								EndPos:    32,
 							},
 						},
-						ByRef:    false,
-						Variadic: false,
 						Type: &ast.Nullable{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
-									StartPos:  19,
-									EndPos:    23,
+									StartPos:  18,
+									EndPos:    22,
 								},
 							},
 							Expr: &ast.NameName{
@@ -1024,8 +1021,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 2,
 										EndLine:   2,
-										StartPos:  20,
-										EndPos:    23,
+										StartPos:  19,
+										EndPos:    22,
 									},
 								},
 								Parts: []ast.Vertex{
@@ -1034,8 +1031,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 2,
 												EndLine:   2,
-												StartPos:  20,
-												EndPos:    23,
+												StartPos:  19,
+												EndPos:    22,
 											},
 										},
 										Value: []byte("bar"),
@@ -1048,8 +1045,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
-									StartPos:  24,
-									EndPos:    28,
+									StartPos:  23,
+									EndPos:    27,
 								},
 							},
 							VarName: &ast.Identifier{
@@ -1057,8 +1054,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 2,
 										EndLine:   2,
-										StartPos:  24,
-										EndPos:    28,
+										StartPos:  23,
+										EndPos:    27,
 									},
 								},
 								Value: []byte("$bar"),
@@ -1069,8 +1066,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
-									StartPos:  29,
-									EndPos:    33,
+									StartPos:  28,
+									EndPos:    32,
 								},
 							},
 							Const: &ast.NameName{
@@ -1078,8 +1075,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 2,
 										EndLine:   2,
-										StartPos:  29,
-										EndPos:    33,
+										StartPos:  28,
+										EndPos:    32,
 									},
 								},
 								Parts: []ast.Vertex{
@@ -1088,8 +1085,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 2,
 												EndLine:   2,
-												StartPos:  29,
-												EndPos:    33,
+												StartPos:  28,
+												EndPos:    32,
 											},
 										},
 										Value: []byte("null"),
@@ -1103,19 +1100,17 @@ func TestPhp7ParameterNode(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 2,
 								EndLine:   2,
-								StartPos:  35,
-								EndPos:    47,
+								StartPos:  34,
+								EndPos:    46,
 							},
 						},
-						ByRef:    true,
-						Variadic: true,
 						Type: &ast.NameName{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
-									StartPos:  35,
-									EndPos:    38,
+									StartPos:  34,
+									EndPos:    37,
 								},
 							},
 							Parts: []ast.Vertex{
@@ -1124,46 +1119,67 @@ func TestPhp7ParameterNode(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 2,
 											EndLine:   2,
-											StartPos:  35,
-											EndPos:    38,
+											StartPos:  34,
+											EndPos:    37,
 										},
 									},
 									Value: []byte("baz"),
 								},
 							},
 						},
-						Var: &ast.ExprVariable{
+						Var: &ast.Reference{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
-									StartPos:  43,
-									EndPos:    47,
+									StartPos:  38,
+									EndPos:    46,
 								},
 							},
-							VarName: &ast.Identifier{
+							Var: &ast.Variadic{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 2,
 										EndLine:   2,
-										StartPos:  43,
-										EndPos:    47,
+										StartPos:  39,
+										EndPos:    46,
 									},
 								},
-								Value: []byte("$baz"),
+								Var: &ast.ExprVariable{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 2,
+											EndLine:   2,
+											StartPos:  42,
+											EndPos:    46,
+										},
+									},
+									VarName: &ast.Identifier{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 2,
+												EndLine:   2,
+												StartPos:  42,
+												EndPos:    46,
+											},
+										},
+										Value: []byte("$baz"),
+									},
+								},
 							},
 						},
 					},
 				},
-				Stmts: []ast.Vertex{},
+				Stmts: []ast.Vertex{
+				},
 			},
 			&ast.StmtClass{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 3,
 						EndLine:   3,
-						StartPos:  54,
-						EndPos:    118,
+						StartPos:  53,
+						EndPos:    117,
 					},
 				},
 				ClassName: &ast.Identifier{
@@ -1171,8 +1187,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 3,
 							EndLine:   3,
-							StartPos:  60,
-							EndPos:    63,
+							StartPos:  59,
+							EndPos:    62,
 						},
 					},
 					Value: []byte("foo"),
@@ -1183,18 +1199,17 @@ func TestPhp7ParameterNode(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 3,
 								EndLine:   3,
-								StartPos:  65,
-								EndPos:    117,
+								StartPos:  64,
+								EndPos:    116,
 							},
 						},
-						ReturnsRef: false,
 						MethodName: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 3,
 									EndLine:   3,
-									StartPos:  81,
-									EndPos:    84,
+									StartPos:  80,
+									EndPos:    83,
 								},
 							},
 							Value: []byte("foo"),
@@ -1205,8 +1220,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 3,
 										EndLine:   3,
-										StartPos:  65,
-										EndPos:    71,
+										StartPos:  64,
+										EndPos:    70,
 									},
 								},
 								Value: []byte("public"),
@@ -1218,19 +1233,17 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 3,
 										EndLine:   3,
-										StartPos:  85,
-										EndPos:    99,
+										StartPos:  84,
+										EndPos:    98,
 									},
 								},
-								ByRef:    false,
-								Variadic: false,
 								Type: &ast.Nullable{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 3,
 											EndLine:   3,
-											StartPos:  85,
-											EndPos:    89,
+											StartPos:  84,
+											EndPos:    88,
 										},
 									},
 									Expr: &ast.NameName{
@@ -1238,8 +1251,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 3,
 												EndLine:   3,
-												StartPos:  86,
-												EndPos:    89,
+												StartPos:  85,
+												EndPos:    88,
 											},
 										},
 										Parts: []ast.Vertex{
@@ -1248,8 +1261,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 													Position: &position.Position{
 														StartLine: 3,
 														EndLine:   3,
-														StartPos:  86,
-														EndPos:    89,
+														StartPos:  85,
+														EndPos:    88,
 													},
 												},
 												Value: []byte("bar"),
@@ -1262,8 +1275,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 3,
 											EndLine:   3,
-											StartPos:  90,
-											EndPos:    94,
+											StartPos:  89,
+											EndPos:    93,
 										},
 									},
 									VarName: &ast.Identifier{
@@ -1271,8 +1284,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 3,
 												EndLine:   3,
-												StartPos:  90,
-												EndPos:    94,
+												StartPos:  89,
+												EndPos:    93,
 											},
 										},
 										Value: []byte("$bar"),
@@ -1283,8 +1296,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 3,
 											EndLine:   3,
-											StartPos:  95,
-											EndPos:    99,
+											StartPos:  94,
+											EndPos:    98,
 										},
 									},
 									Const: &ast.NameName{
@@ -1292,8 +1305,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 3,
 												EndLine:   3,
-												StartPos:  95,
-												EndPos:    99,
+												StartPos:  94,
+												EndPos:    98,
 											},
 										},
 										Parts: []ast.Vertex{
@@ -1302,8 +1315,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 													Position: &position.Position{
 														StartLine: 3,
 														EndLine:   3,
-														StartPos:  95,
-														EndPos:    99,
+														StartPos:  94,
+														EndPos:    98,
 													},
 												},
 												Value: []byte("null"),
@@ -1317,19 +1330,17 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 3,
 										EndLine:   3,
-										StartPos:  101,
-										EndPos:    113,
+										StartPos:  100,
+										EndPos:    112,
 									},
 								},
-								ByRef:    true,
-								Variadic: true,
 								Type: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 3,
 											EndLine:   3,
-											StartPos:  101,
-											EndPos:    104,
+											StartPos:  100,
+											EndPos:    103,
 										},
 									},
 									Parts: []ast.Vertex{
@@ -1338,33 +1349,53 @@ func TestPhp7ParameterNode(t *testing.T) {
 												Position: &position.Position{
 													StartLine: 3,
 													EndLine:   3,
-													StartPos:  101,
-													EndPos:    104,
+													StartPos:  100,
+													EndPos:    103,
 												},
 											},
 											Value: []byte("baz"),
 										},
 									},
 								},
-								Var: &ast.ExprVariable{
+								Var: &ast.Reference{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 3,
 											EndLine:   3,
-											StartPos:  109,
-											EndPos:    113,
+											StartPos:  104,
+											EndPos:    112,
 										},
 									},
-									VarName: &ast.Identifier{
+									Var: &ast.Variadic{
 										Node: ast.Node{
 											Position: &position.Position{
 												StartLine: 3,
 												EndLine:   3,
-												StartPos:  109,
-												EndPos:    113,
+												StartPos:  105,
+												EndPos:    112,
 											},
 										},
-										Value: []byte("$baz"),
+										Var: &ast.ExprVariable{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 3,
+													EndLine:   3,
+													StartPos:  108,
+													EndPos:    112,
+												},
+											},
+											VarName: &ast.Identifier{
+												Node: ast.Node{
+													Position: &position.Position{
+														StartLine: 3,
+														EndLine:   3,
+														StartPos:  108,
+														EndPos:    112,
+													},
+												},
+												Value: []byte("$baz"),
+											},
+										},
 									},
 								},
 							},
@@ -1374,11 +1405,12 @@ func TestPhp7ParameterNode(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 3,
 									EndLine:   3,
-									StartPos:  115,
-									EndPos:    117,
+									StartPos:  114,
+									EndPos:    116,
 								},
 							},
-							Stmts: []ast.Vertex{},
+							Stmts: []ast.Vertex{
+							},
 						},
 					},
 				},
@@ -1388,8 +1420,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 4,
 						EndLine:   4,
-						StartPos:  121,
-						EndPos:    163,
+						StartPos:  120,
+						EndPos:    162,
 					},
 				},
 				Expr: &ast.ExprClosure{
@@ -1397,31 +1429,27 @@ func TestPhp7ParameterNode(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 4,
 							EndLine:   4,
-							StartPos:  121,
-							EndPos:    162,
+							StartPos:  120,
+							EndPos:    161,
 						},
 					},
-					ReturnsRef: false,
-					Static:     false,
 					Params: []ast.Vertex{
 						&ast.Parameter{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 4,
 									EndLine:   4,
-									StartPos:  130,
-									EndPos:    144,
+									StartPos:  129,
+									EndPos:    143,
 								},
 							},
-							ByRef:    false,
-							Variadic: false,
 							Type: &ast.Nullable{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
-										StartPos:  130,
-										EndPos:    134,
+										StartPos:  129,
+										EndPos:    133,
 									},
 								},
 								Expr: &ast.NameName{
@@ -1429,8 +1457,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 4,
 											EndLine:   4,
-											StartPos:  131,
-											EndPos:    134,
+											StartPos:  130,
+											EndPos:    133,
 										},
 									},
 									Parts: []ast.Vertex{
@@ -1439,8 +1467,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 												Position: &position.Position{
 													StartLine: 4,
 													EndLine:   4,
-													StartPos:  131,
-													EndPos:    134,
+													StartPos:  130,
+													EndPos:    133,
 												},
 											},
 											Value: []byte("bar"),
@@ -1453,8 +1481,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
-										StartPos:  135,
-										EndPos:    139,
+										StartPos:  134,
+										EndPos:    138,
 									},
 								},
 								VarName: &ast.Identifier{
@@ -1462,8 +1490,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 4,
 											EndLine:   4,
-											StartPos:  135,
-											EndPos:    139,
+											StartPos:  134,
+											EndPos:    138,
 										},
 									},
 									Value: []byte("$bar"),
@@ -1474,8 +1502,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
-										StartPos:  140,
-										EndPos:    144,
+										StartPos:  139,
+										EndPos:    143,
 									},
 								},
 								Const: &ast.NameName{
@@ -1483,8 +1511,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 4,
 											EndLine:   4,
-											StartPos:  140,
-											EndPos:    144,
+											StartPos:  139,
+											EndPos:    143,
 										},
 									},
 									Parts: []ast.Vertex{
@@ -1493,8 +1521,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 												Position: &position.Position{
 													StartLine: 4,
 													EndLine:   4,
-													StartPos:  140,
-													EndPos:    144,
+													StartPos:  139,
+													EndPos:    143,
 												},
 											},
 											Value: []byte("null"),
@@ -1508,19 +1536,17 @@ func TestPhp7ParameterNode(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 4,
 									EndLine:   4,
-									StartPos:  146,
-									EndPos:    158,
+									StartPos:  145,
+									EndPos:    157,
 								},
 							},
-							Variadic: true,
-							ByRef:    true,
 							Type: &ast.NameName{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
-										StartPos:  146,
-										EndPos:    149,
+										StartPos:  145,
+										EndPos:    148,
 									},
 								},
 								Parts: []ast.Vertex{
@@ -1529,38 +1555,59 @@ func TestPhp7ParameterNode(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 4,
 												EndLine:   4,
-												StartPos:  146,
-												EndPos:    149,
+												StartPos:  145,
+												EndPos:    148,
 											},
 										},
 										Value: []byte("baz"),
 									},
 								},
 							},
-							Var: &ast.ExprVariable{
+							Var: &ast.Reference{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
-										StartPos:  154,
-										EndPos:    158,
+										StartPos:  149,
+										EndPos:    157,
 									},
 								},
-								VarName: &ast.Identifier{
+								Var: &ast.Variadic{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 4,
 											EndLine:   4,
-											StartPos:  154,
-											EndPos:    158,
+											StartPos:  150,
+											EndPos:    157,
 										},
 									},
-									Value: []byte("$baz"),
+									Var: &ast.ExprVariable{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 4,
+												EndLine:   4,
+												StartPos:  153,
+												EndPos:    157,
+											},
+										},
+										VarName: &ast.Identifier{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 4,
+													EndLine:   4,
+													StartPos:  153,
+													EndPos:    157,
+												},
+											},
+											Value: []byte("$baz"),
+										},
+									},
 								},
 							},
 						},
 					},
-					Stmts: []ast.Vertex{},
+					Stmts: []ast.Vertex{
+					},
 				},
 			},
 			&ast.StmtExpression{
@@ -1568,8 +1615,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 5,
 						EndLine:   5,
-						StartPos:  166,
-						EndPos:    215,
+						StartPos:  165,
+						EndPos:    214,
 					},
 				},
 				Expr: &ast.ExprClosure{
@@ -1577,31 +1624,28 @@ func TestPhp7ParameterNode(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 5,
 							EndLine:   5,
-							StartPos:  166,
-							EndPos:    214,
+							StartPos:  165,
+							EndPos:    213,
 						},
 					},
-					Static:     true,
-					ReturnsRef: false,
+					Static: true,
 					Params: []ast.Vertex{
 						&ast.Parameter{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 5,
 									EndLine:   5,
-									StartPos:  182,
-									EndPos:    196,
+									StartPos:  181,
+									EndPos:    195,
 								},
 							},
-							ByRef:    false,
-							Variadic: false,
 							Type: &ast.Nullable{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
-										StartPos:  182,
-										EndPos:    186,
+										StartPos:  181,
+										EndPos:    185,
 									},
 								},
 								Expr: &ast.NameName{
@@ -1609,8 +1653,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 5,
 											EndLine:   5,
-											StartPos:  183,
-											EndPos:    186,
+											StartPos:  182,
+											EndPos:    185,
 										},
 									},
 									Parts: []ast.Vertex{
@@ -1619,8 +1663,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 												Position: &position.Position{
 													StartLine: 5,
 													EndLine:   5,
-													StartPos:  183,
-													EndPos:    186,
+													StartPos:  182,
+													EndPos:    185,
 												},
 											},
 											Value: []byte("bar"),
@@ -1633,8 +1677,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
-										StartPos:  187,
-										EndPos:    191,
+										StartPos:  186,
+										EndPos:    190,
 									},
 								},
 								VarName: &ast.Identifier{
@@ -1642,8 +1686,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 5,
 											EndLine:   5,
-											StartPos:  187,
-											EndPos:    191,
+											StartPos:  186,
+											EndPos:    190,
 										},
 									},
 									Value: []byte("$bar"),
@@ -1654,8 +1698,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
-										StartPos:  192,
-										EndPos:    196,
+										StartPos:  191,
+										EndPos:    195,
 									},
 								},
 								Const: &ast.NameName{
@@ -1663,8 +1707,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 5,
 											EndLine:   5,
-											StartPos:  192,
-											EndPos:    196,
+											StartPos:  191,
+											EndPos:    195,
 										},
 									},
 									Parts: []ast.Vertex{
@@ -1673,8 +1717,8 @@ func TestPhp7ParameterNode(t *testing.T) {
 												Position: &position.Position{
 													StartLine: 5,
 													EndLine:   5,
-													StartPos:  192,
-													EndPos:    196,
+													StartPos:  191,
+													EndPos:    195,
 												},
 											},
 											Value: []byte("null"),
@@ -1688,19 +1732,17 @@ func TestPhp7ParameterNode(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 5,
 									EndLine:   5,
-									StartPos:  198,
-									EndPos:    210,
+									StartPos:  197,
+									EndPos:    209,
 								},
 							},
-							Variadic: true,
-							ByRef:    true,
 							Type: &ast.NameName{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
-										StartPos:  198,
-										EndPos:    201,
+										StartPos:  197,
+										EndPos:    200,
 									},
 								},
 								Parts: []ast.Vertex{
@@ -1709,42 +1751,64 @@ func TestPhp7ParameterNode(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 5,
 												EndLine:   5,
-												StartPos:  198,
-												EndPos:    201,
+												StartPos:  197,
+												EndPos:    200,
 											},
 										},
 										Value: []byte("baz"),
 									},
 								},
 							},
-							Var: &ast.ExprVariable{
+							Var: &ast.Reference{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
-										StartPos:  206,
-										EndPos:    210,
+										StartPos:  201,
+										EndPos:    209,
 									},
 								},
-								VarName: &ast.Identifier{
+								Var: &ast.Variadic{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 5,
 											EndLine:   5,
-											StartPos:  206,
-											EndPos:    210,
+											StartPos:  202,
+											EndPos:    209,
 										},
 									},
-									Value: []byte("$baz"),
+									Var: &ast.ExprVariable{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 5,
+												EndLine:   5,
+												StartPos:  205,
+												EndPos:    209,
+											},
+										},
+										VarName: &ast.Identifier{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 5,
+													EndLine:   5,
+													StartPos:  205,
+													EndPos:    209,
+												},
+											},
+											Value: []byte("$baz"),
+										},
+									},
 								},
 							},
 						},
 					},
-					Stmts: []ast.Vertex{},
+					Stmts: []ast.Vertex{
+					},
 				},
 			},
 		},
 	}
+
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
 	php7parser := php7.NewParser(lexer, nil)
@@ -7497,8 +7561,6 @@ func TestStmtFunction_ReturnVar(t *testing.T) {
 								EndPos:    24,
 							},
 						},
-						ByRef:    false,
-						Variadic: false,
 						Type: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -7541,8 +7603,6 @@ func TestStmtFunction_ReturnVar(t *testing.T) {
 								EndPos:    37,
 							},
 						},
-						ByRef:    false,
-						Variadic: false,
 						Type: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -15290,8 +15350,6 @@ func TestExprClosure_Use(t *testing.T) {
 									EndPos:    14,
 								},
 							},
-							Variadic: false,
-							ByRef:    false,
 							Var: &ast.ExprVariable{
 								Node: ast.Node{
 									Position: &position.Position{
@@ -15323,8 +15381,6 @@ func TestExprClosure_Use(t *testing.T) {
 									EndPos:    18,
 								},
 							},
-							ByRef:    false,
-							Variadic: false,
 							Var: &ast.ExprVariable{
 								Node: ast.Node{
 									Position: &position.Position{
@@ -15468,8 +15524,6 @@ func TestExprClosure_Use2(t *testing.T) {
 									EndPos:    14,
 								},
 							},
-							ByRef:    false,
-							Variadic: false,
 							Var: &ast.ExprVariable{
 								Node: ast.Node{
 									Position: &position.Position{
@@ -15501,8 +15555,6 @@ func TestExprClosure_Use2(t *testing.T) {
 									EndPos:    18,
 								},
 							},
-							ByRef:    false,
-							Variadic: false,
 							Var: &ast.ExprVariable{
 								Node: ast.Node{
 									Position: &position.Position{

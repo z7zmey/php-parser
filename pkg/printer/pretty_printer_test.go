@@ -119,10 +119,14 @@ func TestPrintParameter(t *testing.T) {
 
 	p := printer.NewPrettyPrinter(o, "    ")
 	p.Print(&ast.Parameter{
-		ByRef:        false,
-		Variadic:     true,
-		Type:         &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-		Var:          &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}},
+		Type: &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Var: &ast.Variadic{
+			Var: &ast.ExprVariable{
+				VarName: &ast.Identifier{
+					Value: []byte("var"),
+				},
+			},
+		},
 		DefaultValue: &ast.ScalarString{Value: []byte("'default'")},
 	})
 
@@ -140,10 +144,8 @@ func TestPrintNullable(t *testing.T) {
 	p := printer.NewPrettyPrinter(o, "    ")
 	p.Print(&ast.Nullable{
 		Expr: &ast.Parameter{
-			ByRef:        false,
-			Variadic:     true,
 			Type:         &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-			Var:          &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}},
+			Var:          &ast.Variadic{Var: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}}},
 			DefaultValue: &ast.ScalarString{Value: []byte("'default'")},
 		},
 	})
@@ -1389,9 +1391,7 @@ func TestPrintExprClosure(t *testing.T) {
 				ReturnsRef: true,
 				Params: []ast.Vertex{
 					&ast.Parameter{
-						ByRef:    true,
-						Variadic: false,
-						Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}},
+						Var: &ast.Reference{Var: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}}},
 					},
 				},
 				ClosureUse: &ast.ExprClosureUse{
@@ -2446,14 +2446,12 @@ func TestPrintStmtClassMethod(t *testing.T) {
 		MethodName: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:        true,
 				Type:         &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
-				Var:          &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}},
+				Var:          &ast.Reference{Var: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}}},
 				DefaultValue: &ast.ExprConstFetch{Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}}},
 			},
 			&ast.Parameter{
-				Variadic: true,
-				Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}},
+				Var: &ast.Variadic{Var: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}}},
 			},
 		},
 		ReturnType: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("void")}}},
@@ -2484,14 +2482,12 @@ func TestPrintStmtAbstractClassMethod(t *testing.T) {
 		MethodName: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:        true,
 				Type:         &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
-				Var:          &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}},
+				Var:          &ast.Reference{Var: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}}},
 				DefaultValue: &ast.ExprConstFetch{Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}}},
 			},
 			&ast.Parameter{
-				Variadic: true,
-				Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}},
+				Var: &ast.Variadic{Var: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}}},
 			},
 		},
 		ReturnType: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("void")}}},
@@ -3197,9 +3193,7 @@ func TestPrintStmtFunction(t *testing.T) {
 				FunctionName: &ast.Identifier{Value: []byte("foo")},
 				Params: []ast.Vertex{
 					&ast.Parameter{
-						ByRef:    true,
-						Variadic: false,
-						Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}},
+						Var: &ast.Reference{Var: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}}},
 					},
 				},
 				ReturnType: &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},

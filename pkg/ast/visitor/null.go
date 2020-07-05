@@ -30,6 +30,14 @@ func (v *Null) Nullable(_ *ast.Nullable) {
 	// do nothing
 }
 
+func (v *Null) Reference(_ *ast.Reference) {
+	// do nothing
+}
+
+func (v *Null) Variadic(_ *ast.Variadic) {
+	// do nothing
+}
+
 func (v *Null) Parameter(_ *ast.Parameter) {
 	// do nothing
 }

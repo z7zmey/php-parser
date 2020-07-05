@@ -502,10 +502,8 @@ func TestResolveFunctionName(t *testing.T) {
 		FunctionName: &ast.Identifier{Value: []byte("A")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:    false,
-				Variadic: false,
-				Type:     nameAB,
-				Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				Type: nameAB,
+				Var:  &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
 		ReturnType: &ast.Nullable{Expr: nameBC},
@@ -540,10 +538,8 @@ func TestResolveMethodName(t *testing.T) {
 		MethodName: &ast.Identifier{Value: []byte("A")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:    false,
-				Variadic: false,
-				Type:     nameAB,
-				Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				Type: nameAB,
+				Var:  &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
 		ReturnType: &ast.Nullable{Expr: nameBC},
@@ -573,10 +569,8 @@ func TestResolveClosureName(t *testing.T) {
 		Static:     false,
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:    false,
-				Variadic: false,
-				Type:     nameAB,
-				Var:      &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				Type: nameAB,
+				Var:  &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
 		ClosureUse: nil,

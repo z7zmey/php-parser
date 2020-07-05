@@ -141,8 +141,6 @@ func TestPrinterPrintParameter(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&ast.Parameter{
-		ByRef:    false,
-		Variadic: true,
 		Type: &ast.NameFullyQualified{
 			Parts: []ast.Vertex{
 				&ast.NameNamePart{
@@ -150,8 +148,10 @@ func TestPrinterPrintParameter(t *testing.T) {
 				},
 			},
 		},
-		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+		Var: &ast.Variadic{
+			Var: &ast.ExprVariable{
+				VarName: &ast.Identifier{Value: []byte("$var")},
+			},
 		},
 		DefaultValue: &ast.ScalarString{
 			Value: []byte("'default'"),
@@ -172,8 +172,6 @@ func TestPrinterPrintNullable(t *testing.T) {
 	p := printer.NewPrinter(o)
 	p.Print(&ast.Nullable{
 		Expr: &ast.Parameter{
-			ByRef:    true,
-			Variadic: false,
 			Type: &ast.NameFullyQualified{
 				Parts: []ast.Vertex{
 					&ast.NameNamePart{
@@ -181,8 +179,10 @@ func TestPrinterPrintNullable(t *testing.T) {
 					},
 				},
 			},
-			Var: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$var")},
+			Var: &ast.Reference{
+				Var: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("$var")},
+				},
 			},
 			DefaultValue: &ast.ScalarString{
 				Value: []byte("'default'"),
@@ -1703,10 +1703,10 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 		ReturnsRef: true,
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:    true,
-				Variadic: false,
-				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$var")},
+				Var: &ast.Reference{
+					Var: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("$var")},
+					},
 				},
 			},
 		},
@@ -1748,10 +1748,10 @@ func TestPrinterPrintExprArrowFunction(t *testing.T) {
 			ReturnsRef: true,
 			Params: []ast.Vertex{
 				&ast.Parameter{
-					ByRef:    true,
-					Variadic: false,
-					Var: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$var")},
+					Var: &ast.Reference{
+						Var: &ast.ExprVariable{
+							VarName: &ast.Identifier{Value: []byte("$var")},
+						},
 					},
 				},
 			},
@@ -2925,17 +2925,19 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 		MethodName: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef: true,
 				Type:  &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
-				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+				Var: &ast.Reference{
+					Var: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("$a")},
+					},
 				},
 				DefaultValue: &ast.ExprConstFetch{Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}}},
 			},
 			&ast.Parameter{
-				Variadic: true,
-				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+				Var: &ast.Variadic{
+					Var: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("$b")},
+					},
 				},
 			},
 		},
@@ -2972,17 +2974,19 @@ func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 		MethodName: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef: true,
 				Type:  &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
-				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+				Var: &ast.Reference{
+					Var: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("$a")},
+					},
 				},
 				DefaultValue: &ast.ExprConstFetch{Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}}},
 			},
 			&ast.Parameter{
-				Variadic: true,
-				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+				Var: &ast.Variadic{
+					Var: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("$b")},
+					},
 				},
 			},
 		},
@@ -3607,10 +3611,10 @@ func TestPrinterPrintStmtFunction(t *testing.T) {
 		FunctionName: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				ByRef:    true,
-				Variadic: false,
-				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$var")},
+				Var: &ast.Reference{
+					Var: &ast.ExprVariable{
+						VarName: &ast.Identifier{Value: []byte("$var")},
+					},
 				},
 			},
 		},

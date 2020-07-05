@@ -30,8 +30,7 @@ func ExampleDump() {
 		Stmts: []ast.Vertex{
 			&ast.Identifier{},
 			&ast.Parameter{
-				Variadic: true,
-				Var:      &ast.ExprVariable{},
+				Var: &ast.ExprVariable{},
 			},
 			&ast.StmtInlineHtml{
 				Value: []byte("foo"),
@@ -64,7 +63,6 @@ func ExampleDump() {
 	//			Value: []byte(""),
 	//		},
 	//		&ast.Parameter{
-	//			Variadic: true,
 	//			Var: &ast.ExprVariable{
 	//			},
 	//		},

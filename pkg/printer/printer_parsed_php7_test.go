@@ -107,6 +107,18 @@ func TestParseAndPrintIdentifier(t *testing.T) {
 	}
 }
 
+func TestParseAndPrintParameterTMP(t *testing.T) {
+
+	src := `<?php
+	function foo ( foo & ... $foo = null ) {}`
+
+	actual := print(parse(src))
+
+	if src != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)
+	}
+}
+
 func TestParseAndPrintParameter(t *testing.T) {
 
 	src := `<?php

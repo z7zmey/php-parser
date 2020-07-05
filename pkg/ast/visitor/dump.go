@@ -33,10 +33,18 @@ func (v *Dump) print(str string) {
 }
 
 func (v *Dump) printIndent(indentDepth int) {
+	if indentDepth < 0 {
+		indentDepth = 0
+	}
+
 	v.print(strings.Repeat("\t", indentDepth))
 }
 
 func (v *Dump) printIndentIfNotSingle(indentDepth int) {
+	if indentDepth < 0 {
+		indentDepth = 0
+	}
+
 	if !v.stack[v.depth-1].singleNode {
 		v.print(strings.Repeat("\t", indentDepth))
 	}
@@ -173,20 +181,22 @@ func (v *Dump) Nullable(n *ast.Nullable) {
 	v.printNode(n.GetNode())
 }
 
+func (v *Dump) Reference(n *ast.Reference) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.Reference{\n")
+	v.printNode(n.GetNode())
+}
+
+func (v *Dump) Variadic(n *ast.Variadic) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.Variadic{\n")
+	v.printNode(n.GetNode())
+}
+
 func (v *Dump) Parameter(n *ast.Parameter) {
 	v.printIndent(v.indent - 1)
 	v.print("&ast.Parameter{\n")
 	v.printNode(n.GetNode())
-
-	if n.ByRef {
-		v.printIndent(v.indent)
-		v.print("ByRef: true,\n")
-	}
-
-	if n.Variadic {
-		v.printIndent(v.indent)
-		v.print("Variadic: true,\n")
-	}
 }
 
 func (v *Dump) Identifier(n *ast.Identifier) {

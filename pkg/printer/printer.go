@@ -79,6 +79,10 @@ func (p *Printer) printNode(n ast.Vertex) {
 		p.printNodeRoot(n)
 	case *ast.Identifier:
 		p.printNodeIdentifier(n)
+	case *ast.Reference:
+		p.printNodeReference(n)
+	case *ast.Variadic:
+		p.printNodeVariadic(n)
 	case *ast.Parameter:
 		p.printNodeParameter(n)
 	case *ast.Nullable:
@@ -444,6 +448,26 @@ func (p *Printer) printNodeIdentifier(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
+func (p *Printer) printNodeReference(n ast.Vertex) {
+	nn := n.(*ast.Reference)
+	p.printFreeFloating(nn, token.Start)
+
+	io.WriteString(p.w, "&")
+	p.Print(nn.Var)
+
+	p.printFreeFloating(nn, token.End)
+}
+
+func (p *Printer) printNodeVariadic(n ast.Vertex) {
+	nn := n.(*ast.Variadic)
+	p.printFreeFloating(nn, token.Start)
+
+	io.WriteString(p.w, "...")
+	p.Print(nn.Var)
+
+	p.printFreeFloating(nn, token.End)
+}
+
 func (p *Printer) printNodeParameter(n ast.Vertex) {
 	nn := n.(*ast.Parameter)
 	p.printFreeFloating(nn, token.Start)
@@ -451,22 +475,10 @@ func (p *Printer) printNodeParameter(n ast.Vertex) {
 	if nn.Type != nil {
 		p.Print(nn.Type)
 	}
-	p.printFreeFloating(nn, token.OptionalType)
-
-	if nn.ByRef {
-		io.WriteString(p.w, "&")
-	}
-	p.printFreeFloating(nn, token.Ampersand)
-
-	if nn.Variadic {
-		io.WriteString(p.w, "...")
-	}
-	p.printFreeFloating(nn, token.Variadic)
 
 	p.Print(nn.Var)
 
 	if nn.DefaultValue != nil {
-		p.printFreeFloating(nn, token.Var)
 		io.WriteString(p.w, "=")
 		p.Print(nn.DefaultValue)
 	}

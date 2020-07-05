@@ -36,11 +36,29 @@ func (n *Nullable) Accept(v NodeVisitor) {
 	v.Nullable(n)
 }
 
+// Reference node
+type Reference struct {
+	Node
+	Var Vertex
+}
+
+func (n *Reference) Accept(v NodeVisitor) {
+	v.Reference(n)
+}
+
+// Variadic node
+type Variadic struct {
+	Node
+	Var Vertex
+}
+
+func (n *Variadic) Accept(v NodeVisitor) {
+	v.Variadic(n)
+}
+
 // Parameter node
 type Parameter struct {
 	Node
-	ByRef        bool
-	Variadic     bool
 	Type         Vertex
 	Var          Vertex
 	DefaultValue Vertex

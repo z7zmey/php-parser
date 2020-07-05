@@ -2139,12 +2139,27 @@ parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
                 identifier := &ast.Identifier{ast.Node{}, $4.Value}
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.Parameter{ast.Node{}, $2 != nil, $3 != nil, $1, variable, nil}
-
-                // save position
                 identifier.GetNode().Position = position.NewTokenPosition($4)
+
+                var variable ast.Vertex
+                variable = &ast.ExprVariable{ast.Node{}, identifier}
                 variable.GetNode().Position = position.NewTokenPosition($4)
+                yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Tokens)
+
+                if $3 != nil {
+                    variable = &ast.Variadic{ast.Node{}, variable}
+                    variable.GetNode().Position = position.NewTokensPosition($3, $4)
+                    yylex.(*Parser).setFreeFloating(variable, token.Start, $3.Tokens)
+                }
+
+                if $2 != nil {
+                    variable = &ast.Reference{ast.Node{}, variable}
+                    variable.GetNode().Position = position.NewTokensPosition($2, $4)
+                    yylex.(*Parser).setFreeFloating(variable, token.Start, $2.Tokens)
+                }
+
+                $$ = &ast.Parameter{ast.Node{}, $1, variable, nil}
+
                 if $1 != nil {
                     $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
                 } else if $2 != nil {
@@ -2155,41 +2170,33 @@ parameter:
                     $$.GetNode().Position = position.NewTokenPosition($4)
                 }
 
-                // save comments
-                if $1 != nil {
-                    yylex.(*Parser).MoveFreeFloating($1, $$)
-                }
-                if $2 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.OptionalType, $2.Tokens)
-                }
-                if $3 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $3.Tokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.Variadic, $4.Tokens)
-
-
-                // normalize
-                if $3 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Ampersand, $$.GetNode().Tokens[token.Variadic]); delete($$.GetNode().Tokens, token.Variadic)
-                }
-                if $2 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.OptionalType, $$.GetNode().Tokens[token.Ampersand]); delete($$.GetNode().Tokens, token.Ampersand)
-                }
-                if $1 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $$.GetNode().Tokens[token.OptionalType]); delete($$.GetNode().Tokens, token.OptionalType)
-                }
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
                 identifier := &ast.Identifier{ast.Node{}, $4.Value}
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.Parameter{ast.Node{}, $2 != nil, $3 != nil, $1, variable, $6}
-
-                // save position
                 identifier.GetNode().Position = position.NewTokenPosition($4)
+
+                var variable ast.Vertex
+                variable = &ast.ExprVariable{ast.Node{}, identifier}
                 variable.GetNode().Position = position.NewTokenPosition($4)
+                yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Tokens)
+                yylex.(*Parser).setFreeFloating(variable, token.End, $5.Tokens)
+
+                if $3 != nil {
+                    variable = &ast.Variadic{ast.Node{}, variable}
+                    variable.GetNode().Position = position.NewTokensPosition($3, $4)
+                    yylex.(*Parser).setFreeFloating(variable, token.Start, $3.Tokens)
+                }
+
+                if $2 != nil {
+                    variable = &ast.Reference{ast.Node{}, variable}
+                    variable.GetNode().Position = position.NewTokensPosition($2, $4)
+                    yylex.(*Parser).setFreeFloating(variable, token.Start, $2.Tokens)
+                }
+
+                $$ = &ast.Parameter{ast.Node{}, $1, variable, $6}
+
                 if $1 != nil {
                     $$.GetNode().Position = position.NewNodesPosition($1, $6)
                 } else if $2 != nil {
@@ -2198,31 +2205,6 @@ parameter:
                     $$.GetNode().Position = position.NewTokenNodePosition($3, $6)
                 } else {
                     $$.GetNode().Position = position.NewTokenNodePosition($4, $6)
-                }
-
-                // save comments
-                if $1 != nil {
-                    yylex.(*Parser).MoveFreeFloating($1, $$)
-                }
-                if $2 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.OptionalType, $2.Tokens)
-                }
-                if $3 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $3.Tokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.Variadic, $4.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $5.Tokens)
-
-
-                // normalize
-                if $3 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Ampersand, $$.GetNode().Tokens[token.Variadic]); delete($$.GetNode().Tokens, token.Variadic)
-                }
-                if $2 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.OptionalType, $$.GetNode().Tokens[token.Ampersand]); delete($$.GetNode().Tokens, token.Ampersand)
-                }
-                if $1 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $$.GetNode().Tokens[token.OptionalType]); delete($$.GetNode().Tokens, token.OptionalType)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
