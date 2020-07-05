@@ -337,6 +337,21 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			}
 			t.visitor.Leave("Modifiers", false)
 		}
+		if nn.ArgumentList != nil {
+			t.visitor.Enter("ArgumentList", true)
+			t.Traverse(nn.ArgumentList)
+			t.visitor.Leave("ArgumentList", true)
+		}
+		if nn.Extends != nil {
+			t.visitor.Enter("Extends", true)
+			t.Traverse(nn.Extends)
+			t.visitor.Leave("Extends", true)
+		}
+		if nn.Implements != nil {
+			t.visitor.Enter("Implements", true)
+			t.Traverse(nn.Implements)
+			t.visitor.Leave("Implements", true)
+		}
 		if nn.Stmts != nil {
 			t.visitor.Enter("Stmts", false)
 			for _, c := range nn.Stmts {
@@ -785,6 +800,11 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.InterfaceName)
 			t.visitor.Leave("InterfaceName", true)
 		}
+		if nn.Extends != nil {
+			t.visitor.Enter("Extends", true)
+			t.Traverse(nn.Extends)
+			t.visitor.Leave("Extends", true)
+		}
 		if nn.Stmts != nil {
 			t.visitor.Enter("Stmts", false)
 			for _, c := range nn.Stmts {
@@ -845,6 +865,12 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			return
 		}
 	case *ast.StmtProperty:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
 		if nn.Var != nil {
 			t.visitor.Enter("Var", true)
 			t.Traverse(nn.Var)
@@ -949,6 +975,11 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.visitor.Enter("Cond", true)
 			t.Traverse(nn.Cond)
 			t.visitor.Leave("Cond", true)
+		}
+		if nn.CaseList != nil {
+			t.visitor.Enter("CaseList", true)
+			t.Traverse(nn.CaseList)
+			t.visitor.Leave("CaseList", true)
 		}
 	case *ast.StmtThrow:
 		if nn == nil {
@@ -1503,6 +1534,11 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Method)
 			t.visitor.Leave("Method", true)
 		}
+		if nn.ArgumentList != nil {
+			t.visitor.Enter("ArgumentList", true)
+			t.Traverse(nn.ArgumentList)
+			t.visitor.Leave("ArgumentList", true)
+		}
 	case *ast.ExprNew:
 		if nn == nil {
 			return
@@ -1514,6 +1550,11 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.visitor.Enter("Class", true)
 			t.Traverse(nn.Class)
 			t.visitor.Leave("Class", true)
+		}
+		if nn.ArgumentList != nil {
+			t.visitor.Enter("ArgumentList", true)
+			t.Traverse(nn.ArgumentList)
+			t.visitor.Leave("ArgumentList", true)
 		}
 	case *ast.ExprPostDec:
 		if nn == nil {
