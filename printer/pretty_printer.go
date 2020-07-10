@@ -4,8 +4,6 @@ import (
 	"io"
 	"strings"
 
-	"github.com/z7zmey/php-parser/node/stmt"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/assign"
@@ -13,6 +11,7 @@ import (
 	"github.com/z7zmey/php-parser/node/expr/cast"
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/node/stmt"
 )
 
 type PrettyPrinter struct {
@@ -415,11 +414,12 @@ func (p *PrettyPrinter) printNode(n node.Node) {
 // node
 
 func (p *PrettyPrinter) printNodeRoot(n node.Node) {
+	var stmts []node.Node
 	v := n.(*node.Root)
 
 	if len(v.Stmts) > 0 {
 		firstStmt := v.Stmts[0]
-		v.Stmts = v.Stmts[1:]
+		stmts = v.Stmts[1:]
 
 		switch fs := firstStmt.(type) {
 		case *stmt.InlineHtml:
@@ -433,7 +433,7 @@ func (p *PrettyPrinter) printNodeRoot(n node.Node) {
 		}
 	}
 	p.indentDepth--
-	p.printNodes(v.Stmts)
+	p.printNodes(stmts)
 	io.WriteString(p.w, "\n")
 }
 
