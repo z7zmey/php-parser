@@ -111,6 +111,11 @@ func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 			nsr.ResolveType(n.ReturnType)
 		}
 
+	case *stmt.PropertyList:
+		if n.Type != nil {
+			nsr.ResolveType(n.Type)
+		}
+
 	case *expr.Closure:
 		for _, parameter := range n.Params {
 			nsr.ResolveType(parameter.(*node.Parameter).VariableType)
