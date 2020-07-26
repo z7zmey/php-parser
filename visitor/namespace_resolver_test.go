@@ -974,3 +974,55 @@ func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
+
+func TestResolvePropertyTypeName(t *testing.T) {
+	nameSimple := &name.Name{Parts: []node.Node{&name.NamePart{Value: "A"}, &name.NamePart{Value: "B"}}}
+	nameRelative := &name.Relative{Parts: []node.Node{&name.NamePart{Value: "A"}, &name.NamePart{Value: "B"}}}
+	nameFullyQualified := &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "A"}, &name.NamePart{Value: "B"}}}
+
+	propertyNodeSimple := &stmt.PropertyList{
+		Type: nameSimple,
+	}
+
+	propertyNodeRelative := &stmt.PropertyList{
+		Type: nameRelative,
+	}
+
+	propertyNodeFullyQualified := &stmt.PropertyList{
+		Type: nameFullyQualified,
+	}
+
+	classNode := &stmt.Class{
+		ClassName: &node.Identifier{Value: "Bar"},
+		Stmts: []node.Node{
+			propertyNodeSimple,
+			propertyNodeRelative,
+			propertyNodeFullyQualified,
+		},
+	}
+
+	ast := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Namespace{
+				NamespaceName: &name.Name{
+					Parts: []node.Node{
+						&name.NamePart{Value: "Foo"},
+					},
+				},
+			},
+			classNode,
+		},
+	}
+
+	expected := map[node.Node]string{
+		nameSimple:         "Foo\\A\\B",
+		nameRelative:       "Foo\\A\\B",
+		nameFullyQualified: "A\\B",
+		classNode:          "Foo\\Bar",
+	}
+
+	nsResolver := visitor.NewNamespaceResolver()
+	ast.Walk(nsResolver)
+
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
+}
