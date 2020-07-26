@@ -157,6 +157,9 @@ func (d *PrettyJsonDumper) LeaveNode(n walker.Walkable) {
 	fmt.Fprint(d.Writer, "\n")
 	d.printIndent(d.Writer)
 	fmt.Fprint(d.Writer, "}")
+
+	d.isNotFirstNode = true
+	d.isChildNode = false
 }
 
 func (d *PrettyJsonDumper) EnterChildNode(key string, w walker.Walkable) {

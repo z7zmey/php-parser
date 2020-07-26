@@ -120,6 +120,9 @@ func (d *JsonDumper) EnterNode(w walker.Walkable) bool {
 // LeaveNode is invoked after node process
 func (d *JsonDumper) LeaveNode(n walker.Walkable) {
 	fmt.Fprint(d.Writer, "}")
+
+	d.isNotFirstNode = true
+	d.isChildNode = false
 }
 
 func (d *JsonDumper) EnterChildNode(key string, w walker.Walkable) {
