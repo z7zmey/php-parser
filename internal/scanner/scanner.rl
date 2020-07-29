@@ -35,13 +35,13 @@ func (lex *Lexer) Lex() *Token {
         action heredoc_lbl_start {lblStart = lex.p}
         action heredoc_lbl_end   {lblEnd = lex.p}
 
-        action constant_string_new_line   {
+        action new_line   {
             if lex.data[lex.p] == '\n' {
-                lex.newLines.Append(lex.p)
+                lex.newLines.Append(lex.p+1)
             }
 
             if lex.data[lex.p] == '\r' && lex.data[lex.p+1] != '\n' {
-                lex.newLines.Append(lex.p)
+                lex.newLines.Append(lex.p+1)
             }
         }
 
@@ -51,7 +51,7 @@ func (lex *Lexer) Lex() *Token {
         action is_not_string_end_or_var { lex.isNotStringEnd('"') && lex.isNotStringVar() }
         action is_not_backqoute_end_or_var { lex.isNotStringEnd('`') && lex.isNotStringVar() }
 
-        newline = ('\r\n' >(nl, 1) | '\r' >(nl, 0) | '\n' >(nl, 0)) %{lex.newLines.Append(lex.p);};
+        newline = ('\r\n' >(nl, 1) | '\r' >(nl, 0) | '\n' >(nl, 0)) $new_line %{};
         any_line = any | newline;
         whitespace = [\t\v\f ];
         whitespace_line = [\t\v\f ] | newline;
@@ -79,45 +79,45 @@ func (lex *Lexer) Lex() *Token {
             # single qoute string
 
             qoute: (
-                (any - [\\'\r\n])                -> qoute
-                | "\r" @constant_string_new_line -> qoute
-                | "\n" @constant_string_new_line -> qoute
-                | "\\"                           -> qoute_any
-                | "'"                            -> final
+                (any - [\\'\r\n]) -> qoute
+                | "\r" @new_line  -> qoute
+                | "\n" @new_line  -> qoute
+                | "\\"            -> qoute_any
+                | "'"             -> final
             ),
             qoute_any: (
-                (any - [\r\n])                   -> qoute
-                | "\r" @constant_string_new_line -> qoute
-                | "\n" @constant_string_new_line -> qoute
+                (any - [\r\n])   -> qoute
+                | "\r" @new_line -> qoute
+                | "\n" @new_line -> qoute
             ),
 
             # double qoute string
 
             double_qoute: (
-                (any - [\\"${\r\n])                -> double_qoute
-                | "\r" @constant_string_new_line   -> double_qoute
-                | "\n" @constant_string_new_line   -> double_qoute
-                | "\\"                             -> double_qoute_any
-                | '"'                              -> final
-                | '$'                              -> double_qoute_nonvarname
-                | '{'                              -> double_qoute_nondollar
+                (any - [\\"${\r\n]) -> double_qoute
+                | "\r" @new_line    -> double_qoute
+                | "\n" @new_line    -> double_qoute
+                | "\\"              -> double_qoute_any
+                | '"'               -> final
+                | '$'               -> double_qoute_nonvarname
+                | '{'               -> double_qoute_nondollar
             ),
             double_qoute_any: (
-                (any - [\r\n])                     -> double_qoute
-                | "\r" @constant_string_new_line   -> double_qoute
-                | "\n" @constant_string_new_line   -> double_qoute
+                (any - [\r\n])     -> double_qoute
+                | "\r" @new_line   -> double_qoute
+                | "\n" @new_line   -> double_qoute
             ),
             double_qoute_nondollar: (
-                (any - [\\$"\r\n])                 -> double_qoute
-                | "\r" @constant_string_new_line   -> double_qoute
-                | "\n" @constant_string_new_line   -> double_qoute
-                | "\\"                             -> double_qoute_any
-                | '"'                              -> final
+                (any - [\\$"\r\n]) -> double_qoute
+                | "\r" @new_line   -> double_qoute
+                | "\n" @new_line   -> double_qoute
+                | "\\"             -> double_qoute_any
+                | '"'              -> final
             ),
             double_qoute_nonvarname: (
                 (any - [\\{"\r\n] - varname_first) -> double_qoute
-                | "\r" @constant_string_new_line   -> double_qoute
-                | "\n" @constant_string_new_line   -> double_qoute
+                | "\r" @new_line                   -> double_qoute
+                | "\n" @new_line                   -> double_qoute
                 | "\\"                             -> double_qoute_any
                 | '"'                              -> final
             );

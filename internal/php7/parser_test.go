@@ -1170,8 +1170,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 						},
 					},
 				},
-				Stmts: []ast.Vertex{
-				},
+				Stmts: []ast.Vertex{},
 			},
 			&ast.StmtClass{
 				Node: ast.Node{
@@ -1409,8 +1408,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									EndPos:    116,
 								},
 							},
-							Stmts: []ast.Vertex{
-							},
+							Stmts: []ast.Vertex{},
 						},
 					},
 				},
@@ -1606,8 +1604,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 							},
 						},
 					},
-					Stmts: []ast.Vertex{
-					},
+					Stmts: []ast.Vertex{},
 				},
 			},
 			&ast.StmtExpression{
@@ -1802,13 +1799,11 @@ func TestPhp7ParameterNode(t *testing.T) {
 							},
 						},
 					},
-					Stmts: []ast.Vertex{
-					},
+					Stmts: []ast.Vertex{},
 				},
 			},
 		},
 	}
-
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
 	php7parser := php7.NewParser(lexer, nil)

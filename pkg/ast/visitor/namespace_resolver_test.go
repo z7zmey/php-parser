@@ -978,3 +978,55 @@ func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
+func TestResolvePropertyTypeName(t *testing.T) {
+	nameSimple := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
+	nameRelative := &ast.NameRelative{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
+	nameFullyQualified := &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
+
+	propertyNodeSimple := &ast.StmtPropertyList{
+		Type: nameSimple,
+	}
+
+	propertyNodeRelative := &ast.StmtPropertyList{
+		Type: nameRelative,
+	}
+
+	propertyNodeFullyQualified := &ast.StmtPropertyList{
+		Type: nameFullyQualified,
+	}
+
+	classNode := &ast.StmtClass{
+		ClassName: &ast.Identifier{Value: []byte("Bar")},
+		Stmts: []ast.Vertex{
+			propertyNodeSimple,
+			propertyNodeRelative,
+			propertyNodeFullyQualified,
+		},
+	}
+
+	stmts := &ast.StmtStmtList{
+		Stmts: []ast.Vertex{
+			&ast.StmtNamespace{
+				NamespaceName: &ast.NameName{
+					Parts: []ast.Vertex{
+						&ast.NameNamePart{Value: []byte("Foo")},
+					},
+				},
+			},
+			classNode,
+		},
+	}
+
+	expected := map[ast.Vertex]string{
+		nameSimple:         "Foo\\A\\B",
+		nameRelative:       "Foo\\A\\B",
+		nameFullyQualified: "A\\B",
+		classNode:          "Foo\\Bar",
+	}
+
+	nsResolver := visitor.NewNamespaceResolver()
+	dfsTraverser := traverser.NewDFS(nsResolver)
+	dfsTraverser.Traverse(stmts)
+
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
+}

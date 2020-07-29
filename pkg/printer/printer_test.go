@@ -2925,7 +2925,7 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 		MethodName: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				Type:  &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
+				Type: &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
 				Var: &ast.Reference{
 					Var: &ast.ExprVariable{
 						VarName: &ast.Identifier{Value: []byte("$a")},
@@ -2974,7 +2974,7 @@ func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 		MethodName: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				Type:  &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
+				Type: &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
 				Var: &ast.Reference{
 					Var: &ast.ExprVariable{
 						VarName: &ast.Identifier{Value: []byte("$a")},

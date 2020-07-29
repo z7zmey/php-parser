@@ -1049,8 +1049,7 @@ func TestPhp5ParameterNode(t *testing.T) {
 						},
 					},
 				},
-				Stmts: []ast.Vertex{
-				},
+				Stmts: []ast.Vertex{},
 			},
 			&ast.StmtClass{
 				Node: ast.Node{
@@ -1278,8 +1277,7 @@ func TestPhp5ParameterNode(t *testing.T) {
 									EndPos:    114,
 								},
 							},
-							Stmts: []ast.Vertex{
-							},
+							Stmts: []ast.Vertex{},
 						},
 					},
 				},
@@ -1465,8 +1463,7 @@ func TestPhp5ParameterNode(t *testing.T) {
 							},
 						},
 					},
-					Stmts: []ast.Vertex{
-					},
+					Stmts: []ast.Vertex{},
 				},
 			},
 			&ast.StmtExpression{
@@ -1651,13 +1648,11 @@ func TestPhp5ParameterNode(t *testing.T) {
 							},
 						},
 					},
-					Stmts: []ast.Vertex{
-					},
+					Stmts: []ast.Vertex{},
 				},
 			},
 		},
 	}
-
 
 	lexer := scanner.NewLexer([]byte(src), "5.6", false, nil)
 	php5parser := php5.NewParser(lexer, nil)

@@ -9,10 +9,17 @@ import (
 )
 
 func TestPrintFile(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrettyPrinter(o, "\t")
-	p.Print(&ast.Root{
+	expected := `<?php
+namespace Foo;
+abstract class Bar extends Baz
+{
+	public function greet()
+	{
+		echo 'Hello world';
+	}
+}
+`
+	rootNode := &ast.Root{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
 				NamespaceName: &ast.NameName{
@@ -52,22 +59,20 @@ func TestPrintFile(t *testing.T) {
 				},
 			},
 		},
-	})
-
-	expected := `<?php
-namespace Foo;
-abstract class Bar extends Baz
-{
-	public function greet()
-	{
-		echo 'Hello world';
 	}
-}
-`
-	actual := o.String()
 
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	o1 := bytes.NewBufferString("")
+	p1 := printer.NewPrettyPrinter(o1, "\t")
+	p1.Print(rootNode)
+	if actual := o1.String(); expected != actual {
+		t.Errorf("\nPrint the 1st time\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+
+	o2 := bytes.NewBufferString("")
+	p2 := printer.NewPrettyPrinter(o2, "\t")
+	p2.Print(rootNode)
+	if actual := o2.String(); expected != actual {
+		t.Errorf("\nPrint the 2nd time\nexpected: %s\ngot: %s\n", expected, actual)
 	}
 }
 

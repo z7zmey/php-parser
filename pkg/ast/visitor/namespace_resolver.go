@@ -133,6 +133,12 @@ func (nsr *NamespaceResolver) ExprClosure(n *ast.ExprClosure) {
 	}
 }
 
+func (nsr *NamespaceResolver) StmtPropertyList(n *ast.StmtPropertyList) {
+	if n.Type != nil {
+		nsr.ResolveType(n.Type)
+	}
+}
+
 func (nsr *NamespaceResolver) StmtConstList(n *ast.StmtConstList) {
 	for _, constant := range n.Consts {
 		nsr.AddNamespacedName(constant, string(constant.(*ast.StmtConstant).ConstantName.(*ast.Identifier).Value))
