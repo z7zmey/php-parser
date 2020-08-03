@@ -2753,18 +2753,8 @@ func (p *Printer) printStmtHaltCompiler(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "__halt_compiler")
-	p.printFreeFloating(nn, token.HaltCompiller)
-	io.WriteString(p.w, "(")
-	p.printFreeFloating(nn, token.OpenParenthesisToken)
-	io.WriteString(p.w, ")")
-	p.printFreeFloating(nn, token.CloseParenthesisToken)
 
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
+	p.printFreeFloatingOrDefault(nn, token.End, "();")
 }
 
 func (p *Printer) printStmtIf(n ast.Vertex) {

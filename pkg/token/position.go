@@ -25,7 +25,6 @@ const (
 	True
 	Cond
 
-	HaltCompiller
 	Namespace
 	Static
 	Class

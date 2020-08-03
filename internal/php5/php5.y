@@ -364,17 +364,14 @@ top_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = &ast.StmtHaltCompiler{ast.Node{}, }
+                $$ = &ast.StmtHaltCompiler{ast.Node{}}
 
                 // save position
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.HaltCompiller, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.OpenParenthesisToken, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.CloseParenthesisToken, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($2.Tokens, append($3.Tokens, $4.Tokens...)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -831,17 +828,14 @@ inner_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = &ast.StmtHaltCompiler{ast.Node{}, }
+                $$ = &ast.StmtHaltCompiler{ast.Node{}}
 
                 // save position
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.HaltCompiller, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.OpenParenthesisToken, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.CloseParenthesisToken, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($2.Tokens, append($3.Tokens, $4.Tokens...)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
