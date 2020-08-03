@@ -532,7 +532,6 @@ func (p *Printer) printNodeArgument(n ast.Vertex) {
 	if nn.Variadic {
 		io.WriteString(p.w, "...")
 	}
-	p.printFreeFloating(nn, token.Variadic)
 
 	p.Print(nn.Expr)
 
@@ -1916,7 +1915,6 @@ func (p *Printer) printExprVariable(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	p.printFreeFloating(nn, token.Dollar)
 	if _, ok := nn.VarName.(*ast.Identifier); !ok {
 		io.WriteString(p.w, "$")
 	}
@@ -2313,7 +2311,6 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 	}
 	p.printFreeFloating(nn, token.ModifierList)
 	io.WriteString(p.w, "class")
-	p.printFreeFloating(nn, token.Class)
 
 	if nn.ClassName != nil {
 		p.bufStart = " "

@@ -8,15 +8,11 @@ const (
 	End
 	SemiColon
 	AltEnd
-	Dollar
 	Ampersand
 	Name
-	Prefix
 	Key
 	Var
-	UseType
 	ReturnType
-	OptionalType
 	CaseSeparator
 	LexicalVars
 	Params
@@ -37,7 +33,6 @@ const (
 	While
 	For
 	Switch
-	Break
 	Foreach
 	Declare
 	Label
@@ -47,11 +42,8 @@ const (
 	If
 	ElseIf
 	Else
-	Variadic
 	Function
-	DoubleArrow
 	Alias
-	As
 	Equal
 	Exit
 	Array
@@ -77,7 +69,6 @@ const (
 	ParameterList
 	AdaptationList
 	LexicalVarList
-	UseDeclarationList
 
 	OpenParenthesisToken
 	CloseParenthesisToken
