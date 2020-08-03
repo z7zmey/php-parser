@@ -745,30 +745,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Label)
 			t.visitor.Leave("Label", true)
 		}
-	case *ast.StmtGroupUse:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.UseType != nil {
-			t.visitor.Enter("UseType", true)
-			t.Traverse(nn.UseType)
-			t.visitor.Leave("UseType", true)
-		}
-		if nn.Prefix != nil {
-			t.visitor.Enter("Prefix", true)
-			t.Traverse(nn.Prefix)
-			t.visitor.Leave("Prefix", true)
-		}
-		if nn.UseList != nil {
-			t.visitor.Enter("UseList", false)
-			for _, c := range nn.UseList {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("UseList", false)
-		}
 	case *ast.StmtHaltCompiler:
 		if nn == nil {
 			return
@@ -1174,10 +1150,48 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
-		if nn.UseType != nil {
-			t.visitor.Enter("UseType", true)
-			t.Traverse(nn.UseType)
-			t.visitor.Leave("UseType", true)
+		if nn.UseList != nil {
+			t.visitor.Enter("UseList", true)
+			t.Traverse(nn.UseList)
+			t.visitor.Leave("UseList", true)
+		}
+	case *ast.StmtGroupUseList:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Prefix != nil {
+			t.visitor.Enter("Prefix", true)
+			t.Traverse(nn.Prefix)
+			t.visitor.Leave("Prefix", true)
+		}
+		if nn.UseList != nil {
+			t.visitor.Enter("UseList", true)
+			t.Traverse(nn.UseList)
+			t.visitor.Leave("UseList", true)
+		}
+	case *ast.StmtUseList:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.UseDeclarations != nil {
+			t.visitor.Enter("UseDeclarations", false)
+			for _, c := range nn.UseDeclarations {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("UseDeclarations", false)
+		}
+	case *ast.StmtUseDeclaration:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
 		}
 		if nn.Use != nil {
 			t.visitor.Enter("Use", true)
@@ -1189,24 +1203,22 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Alias)
 			t.visitor.Leave("Alias", true)
 		}
-	case *ast.StmtUseList:
+	case *ast.StmtUseType:
 		if nn == nil {
 			return
 		}
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
-		if nn.UseType != nil {
-			t.visitor.Enter("UseType", true)
-			t.Traverse(nn.UseType)
-			t.visitor.Leave("UseType", true)
+		if nn.Type != nil {
+			t.visitor.Enter("Type", true)
+			t.Traverse(nn.Type)
+			t.visitor.Leave("Type", true)
 		}
-		if nn.Uses != nil {
-			t.visitor.Enter("Uses", false)
-			for _, c := range nn.Uses {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("Uses", false)
+		if nn.Use != nil {
+			t.visitor.Enter("Use", true)
+			t.Traverse(nn.Use)
+			t.visitor.Leave("Use", true)
 		}
 	case *ast.StmtWhile:
 		if nn == nil {

@@ -3256,32 +3256,6 @@ func TestPrintStmtGoto(t *testing.T) {
 	}
 }
 
-func TestPrintStmtGroupUse(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrettyPrinter(o, "    ")
-	p.Print(&ast.StmtGroupUse{
-		UseType: &ast.Identifier{Value: []byte("function")},
-		Prefix:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-		UseList: []ast.Vertex{
-			&ast.StmtUse{
-				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
-				Alias: &ast.Identifier{Value: []byte("Baz")},
-			},
-			&ast.StmtUse{
-				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
-			},
-		},
-	})
-
-	expected := `use function Foo\{Bar as Baz, Quuz};`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestPrintHaltCompiler(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -3975,24 +3949,15 @@ func TestPrintStmtUset(t *testing.T) {
 	}
 }
 
-func TestPrintStmtUseList(t *testing.T) {
+func TestPrintUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrettyPrinter(o, "    ")
-	p.Print(&ast.StmtUseList{
-		UseType: &ast.Identifier{Value: []byte("function")},
-		Uses: []ast.Vertex{
-			&ast.StmtUse{
-				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-				Alias: &ast.Identifier{Value: []byte("Bar")},
-			},
-			&ast.StmtUse{
-				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
-			},
-		},
+	p.Print(&ast.StmtUse{
+		UseList: &ast.StmtUseList{},
 	})
 
-	expected := `use function Foo as Bar, Baz;`
+	expected := `use ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -4000,14 +3965,74 @@ func TestPrintStmtUseList(t *testing.T) {
 	}
 }
 
-func TestPrintUse(t *testing.T) {
+func TestPrintStmtGroupUseList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrettyPrinter(o, "    ")
-	p.Print(&ast.StmtUse{
-		UseType: &ast.Identifier{Value: []byte("function")},
-		Use:     &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-		Alias:   &ast.Identifier{Value: []byte("Bar")},
+	p.Print(&ast.StmtGroupUseList{
+		Prefix:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		UseList: &ast.StmtUseList{},
+	})
+
+	expected := `Foo\{}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtUseList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrettyPrinter(o, "    ")
+	p.Print(&ast.StmtUseList{
+		UseDeclarations: []ast.Vertex{
+			&ast.StmtUseDeclaration{
+				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+				Alias: &ast.Identifier{Value: []byte("Bar")},
+			},
+			&ast.StmtUseDeclaration{
+				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+			},
+		},
+	})
+
+	expected := `Foo as Bar, Baz`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintUseDeclaration(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrettyPrinter(o, "    ")
+	p.Print(&ast.StmtUseDeclaration{
+		Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Alias: &ast.Identifier{Value: []byte("Bar")},
+	})
+
+	expected := `Foo as Bar`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintUseType(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrettyPrinter(o, "    ")
+	p.Print(&ast.StmtUseType{
+		Type: &ast.Identifier{Value: []byte("function")},
+		Use: &ast.StmtUseDeclaration{
+			Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+			Alias: &ast.Identifier{Value: []byte("Bar")},
+		},
 	})
 
 	expected := `function Foo as Bar`

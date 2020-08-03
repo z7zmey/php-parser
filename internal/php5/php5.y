@@ -428,49 +428,56 @@ top_statement:
             }
     |   T_USE use_declarations ';'
             {
-                $$ = &ast.StmtUseList{ast.Node{}, nil, $2}
+                useList := &ast.StmtUseList{ast.Node{}, $2}
+                $$ = &ast.StmtUse{ast.Node{}, useList}
 
                 // save position
+                useList.GetNode().Position = position.NewNodeListPosition($2)
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.UseDeclarationList, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE T_FUNCTION use_function_declarations ';'
             {
-                useType := &ast.Identifier{ast.Node{}, $2.Value}
-                $$ = &ast.StmtUseList{ast.Node{}, useType, $3}
+                identifier := &ast.Identifier{ast.Node{}, $2.Value}
+                useList := &ast.StmtUseList{ast.Node{}, $3}
+                useType := &ast.StmtUseType{ast.Node{}, identifier, useList}
+                $$ = &ast.StmtUse{ast.Node{}, useType}
 
                 // save position
-                useType.GetNode().Position = position.NewTokenPosition($2)
+                identifier.GetNode().Position = position.NewTokenPosition($2)
+                useList.GetNode().Position = position.NewNodeListPosition($3)
+                useType.GetNode().Position = position.NewTokenNodePosition($2, useList)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
+                yylex.(*Parser).setFreeFloating(identifier, token.Start, $2.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(useType, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.UseDeclarationList, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $4.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE T_CONST use_const_declarations ';'
             {
-                useType := &ast.Identifier{ast.Node{}, $2.Value}
-                $$ = &ast.StmtUseList{ast.Node{}, useType, $3}
+                identifier := &ast.Identifier{ast.Node{}, $2.Value}
+                useList := &ast.StmtUseList{ast.Node{}, $3}
+                useType := &ast.StmtUseType{ast.Node{}, identifier, useList}
+                $$ = &ast.StmtUse{ast.Node{}, useType}
 
                 // save position
-                useType.GetNode().Position = position.NewTokenPosition($2)
+                identifier.GetNode().Position = position.NewTokenPosition($2)
+                useList.GetNode().Position = position.NewNodeListPosition($3)
+                useType.GetNode().Position = position.NewTokenNodePosition($2, useList)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
+                yylex.(*Parser).setFreeFloating(identifier, token.Start, $2.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(useType, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.UseDeclarationList, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $4.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -511,14 +518,11 @@ use_declaration:
         namespace_name
             {
                 name := &ast.NameName{ast.Node{}, $1}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, nil}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
                 $$.GetNode().Position = position.NewNodeListPosition($1)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -526,7 +530,7 @@ use_declaration:
             {
                 name := &ast.NameName{ast.Node{}, $1}
                 alias := &ast.Identifier{ast.Node{}, $3.Value}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, alias}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
@@ -534,7 +538,6 @@ use_declaration:
                 $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
                 yylex.(*Parser).setFreeFloating(name, token.End, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(alias, token.Start, $3.Tokens)
 
@@ -543,16 +546,14 @@ use_declaration:
     |   T_NS_SEPARATOR namespace_name
             {
                 name := &ast.NameName{ast.Node{}, $2}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, nil}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($2)
                 $$.GetNode().Position = position.NewNodeListPosition($2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Slash, $1.Tokens)
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -560,7 +561,7 @@ use_declaration:
             {
                 name := &ast.NameName{ast.Node{}, $2}
                 alias := &ast.Identifier{ast.Node{}, $4.Value}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, alias}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($2)
@@ -568,9 +569,7 @@ use_declaration:
                 $$.GetNode().Position = position.NewNodeListTokenPosition($2, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Slash, $1.Tokens)
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
                 yylex.(*Parser).setFreeFloating(name, token.End, $3.Tokens)
                 yylex.(*Parser).setFreeFloating(alias, token.Start, $4.Tokens)
 
@@ -600,14 +599,11 @@ use_function_declaration:
         namespace_name
             {
                 name := &ast.NameName{ast.Node{}, $1}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, nil}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
                 $$.GetNode().Position = position.NewNodeListPosition($1)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -615,7 +611,7 @@ use_function_declaration:
             {
                 name := &ast.NameName{ast.Node{}, $1}
                 alias := &ast.Identifier{ast.Node{}, $3.Value}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, alias}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
@@ -623,7 +619,6 @@ use_function_declaration:
                 $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
                 yylex.(*Parser).setFreeFloating(name, token.End, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(alias, token.Start, $3.Tokens)
 
@@ -632,16 +627,14 @@ use_function_declaration:
     |   T_NS_SEPARATOR namespace_name
             {
                 name := &ast.NameName{ast.Node{}, $2}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, nil}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($2)
                 $$.GetNode().Position = position.NewNodeListPosition($2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Slash, $1.Tokens)
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -649,7 +642,7 @@ use_function_declaration:
             {
                 name := &ast.NameName{ast.Node{}, $2}
                 alias := &ast.Identifier{ast.Node{}, $4.Value}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, alias}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($2)
@@ -657,9 +650,7 @@ use_function_declaration:
                 $$.GetNode().Position = position.NewNodeListTokenPosition($2, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Slash, $1.Tokens)
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
                 yylex.(*Parser).setFreeFloating(name, token.End, $3.Tokens)
                 yylex.(*Parser).setFreeFloating(alias, token.Start, $4.Tokens)
 
@@ -689,14 +680,11 @@ use_const_declaration:
         namespace_name
             {
                 name := &ast.NameName{ast.Node{}, $1}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, nil}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
                 $$.GetNode().Position = position.NewNodeListPosition($1)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -704,7 +692,7 @@ use_const_declaration:
             {
                 name := &ast.NameName{ast.Node{}, $1}
                 alias := &ast.Identifier{ast.Node{}, $3.Value}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, alias}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
@@ -712,7 +700,6 @@ use_const_declaration:
                 $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
                 yylex.(*Parser).setFreeFloating(name, token.End, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(alias, token.Start, $3.Tokens)
 
@@ -721,16 +708,14 @@ use_const_declaration:
     |   T_NS_SEPARATOR namespace_name
             {
                 name := &ast.NameName{ast.Node{}, $2}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, nil}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, nil}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($2)
                 $$.GetNode().Position = position.NewNodeListPosition($2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Slash, $1.Tokens)
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -738,7 +723,7 @@ use_const_declaration:
             {
                 name := &ast.NameName{ast.Node{}, $2}
                 alias := &ast.Identifier{ast.Node{}, $4.Value}
-                $$ = &ast.StmtUse{ast.Node{}, nil, name, alias}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, alias}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($2)
@@ -746,9 +731,7 @@ use_const_declaration:
                 $$.GetNode().Position = position.NewNodeListTokenPosition($2, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Slash, $1.Tokens)
-                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
                 yylex.(*Parser).setFreeFloating(name, token.End, $3.Tokens)
                 yylex.(*Parser).setFreeFloating(alias, token.Start, $4.Tokens)
 

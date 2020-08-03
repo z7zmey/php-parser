@@ -6,7 +6,6 @@ type Position int
 const (
 	Start Position = iota
 	End
-	Slash
 	Colon
 	SemiColon
 	AltEnd

@@ -12422,7 +12422,7 @@ func TestStmtUse(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -12431,17 +12431,17 @@ func TestStmtUse(t *testing.T) {
 						EndPos:    11,
 					},
 				},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  7,
-								EndPos:    10,
-							},
+				UseList: &ast.StmtUseList{
+					Node: ast.Node{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  7,
+							EndPos:    10,
 						},
-						Use: &ast.NameName{
+					},
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -12450,17 +12450,27 @@ func TestStmtUse(t *testing.T) {
 									EndPos:    10,
 								},
 							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  7,
-											EndPos:    10,
-										},
+							Use: &ast.NameName{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  7,
+										EndPos:    10,
 									},
-									Value: []byte("Foo"),
+								},
+								Parts: []ast.Vertex{
+									&ast.NameNamePart{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  7,
+												EndPos:    10,
+											},
+										},
+										Value: []byte("Foo"),
+									},
 								},
 							},
 						},
@@ -12490,7 +12500,7 @@ func TestStmtUse_FullyQualified(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -12499,17 +12509,17 @@ func TestStmtUse_FullyQualified(t *testing.T) {
 						EndPos:    12,
 					},
 				},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  8,
-								EndPos:    11,
-							},
+				UseList: &ast.StmtUseList{
+					Node: ast.Node{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  8,
+							EndPos:    11,
 						},
-						Use: &ast.NameName{
+					},
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -12518,17 +12528,27 @@ func TestStmtUse_FullyQualified(t *testing.T) {
 									EndPos:    11,
 								},
 							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  8,
-											EndPos:    11,
-										},
+							Use: &ast.NameName{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  8,
+										EndPos:    11,
 									},
-									Value: []byte("Foo"),
+								},
+								Parts: []ast.Vertex{
+									&ast.NameNamePart{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  8,
+												EndPos:    11,
+											},
+										},
+										Value: []byte("Foo"),
+									},
 								},
 							},
 						},
@@ -12558,7 +12578,7 @@ func TestStmtUse_FullyQualifiedAlias(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -12567,49 +12587,59 @@ func TestStmtUse_FullyQualifiedAlias(t *testing.T) {
 						EndPos:    19,
 					},
 				},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  8,
-								EndPos:    18,
-							},
+				UseList: &ast.StmtUseList{
+					Node: ast.Node{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  8,
+							EndPos:    18,
 						},
-						Use: &ast.NameName{
+					},
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  8,
-									EndPos:    11,
-								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  8,
-											EndPos:    11,
-										},
-									},
-									Value: []byte("Foo"),
-								},
-							},
-						},
-						Alias: &ast.Identifier{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  15,
 									EndPos:    18,
 								},
 							},
-							Value: []byte("Bar"),
+							Use: &ast.NameName{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  8,
+										EndPos:    11,
+									},
+								},
+								Parts: []ast.Vertex{
+									&ast.NameNamePart{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  8,
+												EndPos:    11,
+											},
+										},
+										Value: []byte("Foo"),
+									},
+								},
+							},
+							Alias: &ast.Identifier{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  15,
+										EndPos:    18,
+									},
+								},
+								Value: []byte("Bar"),
+							},
 						},
 					},
 				},
@@ -12637,7 +12667,7 @@ func TestStmtUse_List(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -12646,17 +12676,17 @@ func TestStmtUse_List(t *testing.T) {
 						EndPos:    16,
 					},
 				},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  7,
-								EndPos:    10,
-							},
+				UseList: &ast.StmtUseList{
+					Node: ast.Node{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  7,
+							EndPos:    15,
 						},
-						Use: &ast.NameName{
+					},
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -12665,31 +12695,31 @@ func TestStmtUse_List(t *testing.T) {
 									EndPos:    10,
 								},
 							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  7,
-											EndPos:    10,
-										},
+							Use: &ast.NameName{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  7,
+										EndPos:    10,
 									},
-									Value: []byte("Foo"),
+								},
+								Parts: []ast.Vertex{
+									&ast.NameNamePart{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  7,
+												EndPos:    10,
+											},
+										},
+										Value: []byte("Foo"),
+									},
 								},
 							},
 						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  12,
-								EndPos:    15,
-							},
-						},
-						Use: &ast.NameName{
+						&ast.StmtUseDeclaration{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -12698,17 +12728,27 @@ func TestStmtUse_List(t *testing.T) {
 									EndPos:    15,
 								},
 							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  12,
-											EndPos:    15,
-										},
+							Use: &ast.NameName{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  12,
+										EndPos:    15,
 									},
-									Value: []byte("Bar"),
+								},
+								Parts: []ast.Vertex{
+									&ast.NameNamePart{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  12,
+												EndPos:    15,
+											},
+										},
+										Value: []byte("Bar"),
+									},
 								},
 							},
 						},
@@ -12738,7 +12778,7 @@ func TestStmtUse_ListAlias(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -12747,17 +12787,17 @@ func TestStmtUse_ListAlias(t *testing.T) {
 						EndPos:    23,
 					},
 				},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  7,
-								EndPos:    10,
-							},
+				UseList: &ast.StmtUseList{
+					Node: ast.Node{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  7,
+							EndPos:    22,
 						},
-						Use: &ast.NameName{
+					},
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -12766,63 +12806,73 @@ func TestStmtUse_ListAlias(t *testing.T) {
 									EndPos:    10,
 								},
 							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  7,
-											EndPos:    10,
-										},
+							Use: &ast.NameName{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  7,
+										EndPos:    10,
 									},
-									Value: []byte("Foo"),
+								},
+								Parts: []ast.Vertex{
+									&ast.NameNamePart{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  7,
+												EndPos:    10,
+											},
+										},
+										Value: []byte("Foo"),
+									},
 								},
 							},
 						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  12,
-								EndPos:    22,
-							},
-						},
-						Use: &ast.NameName{
+						&ast.StmtUseDeclaration{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  12,
-									EndPos:    15,
-								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  12,
-											EndPos:    15,
-										},
-									},
-									Value: []byte("Bar"),
-								},
-							},
-						},
-						Alias: &ast.Identifier{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  19,
 									EndPos:    22,
 								},
 							},
-							Value: []byte("Baz"),
+							Use: &ast.NameName{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  12,
+										EndPos:    15,
+									},
+								},
+								Parts: []ast.Vertex{
+									&ast.NameNamePart{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  12,
+												EndPos:    15,
+											},
+										},
+										Value: []byte("Bar"),
+									},
+								},
+							},
+							Alias: &ast.Identifier{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  19,
+										EndPos:    22,
+									},
+								},
+								Value: []byte("Baz"),
+							},
 						},
 					},
 				},
@@ -12850,7 +12900,7 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -12859,38 +12909,46 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 						EndPos:    26,
 					},
 				},
-				UseType: &ast.Identifier{
+				UseList: &ast.StmtUseType{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
-							EndPos:    15,
+							EndPos:    25,
 						},
 					},
-					Value: []byte("function"),
-				},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
+					Type: &ast.Identifier{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  7,
+								EndPos:    15,
+							},
+						},
+						Value: []byte("function"),
+					},
+					Use: &ast.StmtUseList{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  16,
-								EndPos:    19,
+								EndPos:    25,
 							},
 						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  16,
-									EndPos:    19,
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  16,
+										EndPos:    19,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -12899,31 +12957,31 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 											EndPos:    19,
 										},
 									},
-									Value: []byte("Foo"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  16,
+													EndPos:    19,
+												},
+											},
+											Value: []byte("Foo"),
+										},
+									},
 								},
 							},
-						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  22,
-								EndPos:    25,
-							},
-						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  22,
-									EndPos:    25,
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  22,
+										EndPos:    25,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -12932,7 +12990,19 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 											EndPos:    25,
 										},
 									},
-									Value: []byte("Bar"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  22,
+													EndPos:    25,
+												},
+											},
+											Value: []byte("Bar"),
+										},
+									},
 								},
 							},
 						},
@@ -12962,7 +13032,7 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -12971,38 +13041,46 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 						EndPos:    40,
 					},
 				},
-				UseType: &ast.Identifier{
+				UseList: &ast.StmtUseType{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
-							EndPos:    15,
+							EndPos:    39,
 						},
 					},
-					Value: []byte("function"),
-				},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
+					Type: &ast.Identifier{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  7,
+								EndPos:    15,
+							},
+						},
+						Value: []byte("function"),
+					},
+					Use: &ast.StmtUseList{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  16,
-								EndPos:    26,
+								EndPos:    39,
 							},
 						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  16,
-									EndPos:    19,
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  16,
+										EndPos:    26,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13011,42 +13089,42 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 											EndPos:    19,
 										},
 									},
-									Value: []byte("Foo"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  16,
+													EndPos:    19,
+												},
+											},
+											Value: []byte("Foo"),
+										},
+									},
+								},
+								Alias: &ast.Identifier{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  23,
+											EndPos:    26,
+										},
+									},
+									Value: []byte("foo"),
 								},
 							},
-						},
-						Alias: &ast.Identifier{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  23,
-									EndPos:    26,
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  29,
+										EndPos:    39,
+									},
 								},
-							},
-							Value: []byte("foo"),
-						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  29,
-								EndPos:    39,
-							},
-						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  29,
-									EndPos:    32,
-								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13055,20 +13133,32 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 											EndPos:    32,
 										},
 									},
-									Value: []byte("Bar"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  29,
+													EndPos:    32,
+												},
+											},
+											Value: []byte("Bar"),
+										},
+									},
+								},
+								Alias: &ast.Identifier{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  36,
+											EndPos:    39,
+										},
+									},
+									Value: []byte("bar"),
 								},
 							},
-						},
-						Alias: &ast.Identifier{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  36,
-									EndPos:    39,
-								},
-							},
-							Value: []byte("bar"),
 						},
 					},
 				},
@@ -13096,7 +13186,7 @@ func TestStmtUse_ListConstType(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -13105,38 +13195,47 @@ func TestStmtUse_ListConstType(t *testing.T) {
 						EndPos:    23,
 					},
 				},
-				UseType: &ast.Identifier{
+
+				UseList: &ast.StmtUseType{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
-							EndPos:    12,
+							EndPos:    22,
 						},
 					},
-					Value: []byte("const"),
-				},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
+					Type: &ast.Identifier{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  7,
+								EndPos:    12,
+							},
+						},
+						Value: []byte("const"),
+					},
+					Use: &ast.StmtUseList{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  13,
-								EndPos:    16,
+								EndPos:    22,
 							},
 						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  13,
-									EndPos:    16,
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  13,
+										EndPos:    16,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13145,31 +13244,31 @@ func TestStmtUse_ListConstType(t *testing.T) {
 											EndPos:    16,
 										},
 									},
-									Value: []byte("Foo"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  13,
+													EndPos:    16,
+												},
+											},
+											Value: []byte("Foo"),
+										},
+									},
 								},
 							},
-						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  19,
-								EndPos:    22,
-							},
-						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  19,
-									EndPos:    22,
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  19,
+										EndPos:    22,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13178,7 +13277,19 @@ func TestStmtUse_ListConstType(t *testing.T) {
 											EndPos:    22,
 										},
 									},
-									Value: []byte("Bar"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  19,
+													EndPos:    22,
+												},
+											},
+											Value: []byte("Bar"),
+										},
+									},
 								},
 							},
 						},
@@ -13208,7 +13319,7 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -13217,38 +13328,46 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 						EndPos:    37,
 					},
 				},
-				UseType: &ast.Identifier{
+				UseList: &ast.StmtUseType{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
-							EndPos:    12,
+							EndPos:    36,
 						},
 					},
-					Value: []byte("const"),
-				},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
+					Type: &ast.Identifier{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  7,
+								EndPos:    12,
+							},
+						},
+						Value: []byte("const"),
+					},
+					Use: &ast.StmtUseList{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  13,
-								EndPos:    23,
+								EndPos:    36,
 							},
 						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  13,
-									EndPos:    16,
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  13,
+										EndPos:    23,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13257,42 +13376,42 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 											EndPos:    16,
 										},
 									},
-									Value: []byte("Foo"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  13,
+													EndPos:    16,
+												},
+											},
+											Value: []byte("Foo"),
+										},
+									},
+								},
+								Alias: &ast.Identifier{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  20,
+											EndPos:    23,
+										},
+									},
+									Value: []byte("foo"),
 								},
 							},
-						},
-						Alias: &ast.Identifier{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  20,
-									EndPos:    23,
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  26,
+										EndPos:    36,
+									},
 								},
-							},
-							Value: []byte("foo"),
-						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  26,
-								EndPos:    36,
-							},
-						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  26,
-									EndPos:    29,
-								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13301,20 +13420,32 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 											EndPos:    29,
 										},
 									},
-									Value: []byte("Bar"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  26,
+													EndPos:    29,
+												},
+											},
+											Value: []byte("Bar"),
+										},
+									},
+								},
+								Alias: &ast.Identifier{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  33,
+											EndPos:    36,
+										},
+									},
+									Value: []byte("bar"),
 								},
 							},
-						},
-						Alias: &ast.Identifier{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  33,
-									EndPos:    36,
-								},
-							},
-							Value: []byte("bar"),
 						},
 					},
 				},
@@ -13342,7 +13473,7 @@ func TestStmtUse_GroupUse(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -13351,50 +13482,58 @@ func TestStmtUse_GroupUse(t *testing.T) {
 						EndPos:    22,
 					},
 				},
-				Prefix: &ast.NameName{
+				UseList: &ast.StmtGroupUseList{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
-							EndPos:    10,
+							EndPos:    21,
 						},
 					},
-					Parts: []ast.Vertex{
-						&ast.NameNamePart{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  7,
-									EndPos:    10,
-								},
+					Prefix: &ast.NameName{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  7,
+								EndPos:    10,
 							},
-							Value: []byte("Foo"),
+						},
+						Parts: []ast.Vertex{
+							&ast.NameNamePart{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  7,
+										EndPos:    10,
+									},
+								},
+								Value: []byte("Foo"),
+							},
 						},
 					},
-				},
-				UseList: []ast.Vertex{
-					&ast.StmtUse{
+					UseList: &ast.StmtUseList{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  12,
-								EndPos:    15,
+								EndPos:    20,
 							},
 						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  12,
-									EndPos:    15,
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  12,
+										EndPos:    15,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13403,31 +13542,31 @@ func TestStmtUse_GroupUse(t *testing.T) {
 											EndPos:    15,
 										},
 									},
-									Value: []byte("Bar"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  12,
+													EndPos:    15,
+												},
+											},
+											Value: []byte("Bar"),
+										},
+									},
 								},
 							},
-						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  17,
-								EndPos:    20,
-							},
-						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  17,
-									EndPos:    20,
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  17,
+										EndPos:    20,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13436,7 +13575,19 @@ func TestStmtUse_GroupUse(t *testing.T) {
 											EndPos:    20,
 										},
 									},
-									Value: []byte("Baz"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  17,
+													EndPos:    20,
+												},
+											},
+											Value: []byte("Baz"),
+										},
+									},
 								},
 							},
 						},
@@ -13466,7 +13617,7 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -13475,50 +13626,58 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 						EndPos:    30,
 					},
 				},
-				Prefix: &ast.NameName{
+				UseList: &ast.StmtGroupUseList{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
-							EndPos:    10,
+							EndPos:    29,
 						},
 					},
-					Parts: []ast.Vertex{
-						&ast.NameNamePart{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  7,
-									EndPos:    10,
-								},
+					Prefix: &ast.NameName{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  7,
+								EndPos:    10,
 							},
-							Value: []byte("Foo"),
+						},
+						Parts: []ast.Vertex{
+							&ast.NameNamePart{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  7,
+										EndPos:    10,
+									},
+								},
+								Value: []byte("Foo"),
+							},
 						},
 					},
-				},
-				UseList: []ast.Vertex{
-					&ast.StmtUse{
+					UseList: &ast.StmtUseList{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  12,
-								EndPos:    15,
+								EndPos:    28,
 							},
 						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  12,
-									EndPos:    15,
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  12,
+										EndPos:    15,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13527,31 +13686,31 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 											EndPos:    15,
 										},
 									},
-									Value: []byte("Bar"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  12,
+													EndPos:    15,
+												},
+											},
+											Value: []byte("Bar"),
+										},
+									},
 								},
 							},
-						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  17,
-								EndPos:    28,
-							},
-						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  17,
-									EndPos:    20,
+							&ast.StmtUseDeclaration{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  17,
+										EndPos:    28,
+									},
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.NameName{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13560,20 +13719,32 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 											EndPos:    20,
 										},
 									},
-									Value: []byte("Baz"),
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Node: ast.Node{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  17,
+													EndPos:    20,
+												},
+											},
+											Value: []byte("Baz"),
+										},
+									},
+								},
+								Alias: &ast.Identifier{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  24,
+											EndPos:    28,
+										},
+									},
+									Value: []byte("quux"),
 								},
 							},
-						},
-						Alias: &ast.Identifier{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  24,
-									EndPos:    28,
-								},
-							},
-							Value: []byte("quux"),
 						},
 					},
 				},
@@ -13601,7 +13772,7 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -13610,28 +13781,36 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 						EndPos:    31,
 					},
 				},
-				UseType: &ast.Identifier{
+				UseList: &ast.StmtUseType{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
-							EndPos:    15,
+							EndPos:    30,
 						},
 					},
-					Value: []byte("function"),
-				},
-				Prefix: &ast.NameName{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 1,
-							EndLine:   1,
-							StartPos:  16,
-							EndPos:    19,
+					Type: &ast.Identifier{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  7,
+								EndPos:    15,
+							},
 						},
+						Value: []byte("function"),
 					},
-					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+					Use: &ast.StmtGroupUseList{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  16,
+								EndPos:    30,
+							},
+						},
+						Prefix: &ast.NameName{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -13640,31 +13819,31 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 									EndPos:    19,
 								},
 							},
-							Value: []byte("Foo"),
-						},
-					},
-				},
-				UseList: []ast.Vertex{
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  21,
-								EndPos:    24,
+							Parts: []ast.Vertex{
+								&ast.NameNamePart{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  16,
+											EndPos:    19,
+										},
+									},
+									Value: []byte("Foo"),
+								},
 							},
 						},
-						Use: &ast.NameName{
+						UseList: &ast.StmtUseList{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  21,
-									EndPos:    24,
+									EndPos:    29,
 								},
 							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+							UseDeclarations: []ast.Vertex{
+								&ast.StmtUseDeclaration{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13673,31 +13852,31 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 											EndPos:    24,
 										},
 									},
-									Value: []byte("Bar"),
+									Use: &ast.NameName{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  21,
+												EndPos:    24,
+											},
+										},
+										Parts: []ast.Vertex{
+											&ast.NameNamePart{
+												Node: ast.Node{
+													Position: &position.Position{
+														StartLine: 1,
+														EndLine:   1,
+														StartPos:  21,
+														EndPos:    24,
+													},
+												},
+												Value: []byte("Bar"),
+											},
+										},
+									},
 								},
-							},
-						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  26,
-								EndPos:    29,
-							},
-						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  26,
-									EndPos:    29,
-								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.StmtUseDeclaration{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13706,7 +13885,29 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 											EndPos:    29,
 										},
 									},
-									Value: []byte("Baz"),
+									Use: &ast.NameName{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  26,
+												EndPos:    29,
+											},
+										},
+										Parts: []ast.Vertex{
+											&ast.NameNamePart{
+												Node: ast.Node{
+													Position: &position.Position{
+														StartLine: 1,
+														EndLine:   1,
+														StartPos:  26,
+														EndPos:    29,
+													},
+												},
+												Value: []byte("Baz"),
+											},
+										},
+									},
 								},
 							},
 						},
@@ -13736,7 +13937,7 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -13745,28 +13946,36 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 						EndPos:    28,
 					},
 				},
-				UseType: &ast.Identifier{
+				UseList: &ast.StmtUseType{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
-							EndPos:    12,
+							EndPos:    27,
 						},
 					},
-					Value: []byte("const"),
-				},
-				Prefix: &ast.NameName{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 1,
-							EndLine:   1,
-							StartPos:  13,
-							EndPos:    16,
+					Type: &ast.Identifier{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  7,
+								EndPos:    12,
+							},
 						},
+						Value: []byte("const"),
 					},
-					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+					Use: &ast.StmtGroupUseList{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  13,
+								EndPos:    27,
+							},
+						},
+						Prefix: &ast.NameName{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -13775,31 +13984,31 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 									EndPos:    16,
 								},
 							},
-							Value: []byte("Foo"),
-						},
-					},
-				},
-				UseList: []ast.Vertex{
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  18,
-								EndPos:    21,
+							Parts: []ast.Vertex{
+								&ast.NameNamePart{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  13,
+											EndPos:    16,
+										},
+									},
+									Value: []byte("Foo"),
+								},
 							},
 						},
-						Use: &ast.NameName{
+						UseList: &ast.StmtUseList{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  18,
-									EndPos:    21,
+									EndPos:    26,
 								},
 							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+							UseDeclarations: []ast.Vertex{
+								&ast.StmtUseDeclaration{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13808,31 +14017,31 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 											EndPos:    21,
 										},
 									},
-									Value: []byte("Bar"),
+									Use: &ast.NameName{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  18,
+												EndPos:    21,
+											},
+										},
+										Parts: []ast.Vertex{
+											&ast.NameNamePart{
+												Node: ast.Node{
+													Position: &position.Position{
+														StartLine: 1,
+														EndLine:   1,
+														StartPos:  18,
+														EndPos:    21,
+													},
+												},
+												Value: []byte("Bar"),
+											},
+										},
+									},
 								},
-							},
-						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  23,
-								EndPos:    26,
-							},
-						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  23,
-									EndPos:    26,
-								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.StmtUseDeclaration{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13841,7 +14050,29 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 											EndPos:    26,
 										},
 									},
-									Value: []byte("Baz"),
+									Use: &ast.NameName{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  23,
+												EndPos:    26,
+											},
+										},
+										Parts: []ast.Vertex{
+											&ast.NameNamePart{
+												Node: ast.Node{
+													Position: &position.Position{
+														StartLine: 1,
+														EndLine:   1,
+														StartPos:  23,
+														EndPos:    26,
+													},
+												},
+												Value: []byte("Baz"),
+											},
+										},
+									},
 								},
 							},
 						},
@@ -13871,7 +14102,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtUse{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -13880,61 +14111,69 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 						EndPos:    37,
 					},
 				},
-				Prefix: &ast.NameName{
+				UseList: &ast.StmtGroupUseList{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
-							EndPos:    10,
+							EndPos:    36,
 						},
 					},
-					Parts: []ast.Vertex{
-						&ast.NameNamePart{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  7,
-									EndPos:    10,
-								},
-							},
-							Value: []byte("Foo"),
-						},
-					},
-				},
-				UseList: []ast.Vertex{
-					&ast.StmtUse{
+					Prefix: &ast.NameName{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  18,
-								EndPos:    21,
+								StartPos:  7,
+								EndPos:    10,
 							},
 						},
-						UseType: &ast.Identifier{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  12,
-									EndPos:    17,
+						Parts: []ast.Vertex{
+							&ast.NameNamePart{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  7,
+										EndPos:    10,
+									},
 								},
+								Value: []byte("Foo"),
 							},
-							Value: []byte("const"),
 						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  18,
-									EndPos:    21,
-								},
+					},
+					UseList: &ast.StmtUseList{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    35,
 							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+						},
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseType{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  12,
+										EndPos:    21,
+									},
+								},
+								Type: &ast.Identifier{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  12,
+											EndPos:    17,
+										},
+									},
+									Value: []byte("const"),
+								},
+								Use: &ast.StmtUseDeclaration{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13943,42 +14182,52 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 											EndPos:    21,
 										},
 									},
-									Value: []byte("Bar"),
+									Use: &ast.NameName{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  18,
+												EndPos:    21,
+											},
+										},
+										Parts: []ast.Vertex{
+											&ast.NameNamePart{
+												Node: ast.Node{
+													Position: &position.Position{
+														StartLine: 1,
+														EndLine:   1,
+														StartPos:  18,
+														EndPos:    21,
+													},
+												},
+												Value: []byte("Bar"),
+											},
+										},
+									},
 								},
 							},
-						},
-					},
-					&ast.StmtUse{
-						Node: ast.Node{
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  32,
-								EndPos:    35,
-							},
-						},
-						UseType: &ast.Identifier{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  23,
-									EndPos:    31,
+							&ast.StmtUseType{
+								Node: ast.Node{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  23,
+										EndPos:    35,
+									},
 								},
-							},
-							Value: []byte("function"),
-						},
-						Use: &ast.NameName{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  32,
-									EndPos:    35,
+								Type: &ast.Identifier{
+									Node: ast.Node{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  23,
+											EndPos:    31,
+										},
+									},
+									Value: []byte("function"),
 								},
-							},
-							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								Use: &ast.StmtUseDeclaration{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -13987,7 +14236,29 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 											EndPos:    35,
 										},
 									},
-									Value: []byte("Baz"),
+									Use: &ast.NameName{
+										Node: ast.Node{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  32,
+												EndPos:    35,
+											},
+										},
+										Parts: []ast.Vertex{
+											&ast.NameNamePart{
+												Node: ast.Node{
+													Position: &position.Position{
+														StartLine: 1,
+														EndLine:   1,
+														StartPos:  32,
+														EndPos:    35,
+													},
+												},
+												Value: []byte("Baz"),
+											},
+										},
+									},
 								},
 							},
 						},

@@ -59,7 +59,6 @@ type NodeVisitor interface {
 	StmtFunction(n *StmtFunction)
 	StmtGlobal(n *StmtGlobal)
 	StmtGoto(n *StmtGoto)
-	StmtGroupUse(n *StmtGroupUse)
 	StmtHaltCompiler(n *StmtHaltCompiler)
 	StmtIf(n *StmtIf)
 	StmtInlineHtml(n *StmtInlineHtml)
@@ -85,7 +84,10 @@ type NodeVisitor interface {
 	StmtTry(n *StmtTry)
 	StmtUnset(n *StmtUnset)
 	StmtUse(n *StmtUse)
+	StmtGroupUseList(n *StmtGroupUseList)
 	StmtUseList(n *StmtUseList)
+	StmtUseDeclaration(n *StmtUseDeclaration)
+	StmtUseType(n *StmtUseType)
 	StmtWhile(n *StmtWhile)
 
 	ExprArray(n *ExprArray)

@@ -437,12 +437,6 @@ func (v *Dump) StmtGoto(n *ast.StmtGoto) {
 	v.printNode(n.GetNode())
 }
 
-func (v *Dump) StmtGroupUse(n *ast.StmtGroupUse) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtGroupUse{\n")
-	v.printNode(n.GetNode())
-}
-
 func (v *Dump) StmtHaltCompiler(n *ast.StmtHaltCompiler) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtHaltCompiler{\n")
@@ -596,9 +590,27 @@ func (v *Dump) StmtUse(n *ast.StmtUse) {
 	v.printNode(n.GetNode())
 }
 
+func (v *Dump) StmtGroupUseList(n *ast.StmtGroupUseList) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.StmtGroupUseList{\n")
+	v.printNode(n.GetNode())
+}
+
 func (v *Dump) StmtUseList(n *ast.StmtUseList) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtUseList{\n")
+	v.printNode(n.GetNode())
+}
+
+func (v *Dump) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.StmtUseDeclaration{\n")
+	v.printNode(n.GetNode())
+}
+
+func (v *Dump) StmtUseType(n *ast.StmtUseType) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.StmtUseType{\n")
 	v.printNode(n.GetNode())
 }
 

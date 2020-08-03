@@ -16,10 +16,12 @@ func TestResolveStaticCall(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameAB,
+			&ast.StmtUse{
+				UseList: &ast.StmtUseList{
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
+							Use: nameAB,
+						},
 					},
 				},
 			},
@@ -48,10 +50,12 @@ func TestResolveStaticPropertyFetch(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameAB,
+			&ast.StmtUse{
+				UseList: &ast.StmtUseList{
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
+							Use: nameAB,
+						},
 					},
 				},
 			},
@@ -79,10 +83,12 @@ func TestResolveClassConstFetch(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameAB,
+			&ast.StmtUse{
+				UseList: &ast.StmtUseList{
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
+							Use: nameAB,
+						},
 					},
 				},
 			},
@@ -110,10 +116,12 @@ func TestResolveNew(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameAB,
+			&ast.StmtUse{
+				UseList: &ast.StmtUseList{
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
+							Use: nameAB,
+						},
 					},
 				},
 			},
@@ -141,10 +149,12 @@ func TestResolveInstanceOf(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameAB,
+			&ast.StmtUse{
+				UseList: &ast.StmtUseList{
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
+							Use: nameAB,
+						},
 					},
 				},
 			},
@@ -175,14 +185,15 @@ func TestResolveInstanceCatch(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameAB,
-					},
-					&ast.StmtUse{
-						Use:   nameDE,
-						Alias: &ast.Identifier{Value: []byte("F")},
+			&ast.StmtUse{
+				UseList: &ast.StmtUseList{
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
+							Use: nameAB,
+						}, &ast.StmtUseDeclaration{
+							Use:   nameDE,
+							Alias: &ast.Identifier{Value: []byte("F")},
+						},
 					},
 				},
 			},
@@ -220,11 +231,15 @@ func TestResolveFunctionCall(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
-				UseType: &ast.Identifier{Value: []byte("function")},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameAB,
+			&ast.StmtUse{
+				UseList: &ast.StmtUseType{
+					Type: &ast.Identifier{Value: []byte("function")},
+					Use: &ast.StmtUseList{
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseDeclaration{
+								Use: nameAB,
+							},
+						},
 					},
 				},
 			},
@@ -252,11 +267,15 @@ func TestResolveConstFetch(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
-				UseType: &ast.Identifier{Value: []byte("const")},
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameAB,
+			&ast.StmtUse{
+				UseList: &ast.StmtUseType{
+					Type: &ast.Identifier{Value: []byte("const")},
+					Use: &ast.StmtUseList{
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseDeclaration{
+								Use: nameAB,
+							},
+						},
 					},
 				},
 			},
@@ -286,25 +305,39 @@ func TestResolveGroupUse(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
-				Prefix: nameAB,
-				UseList: []ast.Vertex{
-					&ast.StmtUse{
-						UseType: &ast.Identifier{Value: []byte("Function")},
-						Use:     nameF,
-					},
-					&ast.StmtUse{
-						UseType: &ast.Identifier{Value: []byte("const")},
-						Use:     nameC,
+			&ast.StmtUse{
+				UseList: &ast.StmtGroupUseList{
+					Prefix: nameAB,
+					UseList: &ast.StmtUseList{
+						UseDeclarations: []ast.Vertex{
+							&ast.StmtUseType{
+								Type: &ast.Identifier{Value: []byte("Function")},
+								Use: &ast.StmtUseDeclaration{
+									Use: nameF,
+								},
+							},
+							&ast.StmtUseType{
+								Type: &ast.Identifier{Value: []byte("const")},
+								Use: &ast.StmtUseDeclaration{
+									Use: nameC,
+								},
+							},
+						},
 					},
 				},
 			},
-			&ast.StmtGroupUse{
-				Prefix:  nameBD,
-				UseType: &ast.Identifier{Value: []byte("Function")},
-				UseList: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameE,
+			&ast.StmtUse{
+				UseList: &ast.StmtUseType{
+					Type: &ast.Identifier{Value: []byte("Function")},
+					Use: &ast.StmtGroupUseList{
+						Prefix: nameBD,
+						UseList: &ast.StmtUseList{
+							UseDeclarations: []ast.Vertex{
+								&ast.StmtUseDeclaration{
+									Use: nameE,
+								},
+							},
+						},
 					},
 				},
 			},
@@ -347,10 +380,12 @@ func TestResolveTraitUse(t *testing.T) {
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUseList{
-				Uses: []ast.Vertex{
-					&ast.StmtUse{
-						Use: nameAB,
+			&ast.StmtUse{
+				UseList: &ast.StmtUseList{
+					UseDeclarations: []ast.Vertex{
+						&ast.StmtUseDeclaration{
+							Use: nameAB,
+						},
 					},
 				},
 			},
@@ -668,10 +703,12 @@ func TestResolveNamespaces(t *testing.T) {
 			&ast.StmtNamespace{
 				NamespaceName: namespaceCD,
 				Stmts: []ast.Vertex{
-					&ast.StmtUseList{
-						Uses: []ast.Vertex{
-							&ast.StmtUse{
-								Use: nameAC,
+					&ast.StmtUse{
+						UseList: &ast.StmtUseList{
+							UseDeclarations: []ast.Vertex{
+								&ast.StmtUseDeclaration{
+									Use: nameAC,
+								},
 							},
 						},
 					},

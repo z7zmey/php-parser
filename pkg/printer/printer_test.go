@@ -3673,32 +3673,6 @@ func TestPrinterPrintStmtGoto(t *testing.T) {
 	}
 }
 
-func TestPrinterPrintStmtGroupUse(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtGroupUse{
-		UseType: &ast.Identifier{Value: []byte("function")},
-		Prefix:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-		UseList: []ast.Vertex{
-			&ast.StmtUse{
-				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
-				Alias: &ast.Identifier{Value: []byte("Baz")},
-			},
-			&ast.StmtUse{
-				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
-			},
-		},
-	})
-
-	expected := `use function Foo\{Bar as Baz,Quuz};`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestPrinterPrintHaltCompiler(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -4412,24 +4386,21 @@ func TestPrinterPrintStmtUnset(t *testing.T) {
 	}
 }
 
-func TestPrinterPrintStmtUseList(t *testing.T) {
+func TestPrinterPrintUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtUseList{
-		UseType: &ast.Identifier{Value: []byte("function")},
-		Uses: []ast.Vertex{
-			&ast.StmtUse{
-				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-				Alias: &ast.Identifier{Value: []byte("Bar")},
-			},
-			&ast.StmtUse{
-				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+	p.Print(&ast.StmtUse{
+		UseList: &ast.StmtUseList{
+			UseDeclarations: []ast.Vertex{
+				&ast.StmtUseDeclaration{
+					Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+				},
 			},
 		},
 	})
 
-	expected := `use function Foo as Bar,Baz;`
+	expected := `use Foo;`
 	actual := o.String()
 
 	if expected != actual {
@@ -4437,14 +4408,74 @@ func TestPrinterPrintStmtUseList(t *testing.T) {
 	}
 }
 
-func TestPrinterPrintUse(t *testing.T) {
+func TestPrinterPrintStmtGroupUseList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtUse{
-		UseType: &ast.Identifier{Value: []byte("function")},
-		Use:     &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-		Alias:   &ast.Identifier{Value: []byte("Bar")},
+	p.Print(&ast.StmtGroupUseList{
+		Prefix:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		UseList: &ast.StmtUseList{},
+	})
+
+	expected := `Foo\{}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintStmtUseList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&ast.StmtUseList{
+		UseDeclarations: []ast.Vertex{
+			&ast.StmtUseDeclaration{
+				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+				Alias: &ast.Identifier{Value: []byte("Bar")},
+			},
+			&ast.StmtUseDeclaration{
+				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+			},
+		},
+	})
+
+	expected := `Foo as Bar,Baz`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintUseDeclaration(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&ast.StmtUseDeclaration{
+		Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Alias: &ast.Identifier{Value: []byte("Bar")},
+	})
+
+	expected := `Foo as Bar`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintUseType(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&ast.StmtUseType{
+		Type: &ast.Identifier{Value: []byte("function")},
+		Use: &ast.StmtUseDeclaration{
+			Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+			Alias: &ast.Identifier{Value: []byte("Bar")},
+		},
 	})
 
 	expected := `function Foo as Bar`

@@ -532,18 +532,6 @@ func (n *StmtGoto) Accept(v NodeVisitor) {
 	v.StmtGoto(n)
 }
 
-// StmtGroupUse node
-type StmtGroupUse struct {
-	Node
-	UseType Vertex
-	Prefix  Vertex
-	UseList []Vertex
-}
-
-func (n *StmtGroupUse) Accept(v NodeVisitor) {
-	v.StmtGroupUse(n)
-}
-
 // StmtHaltCompiler node
 type StmtHaltCompiler struct {
 	Node
@@ -804,24 +792,54 @@ func (n *StmtUnset) Accept(v NodeVisitor) {
 // StmtUse node
 type StmtUse struct {
 	Node
-	UseType Vertex
-	Use     Vertex
-	Alias   Vertex
+	UseList Vertex
 }
 
 func (n *StmtUse) Accept(v NodeVisitor) {
 	v.StmtUse(n)
 }
 
+// StmtGroupUseList node
+type StmtGroupUseList struct {
+	Node
+	Prefix  Vertex
+	UseList Vertex
+}
+
+func (n *StmtGroupUseList) Accept(v NodeVisitor) {
+	v.StmtGroupUseList(n)
+}
+
 // StmtUseList node
 type StmtUseList struct {
 	Node
-	UseType Vertex
-	Uses    []Vertex
+	UseDeclarations []Vertex
 }
 
 func (n *StmtUseList) Accept(v NodeVisitor) {
 	v.StmtUseList(n)
+}
+
+// StmtUseDeclaration node
+type StmtUseDeclaration struct {
+	Node
+	Use   Vertex
+	Alias Vertex
+}
+
+func (n *StmtUseDeclaration) Accept(v NodeVisitor) {
+	v.StmtUseDeclaration(n)
+}
+
+// StmtUseType node
+type StmtUseType struct {
+	Node
+	Type Vertex
+	Use  Vertex
+}
+
+func (n *StmtUseType) Accept(v NodeVisitor) {
+	v.StmtUseType(n)
 }
 
 // StmtWhile node

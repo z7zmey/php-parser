@@ -16,8 +16,10 @@ const (
 )
 
 type Printer struct {
-	w io.Writer
-	s printerState
+	w        io.Writer
+	s        printerState
+	bufStart string
+	bufEnd   string
 }
 
 // NewPrinter -  Constructor for Printer
@@ -57,6 +59,21 @@ func (p *Printer) joinPrint(glue string, nn []ast.Vertex) {
 func (p *Printer) printNodes(nn []ast.Vertex) {
 	for _, n := range nn {
 		p.Print(n)
+	}
+}
+
+func (p *Printer) printFreeFloatingOrDefault(n ast.Vertex, pos token.Position, def string) {
+	if n == nil {
+		return
+	}
+
+	if len(n.GetNode().Tokens[pos]) == 0 {
+		io.WriteString(p.w, def)
+		return
+	}
+
+	for _, m := range n.GetNode().Tokens[pos] {
+		io.WriteString(p.w, string(m.Value))
 	}
 }
 
@@ -374,8 +391,6 @@ func (p *Printer) printNode(n ast.Vertex) {
 		p.printStmtGlobal(n)
 	case *ast.StmtGoto:
 		p.printStmtGoto(n)
-	case *ast.StmtGroupUse:
-		p.printStmtGroupUse(n)
 	case *ast.StmtHaltCompiler:
 		p.printStmtHaltCompiler(n)
 	case *ast.StmtIf:
@@ -422,10 +437,16 @@ func (p *Printer) printNode(n ast.Vertex) {
 		p.printStmtTry(n)
 	case *ast.StmtUnset:
 		p.printStmtUnset(n)
-	case *ast.StmtUseList:
-		p.printStmtUseList(n)
 	case *ast.StmtUse:
 		p.printStmtUse(n)
+	case *ast.StmtGroupUseList:
+		p.printStmtGroupUseList(n)
+	case *ast.StmtUseList:
+		p.printStmtUseList(n)
+	case *ast.StmtUseDeclaration:
+		p.printStmtUseDeclaration(n)
+	case *ast.StmtUseType:
+		p.printStmtUseType(n)
 	case *ast.StmtWhile:
 		p.printStmtWhile(n)
 	}
@@ -443,8 +464,11 @@ func (p *Printer) printNodeRoot(n ast.Vertex) {
 
 func (p *Printer) printNodeIdentifier(n ast.Vertex) {
 	nn := n.(*ast.Identifier)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
+
 	io.WriteString(p.w, string(nn.Value))
+
 	p.printFreeFloating(nn, token.End)
 }
 
@@ -519,7 +543,8 @@ func (p *Printer) printNodeArgument(n ast.Vertex) {
 
 func (p *Printer) printNameNamePart(n ast.Vertex) {
 	nn := n.(*ast.NameNamePart)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
 
 	io.WriteString(p.w, string(nn.Value))
 
@@ -532,22 +557,26 @@ func (p *Printer) printNameName(n ast.Vertex) {
 
 	p.joinPrint("\\", nn.Parts)
 
-	p.printFreeFloating(nn, token.End)
+	p.printFreeFloatingOrDefault(nn, token.End, p.bufEnd)
+	p.bufEnd = ""
 }
 
 func (p *Printer) printNameFullyQualified(n ast.Vertex) {
 	nn := n.(*ast.NameFullyQualified)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
 
 	io.WriteString(p.w, "\\")
 	p.joinPrint("\\", nn.Parts)
 
-	p.printFreeFloating(nn, token.End)
+	p.printFreeFloatingOrDefault(nn, token.End, p.bufEnd)
+	p.bufEnd = ""
 }
 
 func (p *Printer) printNameRelative(n ast.Vertex) {
 	nn := n.(*ast.NameRelative)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
 
 	io.WriteString(p.w, "namespace")
 	p.printFreeFloating(nn, token.Namespace)
@@ -557,7 +586,8 @@ func (p *Printer) printNameRelative(n ast.Vertex) {
 		p.Print(part)
 	}
 
-	p.printFreeFloating(nn, token.End)
+	p.printFreeFloatingOrDefault(nn, token.End, p.bufEnd)
+	p.bufEnd = ""
 }
 
 // scalar
@@ -2710,41 +2740,6 @@ func (p *Printer) printStmtGoto(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtGroupUse(n ast.Vertex) {
-	nn := n.(*ast.StmtGroupUse)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "use")
-	p.printFreeFloating(nn, token.Use)
-
-	if nn.UseType != nil {
-		if nn.UseType.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-		p.Print(nn.UseType)
-	}
-
-	if nn.Prefix.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
-	p.Print(nn.Prefix)
-	io.WriteString(p.w, "\\")
-	p.printFreeFloating(nn, token.Slash)
-
-	io.WriteString(p.w, "{")
-	p.joinPrint(",", nn.UseList)
-	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
-	p.printFreeFloating(nn, token.UseDeclarationList)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
-}
-
 func (p *Printer) printStmtHaltCompiler(n ast.Vertex) {
 	nn := n.(*ast.StmtHaltCompiler)
 	p.printFreeFloating(nn, token.Start)
@@ -3197,58 +3192,77 @@ func (p *Printer) printStmtUnset(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtUseList(n ast.Vertex) {
-	nn := n.(*ast.StmtUseList)
+func (p *Printer) printStmtUse(n ast.Vertex) {
+	nn := n.(*ast.StmtUse)
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "use")
 
-	if nn.UseType != nil {
-		if nn.UseType.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-		p.Print(nn.UseType)
+	p.bufStart = " "
+	p.Print(nn.UseList)
+
+	p.printFreeFloatingOrDefault(nn, token.End, ";")
+}
+
+func (p *Printer) printStmtGroupUseList(n ast.Vertex) {
+	nn := n.(*ast.StmtGroupUseList)
+	p.printFreeFloating(nn, token.Start)
+
+	p.Print(nn.Prefix)
+
+	p.bufStart = "\\{"
+	p.bufEnd = "}"
+	p.Print(nn.UseList)
+
+	p.printFreeFloating(nn, token.End)
+}
+
+func (p *Printer) printStmtUseList(n ast.Vertex) {
+	nn := n.(*ast.StmtUseList)
+
+	bufEnd := p.bufEnd
+	p.bufEnd = ""
+
+	if p.bufStart == "\\{" {
+		p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+		p.bufStart = ""
+	} else {
+		p.printFreeFloating(nn, token.Start)
 	}
 
-	if nn.Uses[0].GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
-	p.joinPrint(",", nn.Uses)
-	p.printFreeFloating(nn, token.UseDeclarationList)
+	p.joinPrint(",", nn.UseDeclarations)
 
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+	p.printFreeFloatingOrDefault(nn, token.End, bufEnd)
+}
+
+func (p *Printer) printStmtUseDeclaration(n ast.Vertex) {
+	nn := n.(*ast.StmtUseDeclaration)
+	p.printFreeFloating(nn, token.Start)
+
+	if nn.Alias != nil {
+		p.bufEnd = " "
+	}
+
+	p.Print(nn.Use)
+
+	if nn.Alias != nil {
+		io.WriteString(p.w, "as")
+
+		p.bufStart = " "
+		p.Print(nn.Alias)
 	}
 
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtUse(n ast.Vertex) {
-	nn := n.(*ast.StmtUse)
+func (p *Printer) printStmtUseType(n ast.Vertex) {
+	nn := n.(*ast.StmtUseType)
 	p.printFreeFloating(nn, token.Start)
 
-	if nn.UseType != nil {
-		p.Print(nn.UseType)
-		if nn.UseType.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-	}
+	p.Print(nn.Type)
 
-	p.printFreeFloating(nn, token.Slash)
-
+	p.bufStart = " "
 	p.Print(nn.Use)
-
-	if nn.Alias != nil {
-		if nn.Alias.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-		io.WriteString(p.w, "as")
-		if nn.Alias.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-		p.Print(nn.Alias)
-	}
 
 	p.printFreeFloating(nn, token.End)
 }
