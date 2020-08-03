@@ -6,7 +6,6 @@ type Position int
 const (
 	Start Position = iota
 	End
-	Colon
 	SemiColon
 	AltEnd
 	Dollar

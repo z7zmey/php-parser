@@ -1409,7 +1409,7 @@ func (p *Printer) printExprArrowFunction(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Params)
 
 	if nn.ReturnType != nil {
-		io.WriteString(p.w, ":")
+		p.bufStart = ":"
 		p.Print(nn.ReturnType)
 	}
 	p.printFreeFloating(nn, token.ReturnType)
@@ -1505,7 +1505,7 @@ func (p *Printer) printExprClosure(n ast.Vertex) {
 	p.printFreeFloating(nn, token.LexicalVars)
 
 	if nn.ReturnType != nil {
-		io.WriteString(p.w, ":")
+		p.bufStart = ":"
 		p.Print(nn.ReturnType)
 	}
 	p.printFreeFloating(nn, token.ReturnType)
@@ -2285,7 +2285,7 @@ func (p *Printer) printStmtClassMethod(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Params)
 
 	if nn.ReturnType != nil {
-		io.WriteString(p.w, ":")
+		p.bufStart = ":"
 		p.Print(nn.ReturnType)
 	}
 
@@ -2703,7 +2703,7 @@ func (p *Printer) printStmtFunction(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Params)
 
 	if nn.ReturnType != nil {
-		io.WriteString(p.w, ":")
+		p.bufStart = ":"
 		p.Print(nn.ReturnType)
 	}
 	p.printFreeFloating(nn, token.ReturnType)

@@ -1453,9 +1453,6 @@ function_declaration_statement:
                 }
                 yylex.(*Parser).setFreeFloating($$, token.Name, $5.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.ParamList, $7.Tokens)
-                if $8 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $8.GetNode().Tokens[token.Colon]); delete($8.GetNode().Tokens, token.Colon)
-                }
                 yylex.(*Parser).setFreeFloating($$, token.ReturnType, $9.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.Stmts, $11.Tokens)
 
@@ -2286,7 +2283,7 @@ return_type:
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Colon, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.Tokens, $$.GetNode().Tokens[token.Start]...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2540,9 +2537,6 @@ class_statement:
                 }
                 yylex.(*Parser).setFreeFloating($$, token.Name, $6.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.ParameterList, $8.Tokens)
-                if $9 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $9.GetNode().Tokens[token.Colon]); delete($9.GetNode().Tokens, token.Colon)
-                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4150,9 +4144,6 @@ inline_function:
                     yylex.(*Parser).setFreeFloating($$, token.Ampersand, $4.Tokens)
                 }
                 yylex.(*Parser).setFreeFloating($$, token.ParameterList, $6.Tokens)
-                if $8 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.LexicalVars, $8.GetNode().Tokens[token.Colon]); delete($8.GetNode().Tokens, token.Colon)
-                }
                 yylex.(*Parser).setFreeFloating($$, token.ReturnType, $9.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.Stmts, $11.Tokens)
 
@@ -4182,9 +4173,6 @@ inline_function:
                     yylex.(*Parser).setFreeFloating($$, token.Ampersand, $3.Tokens)
                 };
                 yylex.(*Parser).setFreeFloating($$, token.ParameterList, $5.Tokens)
-                if $6 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $6.GetNode().Tokens[token.Colon]); delete($6.GetNode().Tokens, token.Colon)
-                };
                 yylex.(*Parser).setFreeFloating($$, token.ReturnType, $8.Tokens)
 
                 // normalize
