@@ -979,7 +979,7 @@ func TestParseAndPrintClass(t *testing.T) {
 		
 	}
 
-	new class ( $c ) extends Foo implements Bar , Baz {
+	new class ( $c, $a ) extends Foo implements Bar , Baz {
 
 	} ;`
 

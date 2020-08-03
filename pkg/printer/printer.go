@@ -594,35 +594,48 @@ func (p *Printer) printNameRelative(n ast.Vertex) {
 
 func (p *Printer) printScalarLNumber(n ast.Vertex) {
 	nn := n.(*ast.ScalarLnumber)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
+
 	io.WriteString(p.w, string(nn.Value))
+
 	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printScalarDNumber(n ast.Vertex) {
 	nn := n.(*ast.ScalarDnumber)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
+
 	io.WriteString(p.w, string(nn.Value))
+
 	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printScalarString(n ast.Vertex) {
 	nn := n.(*ast.ScalarString)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
+
 	io.WriteString(p.w, string(nn.Value))
+
 	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printScalarEncapsedStringPart(n ast.Vertex) {
 	nn := n.(*ast.ScalarEncapsedStringPart)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
+
 	io.WriteString(p.w, string(nn.Value))
+
 	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printScalarEncapsed(n ast.Vertex) {
 	nn := n.(*ast.ScalarEncapsed)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
 
 	io.WriteString(p.w, "\"")
 	for _, part := range nn.Parts {
@@ -652,7 +665,8 @@ func (p *Printer) printScalarEncapsed(n ast.Vertex) {
 
 func (p *Printer) printScalarHeredoc(n ast.Vertex) {
 	nn := n.(*ast.ScalarHeredoc)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
 
 	io.WriteString(p.w, string(nn.Label))
 
@@ -684,8 +698,11 @@ func (p *Printer) printScalarHeredoc(n ast.Vertex) {
 
 func (p *Printer) printScalarMagicConstant(n ast.Vertex) {
 	nn := n.(*ast.ScalarMagicConstant)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
+
 	io.WriteString(p.w, string(nn.Value))
+
 	p.printFreeFloating(nn, token.End)
 }
 
@@ -1613,9 +1630,7 @@ func (p *Printer) printExprInstanceOf(n ast.Vertex) {
 
 	io.WriteString(p.w, "instanceof")
 
-	if nn.Class.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
+	p.bufStart = " "
 	p.Print(nn.Class)
 
 	p.printFreeFloating(nn, token.End)
@@ -1673,9 +1688,7 @@ func (p *Printer) printExprNew(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "new")
-	if nn.Class.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
+	p.bufStart = " "
 	p.Print(nn.Class)
 
 	if nn.ArgumentList != nil {
@@ -1900,7 +1913,8 @@ func (p *Printer) printExprUnaryPlus(n ast.Vertex) {
 
 func (p *Printer) printExprVariable(n ast.Vertex) {
 	nn := n.(*ast.ExprVariable)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
 
 	p.printFreeFloating(nn, token.Dollar)
 	if _, ok := nn.VarName.(*ast.Identifier); !ok {
@@ -2282,7 +2296,8 @@ func (p *Printer) printStmtClassMethod(n ast.Vertex) {
 
 func (p *Printer) printStmtClass(n ast.Vertex) {
 	nn := n.(*ast.StmtClass)
-	p.printFreeFloating(nn, token.Start)
+	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
+	p.bufStart = ""
 
 	if nn.Modifiers != nil {
 		for k, m := range nn.Modifiers {
@@ -2301,9 +2316,7 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Class)
 
 	if nn.ClassName != nil {
-		if nn.ClassName.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
+		p.bufStart = " "
 		p.Print(nn.ClassName)
 	}
 
@@ -2322,9 +2335,7 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 			io.WriteString(p.w, " ")
 		}
 		io.WriteString(p.w, "extends")
-		if nn.Extends.ClassName.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
+		p.bufStart = " "
 		p.Print(nn.Extends.ClassName)
 	}
 
@@ -2890,11 +2901,10 @@ func (p *Printer) printStmtPropertyList(n ast.Vertex) {
 		p.Print(m)
 	}
 
-	if nn.Type != nil && nn.Type.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+	if nn.Type != nil {
+		p.bufStart = " "
+		p.Print(nn.Type)
 	}
-
-	p.Print(nn.Type)
 
 	if nn.Properties[0].GetNode().Tokens.IsEmpty() {
 		io.WriteString(p.w, " ")
@@ -2931,9 +2941,7 @@ func (p *Printer) printStmtReturn(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "return")
-	if nn.Expr != nil && nn.Expr.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
+	p.bufStart = " "
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.Expr)
 
@@ -3102,9 +3110,7 @@ func (p *Printer) printStmtTraitUsePrecedence(n ast.Vertex) {
 	}
 
 	io.WriteString(p.w, "insteadof")
-	if nn.Insteadof[0].GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
+	p.bufStart = " "
 	p.joinPrint(",", nn.Insteadof)
 	p.printFreeFloating(nn, token.NameList)
 
