@@ -65,18 +65,17 @@ func _() {
 	_ = x[ArrayPairList-54]
 	_ = x[CaseListStart-55]
 	_ = x[CaseListEnd-56]
-	_ = x[ArgumentList-57]
-	_ = x[PropertyList-58]
-	_ = x[ParameterList-59]
-	_ = x[AdaptationList-60]
-	_ = x[LexicalVarList-61]
-	_ = x[OpenParenthesisToken-62]
-	_ = x[CloseParenthesisToken-63]
+	_ = x[PropertyList-57]
+	_ = x[ParameterList-58]
+	_ = x[AdaptationList-59]
+	_ = x[LexicalVarList-60]
+	_ = x[OpenParenthesisToken-61]
+	_ = x[CloseParenthesisToken-62]
 }
 
-const _Position_name = "StartEndSemiColonAltEndAmpersandNameKeyVarReturnTypeCaseSeparatorLexicalVarsParamsRefCastExprInitExprCondExprIncExprTrueCondNamespaceStaticClassUseWhileForSwitchForeachDeclareLabelFinallyListDefaultIfElseIfElseFunctionAliasEqualExitArrayIssetEmptyEvalEchoTryCatchUnsetStmtsVarListConstListNameListParamListModifierListArrayPairListCaseListStartCaseListEndArgumentListPropertyListParameterListAdaptationListLexicalVarListOpenParenthesisTokenCloseParenthesisToken"
+const _Position_name = "StartEndSemiColonAltEndAmpersandNameKeyVarReturnTypeCaseSeparatorLexicalVarsParamsRefCastExprInitExprCondExprIncExprTrueCondNamespaceStaticClassUseWhileForSwitchForeachDeclareLabelFinallyListDefaultIfElseIfElseFunctionAliasEqualExitArrayIssetEmptyEvalEchoTryCatchUnsetStmtsVarListConstListNameListParamListModifierListArrayPairListCaseListStartCaseListEndPropertyListParameterListAdaptationListLexicalVarListOpenParenthesisTokenCloseParenthesisToken"
 
-var _Position_index = [...]uint16{0, 5, 8, 17, 23, 32, 36, 39, 42, 52, 65, 76, 82, 85, 89, 93, 101, 109, 116, 120, 124, 133, 139, 144, 147, 152, 155, 161, 168, 175, 180, 187, 191, 198, 200, 206, 210, 218, 223, 228, 232, 237, 242, 247, 251, 255, 258, 263, 268, 273, 280, 289, 297, 306, 318, 331, 344, 355, 367, 379, 392, 406, 420, 440, 461}
+var _Position_index = [...]uint16{0, 5, 8, 17, 23, 32, 36, 39, 42, 52, 65, 76, 82, 85, 89, 93, 101, 109, 116, 120, 124, 133, 139, 144, 147, 152, 155, 161, 168, 175, 180, 187, 191, 198, 200, 206, 210, 218, 223, 228, 232, 237, 242, 247, 251, 255, 258, 263, 268, 273, 280, 289, 297, 306, 318, 331, 344, 355, 367, 380, 394, 408, 428, 449}
 
 func (i Position) String() string {
 	if i < 0 || i >= Position(len(_Position_index)-1) {

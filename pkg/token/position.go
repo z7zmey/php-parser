@@ -63,7 +63,6 @@ const (
 	ArrayPairList
 	CaseListStart
 	CaseListEnd
-	ArgumentList
 	PropertyList
 	ParameterList
 	AdaptationList

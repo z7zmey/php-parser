@@ -2404,8 +2404,8 @@ function_call_parameter_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArgumentList, $2.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $2.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2417,8 +2417,8 @@ function_call_parameter_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArgumentList, $3.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2432,8 +2432,8 @@ function_call_parameter_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArgumentList, $3.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

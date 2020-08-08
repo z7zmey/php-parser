@@ -1587,12 +1587,9 @@ func (p *Printer) printExprFunctionCall(n ast.Vertex) {
 
 	p.Print(nn.Function)
 
-	p.printFreeFloating(nn.ArgumentList, token.Start)
-	io.WriteString(p.w, "(")
+	p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
 	p.joinPrint(",", nn.ArgumentList.Arguments)
-	p.printFreeFloating(nn.ArgumentList, token.ArgumentList)
-	io.WriteString(p.w, ")")
-	p.printFreeFloating(nn.ArgumentList, token.End)
+	p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1674,12 +1671,9 @@ func (p *Printer) printExprMethodCall(n ast.Vertex) {
 	io.WriteString(p.w, "->")
 	p.Print(nn.Method)
 
-	p.printFreeFloating(nn.ArgumentList, token.Start)
-	io.WriteString(p.w, "(")
+	p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
 	p.joinPrint(",", nn.ArgumentList.Arguments)
-	p.printFreeFloating(nn.ArgumentList, token.ArgumentList)
-	io.WriteString(p.w, ")")
-	p.printFreeFloating(nn.ArgumentList, token.End)
+	p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1693,12 +1687,9 @@ func (p *Printer) printExprNew(n ast.Vertex) {
 	p.Print(nn.Class)
 
 	if nn.ArgumentList != nil {
-		p.printFreeFloating(nn.ArgumentList, token.Start)
-		io.WriteString(p.w, "(")
+		p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
 		p.joinPrint(",", nn.ArgumentList.Arguments)
-		p.printFreeFloating(nn.ArgumentList, token.ArgumentList)
-		io.WriteString(p.w, ")")
-		p.printFreeFloating(nn.ArgumentList, token.End)
+		p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -1851,12 +1842,9 @@ func (p *Printer) printExprStaticCall(n ast.Vertex) {
 	io.WriteString(p.w, "::")
 	p.Print(nn.Call)
 
-	p.printFreeFloating(nn.ArgumentList, token.Start)
-	io.WriteString(p.w, "(")
+	p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
 	p.joinPrint(",", nn.ArgumentList.Arguments)
-	p.printFreeFloating(nn.ArgumentList, token.ArgumentList)
-	io.WriteString(p.w, ")")
-	p.printFreeFloating(nn.ArgumentList, token.End)
+	p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2320,12 +2308,9 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 	}
 
 	if nn.ArgumentList != nil {
-		p.printFreeFloating(nn.ArgumentList, token.Start)
-		io.WriteString(p.w, "(")
+		p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
 		p.joinPrint(",", nn.ArgumentList.Arguments)
-		p.printFreeFloating(nn.ArgumentList, token.ArgumentList)
-		io.WriteString(p.w, ")")
-		p.printFreeFloating(nn.ArgumentList, token.End)
+		p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
 	}
 
 	if nn.Extends != nil {

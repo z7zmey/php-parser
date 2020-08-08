@@ -2318,8 +2318,8 @@ argument_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArgumentList, $2.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $2.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2331,11 +2331,11 @@ argument_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
                 if $3 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.ArgumentList, append($3.Tokens, $4.Tokens...))
+                    yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($3.Tokens, $4.Tokens...))
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, token.ArgumentList, $4.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens($$, token.End, $4.Tokens)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
