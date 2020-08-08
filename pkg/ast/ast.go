@@ -198,4 +198,8 @@ type NodeVisitor interface {
 	NameFullyQualified(n *NameFullyQualified)
 	NameRelative(n *NameRelative)
 	NameNamePart(n *NameNamePart)
+
+	ParserAs(n *ParserAs)
+	ParserNsSeparator(n *ParserNsSeparator)
+	ParserBrackets(n *ParserBrackets)
 }

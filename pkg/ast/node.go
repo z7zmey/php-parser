@@ -1876,3 +1876,30 @@ type NameNamePart struct {
 func (n *NameNamePart) Accept(v NodeVisitor) {
 	v.NameNamePart(n)
 }
+
+type ParserAs struct {
+	Node
+	Child Vertex
+}
+
+func (n *ParserAs) Accept(v NodeVisitor) {
+	v.ParserAs(n)
+}
+
+type ParserNsSeparator struct {
+	Node
+	Child Vertex
+}
+
+func (n *ParserNsSeparator) Accept(v NodeVisitor) {
+	v.ParserNsSeparator(n)
+}
+
+type ParserBrackets struct {
+	Node
+	Child Vertex
+}
+
+func (n *ParserBrackets) Accept(v NodeVisitor) {
+	v.ParserBrackets(n)
+}

@@ -1288,3 +1288,21 @@ func (v *Dump) NameNamePart(n *ast.NameNamePart) {
 	v.printIndent(v.indent)
 	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 }
+
+func (v *Dump) ParserAs(n *ast.ParserAs) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.ParserAs{\n")
+	v.printNode(n.GetNode())
+}
+
+func (v *Dump) ParserNsSeparator(n *ast.ParserNsSeparator) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.ParserNsSeparator{\n")
+	v.printNode(n.GetNode())
+}
+
+func (v *Dump) ParserBrackets(n *ast.ParserBrackets) {
+	v.printIndentIfNotSingle(v.indent - 1)
+	v.print("&ast.ParserBrackets{\n")
+	v.printNode(n.GetNode())
+}

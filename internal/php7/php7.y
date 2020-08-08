@@ -628,42 +628,52 @@ group_use_declaration:
             {
                 name := &ast.NameName{ast.Node{}, $1}
                 useList := &ast.StmtUseList{ast.Node{}, $4}
-                $$ = &ast.StmtGroupUseList{ast.Node{}, name, useList}
+                useListBrackets := &ast.ParserBrackets{ast.Node{}, useList}
+                useListNsSeparator := &ast.ParserNsSeparator{ast.Node{}, useListBrackets}
+                $$ = &ast.StmtGroupUseList{ast.Node{}, name, useListNsSeparator}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
                 useList.GetNode().Position = position.NewNodeListPosition($4)
+                useListBrackets.GetNode().Position = position.NewTokensPosition($3, $6)
+                useListNsSeparator.GetNode().Position = position.NewTokensPosition($2, $6)
                 $$.GetNode().Position = position.NewNodeListTokenPosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens(useList, token.Start, append($2.Tokens, $3.Tokens...))
                 if $5 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, append($5.Tokens, $6.Tokens...))
-                } else {
-                    yylex.(*Parser).setFreeFloating(useList, token.End, $6.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $5.Tokens)
                 }
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $3.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $6.Tokens)
+                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $2.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
                 name := &ast.NameName{ast.Node{}, $2}
+                prefixNsSeparator := &ast.ParserNsSeparator{ast.Node{}, name}
                 useList := &ast.StmtUseList{ast.Node{}, $5}
-                $$ = &ast.StmtGroupUseList{ast.Node{}, name, useList}
+                useListBrackets := &ast.ParserBrackets{ast.Node{}, useList}
+                useListNsSeparator := &ast.ParserNsSeparator{ast.Node{}, useListBrackets}
+                $$ = &ast.StmtGroupUseList{ast.Node{}, prefixNsSeparator, useListNsSeparator}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($2)
+                prefixNsSeparator.GetNode().Position = position.NewTokenNodePosition($1, name)
                 useList.GetNode().Position = position.NewNodeListPosition($5)
+                useListBrackets.GetNode().Position = position.NewTokensPosition($4, $7)
+                useListNsSeparator.GetNode().Position = position.NewTokensPosition($3, $7)
                 $$.GetNode().Position = position.NewTokensPosition($1, $7)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens(useList, token.Start, append($3.Tokens, $4.Tokens...))
+                yylex.(*Parser).setFreeFloating(prefixNsSeparator, token.Start, $1.Tokens)
                 if $6 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, append($6.Tokens, $7.Tokens...))
-                } else {
-                    yylex.(*Parser).setFreeFloating(useList, token.End, $7.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $6.Tokens)
                 }
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $7.Tokens)
+                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -674,42 +684,52 @@ mixed_group_use_declaration:
             {
                 name := &ast.NameName{ast.Node{}, $1}
                 useList := &ast.StmtUseList{ast.Node{}, $4}
-                $$ = &ast.StmtGroupUseList{ast.Node{}, name, useList}
+                useListBrackets := &ast.ParserBrackets{ast.Node{}, useList}
+                useListNsSeparator := &ast.ParserNsSeparator{ast.Node{}, useListBrackets}
+                $$ = &ast.StmtGroupUseList{ast.Node{}, name, useListNsSeparator}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
                 useList.GetNode().Position = position.NewNodeListPosition($4)
+                useListBrackets.GetNode().Position = position.NewTokensPosition($3, $6)
+                useListNsSeparator.GetNode().Position = position.NewTokensPosition($2, $6)
                 $$.GetNode().Position = position.NewNodeListTokenPosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens(useList, token.Start, append($2.Tokens, $3.Tokens...))
                 if $5 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, append($5.Tokens, $6.Tokens...))
-                } else {
-                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $6.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $5.Tokens)
                 }
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $3.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $6.Tokens)
+                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $2.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
                 name := &ast.NameName{ast.Node{}, $2}
+                prefixNsSeparator := &ast.ParserNsSeparator{ast.Node{}, name}
                 useList := &ast.StmtUseList{ast.Node{}, $5}
-                $$ = &ast.StmtGroupUseList{ast.Node{}, name, useList}
+                useListBrackets := &ast.ParserBrackets{ast.Node{}, useList}
+                useListNsSeparator := &ast.ParserNsSeparator{ast.Node{}, useListBrackets}
+                $$ = &ast.StmtGroupUseList{ast.Node{}, prefixNsSeparator, useListNsSeparator}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($2)
+                prefixNsSeparator.GetNode().Position = position.NewTokenNodePosition($1, name)
                 useList.GetNode().Position = position.NewNodeListPosition($5)
+                useListBrackets.GetNode().Position = position.NewTokensPosition($4, $7)
+                useListNsSeparator.GetNode().Position = position.NewTokensPosition($3, $7)
                 $$.GetNode().Position = position.NewTokensPosition($1, $7)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens(useList, token.Start, append($3.Tokens, $4.Tokens...))
+                yylex.(*Parser).setFreeFloating(prefixNsSeparator, token.Start, $1.Tokens)
                 if $6 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, append($6.Tokens, $7.Tokens...))
-                } else {
-                    yylex.(*Parser).setFreeFloating(useList, token.End, $7.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $6.Tokens)
                 }
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $7.Tokens)
+                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -814,15 +834,17 @@ unprefixed_use_declaration:
             {
                 name := &ast.NameName{ast.Node{}, $1}
                 alias := &ast.Identifier{ast.Node{}, $3.Value}
-                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, alias}
+                asAlias := &ast.ParserAs{ast.Node{}, alias}
+                $$ = &ast.StmtUseDeclaration{ast.Node{}, name, asAlias}
 
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
                 alias.GetNode().Position = position.NewTokenPosition($3)
+                asAlias.GetNode().Position = position.NewTokensPosition($2, $3)
                 $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(name, token.End, $2.Tokens)
+                yylex.(*Parser).setFreeFloating(asAlias, token.Start, $2.Tokens)
                 yylex.(*Parser).setFreeFloating(alias, token.Start, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -838,10 +860,14 @@ use_declaration:
             }
     |   T_NS_SEPARATOR unprefixed_use_declaration
             {
-                $$ = $2;
+                $$ = &ast.ParserNsSeparator{ast.Node{}, $2}
+
+                // save position
+                $2.GetNode().Position = position.NewTokenNodePosition($1, $2)
+                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

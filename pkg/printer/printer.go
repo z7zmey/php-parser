@@ -19,10 +19,9 @@ type Printer struct {
 	w        io.Writer
 	s        printerState
 	bufStart string
-	bufEnd   string
 }
 
-// NewPrinter -  Constructor for Printer
+// NewPrinter - Constructor for Printer
 func NewPrinter(w io.Writer) *Printer {
 	return &Printer{
 		w: w,
@@ -449,6 +448,12 @@ func (p *Printer) printNode(n ast.Vertex) {
 		p.printStmtUseType(n)
 	case *ast.StmtWhile:
 		p.printStmtWhile(n)
+	case *ast.ParserAs:
+		p.printParserAs(n)
+	case *ast.ParserNsSeparator:
+		p.printParserNsSeparator(n)
+	case *ast.ParserBrackets:
+		p.printParserBrackets(n)
 	}
 }
 
@@ -556,8 +561,7 @@ func (p *Printer) printNameName(n ast.Vertex) {
 
 	p.joinPrint("\\", nn.Parts)
 
-	p.printFreeFloatingOrDefault(nn, token.End, p.bufEnd)
-	p.bufEnd = ""
+	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printNameFullyQualified(n ast.Vertex) {
@@ -568,8 +572,7 @@ func (p *Printer) printNameFullyQualified(n ast.Vertex) {
 	io.WriteString(p.w, "\\")
 	p.joinPrint("\\", nn.Parts)
 
-	p.printFreeFloatingOrDefault(nn, token.End, p.bufEnd)
-	p.bufEnd = ""
+	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printNameRelative(n ast.Vertex) {
@@ -585,8 +588,7 @@ func (p *Printer) printNameRelative(n ast.Vertex) {
 		p.Print(part)
 	}
 
-	p.printFreeFloatingOrDefault(nn, token.End, p.bufEnd)
-	p.bufEnd = ""
+	p.printFreeFloating(nn, token.End)
 }
 
 // scalar
@@ -3203,43 +3205,38 @@ func (p *Printer) printStmtGroupUseList(n ast.Vertex) {
 
 	p.Print(nn.Prefix)
 
-	p.bufStart = "\\{"
-	p.bufEnd = "}"
+	if _, ok := nn.UseList.(*ast.ParserNsSeparator); !ok {
+		io.WriteString(p.w, "\\{")
+	}
+
 	p.Print(nn.UseList)
+
+	if _, ok := nn.UseList.(*ast.ParserNsSeparator); !ok {
+		io.WriteString(p.w, "}")
+	}
 
 	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printStmtUseList(n ast.Vertex) {
 	nn := n.(*ast.StmtUseList)
-
-	bufEnd := p.bufEnd
-	p.bufEnd = ""
-
-	if p.bufStart == "\\{" {
-		p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
-		p.bufStart = ""
-	} else {
-		p.printFreeFloating(nn, token.Start)
-	}
+	p.printFreeFloating(nn, token.Start)
 
 	p.joinPrint(",", nn.UseDeclarations)
 
-	p.printFreeFloatingOrDefault(nn, token.End, bufEnd)
+	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printStmtUseDeclaration(n ast.Vertex) {
 	nn := n.(*ast.StmtUseDeclaration)
 	p.printFreeFloating(nn, token.Start)
 
-	if nn.Alias != nil {
-		p.bufEnd = " "
-	}
-
 	p.Print(nn.Use)
 
 	if nn.Alias != nil {
-		io.WriteString(p.w, "as")
+		if _, ok := nn.Alias.(*ast.ParserAs); !ok {
+			io.WriteString(p.w, " as")
+		}
 
 		p.bufStart = " "
 		p.Print(nn.Alias)
@@ -3272,6 +3269,35 @@ func (p *Printer) printStmtWhile(n ast.Vertex) {
 	io.WriteString(p.w, ")")
 
 	p.Print(nn.Stmt)
+
+	p.printFreeFloating(nn, token.End)
+}
+
+func (p *Printer) printParserAs(n ast.Vertex) {
+	nn := n.(*ast.ParserAs)
+	p.printFreeFloating(nn, token.Start)
+
+	io.WriteString(p.w, "as")
+	p.Print(nn.Child)
+
+	p.printFreeFloating(nn, token.End)
+}
+
+func (p *Printer) printParserNsSeparator(n ast.Vertex) {
+	nn := n.(*ast.ParserNsSeparator)
+	p.printFreeFloating(nn, token.Start)
+
+	io.WriteString(p.w, "\\")
+	p.Print(nn.Child)
+
+	p.printFreeFloating(nn, token.End)
+}
+
+func (p *Printer) printParserBrackets(n ast.Vertex) {
+	nn := n.(*ast.ParserBrackets)
+	p.printFreeFloating(nn, token.Start)
+
+	p.Print(nn.Child)
 
 	p.printFreeFloating(nn, token.End)
 }

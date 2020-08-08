@@ -9,6 +9,8 @@ import (
 	"github.com/z7zmey/php-parser/internal/php5"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/ast/traverser"
+	"github.com/z7zmey/php-parser/pkg/ast/visitor"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
 )
@@ -8594,7 +8596,7 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 155,
 							EndLine:   155,
-							StartPos:  3295,
+							StartPos:  3294,
 							EndPos:    3298,
 						},
 					},
@@ -8604,7 +8606,7 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 155,
 									EndLine:   155,
-									StartPos:  3295,
+									StartPos:  3294,
 									EndPos:    3298,
 								},
 							},
@@ -8649,7 +8651,7 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 156,
 							EndLine:   156,
-							StartPos:  3305,
+							StartPos:  3304,
 							EndPos:    3315,
 						},
 					},
@@ -8659,7 +8661,7 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 156,
 									EndLine:   156,
-									StartPos:  3305,
+									StartPos:  3304,
 									EndPos:    3315,
 								},
 							},
@@ -8965,7 +8967,7 @@ func TestPhp5(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 159,
 										EndLine:   159,
-										StartPos:  3371,
+										StartPos:  3370,
 										EndPos:    3374,
 									},
 								},
@@ -9085,7 +9087,7 @@ func TestPhp5(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 160,
 										EndLine:   160,
-										StartPos:  3402,
+										StartPos:  3401,
 										EndPos:    3412,
 									},
 								},
@@ -9205,7 +9207,7 @@ func TestPhp5(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 161,
 										EndLine:   161,
-										StartPos:  3430,
+										StartPos:  3429,
 										EndPos:    3433,
 									},
 								},
@@ -9325,7 +9327,7 @@ func TestPhp5(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 162,
 										EndLine:   162,
-										StartPos:  3458,
+										StartPos:  3457,
 										EndPos:    3468,
 									},
 								},
@@ -22214,6 +22216,7 @@ func TestPhp5(t *testing.T) {
 	php5parser := php5.NewParser(lexer, nil)
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
+	traverser.NewDFS(new(visitor.FilterParserNodes)).Traverse(actual)
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -22352,6 +22355,7 @@ func TestPhp5Strings(t *testing.T) {
 	php5parser := php5.NewParser(lexer, nil)
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
+	traverser.NewDFS(new(visitor.FilterParserNodes)).Traverse(actual)
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -22579,6 +22583,7 @@ CAD;
 	php5parser := php5.NewParser(lexer, nil)
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
+	traverser.NewDFS(new(visitor.FilterParserNodes)).Traverse(actual)
 	assert.DeepEqual(t, expected, actual)
 }
 
