@@ -40,3 +40,29 @@ func (v *FilterParserNodes) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
 		n.Alias = nn.Child
 	}
 }
+
+func (v *FilterParserNodes) StmtAltIf(n *ast.StmtAltIf) {
+	if nn, ok := n.Cond.(*ast.ParserBrackets); ok {
+		n.Cond = nn.Child
+	}
+
+	if nn, ok := n.Stmt.(*ast.ParserBrackets); ok {
+		n.Stmt = nn.Child
+	}
+}
+
+func (v *FilterParserNodes) StmtAltElseIf(n *ast.StmtAltElseIf) {
+	if nn, ok := n.Cond.(*ast.ParserBrackets); ok {
+		n.Cond = nn.Child
+	}
+
+	if nn, ok := n.Stmt.(*ast.ParserBrackets); ok {
+		n.Stmt = nn.Child
+	}
+}
+
+func (v *FilterParserNodes) StmtAltElse(n *ast.StmtAltElse) {
+	if nn, ok := n.Stmt.(*ast.ParserBrackets); ok {
+		n.Stmt = nn.Child
+	}
+}

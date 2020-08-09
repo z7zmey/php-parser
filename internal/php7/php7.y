@@ -2037,38 +2037,46 @@ if_stmt:
 alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             {
+                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
                 stmts := &ast.StmtStmtList{ast.Node{}, $6}
-                $$ = &ast.StmtAltIf{ast.Node{}, $3, stmts, nil, nil}
+                stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
+                $$ = &ast.StmtAltIf{ast.Node{}, exprBrackets, stmtsBrackets, nil, nil}
 
                 // save position
+                exprBrackets.GetNode().Position = position.NewTokensPosition($2, $4)
                 stmts.GetNode().Position = position.NewNodeListPosition($6)
+                stmtsBrackets.GetNode().Position = position.NewTokenNodeListPosition($5, $6)
                 $$.GetNode().Position = position.NewTokenNodeListPosition($1, $6)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.If, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $5.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $5.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
+                exprBrackets := &ast.ParserBrackets{ast.Node{}, $4}
                 stmts := &ast.StmtStmtList{ast.Node{}, $7}
-                _elseIf := &ast.StmtAltElseIf{ast.Node{}, $4, stmts}
+                stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
+                _elseIf := &ast.StmtAltElseIf{ast.Node{}, exprBrackets, stmtsBrackets}
                 $1.(*ast.StmtAltIf).ElseIf = append($1.(*ast.StmtAltIf).ElseIf, _elseIf)
 
                 $$ = $1
 
                 // save position
+                exprBrackets.GetNode().Position = position.NewTokensPosition($3, $5)
                 stmts.GetNode().Position = position.NewNodeListPosition($7)
+                stmtsBrackets.GetNode().Position = position.NewTokenNodeListPosition($6, $7)
                 _elseIf.GetNode().Position = position.NewTokenNodeListPosition($2, $7)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(_elseIf, token.ElseIf, $3.Tokens)
-                yylex.(*Parser).setFreeFloating(_elseIf, token.Expr, $5.Tokens)
-                yylex.(*Parser).setFreeFloating(_elseIf, token.Cond, $6.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $3.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $5.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $6.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2083,8 +2091,12 @@ alt_if_stmt:
                 $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $3.Tokens)
+                altif := $$.(*ast.StmtAltIf)
+                if len(altif.ElseIf) > 0 {
+                    yylex.(*Parser).setFreeFloating(altif.ElseIf[len(altif.ElseIf)-1], token.End, append($2.Tokens, $3.Tokens...))
+                } else {
+                    yylex.(*Parser).setFreeFloating(altif.Stmt, token.End, append($2.Tokens, $3.Tokens...))
+                }
                 yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2092,21 +2104,22 @@ alt_if_stmt:
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
                 stmts := &ast.StmtStmtList{ast.Node{}, $4}
-                _else := &ast.StmtAltElse{ast.Node{}, stmts}
+                stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
+                _else := &ast.StmtAltElse{ast.Node{}, stmtsBrackets}
                 $1.(*ast.StmtAltIf).Else = _else
 
                 $$ = $1
 
                 // save position
                 stmts.GetNode().Position = position.NewNodeListPosition($4)
+                stmtsBrackets.GetNode().Position = position.NewTokensPosition($3, $5)
                 _else.GetNode().Position = position.NewTokenNodeListPosition($2, $4)
                 $$.GetNode().Position = position.NewNodeTokenPosition($1, $6)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(_else, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(_else, token.Else, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $5.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $6.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $3.Tokens)
+                yylex.(*Parser).setFreeFloating(stmtsBrackets, token.End, append($5.Tokens, $6.Tokens...))
                 yylex.(*Parser).setToken($$, token.SemiColon, $6.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
