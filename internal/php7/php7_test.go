@@ -11046,7 +11046,7 @@ func TestPhp7(t *testing.T) {
 							StartLine: 187,
 							EndLine:   187,
 							StartPos:  3780,
-							EndPos:    3788,
+							EndPos:    3789,
 						},
 					},
 					Expr: &ast.ExprVariable{
@@ -13123,7 +13123,7 @@ func TestPhp7(t *testing.T) {
 							StartLine: 232,
 							EndLine:   232,
 							StartPos:  4298,
-							EndPos:    4306,
+							EndPos:    4307,
 						},
 					},
 					Expr: &ast.ExprVariable{
@@ -18632,7 +18632,7 @@ func TestPhp7(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 332,
 						EndLine:   332,
-						StartPos:  5518,
+						StartPos:  5517,
 						EndPos:    5532,
 					},
 				},
@@ -18641,7 +18641,7 @@ func TestPhp7(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 332,
 							EndLine:   332,
-							StartPos:  5518,
+							StartPos:  5517,
 							EndPos:    5531,
 						},
 					},
@@ -18696,7 +18696,7 @@ func TestPhp7(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 333,
 						EndLine:   333,
-						StartPos:  5534,
+						StartPos:  5533,
 						EndPos:    5545,
 					},
 				},
@@ -18705,7 +18705,7 @@ func TestPhp7(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 333,
 							EndLine:   333,
-							StartPos:  5534,
+							StartPos:  5533,
 							EndPos:    5544,
 						},
 					},

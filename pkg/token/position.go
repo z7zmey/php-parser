@@ -27,28 +27,19 @@ const (
 
 	Namespace
 	Static
-	Class
 	Use
-	While
 	For
-	Switch
 	Foreach
 	Declare
 	Label
 	Finally
 	List
 	Default
-	If
-	ElseIf
-	Else
 	Function
 	Alias
 	Equal
-	Exit
 	Array
 	Isset
-	Empty
-	Eval
 	Echo
 	Try
 	Catch
@@ -68,7 +59,6 @@ const (
 	AdaptationList
 	LexicalVarList
 
-	OpenParenthesisToken
 	CloseParenthesisToken
 )
 

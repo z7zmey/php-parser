@@ -10048,7 +10048,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 175,
 							EndLine:   175,
 							StartPos:  3593,
-							EndPos:    3601,
+							EndPos:    3602,
 						},
 					},
 					Expr: &ast.ExprVariable{
@@ -12426,7 +12426,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 223,
 							EndLine:   223,
 							StartPos:  4168,
-							EndPos:    4176,
+							EndPos:    4177,
 						},
 					},
 					Expr: &ast.ExprVariable{

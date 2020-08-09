@@ -15577,7 +15577,7 @@ func TestExprClone_Brackets(t *testing.T) {
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  3,
-							EndPos:    11,
+							EndPos:    12,
 						},
 					},
 					Expr: &ast.ExprVariable{
@@ -19422,7 +19422,7 @@ func TestExprPrint(t *testing.T) {
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  3,
-							EndPos:    11,
+							EndPos:    12,
 						},
 					},
 					Expr: &ast.ExprVariable{

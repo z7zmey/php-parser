@@ -919,36 +919,22 @@ unticked_statement:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                if len($2.GetNode().Tokens[token.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.If, $2.GetNode().Tokens[token.OpenParenthesisToken][:len($2.GetNode().Tokens[token.OpenParenthesisToken])-1]); delete($2.GetNode().Tokens, token.OpenParenthesisToken)
-                }
-                if len($2.GetNode().Tokens[token.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $2.GetNode().Tokens[token.CloseParenthesisToken][:len($2.GetNode().Tokens[token.CloseParenthesisToken])-1]); delete($2.GetNode().Tokens, token.CloseParenthesisToken)
-                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_IF parenthesis_expr ':' inner_statement_list new_elseif_list new_else_single T_ENDIF ';'
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $2}
                 stmts := &ast.StmtStmtList{ast.Node{}, $4}
                 stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
-                $$ = &ast.StmtAltIf{ast.Node{}, exprBrackets, stmtsBrackets, $5, $6}
+                $$ = &ast.StmtAltIf{ast.Node{}, $2, stmtsBrackets, $5, $6}
 
                 // save position
-                exprBrackets.GetNode().Position = position.NewNodePosition($2)
                 stmts.GetNode().Position = position.NewNodeListPosition($4)
                 stmtsBrackets.GetNode().Position = position.NewTokenNodeListPosition($3, $4)
                 $$.GetNode().Position = position.NewTokensPosition($1, $8)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                if len($2.GetNode().Tokens[token.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.GetNode().Tokens[token.OpenParenthesisToken]); delete($2.GetNode().Tokens, token.OpenParenthesisToken)
-                }
-                if len($2.GetNode().Tokens[token.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $2.GetNode().Tokens[token.CloseParenthesisToken]); delete($2.GetNode().Tokens, token.CloseParenthesisToken)
-                }
                 yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $3.Tokens)
                 if $6 != nil {
                     yylex.(*Parser).setFreeFloating($6.(*ast.StmtAltElse).Stmt, token.End, append($7.Tokens, $8.Tokens...))
@@ -977,12 +963,6 @@ unticked_statement:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                if len($2.GetNode().Tokens[token.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.While, $2.GetNode().Tokens[token.OpenParenthesisToken][:len($2.GetNode().Tokens[token.OpenParenthesisToken])-1]); delete($2.GetNode().Tokens, token.OpenParenthesisToken)
-                }
-                if len($2.GetNode().Tokens[token.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $2.GetNode().Tokens[token.CloseParenthesisToken][:len($2.GetNode().Tokens[token.CloseParenthesisToken])-1]); delete($2.GetNode().Tokens, token.CloseParenthesisToken)
-                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -996,13 +976,7 @@ unticked_statement:
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
                 yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.Tokens)
-                if len($4.GetNode().Tokens[token.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.While, $4.GetNode().Tokens[token.OpenParenthesisToken][:len($4.GetNode().Tokens[token.OpenParenthesisToken])-1]); delete($4.GetNode().Tokens, token.OpenParenthesisToken)
-                }
-                if len($4.GetNode().Tokens[token.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.GetNode().Tokens[token.CloseParenthesisToken][:len($4.GetNode().Tokens[token.CloseParenthesisToken])-1]); delete($4.GetNode().Tokens, token.CloseParenthesisToken)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $5.Tokens)
+                yylex.(*Parser).setFreeFloating($4, token.End, $5.Tokens)
                 yylex.(*Parser).setToken($$, token.SemiColon, $5.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -1052,12 +1026,6 @@ unticked_statement:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                if len($2.GetNode().Tokens[token.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Switch, $2.GetNode().Tokens[token.OpenParenthesisToken][:len($2.GetNode().Tokens[token.OpenParenthesisToken])-1]); delete($2.GetNode().Tokens, token.OpenParenthesisToken)
-                }
-                if len($2.GetNode().Tokens[token.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $2.GetNode().Tokens[token.CloseParenthesisToken][:len($2.GetNode().Tokens[token.CloseParenthesisToken])-1]); delete($2.GetNode().Tokens, token.CloseParenthesisToken)
-                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2163,12 +2131,6 @@ elseif_list:
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.Tokens)
-                if len($3.GetNode().Tokens[token.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens(_elseIf, token.ElseIf, $3.GetNode().Tokens[token.OpenParenthesisToken][:len($3.GetNode().Tokens[token.OpenParenthesisToken])-1]); delete($3.GetNode().Tokens, token.OpenParenthesisToken)
-                }
-                if len($3.GetNode().Tokens[token.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens(_elseIf, token.Expr, $3.GetNode().Tokens[token.CloseParenthesisToken][:len($3.GetNode().Tokens[token.CloseParenthesisToken])-1]); delete($3.GetNode().Tokens, token.CloseParenthesisToken)
-                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2184,26 +2146,18 @@ new_elseif_list:
             }
     |   new_elseif_list T_ELSEIF parenthesis_expr ':' inner_statement_list
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
                 stmts := &ast.StmtStmtList{ast.Node{}, $5}
                 stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
-                _elseIf := &ast.StmtAltElseIf{ast.Node{}, exprBrackets, stmtsBrackets}
+                _elseIf := &ast.StmtAltElseIf{ast.Node{}, $3, stmtsBrackets}
                 $$ = append($1, _elseIf)
 
                 // save position
-                exprBrackets.GetNode().Position = position.NewNodePosition($3)
                 stmts.GetNode().Position = position.NewNodeListPosition($5)
-                exprBrackets.GetNode().Position = position.NewTokenNodeListPosition($4, $5)
+                stmtsBrackets.GetNode().Position = position.NewTokenNodeListPosition($4, $5)
                 _elseIf.GetNode().Position = position.NewTokenNodeListPosition($2, $5)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.Tokens)
-                if len($3.GetNode().Tokens[token.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $3.GetNode().Tokens[token.OpenParenthesisToken]); delete($3.GetNode().Tokens, token.OpenParenthesisToken)
-                }
-                if len($3.GetNode().Tokens[token.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $3.GetNode().Tokens[token.CloseParenthesisToken]); delete($3.GetNode().Tokens, token.CloseParenthesisToken)
-                }
                 yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $4.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4089,9 +4043,6 @@ expr_without_variable:
                 $$ = $1
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-
-                yylex.(*Parser).setFreeFloatingTokens($1, token.Start, append($1.GetNode().Tokens[token.OpenParenthesisToken], $1.GetNode().Tokens[token.Start]...)); delete($1.GetNode().Tokens, token.OpenParenthesisToken)
-                yylex.(*Parser).setFreeFloatingTokens($1, token.End, append($1.GetNode().Tokens[token.End], $1.GetNode().Tokens[token.CloseParenthesisToken]...)); delete($1.GetNode().Tokens, token.CloseParenthesisToken)
             }
     |   new_expr
             {
@@ -4258,15 +4209,14 @@ expr_without_variable:
             }
     |   T_EXIT exit_expr
             {
-                e := $2.(*ast.ExprExit)
-                $$ = $2
+                $$ = &ast.ExprExit{ast.Node{}, false, $2}
 
                 if (bytes.EqualFold($1.Value, []byte("die"))) {
-                    e.Die = true
+                    $$.(*ast.ExprExit).Die = true
                 }
 
                 // save position
-                if $2.GetNode().Position == nil {
+                if $2 == nil {
                     $$.GetNode().Position = position.NewTokenPosition($1)
                 } else {
                     $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
@@ -4930,39 +4880,28 @@ dynamic_class_name_variable_property:
 exit_expr:
         /* empty */
             {
-                $$ = &ast.ExprExit{ast.Node{}, false, nil};
+                $$ = nil
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' ')'
             {
-                $$ = &ast.ExprExit{ast.Node{}, false, nil};
+                $$ = &ast.ParserBrackets{ast.Node{}, nil}
 
                 // save position
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Exit, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $2.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $2.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   parenthesis_expr
             {
-                $$ = &ast.ExprExit{ast.Node{}, false, $1};
-
-                // save position
-                if bytes.Compare(yylex.(*Parser).currentToken.Value, []byte(")")) == 0 {
-                    $$.GetNode().Position = position.NewTokenPosition(yylex.(*Parser).currentToken)
-                } else {
-                    $$.GetNode().Position = position.NewNodePosition($1)
-                }
+                $$ = $1
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Exit, $1.GetNode().Tokens[token.OpenParenthesisToken]); delete($1.GetNode().Tokens, token.OpenParenthesisToken)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $1.GetNode().Tokens[token.CloseParenthesisToken]); delete($1.GetNode().Tokens, token.CloseParenthesisToken)
             }
 ;
 
@@ -5945,33 +5884,27 @@ expr:
 parenthesis_expr:
         '(' expr ')'
             {
-                $$ = $2
+                $$ = &ast.ParserBrackets{ast.Node{}, $2}
+
+                // save position
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                if len($2.GetNode().Tokens[token.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($2, token.Start, append($2.GetNode().Tokens[token.OpenParenthesisToken], $2.GetNode().Tokens[token.Start]...))
-                }
-                if len($2.GetNode().Tokens[token.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($2, token.End, append($2.GetNode().Tokens[token.End], $2.GetNode().Tokens[token.CloseParenthesisToken]...))
-                }
-                yylex.(*Parser).setFreeFloatingTokens($2, token.OpenParenthesisToken, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($2, token.CloseParenthesisToken, $3.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' yield_expr ')'
             {
-                $$ = $2
+                $$ = &ast.ParserBrackets{ast.Node{}, $2}
+
+                // save position
+                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                if len($2.GetNode().Tokens[token.OpenParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($2, token.Start, append($2.GetNode().Tokens[token.OpenParenthesisToken], $2.GetNode().Tokens[token.Start]...))
-                }
-                if len($2.GetNode().Tokens[token.CloseParenthesisToken]) > 0 {
-                    yylex.(*Parser).setFreeFloating($2, token.End, append($2.GetNode().Tokens[token.End], $2.GetNode().Tokens[token.CloseParenthesisToken]...))
-                }
-                yylex.(*Parser).setFreeFloatingTokens($2, token.OpenParenthesisToken, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($2, token.CloseParenthesisToken, $3.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6943,29 +6876,33 @@ internal_functions_in_yacc:
             }
     |   T_EMPTY '(' variable ')'
             {
-                $$ = &ast.ExprEmpty{ast.Node{}, $3}
+                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
+                $$ = &ast.ExprEmpty{ast.Node{}, exprBrackets}
 
                 // save position
+                exprBrackets.GetNode().Position = position.NewTokensPosition($2, $4)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Empty, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EMPTY '(' expr ')'
             {
-                $$ = &ast.ExprEmpty{ast.Node{}, $3}
+                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
+                $$ = &ast.ExprEmpty{ast.Node{}, exprBrackets}
 
                 // save position
+                exprBrackets.GetNode().Position = position.NewTokensPosition($2, $4)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Empty, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6995,15 +6932,17 @@ internal_functions_in_yacc:
             }
     |   T_EVAL '(' expr ')'
             {
-                $$ = &ast.ExprEval{ast.Node{}, $3}
+                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
+                $$ = &ast.ExprEval{ast.Node{}, exprBrackets}
 
                 // save position
+                exprBrackets.GetNode().Position = position.NewTokensPosition($2, $4)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
                 yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Eval, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

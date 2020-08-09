@@ -5819,7 +5819,7 @@ func TestStmtEcho_Parenthesis(t *testing.T) {
 }
 
 func TestStmtExpression(t *testing.T) {
-	src := `<? 1;`
+	src := `<? ((1));`
 
 	expected := &ast.Root{
 		Node: ast.Node{
@@ -5827,7 +5827,7 @@ func TestStmtExpression(t *testing.T) {
 				StartLine: 1,
 				EndLine:   1,
 				StartPos:  3,
-				EndPos:    5,
+				EndPos:    9,
 			},
 		},
 		Stmts: []ast.Vertex{
@@ -5837,7 +5837,7 @@ func TestStmtExpression(t *testing.T) {
 						StartLine: 1,
 						EndLine:   1,
 						StartPos:  3,
-						EndPos:    5,
+						EndPos:    9,
 					},
 				},
 				Expr: &ast.ScalarLnumber{
@@ -5845,8 +5845,8 @@ func TestStmtExpression(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  3,
-							EndPos:    4,
+							StartPos:  5,
+							EndPos:    6,
 						},
 					},
 					Value: []byte("1"),
@@ -13535,7 +13535,7 @@ func TestExprClone_Brackets(t *testing.T) {
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  3,
-							EndPos:    11,
+							EndPos:    12,
 						},
 					},
 					Expr: &ast.ExprVariable{
@@ -17177,7 +17177,7 @@ func TestExprPrint(t *testing.T) {
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  3,
-							EndPos:    11,
+							EndPos:    12,
 						},
 					},
 					Expr: &ast.ExprVariable{

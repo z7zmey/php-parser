@@ -1530,11 +1530,16 @@ func (p *Printer) printExprEmpty(n ast.Vertex) {
 	nn := n.(*ast.ExprEmpty)
 	p.printFreeFloating(nn, token.Start)
 	io.WriteString(p.w, "empty")
-	p.printFreeFloating(nn, token.Empty)
-	io.WriteString(p.w, "(")
+
+	if _, ok := nn.Expr.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, "(")
+	}
+
 	p.Print(nn.Expr)
-	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ")")
+
+	if _, ok := nn.Expr.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, ")")
+	}
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1551,12 +1556,18 @@ func (p *Printer) printExprErrorSuppress(n ast.Vertex) {
 func (p *Printer) printExprEval(n ast.Vertex) {
 	nn := n.(*ast.ExprEval)
 	p.printFreeFloating(nn, token.Start)
+
 	io.WriteString(p.w, "eval")
-	p.printFreeFloating(nn, token.Eval)
-	io.WriteString(p.w, "(")
+
+	if _, ok := nn.Expr.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, "(")
+	}
+
 	p.Print(nn.Expr)
-	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ")")
+
+	if _, ok := nn.Expr.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, ")")
+	}
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1570,7 +1581,6 @@ func (p *Printer) printExprExit(n ast.Vertex) {
 	} else {
 		io.WriteString(p.w, "exit")
 	}
-	p.printFreeFloating(nn, token.Exit)
 
 	if nn.Expr != nil && nn.Expr.GetNode().Tokens.IsEmpty() && nn.GetNode().Tokens.IsEmpty() {
 		io.WriteString(p.w, " ")
@@ -2163,11 +2173,17 @@ func (p *Printer) printStmtAltSwitch(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "switch")
-	p.printFreeFloating(nn, token.Switch)
-	io.WriteString(p.w, "(")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, "(")
+	}
+
 	p.Print(nn.Cond)
-	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ")")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, ")")
+	}
+
 	p.printFreeFloating(nn, token.Cond)
 	io.WriteString(p.w, ":")
 
@@ -2192,11 +2208,17 @@ func (p *Printer) printStmtAltWhile(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "while")
-	p.printFreeFloating(nn, token.While)
-	io.WriteString(p.w, "(")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, "(")
+	}
+
 	p.Print(nn.Cond)
-	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ")")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, ")")
+	}
+
 	p.printFreeFloating(nn, token.Cond)
 	io.WriteString(p.w, ":")
 
@@ -2543,11 +2565,17 @@ func (p *Printer) printStmtDo(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Stmts)
 
 	io.WriteString(p.w, "while")
-	p.printFreeFloating(nn, token.While)
-	io.WriteString(p.w, "(")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, "(")
+	}
+
 	p.Print(nn.Cond)
-	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ")")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, ")")
+	}
+
 	p.printFreeFloating(nn, token.Cond)
 
 	p.printFreeFloating(nn, token.SemiColon)
@@ -2587,11 +2615,16 @@ func (p *Printer) printStmtElseif(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "elseif")
-	p.printFreeFloating(nn, token.ElseIf)
-	io.WriteString(p.w, "(")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, "(")
+	}
+
 	p.Print(nn.Cond)
-	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ")")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, ")")
+	}
 
 	p.Print(nn.Stmt)
 
@@ -2794,11 +2827,16 @@ func (p *Printer) printStmtIf(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "if")
-	p.printFreeFloating(n, token.If)
-	io.WriteString(p.w, "(")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, "(")
+	}
+
 	p.Print(nn.Cond)
-	p.printFreeFloating(n, token.Expr)
-	io.WriteString(p.w, ")")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, ")")
+	}
 
 	p.Print(nn.Stmt)
 
@@ -3020,11 +3058,16 @@ func (p *Printer) printStmtSwitch(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "switch")
-	p.printFreeFloating(nn, token.Switch)
-	io.WriteString(p.w, "(")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, "(")
+	}
+
 	p.Print(nn.Cond)
-	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ")")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, ")")
+	}
 
 	p.printFreeFloating(nn.CaseList, token.Start)
 	io.WriteString(p.w, "{")
@@ -3292,11 +3335,16 @@ func (p *Printer) printStmtWhile(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "while")
-	p.printFreeFloating(nn, token.While)
-	io.WriteString(p.w, "(")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, "(")
+	}
+
 	p.Print(nn.Cond)
-	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ")")
+
+	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
+		io.WriteString(p.w, ")")
+	}
 
 	p.Print(nn.Stmt)
 
