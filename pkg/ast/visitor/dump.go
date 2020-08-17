@@ -121,7 +121,7 @@ func (v *Dump) printNode(n *ast.Node) {
 			key := token.Position(k)
 
 			v.printIndent(v.indent + 2)
-			v.print("token." + key.String() + ": []token.Token{\n")
+			v.print("token." + key.String() + ": []*token.Token{\n")
 
 			for _, tkn := range n.Tokens[key] {
 				v.printIndent(v.indent + 3)

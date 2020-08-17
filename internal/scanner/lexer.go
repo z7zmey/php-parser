@@ -13,31 +13,32 @@ import (
 type Lexer struct {
 	data           []byte
 	phpVersion     string
-	withTokens     bool
 	errHandlerFunc func(*errors.Error)
 
+	sts, ste    int
 	p, pe, cs   int
 	ts, te, act int
 	stack       []int
 	top         int
 
 	heredocLabel []byte
-	tokenPool    *TokenPool
+	tokenPool    *token.Pool
+	positionPool *position.Pool
 	newLines     NewLines
 }
 
-func NewLexer(data []byte, phpVersion string, withTokens bool, errHandlerFunc func(*errors.Error)) *Lexer {
+func NewLexer(data []byte, phpVersion string, errHandlerFunc func(*errors.Error)) *Lexer {
 	lex := &Lexer{
 		data:           data,
 		phpVersion:     phpVersion,
-		withTokens:     withTokens,
 		errHandlerFunc: errHandlerFunc,
 
 		pe:    len(data),
 		stack: make([]int, 0),
 
-		tokenPool: &TokenPool{},
-		newLines:  NewLines{make([]int, 0, 128)},
+		tokenPool:    token.NewPool(position.DefaultBlockSize),
+		positionPool: position.NewPool(position.DefaultBlockSize),
+		newLines:     NewLines{make([]int, 0, 128)},
 	}
 
 	initLexer(lex)
@@ -45,26 +46,37 @@ func NewLexer(data []byte, phpVersion string, withTokens bool, errHandlerFunc fu
 	return lex
 }
 
-func (lex *Lexer) ReturnTokenToPool(t *Token) {
-	lex.tokenPool.Put(t)
+func (lex *Lexer) setTokenPosition(token *token.Token) {
+	pos := lex.positionPool.Get()
+
+	pos.StartLine = lex.newLines.GetLine(lex.ts)
+	pos.EndLine = lex.newLines.GetLine(lex.te - 1)
+	pos.StartPos = lex.ts
+	pos.EndPos = lex.te
+
+	token.Position = pos
 }
 
-func (lex *Lexer) setTokenPosition(token *Token) {
-	token.Position.StartLine = lex.newLines.GetLine(lex.ts)
-	token.Position.EndLine = lex.newLines.GetLine(lex.te - 1)
-	token.Position.StartPos = lex.ts
-	token.Position.EndPos = lex.te
-}
-
-func (lex *Lexer) addHiddenToken(t *Token, id TokenID, ps, pe int) {
-	if !lex.withTokens {
-		return
+func (lex *Lexer) addSkippedToken(t *token.Token, id token.ID, ps, pe int) {
+	if lex.sts == 0 {
+		lex.sts = lex.ts
 	}
 
-	t.Tokens = append(t.Tokens, token.Token{
-		ID:    token.ID(id),
-		Value: lex.data[ps:pe],
-	})
+	lex.ste = lex.te
+
+	// TODO remove after parser refactoring
+
+	skippedTkn := lex.tokenPool.Get()
+	skippedTkn.ID = id
+	skippedTkn.Value = lex.data[ps:pe]
+
+	lex.setTokenPosition(skippedTkn)
+
+	if t.SkippedTokens == nil {
+		t.SkippedTokens = make([]*token.Token, 0, 2)
+	}
+
+	t.SkippedTokens = append(t.SkippedTokens, skippedTkn)
 }
 
 func (lex *Lexer) isNotStringVar() bool {

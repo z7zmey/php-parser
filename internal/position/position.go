@@ -1,9 +1,9 @@
 package position
 
 import (
-	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/position"
+	"github.com/z7zmey/php-parser/pkg/token"
 )
 
 type startPos struct {
@@ -95,7 +95,7 @@ func NewNodePosition(n ast.Vertex) *position.Position {
 }
 
 // NewTokenPosition returns new Position
-func NewTokenPosition(t *scanner.Token) *position.Position {
+func NewTokenPosition(t *token.Token) *position.Position {
 	return &position.Position{
 		StartLine: t.Position.StartLine,
 		EndLine:   t.Position.EndLine,
@@ -105,7 +105,7 @@ func NewTokenPosition(t *scanner.Token) *position.Position {
 }
 
 // NewTokensPosition returns new Position
-func NewTokensPosition(startToken *scanner.Token, endToken *scanner.Token) *position.Position {
+func NewTokensPosition(startToken *token.Token, endToken *token.Token) *position.Position {
 	return &position.Position{
 		StartLine: startToken.Position.StartLine,
 		EndLine:   endToken.Position.EndLine,
@@ -115,7 +115,7 @@ func NewTokensPosition(startToken *scanner.Token, endToken *scanner.Token) *posi
 }
 
 // NewTokenNodePosition returns new Position
-func NewTokenNodePosition(t *scanner.Token, n ast.Vertex) *position.Position {
+func NewTokenNodePosition(t *token.Token, n ast.Vertex) *position.Position {
 	return &position.Position{
 		StartLine: t.Position.StartLine,
 		EndLine:   getNodeEndPos(n).endLine,
@@ -125,7 +125,7 @@ func NewTokenNodePosition(t *scanner.Token, n ast.Vertex) *position.Position {
 }
 
 // NewNodeTokenPosition returns new Position
-func NewNodeTokenPosition(n ast.Vertex, t *scanner.Token) *position.Position {
+func NewNodeTokenPosition(n ast.Vertex, t *token.Token) *position.Position {
 	return &position.Position{
 		StartLine: getNodeStartPos(n).startLine,
 		EndLine:   t.Position.EndLine,
@@ -145,7 +145,7 @@ func NewNodesPosition(startNode ast.Vertex, endNode ast.Vertex) *position.Positi
 }
 
 // NewNodeListTokenPosition returns new Position
-func NewNodeListTokenPosition(list []ast.Vertex, t *scanner.Token) *position.Position {
+func NewNodeListTokenPosition(list []ast.Vertex, t *token.Token) *position.Position {
 	return &position.Position{
 		StartLine: getListStartPos(list).startLine,
 		EndLine:   t.Position.EndLine,
@@ -155,7 +155,7 @@ func NewNodeListTokenPosition(list []ast.Vertex, t *scanner.Token) *position.Pos
 }
 
 // NewTokenNodeListPosition returns new Position
-func NewTokenNodeListPosition(t *scanner.Token, list []ast.Vertex) *position.Position {
+func NewTokenNodeListPosition(t *token.Token, list []ast.Vertex) *position.Position {
 	return &position.Position{
 		StartLine: t.Position.StartLine,
 		EndLine:   getListEndPos(list).endLine,
@@ -185,7 +185,7 @@ func NewNodeListNodePosition(list []ast.Vertex, n ast.Vertex) *position.Position
 }
 
 // NewOptionalListTokensPosition returns new Position
-func NewOptionalListTokensPosition(list []ast.Vertex, t *scanner.Token, endToken *scanner.Token) *position.Position {
+func NewOptionalListTokensPosition(list []ast.Vertex, t *token.Token, endToken *token.Token) *position.Position {
 	if list == nil {
 		return &position.Position{
 			StartLine: t.Position.StartLine,

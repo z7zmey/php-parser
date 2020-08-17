@@ -5,15 +5,15 @@ import (
 	"testing"
 
 	builder "github.com/z7zmey/php-parser/internal/position"
-	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/position"
+	"github.com/z7zmey/php-parser/pkg/token"
 )
 
 func TestNewTokenPosition(t *testing.T) {
-	tkn := &scanner.Token{
+	tkn := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
 			StartPos:  0,
@@ -29,18 +29,18 @@ func TestNewTokenPosition(t *testing.T) {
 }
 
 func TestNewTokensPosition(t *testing.T) {
-	token1 := &scanner.Token{
+	token1 := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
 			StartPos:  0,
 			EndPos:    3,
 		},
 	}
-	token2 := &scanner.Token{
+	token2 := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 2,
 			EndLine:   2,
 			StartPos:  4,
@@ -71,9 +71,9 @@ func TestNewNodePosition(t *testing.T) {
 }
 
 func TestNewTokenNodePosition(t *testing.T) {
-	tkn := &scanner.Token{
+	tkn := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
 			StartPos:  0,
@@ -108,9 +108,9 @@ func TestNewNodeTokenPosition(t *testing.T) {
 		},
 	}
 
-	tkn := &scanner.Token{
+	tkn := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 2,
 			EndLine:   2,
 			StartPos:  10,
@@ -202,9 +202,9 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 		},
 	}
 
-	tkn := &scanner.Token{
+	tkn := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 3,
 			EndLine:   3,
 			StartPos:  20,
@@ -218,9 +218,9 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 }
 
 func TestNewTokenNodeListPosition(t *testing.T) {
-	tkn := &scanner.Token{
+	tkn := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
 			StartPos:  0,
@@ -332,18 +332,18 @@ func TestNewNodeListNodePosition(t *testing.T) {
 }
 
 func TestNewOptionalListTokensPosition(t *testing.T) {
-	token1 := &scanner.Token{
+	token1 := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
 			StartPos:  0,
 			EndPos:    3,
 		},
 	}
-	token2 := &scanner.Token{
+	token2 := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 2,
 			EndLine:   2,
 			StartPos:  4,
@@ -378,18 +378,18 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 		},
 	}
 
-	token1 := &scanner.Token{
+	token1 := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 4,
 			EndLine:   4,
 			StartPos:  27,
 			EndPos:    29,
 		},
 	}
-	token2 := &scanner.Token{
+	token2 := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 5,
 			EndLine:   5,
 			StartPos:  30,
@@ -426,9 +426,9 @@ func TestNilNodeListPos(t *testing.T) {
 }
 
 func TestNilNodeListTokenPos(t *testing.T) {
-	token := &scanner.Token{
+	token := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
 			StartPos:  0,
@@ -459,9 +459,9 @@ func TestEmptyNodeListPos(t *testing.T) {
 }
 
 func TestEmptyNodeListTokenPos(t *testing.T) {
-	token := &scanner.Token{
+	token := &token.Token{
 		Value: []byte(`foo`),
-		Position: position.Position{
+		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
 			StartPos:  0,

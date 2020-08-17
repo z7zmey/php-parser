@@ -75,7 +75,7 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 				Expr: &ast.ExprVariable{
 					Node: ast.Node{
 						Tokens: token.Collection{
-							token.Start: []token.Token{
+							token.Start: []*token.Token{
 								{
 									ID:    token.ID('$'),
 									Value: []byte("$"),
@@ -93,7 +93,7 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 				Expr: &ast.ExprVariable{
 					Node: ast.Node{
 						Tokens: token.Collection{
-							token.Start: []token.Token{
+							token.Start: []*token.Token{
 								{
 									ID:    token.ID('$'),
 									Value: []byte("$"),

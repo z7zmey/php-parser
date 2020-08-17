@@ -29,7 +29,7 @@ abstract class Bar extends Baz
 
 	// parse
 
-	lexer := scanner.NewLexer([]byte(src), "7.4", true, nil)
+	lexer := scanner.NewLexer([]byte(src), "7.4", nil)
 	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 
@@ -61,7 +61,7 @@ abstract class Bar extends Baz
 }
 
 func parse(src string) ast.Vertex {
-	lexer := scanner.NewLexer([]byte(src), "7.4", true, nil)
+	lexer := scanner.NewLexer([]byte(src), "7.4", nil)
 	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 

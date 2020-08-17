@@ -62,7 +62,7 @@ const (
 	CloseParenthesisToken
 )
 
-type Collection map[Position][]Token
+type Collection map[Position][]*Token
 
 func (c Collection) IsEmpty() bool {
 	for _, v := range c {

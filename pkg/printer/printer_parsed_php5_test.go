@@ -12,7 +12,7 @@ import (
 )
 
 func parsePhp5(src string) ast.Vertex {
-	lexer := scanner.NewLexer([]byte(src), "5.6", true, nil)
+	lexer := scanner.NewLexer([]byte(src), "5.6", nil)
 	php5parser := php5.NewParser(lexer, nil)
 	php5parser.Parse()
 

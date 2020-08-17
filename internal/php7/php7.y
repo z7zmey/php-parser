@@ -5,17 +5,17 @@ import (
     "bytes"
     "strconv"
 
-	"github.com/z7zmey/php-parser/internal/position"
-	"github.com/z7zmey/php-parser/internal/scanner"
-	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/token"
+    "github.com/z7zmey/php-parser/internal/position"
+    "github.com/z7zmey/php-parser/pkg/ast"
+    "github.com/z7zmey/php-parser/pkg/token"
 )
 
 %}
 
 %union{
     node             ast.Vertex
-    token            *scanner.Token
+    token            *token.Token
+    tkn              *token.Token
     list             []ast.Vertex
 
     ClassExtends     *ast.StmtClassExtends
@@ -24,7 +24,6 @@ import (
     ClosureUse       *ast.ExprClosureUse
 }
 
-%type <token> $unk
 %token <token> T_INCLUDE
 %token <token> T_INCLUDE_ONCE
 %token <token> T_EXIT
@@ -297,9 +296,7 @@ start:
                 // save position
                 yylex.(*Parser).rootNode.GetNode().Position = position.NewNodeListPosition($1)
 
-                yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, token.End, yylex.(*Parser).currentToken.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, token.End, yylex.(*Parser).currentToken.SkippedTokens)
             }
 ;
 
@@ -343,14 +340,10 @@ top_statement_list:
                 if $2 != nil {
                     $$ = append($1, $2)
                 }
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
                 $$ = []ast.Vertex{}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -364,9 +357,7 @@ namespace_name:
                 namePart.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(namePart, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(namePart, token.Start, $1.SkippedTokens)
             }
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
@@ -377,10 +368,8 @@ namespace_name:
                 namePart.GetNode().Position = position.NewTokenPosition($3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(namePart, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens) 
+                yylex.(*Parser).setFreeFloating(namePart, token.Start, $3.SkippedTokens)
             }
 ;
 
@@ -391,8 +380,6 @@ name:
 
                 // save position
                 $$.GetNode().Position = position.NewNodeListPosition($1)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     | T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
@@ -402,10 +389,8 @@ name:
                 $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Namespace, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Namespace, $2.SkippedTokens)
             }
     | T_NS_SEPARATOR namespace_name
             {
@@ -415,9 +400,7 @@ name:
                 $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -426,38 +409,26 @@ top_statement:
             {
                 // error
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   function_declaration_statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_declaration_statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_declaration_statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   interface_declaration_statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
@@ -467,10 +438,8 @@ top_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($2.Tokens, append($3.Tokens, $4.Tokens...)...))
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($2.SkippedTokens, append($3.SkippedTokens, $4.SkippedTokens...)...))
             }
     |   T_NAMESPACE namespace_name ';'
             {
@@ -482,12 +451,10 @@ top_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
                 yylex.(*Parser).MoveFreeFloating($2[0], name)
-                yylex.(*Parser).setFreeFloating(name, token.End, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(name, token.End, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
             {
@@ -499,12 +466,10 @@ top_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
                 yylex.(*Parser).MoveFreeFloating($2[0], name)
-                yylex.(*Parser).setFreeFloating(name, token.End, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $5.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(name, token.End, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $5.SkippedTokens)
             }
     |   T_NAMESPACE '{' top_statement_list '}'
             {
@@ -514,11 +479,9 @@ top_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Namespace, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Namespace, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.SkippedTokens)
             }
     |   T_USE mixed_group_use_declaration ';'
             {
@@ -528,10 +491,8 @@ top_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   T_USE use_type group_use_declaration ';'
             {
@@ -543,10 +504,8 @@ top_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $4.SkippedTokens)
             }
     |   T_USE use_declarations ';'
             {
@@ -558,10 +517,8 @@ top_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   T_USE use_type use_declarations ';'
             {
@@ -575,10 +532,8 @@ top_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $4.SkippedTokens)
             }
     |   T_CONST const_list ';'
             {
@@ -588,11 +543,9 @@ top_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
 ;
 
@@ -605,9 +558,7 @@ use_type:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_CONST
             {
@@ -617,9 +568,7 @@ use_type:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -641,13 +590,11 @@ group_use_declaration:
 
                 // save comments
                 if $5 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $5.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $5.SkippedTokens)
                 }
-                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $3.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $6.Tokens)
-                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $6.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $2.SkippedTokens)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
@@ -667,15 +614,13 @@ group_use_declaration:
                 $$.GetNode().Position = position.NewTokensPosition($1, $7)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(prefixNsSeparator, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloating(prefixNsSeparator, token.Start, $1.SkippedTokens)
                 if $6 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $6.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $6.SkippedTokens)
                 }
-                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $4.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $7.Tokens)
-                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $7.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $3.SkippedTokens)
             }
 ;
 
@@ -697,13 +642,11 @@ mixed_group_use_declaration:
 
                 // save comments
                 if $5 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $5.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $5.SkippedTokens)
                 }
-                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $3.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $6.Tokens)
-                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $6.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $2.SkippedTokens)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
@@ -723,15 +666,13 @@ mixed_group_use_declaration:
                 $$.GetNode().Position = position.NewTokensPosition($1, $7)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(prefixNsSeparator, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloating(prefixNsSeparator, token.Start, $1.SkippedTokens)
                 if $6 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $6.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens(useList, token.End, $6.SkippedTokens)
                 }
-                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $4.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $7.Tokens)
-                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.Start, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(useListBrackets, token.End, $7.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(useListNsSeparator, token.Start, $3.SkippedTokens)
             }
 ;
 
@@ -752,15 +693,11 @@ inline_use_declarations:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   inline_use_declaration
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -770,15 +707,11 @@ unprefixed_use_declarations:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   unprefixed_use_declaration
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -788,15 +721,11 @@ use_declarations:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   use_declaration
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -804,8 +733,6 @@ inline_use_declaration:
         unprefixed_use_declaration
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   use_type unprefixed_use_declaration
             {
@@ -813,8 +740,6 @@ inline_use_declaration:
 
                 // save position
                 $$.GetNode().Position = position.NewNodesPosition($1, $2)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -827,8 +752,6 @@ unprefixed_use_declaration:
                 // save position
                 name.GetNode().Position = position.NewNodeListPosition($1)
                 $$.GetNode().Position = position.NewNodePosition(name)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_AS T_STRING
             {
@@ -844,10 +767,8 @@ unprefixed_use_declaration:
                 $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(asAlias, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(alias, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(asAlias, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(alias, token.Start, $3.SkippedTokens)
             }
 ;
 
@@ -855,8 +776,6 @@ use_declaration:
         unprefixed_use_declaration
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR unprefixed_use_declaration
             {
@@ -867,9 +786,7 @@ use_declaration:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -879,15 +796,11 @@ const_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   const_decl
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -902,14 +815,10 @@ inner_statement_list:
                 if $2 != nil {
                     $$ = append($1, $2)
                 }
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
                 $$ = []ast.Vertex{}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -918,38 +827,26 @@ inner_statement:
             {
                 // error
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   function_declaration_statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_declaration_statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_declaration_statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   interface_declaration_statement
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
@@ -959,10 +856,8 @@ inner_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($2.Tokens, append($3.Tokens, $4.Tokens...)...))
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($2.SkippedTokens, append($3.SkippedTokens, $4.SkippedTokens...)...))
             }
 
 statement:
@@ -974,22 +869,16 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
             }
     |   if_stmt
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   alt_if_stmt
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_WHILE '(' expr ')' while_statement
             {
@@ -1009,11 +898,9 @@ statement:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   T_DO statement T_WHILE '(' expr ')' ';'
             {
@@ -1025,13 +912,11 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $7)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $4.Tokens)
-                yylex.(*Parser).setFreeFloating(exprBrackets, token.End, append($6.Tokens, $7.Tokens...))
-                yylex.(*Parser).setToken($$, token.SemiColon, $7.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(exprBrackets, token.End, append($6.SkippedTokens, $7.SkippedTokens...))
+                yylex.(*Parser).setToken($$, token.SemiColon, $7.SkippedTokens)
             }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
@@ -1052,13 +937,11 @@ statement:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $9)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.For, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.InitExpr, $4.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.CondExpr, $6.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.IncExpr, $8.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.For, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.InitExpr, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.CondExpr, $6.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.IncExpr, $8.SkippedTokens)
             }
     |   T_SWITCH '(' expr ')' switch_case_list
             {
@@ -1080,11 +963,9 @@ statement:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   T_BREAK optional_expr ';'
             {
@@ -1094,11 +975,9 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_CONTINUE optional_expr ';'
             {
@@ -1108,11 +987,9 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_RETURN optional_expr ';'
             {
@@ -1122,11 +999,9 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_GLOBAL global_var_list ';'
             {
@@ -1136,11 +1011,9 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.VarList, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.VarList, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_STATIC static_var_list ';'
             {
@@ -1150,11 +1023,9 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.VarList, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.VarList, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_ECHO echo_expr_list ';'
             {
@@ -1164,12 +1035,10 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Echo, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.Echo, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_INLINE_HTML
             {
@@ -1179,9 +1048,7 @@ statement:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   expr ';'
             {
@@ -1192,10 +1059,8 @@ statement:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
             }
     |   T_UNSET '(' unset_variables possible_comma ')' ';'
             {
@@ -1205,17 +1070,15 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Unset, $2.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Unset, $2.SkippedTokens)
                 if $4 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.VarList, append($4.Tokens, $5.Tokens...))
+                    yylex.(*Parser).setFreeFloating($$, token.VarList, append($4.SkippedTokens, $5.SkippedTokens...))
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, token.VarList, $5.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.VarList, $5.SkippedTokens)
                 }
-                yylex.(*Parser).setFreeFloating($$, token.CloseParenthesisToken, $6.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $6.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.CloseParenthesisToken, $6.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $6.SkippedTokens)
             }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
             {
@@ -1234,13 +1097,10 @@ statement:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $7)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Foreach, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $6.Tokens)
-
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Foreach, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $6.SkippedTokens)
             }
     |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
             {
@@ -1261,13 +1121,11 @@ statement:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $9)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Foreach, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Key, $6.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $8.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Foreach, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Key, $6.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $8.SkippedTokens)
             }
     |   T_DECLARE '(' const_list ')' declare_statement
             {
@@ -1278,11 +1136,9 @@ statement:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Declare, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ConstList, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Declare, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ConstList, $4.SkippedTokens)
             }
     |   ';'
             {
@@ -1292,10 +1148,8 @@ statement:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $1.SkippedTokens)
             }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
@@ -1308,11 +1162,9 @@ statement:
                 }
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Try, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Try, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.SkippedTokens)
             }
     |   T_THROW expr ';'
             {
@@ -1322,11 +1174,9 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_GOTO T_STRING ';'
             {
@@ -1338,12 +1188,10 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(label, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Label, $3.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(label, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Label, $3.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_STRING ':'
             {
@@ -1355,18 +1203,14 @@ statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Label, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Label, $2.SkippedTokens)
             }
 
 catch_list:
         /* empty */
             {
                 $$ = []ast.Vertex{}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
             {
@@ -1381,31 +1225,25 @@ catch_list:
                 catch.GetNode().Position = position.NewTokensPosition($2, $9)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(catch, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(catch, token.Catch, $3.Tokens)
-                yylex.(*Parser).setFreeFloating(variable, token.Start, $5.Tokens)
-                yylex.(*Parser).setFreeFloating(catch, token.Var, $6.Tokens)
-                yylex.(*Parser).setFreeFloating(catch, token.Cond, $7.Tokens)
-                yylex.(*Parser).setFreeFloating(catch, token.Stmts, $9.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(catch, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(catch, token.Catch, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(variable, token.Start, $5.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(catch, token.Var, $6.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(catch, token.Cond, $7.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(catch, token.Stmts, $9.SkippedTokens)
             }
 ;
 catch_name_list:
         name
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   catch_name_list '|' name
             {
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
 ;
 
@@ -1413,8 +1251,6 @@ finally_statement:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FINALLY '{' inner_statement_list '}'
             {
@@ -1424,11 +1260,9 @@ finally_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Finally, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Finally, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.SkippedTokens)
             }
 ;
 
@@ -1436,17 +1270,13 @@ unset_variables:
         unset_variable
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   unset_variables ',' unset_variable
             {
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
 ;
 
@@ -1454,8 +1284,6 @@ unset_variable:
         variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -1471,24 +1299,22 @@ function_declaration_statement:
 
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
                 if $2 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.Tokens)
-                    yylex.(*Parser).setFreeFloating(name, token.Start, $3.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.SkippedTokens)
+                    yylex.(*Parser).setFreeFloating(name, token.Start, $3.SkippedTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating(name, token.Start, $3.Tokens)
+                    yylex.(*Parser).setFreeFloating(name, token.Start, $3.SkippedTokens)
                 }
-                yylex.(*Parser).setFreeFloating($$, token.Name, $5.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ParamList, $7.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ReturnType, $9.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $11.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $5.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ParamList, $7.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ReturnType, $9.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $11.SkippedTokens)
 
                 // normalize
                 if $8 == nil {
                     yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $$.GetNode().Tokens[token.ReturnType]); delete($$.GetNode().Tokens, token.ReturnType)
                 }
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -1526,12 +1352,10 @@ class_declaration_statement:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(name, token.Start, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $7.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $9.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(name, token.Start, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $7.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $9.SkippedTokens)
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
@@ -1543,12 +1367,10 @@ class_declaration_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $8)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(name, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $6.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $8.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(name, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $6.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $8.SkippedTokens)
             }
 ;
 
@@ -1556,14 +1378,10 @@ class_modifiers:
         class_modifier
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_modifiers class_modifier
             {
                 $$ = append($1, $2)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -1576,9 +1394,7 @@ class_modifier:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_FINAL
             {
@@ -1588,9 +1404,7 @@ class_modifier:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -1605,12 +1419,10 @@ trait_declaration_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(name, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $4.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $6.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(name, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $6.SkippedTokens)
             }
 ;
 
@@ -1625,12 +1437,10 @@ interface_declaration_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $7)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(name, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $5.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $7.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(name, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $5.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $7.SkippedTokens)
             }
 ;
 
@@ -1638,8 +1448,6 @@ extends_from:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EXTENDS name
             {
@@ -1649,9 +1457,7 @@ extends_from:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -1659,8 +1465,6 @@ interface_extends_list:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EXTENDS name_list
             {
@@ -1670,9 +1474,7 @@ interface_extends_list:
                 $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -1680,8 +1482,6 @@ implements_list:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_IMPLEMENTS name_list
             {
@@ -1691,9 +1491,7 @@ implements_list:
                 $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -1701,8 +1499,6 @@ foreach_variable:
         variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '&' variable
             {
@@ -1712,9 +1508,7 @@ foreach_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_LIST '(' array_pair_list ')'
             {
@@ -1724,11 +1518,9 @@ foreach_variable:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.List, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.List, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $4.SkippedTokens)
             }
     |   '[' array_pair_list ']'
             {
@@ -1738,10 +1530,8 @@ foreach_variable:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save commentsc
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $3.SkippedTokens)
             }
 ;
 
@@ -1752,8 +1542,6 @@ for_statement:
 
                 // save position
                 $$.GetNode().Position = position.NewNodePosition($1)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDFOR ';'
             {
@@ -1765,12 +1553,10 @@ for_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
 ;
 
@@ -1781,8 +1567,6 @@ foreach_statement:
 
                 // save position
                 $$.GetNode().Position = position.NewNodePosition($1)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
@@ -1794,12 +1578,10 @@ foreach_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
 ;
 
@@ -1810,8 +1592,6 @@ declare_statement:
 
                 // save position
                 $$.GetNode().Position = position.NewNodePosition($1)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
@@ -1823,12 +1603,10 @@ declare_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
 ;
 
@@ -1843,10 +1621,8 @@ switch_case_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(caseList, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(caseList, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $3.SkippedTokens)
             }
     |   '{' ';' case_list '}'
             {
@@ -1858,11 +1634,9 @@ switch_case_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(caseList, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(caseList, token.CaseListStart, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(caseList, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(caseList, token.CaseListStart, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $4.SkippedTokens)
             }
     |   ':' case_list T_ENDSWITCH ';'
             {
@@ -1874,12 +1648,10 @@ switch_case_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
     |   ':' ';' case_list T_ENDSWITCH ';'
             {
@@ -1892,13 +1664,11 @@ switch_case_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(caseList, token.CaseListStart, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $4.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $5.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $5.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(caseList, token.CaseListStart, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $5.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $5.SkippedTokens)
             }
 ;
 
@@ -1906,8 +1676,6 @@ case_list:
         /* empty */
             {
                 $$ = []ast.Vertex{}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
@@ -1918,11 +1686,9 @@ case_list:
                 _case.GetNode().Position = position.NewTokenNodeListPosition($2, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(_case, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(_case, token.Expr, append($4.Tokens))
-                yylex.(*Parser).setToken(_case, token.CaseSeparator, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(_case, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(_case, token.Expr, append($4.SkippedTokens))
+                yylex.(*Parser).setToken(_case, token.CaseSeparator, $4.SkippedTokens)
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
@@ -1933,11 +1699,9 @@ case_list:
                 _default.GetNode().Position = position.NewTokenNodeListPosition($2, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(_default, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(_default, token.Default, $3.Tokens)
-                yylex.(*Parser).setToken(_default, token.CaseSeparator, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(_default, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(_default, token.Default, $3.SkippedTokens)
+                yylex.(*Parser).setToken(_default, token.CaseSeparator, $3.SkippedTokens)
             }
 ;
 
@@ -1959,8 +1723,6 @@ while_statement:
 
                 // save position
                 $$.GetNode().Position = position.NewNodePosition($1)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
@@ -1972,12 +1734,10 @@ while_statement:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
 ;
 
@@ -1992,11 +1752,9 @@ if_stmt_without_else:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             {
@@ -2012,11 +1770,9 @@ if_stmt_without_else:
                 $$.GetNode().Position = position.NewNodesPosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $3.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $5.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $5.SkippedTokens)
             }
 ;
 
@@ -2024,8 +1780,6 @@ if_stmt:
         if_stmt_without_else %prec T_NOELSE
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   if_stmt_without_else T_ELSE statement
             {
@@ -2039,9 +1793,7 @@ if_stmt:
                 $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(_else, token.Start, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(_else, token.Start, $2.SkippedTokens)
             }
 ;
 
@@ -2060,12 +1812,10 @@ alt_if_stmt_without_else:
                 $$.GetNode().Position = position.NewTokenNodeListPosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $5.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $5.SkippedTokens)
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
@@ -2084,12 +1834,10 @@ alt_if_stmt_without_else:
                 _elseIf.GetNode().Position = position.NewTokenNodeListPosition($2, $7)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $3.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $5.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $6.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $5.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $6.SkippedTokens)
             }
 ;
 
@@ -2104,13 +1852,11 @@ alt_if_stmt:
                 // save comments
                 altif := $$.(*ast.StmtAltIf)
                 if len(altif.ElseIf) > 0 {
-                    yylex.(*Parser).setFreeFloating(altif.ElseIf[len(altif.ElseIf)-1], token.End, append($2.Tokens, $3.Tokens...))
+                    yylex.(*Parser).setFreeFloating(altif.ElseIf[len(altif.ElseIf)-1], token.End, append($2.SkippedTokens, $3.SkippedTokens...))
                 } else {
-                    yylex.(*Parser).setFreeFloating(altif.Stmt, token.End, append($2.Tokens, $3.Tokens...))
+                    yylex.(*Parser).setFreeFloating(altif.Stmt, token.End, append($2.SkippedTokens, $3.SkippedTokens...))
                 }
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
@@ -2128,12 +1874,10 @@ alt_if_stmt:
                 $$.GetNode().Position = position.NewNodeTokenPosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(_else, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $3.Tokens)
-                yylex.(*Parser).setFreeFloating(stmtsBrackets, token.End, append($5.Tokens, $6.Tokens...))
-                yylex.(*Parser).setToken($$, token.SemiColon, $6.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(_else, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(stmtsBrackets, token.End, append($5.SkippedTokens, $6.SkippedTokens...))
+                yylex.(*Parser).setToken($$, token.SemiColon, $6.SkippedTokens)
             }
 ;
 
@@ -2141,14 +1885,10 @@ parameter_list:
         non_empty_parameter_list
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2156,17 +1896,13 @@ non_empty_parameter_list:
         parameter
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_parameter_list ',' parameter
             {
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
 ;
 
@@ -2179,18 +1915,18 @@ parameter:
                 var variable ast.Vertex
                 variable = &ast.ExprVariable{ast.Node{}, identifier}
                 variable.GetNode().Position = position.NewTokenPosition($4)
-                yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Tokens)
+                yylex.(*Parser).setFreeFloating(variable, token.Start, $4.SkippedTokens)
 
                 if $3 != nil {
                     variable = &ast.Variadic{ast.Node{}, variable}
                     variable.GetNode().Position = position.NewTokensPosition($3, $4)
-                    yylex.(*Parser).setFreeFloating(variable, token.Start, $3.Tokens)
+                    yylex.(*Parser).setFreeFloating(variable, token.Start, $3.SkippedTokens)
                 }
 
                 if $2 != nil {
                     variable = &ast.Reference{ast.Node{}, variable}
                     variable.GetNode().Position = position.NewTokensPosition($2, $4)
-                    yylex.(*Parser).setFreeFloating(variable, token.Start, $2.Tokens)
+                    yylex.(*Parser).setFreeFloating(variable, token.Start, $2.SkippedTokens)
                 }
 
                 $$ = &ast.Parameter{ast.Node{}, $1, variable, nil}
@@ -2204,8 +1940,6 @@ parameter:
                 } else {
                     $$.GetNode().Position = position.NewTokenPosition($4)
                 }
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
@@ -2215,19 +1949,19 @@ parameter:
                 var variable ast.Vertex
                 variable = &ast.ExprVariable{ast.Node{}, identifier}
                 variable.GetNode().Position = position.NewTokenPosition($4)
-                yylex.(*Parser).setFreeFloating(variable, token.Start, $4.Tokens)
-                yylex.(*Parser).setFreeFloating(variable, token.End, $5.Tokens)
+                yylex.(*Parser).setFreeFloating(variable, token.Start, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(variable, token.End, $5.SkippedTokens)
 
                 if $3 != nil {
                     variable = &ast.Variadic{ast.Node{}, variable}
                     variable.GetNode().Position = position.NewTokensPosition($3, $4)
-                    yylex.(*Parser).setFreeFloating(variable, token.Start, $3.Tokens)
+                    yylex.(*Parser).setFreeFloating(variable, token.Start, $3.SkippedTokens)
                 }
 
                 if $2 != nil {
                     variable = &ast.Reference{ast.Node{}, variable}
                     variable.GetNode().Position = position.NewTokensPosition($2, $4)
-                    yylex.(*Parser).setFreeFloating(variable, token.Start, $2.Tokens)
+                    yylex.(*Parser).setFreeFloating(variable, token.Start, $2.SkippedTokens)
                 }
 
                 $$ = &ast.Parameter{ast.Node{}, $1, variable, $6}
@@ -2241,8 +1975,6 @@ parameter:
                 } else {
                     $$.GetNode().Position = position.NewTokenNodePosition($4, $6)
                 }
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2250,14 +1982,10 @@ optional_type:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   type_expr
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2265,8 +1993,6 @@ type_expr:
         type
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '?' type
             {
@@ -2276,9 +2002,7 @@ type_expr:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -2291,9 +2015,7 @@ type:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_CALLABLE
             {
@@ -2303,15 +2025,11 @@ type:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   name
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2319,17 +2037,13 @@ return_type:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   ':' type_expr
             {
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.Tokens, $$.GetNode().Tokens[token.Start]...))
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.SkippedTokens, $$.GetNode().Tokens[token.Start]...))
             }
 ;
 
@@ -2342,10 +2056,8 @@ argument_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $2.SkippedTokens)
             }
     |   '(' non_empty_argument_list possible_comma ')'
             {
@@ -2355,14 +2067,12 @@ argument_list:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
                 if $3 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($3.Tokens, $4.Tokens...))
+                    yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($3.SkippedTokens, $4.SkippedTokens...))
                 } else {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.End, $4.Tokens)
+                    yylex.(*Parser).setFreeFloatingTokens($$, token.End, $4.SkippedTokens)
                 }
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2370,17 +2080,13 @@ non_empty_argument_list:
         argument
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_argument_list ',' argument
             {
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
 ;
 
@@ -2394,8 +2100,6 @@ argument:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ELLIPSIS expr
             {
@@ -2405,9 +2109,7 @@ argument:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -2417,15 +2119,11 @@ global_var_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   global_var
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2433,8 +2131,6 @@ global_var:
         simple_variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2444,15 +2140,11 @@ static_var_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   static_var
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2469,9 +2161,7 @@ static_var:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_VARIABLE '=' expr
             {
@@ -2485,10 +2175,8 @@ static_var:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
 ;
 
@@ -2496,14 +2184,10 @@ class_statement_list:
         class_statement_list class_statement
             {
                 $$ = append($1, $2)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   /* empty */
             {
                 $$ = []ast.Vertex{}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2517,10 +2201,8 @@ class_statement:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating($$, token.PropertyList, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.PropertyList, $4.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
     |   method_modifiers T_CONST class_const_list ';'
             {
@@ -2532,14 +2214,12 @@ class_statement:
                 // save comments
                 if len($1) > 0 {
                     yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                    yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.SkippedTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Start, $2.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Start, $2.SkippedTokens)
                 }
-                yylex.(*Parser).setFreeFloating($$, token.ConstList, $4.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.ConstList, $4.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
     |   T_USE name_list trait_adaptations
             {
@@ -2549,9 +2229,7 @@ class_statement:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   method_modifiers T_FUNCTION returns_ref identifier backup_doc_comment '(' parameter_list ')' return_type method_body
             {
@@ -2569,20 +2247,18 @@ class_statement:
                 // save comments
                 if len($1) > 0 {
                     yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                    yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.SkippedTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Start, $2.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Start, $2.SkippedTokens)
                 }
                 if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $4.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Function, $4.SkippedTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $3.Tokens)
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $4.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Function, $3.SkippedTokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $4.SkippedTokens)
                 }
-                yylex.(*Parser).setFreeFloating($$, token.Name, $6.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $8.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $6.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $8.SkippedTokens)
             }
 ;
 
@@ -2590,17 +2266,13 @@ name_list:
         name
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   name_list ',' name
             {
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
 ;
 
@@ -2612,11 +2284,8 @@ trait_adaptations:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $1.Tokens)
-
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $1.SkippedTokens)
             }
     |   '{' '}'
             {
@@ -2625,10 +2294,8 @@ trait_adaptations:
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AdaptationList, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.AdaptationList, $2.SkippedTokens)
             }
     |   '{' trait_adaptation_list '}'
             {
@@ -2637,10 +2304,8 @@ trait_adaptations:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.AdaptationList, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.AdaptationList, $3.SkippedTokens)
             }
 ;
 
@@ -2648,14 +2313,10 @@ trait_adaptation_list:
         trait_adaptation
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   trait_adaptation_list trait_adaptation
             {
                 $$ = append($1, $2)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2665,20 +2326,16 @@ trait_adaptation:
                 $$ = $1;
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.NameList, $2.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.NameList, $2.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
             }
     |   trait_alias ';'
             {
                 $$ = $1;
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Alias, $2.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Alias, $2.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
             }
 ;
 
@@ -2692,9 +2349,7 @@ trait_precedence:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
             }
 ;
 
@@ -2710,10 +2365,8 @@ trait_alias:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(alias, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(alias, token.Start, $3.SkippedTokens)
             }
     |   trait_method_reference T_AS reserved_non_modifiers
             {
@@ -2726,10 +2379,8 @@ trait_alias:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(alias, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(alias, token.Start, $3.SkippedTokens)
             }
     |   trait_method_reference T_AS member_modifier identifier
             {
@@ -2742,10 +2393,8 @@ trait_alias:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(alias, token.Start, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(alias, token.Start, $4.SkippedTokens)
             }
     |   trait_method_reference T_AS member_modifier
             {
@@ -2756,9 +2405,7 @@ trait_alias:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
             }
 ;
 
@@ -2773,15 +2420,11 @@ trait_method_reference:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   absolute_trait_method_reference
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2797,10 +2440,8 @@ absolute_trait_method_reference:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(target, token.Start, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(target, token.Start, $2.SkippedTokens)
             }
 ;
 
@@ -2813,10 +2454,8 @@ method_body:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.SemiColon, $1.SkippedTokens)
             }
     |   '{' inner_statement_list '}'
             {
@@ -2826,10 +2465,8 @@ method_body:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
             }
 ;
 
@@ -2837,8 +2474,6 @@ variable_modifiers:
         non_empty_member_modifiers
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VAR
             {
@@ -2849,9 +2484,7 @@ variable_modifiers:
                 modifier.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(modifier, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(modifier, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -2859,14 +2492,10 @@ method_modifiers:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_member_modifiers
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2874,14 +2503,10 @@ non_empty_member_modifiers:
         member_modifier
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_member_modifiers member_modifier
             {
                 $$ = append($1, $2)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2894,9 +2519,7 @@ member_modifier:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_PROTECTED
             {
@@ -2906,9 +2529,7 @@ member_modifier:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_PRIVATE
             {
@@ -2918,9 +2539,7 @@ member_modifier:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_STATIC
             {
@@ -2930,9 +2549,7 @@ member_modifier:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_ABSTRACT
             {
@@ -2942,9 +2559,7 @@ member_modifier:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_FINAL
             {
@@ -2954,9 +2569,7 @@ member_modifier:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -2966,15 +2579,11 @@ property_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   property
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -2991,9 +2600,7 @@ property:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_VARIABLE '=' expr backup_doc_comment
             {
@@ -3007,10 +2614,8 @@ property:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
 ;
 
@@ -3020,15 +2625,11 @@ class_const_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   class_const_decl
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -3043,10 +2644,8 @@ class_const_decl:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
 ;
 
@@ -3061,10 +2660,8 @@ const_decl:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
 ;
 
@@ -3074,15 +2671,11 @@ echo_expr_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   echo_expr
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -3090,8 +2683,6 @@ echo_expr:
         expr
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -3099,14 +2690,10 @@ for_exprs:
         /* empty */
             {
                 $$ = nil;
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   non_empty_for_exprs
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -3116,15 +2703,11 @@ non_empty_for_exprs:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   expr
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -3141,11 +2724,9 @@ anonymous_class:
                 $$.GetNode().Position = position.NewTokensPosition($1, $8)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $6.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $8.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $6.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $8.SkippedTokens)
             }
 ;
 
@@ -3161,9 +2742,7 @@ new_expr:
                 }
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_NEW anonymous_class
             {
@@ -3173,9 +2752,7 @@ new_expr:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -3190,12 +2767,10 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.List, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, $4.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $5.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(listNode, token.List, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $5.SkippedTokens)
             }
     |   '[' array_pair_list ']' '=' expr
             {
@@ -3207,11 +2782,9 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(shortList, token.ArrayPairList, $3.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(shortList, token.ArrayPairList, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $4.SkippedTokens)
             }
     |   variable '=' expr
             {
@@ -3222,9 +2795,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable '=' '&' expr
             {
@@ -3235,10 +2806,8 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Equal, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Equal, $3.SkippedTokens)
             }
     |   T_CLONE expr
             {
@@ -3248,9 +2817,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   variable T_PLUS_EQUAL expr
             {
@@ -3261,9 +2828,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_MINUS_EQUAL expr
             {
@@ -3274,9 +2839,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_MUL_EQUAL expr
             {
@@ -3287,9 +2850,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_POW_EQUAL expr
             {
@@ -3300,9 +2861,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_DIV_EQUAL expr
             {
@@ -3313,9 +2872,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_CONCAT_EQUAL expr
             {
@@ -3326,9 +2883,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_MOD_EQUAL expr
             {
@@ -3339,9 +2894,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_AND_EQUAL expr
             {
@@ -3352,9 +2905,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_OR_EQUAL expr
             {
@@ -3365,9 +2916,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_XOR_EQUAL expr
             {
@@ -3378,9 +2927,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_SL_EQUAL expr
             {
@@ -3391,9 +2938,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_SR_EQUAL expr
             {
@@ -3404,9 +2949,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_COALESCE_EQUAL expr
             {
@@ -3417,9 +2960,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   variable T_INC
             {
@@ -3430,9 +2971,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   T_INC variable
             {
@@ -3442,9 +2981,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   variable T_DEC
             {
@@ -3455,9 +2992,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   T_DEC variable
             {
@@ -3467,9 +3002,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   expr T_BOOLEAN_OR expr
             {
@@ -3480,9 +3013,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_BOOLEAN_AND expr
             {
@@ -3493,9 +3024,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_LOGICAL_OR expr
             {
@@ -3506,9 +3035,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_LOGICAL_AND expr
             {
@@ -3519,9 +3046,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_LOGICAL_XOR expr
             {
@@ -3532,9 +3057,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '|' expr
             {
@@ -3545,9 +3068,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '&' expr
             {
@@ -3558,9 +3079,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '^' expr
             {
@@ -3571,9 +3090,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '.' expr
             {
@@ -3584,9 +3101,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '+' expr
             {
@@ -3597,9 +3112,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '-' expr
             {
@@ -3610,9 +3123,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '*' expr
             {
@@ -3623,9 +3134,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_POW expr
             {
@@ -3636,9 +3145,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '/' expr
             {
@@ -3649,9 +3156,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '%' expr
             {
@@ -3662,9 +3167,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_SL expr
             {
@@ -3675,9 +3178,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_SR expr
             {
@@ -3688,9 +3189,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   '+' expr %prec T_INC
             {
@@ -3700,9 +3199,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '-' expr %prec T_INC
             {
@@ -3712,9 +3209,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '!' expr
             {
@@ -3724,9 +3219,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '~' expr
             {
@@ -3736,9 +3229,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   expr T_IS_IDENTICAL expr
             {
@@ -3749,9 +3240,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
@@ -3762,9 +3251,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_IS_EQUAL expr
             {
@@ -3775,9 +3262,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_IS_NOT_EQUAL expr
             {
@@ -3788,10 +3273,8 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-                yylex.(*Parser).setToken($$, token.Equal, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.Equal, $2.SkippedTokens)
             }
     |   expr '<' expr
             {
@@ -3802,9 +3285,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
@@ -3815,9 +3296,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '>' expr
             {
@@ -3828,9 +3307,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
@@ -3841,9 +3318,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_SPACESHIP expr
             {
@@ -3854,9 +3329,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr T_INSTANCEOF class_name_reference
             {
@@ -3867,9 +3340,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   '(' expr ')'
             {
@@ -3879,16 +3350,12 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   new_expr
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr '?' expr ':' expr
             {
@@ -3899,10 +3366,8 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.True, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Cond, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.True, $4.SkippedTokens)
             }
     |   expr '?' ':' expr
             {
@@ -3913,10 +3378,8 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.True, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Cond, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.True, $3.SkippedTokens)
             }
     |   expr T_COALESCE expr
             {
@@ -3927,15 +3390,11 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   internal_functions_in_yacc
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_INT_CAST expr
             {
@@ -3945,10 +3404,8 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
             }
     |   T_DOUBLE_CAST expr
             {
@@ -3958,10 +3415,8 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
             }
     |   T_STRING_CAST expr
             {
@@ -3971,10 +3426,8 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
             }
     |   T_ARRAY_CAST expr
             {
@@ -3984,10 +3437,8 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
             }
     |   T_OBJECT_CAST expr
             {
@@ -3997,10 +3448,8 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
             }
     |   T_BOOL_CAST expr
             {
@@ -4010,10 +3459,8 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
             }
     |   T_UNSET_CAST expr
             {
@@ -4023,10 +3470,8 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
             }
     |   T_EXIT exit_expr
             {
@@ -4044,9 +3489,7 @@ expr_without_variable:
                 }
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '@' expr
             {
@@ -4056,15 +3499,11 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   scalar
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '`' backticks_expr '`'
             {
@@ -4074,9 +3513,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_PRINT expr
             {
@@ -4086,9 +3523,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_YIELD
             {
@@ -4098,9 +3533,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_YIELD expr
             {
@@ -4110,9 +3543,7 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr
             {
@@ -4122,10 +3553,8 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
             }
     |   T_YIELD_FROM expr
             {
@@ -4135,15 +3564,11 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   inline_function
             {
                 $$ = $1;
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_STATIC inline_function
             {
@@ -4161,9 +3586,7 @@ expr_without_variable:
 
                 // save comments
                 yylex.(*Parser).setFreeFloatingTokens($$, token.Static, $$.GetNode().Tokens[token.Start]); delete($$.GetNode().Tokens, token.Start)
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens);
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens);
             }
 ;
 
@@ -4176,16 +3599,16 @@ inline_function:
                 $$.GetNode().Position = position.NewTokensPosition($1, $11)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
                 if $2 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $4.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Function, $4.SkippedTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.Tokens)
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $4.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.SkippedTokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $4.SkippedTokens)
                 }
-                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $6.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ReturnType, $9.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $11.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $6.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ReturnType, $9.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Stmts, $11.SkippedTokens)
 
                 // normalize
                 if $8 == nil {
@@ -4194,8 +3617,6 @@ inline_function:
                 if $7 == nil {
                     yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $$.GetNode().Tokens[token.LexicalVarList]); delete($$.GetNode().Tokens, token.LexicalVarList)
                 }
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_FN returns_ref '(' parameter_list ')' return_type backup_doc_comment T_DOUBLE_ARROW expr
             {
@@ -4205,22 +3626,20 @@ inline_function:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $9)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
                 if $2 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $3.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Function, $3.SkippedTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.Tokens)
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $3.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.SkippedTokens)
+                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $3.SkippedTokens)
                 };
-                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $5.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ReturnType, $8.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $5.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ReturnType, $8.SkippedTokens)
 
                 // normalize
                 if $6 == nil {
                     yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $$.GetNode().Tokens[token.ReturnType]); delete($$.GetNode().Tokens, token.ReturnType)
                 };
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4243,8 +3662,6 @@ lexical_vars:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_USE '(' lexical_var_list ')'
             {
@@ -4254,11 +3671,9 @@ lexical_vars:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Use, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.LexicalVarList, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Use, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.LexicalVarList, $4.SkippedTokens)
             }
 ;
 
@@ -4268,15 +3683,11 @@ lexical_var_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   lexical_var
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4291,9 +3702,7 @@ lexical_var:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '&' T_VARIABLE
             {
@@ -4307,10 +3716,8 @@ lexical_var:
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(variable, token.Start, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(variable, token.Start, $2.SkippedTokens)
             }
 ;
 
@@ -4324,8 +3731,6 @@ function_call:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
@@ -4336,9 +3741,7 @@ function_call:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
@@ -4349,9 +3752,7 @@ function_call:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
     |   callable_expr argument_list
             {
@@ -4362,8 +3763,6 @@ function_call:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4376,15 +3775,11 @@ class_name:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   name
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4392,14 +3787,10 @@ class_name_reference:
         class_name
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   new_variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4407,8 +3798,6 @@ exit_expr:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' optional_expr ')'
             {
@@ -4418,10 +3807,8 @@ exit_expr:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
 ;
 
@@ -4429,8 +3816,6 @@ backticks_expr:
         /* empty */
             {
                 $$ = []ast.Vertex{}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ENCAPSED_AND_WHITESPACE
             {
@@ -4439,14 +3824,10 @@ backticks_expr:
 
                 // save position
                 part.GetNode().Position = position.NewTokenPosition($1)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   encaps_list
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4454,14 +3835,10 @@ ctor_arguments:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   argument_list
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4474,11 +3851,9 @@ dereferencable_scalar:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Array, $2.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Array, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $4.SkippedTokens)
             }
     |   '[' array_pair_list ']'
             {
@@ -4488,10 +3863,8 @@ dereferencable_scalar:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $3.SkippedTokens)
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
@@ -4501,9 +3874,7 @@ dereferencable_scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -4516,9 +3887,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_DNUMBER
             {
@@ -4528,9 +3897,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_LINE
             {
@@ -4540,9 +3907,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_FILE
             {
@@ -4552,9 +3917,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_DIR
             {
@@ -4564,9 +3927,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_TRAIT_C
             {
@@ -4576,9 +3937,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_METHOD_C
             {
@@ -4588,9 +3947,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_FUNC_C
             {
@@ -4600,9 +3957,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_NS_C
             {
@@ -4612,9 +3967,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_CLASS_C
             {
@@ -4624,9 +3977,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
@@ -4638,9 +3989,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_START_HEREDOC T_END_HEREDOC
             {
@@ -4650,9 +3999,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '"' encaps_list '"'
             {
@@ -4662,9 +4009,7 @@ scalar:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
@@ -4674,21 +4019,15 @@ scalar:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   dereferencable_scalar
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   constant
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4702,8 +4041,6 @@ constant:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
@@ -4716,10 +4053,8 @@ constant:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(target, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(target, token.Start, $3.SkippedTokens)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
@@ -4732,10 +4067,8 @@ constant:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(target, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(target, token.Start, $3.SkippedTokens)
             }
 ;
 
@@ -4743,14 +4076,10 @@ expr:
         variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr_without_variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4758,14 +4087,10 @@ optional_expr:
         /* empty */
             {
                 $$ = nil
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4773,8 +4098,6 @@ variable_class_name:
         dereferencable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4782,8 +4105,6 @@ dereferencable:
         variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' expr ')'
             {
@@ -4793,16 +4114,12 @@ dereferencable:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   dereferencable_scalar
             {
                 $$ = $1;
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4810,8 +4127,6 @@ callable_expr:
         callable_variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '(' expr ')'
             {
@@ -4821,16 +4136,12 @@ callable_expr:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   dereferencable_scalar
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4838,8 +4149,6 @@ callable_variable:
         simple_variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   dereferencable '[' optional_expr ']'
             {
@@ -4849,10 +4158,8 @@ callable_variable:
                 $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
             }
     |   constant '[' optional_expr ']'
             {
@@ -4862,10 +4169,8 @@ callable_variable:
                 $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
             }
     |   dereferencable '{' expr '}'
             {
@@ -4875,10 +4180,8 @@ callable_variable:
                 $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
             }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
             {
@@ -4889,15 +4192,11 @@ callable_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   function_call
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -4905,14 +4204,10 @@ variable:
         callable_variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   static_member
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   dereferencable T_OBJECT_OPERATOR property_name
             {
@@ -4923,9 +4218,7 @@ variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
 ;
 
@@ -4940,9 +4233,7 @@ simple_variable:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '$' '{' expr '}'
             {
@@ -4952,11 +4243,9 @@ simple_variable:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($3, token.Start, append($2.Tokens, $3.GetNode().Tokens[token.Start]...))
-                yylex.(*Parser).setFreeFloatingTokens($3, token.End, append($3.GetNode().Tokens[token.End], $4.Tokens...))
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($3, token.Start, append($2.SkippedTokens, $3.GetNode().Tokens[token.Start]...))
+                yylex.(*Parser).setFreeFloatingTokens($3, token.End, append($3.GetNode().Tokens[token.End], $4.SkippedTokens...))
             }
     |   '$' simple_variable
             {
@@ -4966,9 +4255,7 @@ simple_variable:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -4982,9 +4269,7 @@ static_member:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
@@ -4995,9 +4280,7 @@ static_member:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
 ;
 
@@ -5005,8 +4288,6 @@ new_variable:
         simple_variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   new_variable '[' optional_expr ']'
             {
@@ -5016,10 +4297,8 @@ new_variable:
                 $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
             }
     |   new_variable '{' expr '}'
             {
@@ -5029,10 +4308,8 @@ new_variable:
                 $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
             }
     |   new_variable T_OBJECT_OPERATOR property_name
             {
@@ -5043,9 +4320,7 @@ new_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
@@ -5056,9 +4331,7 @@ new_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
@@ -5069,9 +4342,7 @@ new_variable:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
 ;
 
@@ -5084,25 +4355,19 @@ member_name:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '{' expr '}'
             {
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.Tokens, $$.GetNode().Tokens[token.Start]...))
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($$.GetNode().Tokens[token.End], $3.Tokens...))
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.SkippedTokens, $$.GetNode().Tokens[token.Start]...))
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($$.GetNode().Tokens[token.End], $3.SkippedTokens...))
             }
     |   simple_variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -5115,25 +4380,19 @@ property_name:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '{' expr '}'
             {
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.Tokens, $$.GetNode().Tokens[token.Start]...))
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($$.GetNode().Tokens[token.End], $3.Tokens...))
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.SkippedTokens, $$.GetNode().Tokens[token.Start]...))
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($$.GetNode().Tokens[token.End], $3.SkippedTokens...))
             }
     |   simple_variable
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -5141,8 +4400,6 @@ array_pair_list:
         non_empty_array_pair_list
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -5150,14 +4407,10 @@ possible_array_pair:
         /* empty */
             {
                 $$ = &ast.ExprArrayItem{ast.Node{}, false, nil, nil}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   array_pair
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -5171,9 +4424,7 @@ non_empty_array_pair_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
     |   possible_array_pair
             {
@@ -5182,8 +4433,6 @@ non_empty_array_pair_list:
                 } else {
                     $$ = []ast.Vertex{$1}
                 }
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
@@ -5197,9 +4446,7 @@ array_pair:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr
             {
@@ -5210,8 +4457,6 @@ array_pair:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   expr T_DOUBLE_ARROW '&' variable
             {
@@ -5224,10 +4469,8 @@ array_pair:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(reference, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(reference, token.Start, $3.SkippedTokens)
             }
     |   '&' variable
             {
@@ -5239,9 +4482,7 @@ array_pair:
                 reference.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_ELLIPSIS expr
             {
@@ -5251,9 +4492,7 @@ array_pair:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
@@ -5267,12 +4506,10 @@ array_pair:
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.Start, $3.Tokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.List, $4.Tokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, $6.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(listNode, token.Start, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(listNode, token.List, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, $6.SkippedTokens)
             }
     |   T_LIST '(' array_pair_list ')'
             {
@@ -5285,11 +4522,9 @@ array_pair:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.List, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(listNode, token.List, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, $4.SkippedTokens)
             }
 ;
 
@@ -5297,8 +4532,6 @@ encaps_list:
         encaps_list encaps_var
             {
                 $$ = append($1, $2)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   encaps_list T_ENCAPSED_AND_WHITESPACE
             {
@@ -5309,15 +4542,11 @@ encaps_list:
                 encapsed.GetNode().Position = position.NewTokenPosition($2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(encapsed, token.Start, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(encapsed, token.Start, $2.SkippedTokens)
             }
     |   encaps_var
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_ENCAPSED_AND_WHITESPACE encaps_var
             {
@@ -5328,9 +4557,7 @@ encaps_list:
                 encapsed.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(encapsed, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(encapsed, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -5345,9 +4572,7 @@ encaps_var:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
@@ -5361,10 +4586,8 @@ encaps_var:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
@@ -5380,10 +4603,8 @@ encaps_var:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.Tokens)
-                yylex.(*Parser).setFreeFloating(fetch, token.Start, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(fetch, token.Start, $3.SkippedTokens)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
@@ -5395,10 +4616,8 @@ encaps_var:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setToken($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setToken($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}'
             {
@@ -5412,10 +4631,8 @@ encaps_var:
                 $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setToken($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setToken($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
@@ -5429,22 +4646,18 @@ encaps_var:
                 $$.GetNode().Position = position.NewTokensPosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setToken(variable, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $3.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $5.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $6.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setToken(variable, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $5.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $6.SkippedTokens)
             }
     |   T_CURLY_OPEN variable '}'
             {
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).setToken($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setToken($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
 ;
 
@@ -5457,9 +4670,7 @@ encaps_var_offset:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_NUM_STRING
             {
@@ -5474,9 +4685,7 @@ encaps_var_offset:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '-' T_NUM_STRING
             {
@@ -5500,9 +4709,7 @@ encaps_var_offset:
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_VARIABLE
             {
@@ -5514,9 +4721,7 @@ encaps_var_offset:
                 $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -5529,15 +4734,13 @@ internal_functions_in_yacc:
                 $$.GetNode().Position = position.NewTokensPosition($1, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloating($$, token.Isset, $2.Tokens)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$, token.Isset, $2.SkippedTokens)
                 if $4 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.VarList, $5.Tokens)
+                    yylex.(*Parser).setFreeFloating($$, token.VarList, $5.SkippedTokens)
                 } else {
-                    yylex.(*Parser).setFreeFloating($$, token.VarList, append($4.Tokens, $5.Tokens...))
+                    yylex.(*Parser).setFreeFloating($$, token.VarList, append($4.SkippedTokens, $5.SkippedTokens...))
                 }
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EMPTY '(' expr ')'
             {
@@ -5549,11 +4752,9 @@ internal_functions_in_yacc:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   T_INCLUDE expr
             {
@@ -5563,9 +4764,7 @@ internal_functions_in_yacc:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_INCLUDE_ONCE expr
             {
@@ -5575,9 +4774,7 @@ internal_functions_in_yacc:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_EVAL '(' expr ')'
             {
@@ -5589,11 +4786,9 @@ internal_functions_in_yacc:
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.Tokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   T_REQUIRE expr
             {
@@ -5603,9 +4798,7 @@ internal_functions_in_yacc:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_REQUIRE_ONCE expr
             {
@@ -5615,9 +4808,7 @@ internal_functions_in_yacc:
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 
@@ -5625,17 +4816,13 @@ isset_variables:
         isset_variable
             {
                 $$ = []ast.Vertex{$1}
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   isset_variables ',' isset_variable
             {
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.Tokens)
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
 ;
 
@@ -5643,8 +4830,6 @@ isset_variable:
         expr
             {
                 $$ = $1
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 

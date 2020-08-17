@@ -1,12 +1,12 @@
 package scanner
 
 import (
-	"github.com/z7zmey/php-parser/pkg/errors"
-	"github.com/z7zmey/php-parser/pkg/position"
+	"gotest.tools/assert"
 	"testing"
 
+	"github.com/z7zmey/php-parser/pkg/errors"
+	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
-	"gotest.tools/assert"
 )
 
 func TestTokens(t *testing.T) {
@@ -186,175 +186,174 @@ func TestTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		T_INLINE_HTML.String(),
-		TokenID(int(';')).String(),
-		T_INLINE_HTML.String(),
-		T_ECHO.String(),
-		TokenID(int(';')).String(),
-		T_INLINE_HTML.String(),
+		token.T_INLINE_HTML.String(),
+		token.ID(int(';')).String(),
+		token.T_INLINE_HTML.String(),
+		token.T_ECHO.String(),
+		token.ID(int(';')).String(),
+		token.T_INLINE_HTML.String(),
 
-		T_ABSTRACT.String(),
-		T_ARRAY.String(),
-		T_AS.String(),
-		T_BREAK.String(),
-		T_CALLABLE.String(),
-		T_CASE.String(),
-		T_CATCH.String(),
-		T_CLASS.String(),
-		T_CLONE.String(),
-		T_CONST.String(),
-		T_CONTINUE.String(),
-		T_DECLARE.String(),
-		T_DEFAULT.String(),
-		T_DO.String(),
-		T_ECHO.String(),
-		T_ELSE.String(),
-		T_ELSEIF.String(),
-		T_EMPTY.String(),
-		T_ENDDECLARE.String(),
-		T_ENDFOR.String(),
-		T_ENDFOREACH.String(),
-		T_ENDIF.String(),
-		T_ENDSWITCH.String(),
-		T_ENDWHILE.String(),
-		T_EVAL.String(),
-		T_EXIT.String(),
-		T_EXTENDS.String(),
-		T_FINAL.String(),
-		T_FINALLY.String(),
-		T_FOR.String(),
-		T_FOREACH.String(),
-		T_FUNCTION.String(),
-		T_FUNCTION.String(),
-		T_GLOBAL.String(),
-		T_GOTO.String(),
-		T_IF.String(),
-		T_ISSET.String(),
-		T_IMPLEMENTS.String(),
-		T_INSTANCEOF.String(),
-		T_INSTEADOF.String(),
-		T_INTERFACE.String(),
-		T_LIST.String(),
-		T_NAMESPACE.String(),
-		T_PRIVATE.String(),
-		T_PUBLIC.String(),
-		T_PRINT.String(),
-		T_PROTECTED.String(),
-		T_RETURN.String(),
-		T_STATIC.String(),
-		T_SWITCH.String(),
-		T_THROW.String(),
-		T_TRAIT.String(),
-		T_TRY.String(),
-		T_UNSET.String(),
-		T_USE.String(),
-		T_VAR.String(),
-		T_WHILE.String(),
-		T_YIELD_FROM.String(),
-		T_YIELD.String(),
-		T_INCLUDE.String(),
-		T_INCLUDE_ONCE.String(),
-		T_REQUIRE.String(),
-		T_REQUIRE_ONCE.String(),
+		token.T_ABSTRACT.String(),
+		token.T_ARRAY.String(),
+		token.T_AS.String(),
+		token.T_BREAK.String(),
+		token.T_CALLABLE.String(),
+		token.T_CASE.String(),
+		token.T_CATCH.String(),
+		token.T_CLASS.String(),
+		token.T_CLONE.String(),
+		token.T_CONST.String(),
+		token.T_CONTINUE.String(),
+		token.T_DECLARE.String(),
+		token.T_DEFAULT.String(),
+		token.T_DO.String(),
+		token.T_ECHO.String(),
+		token.T_ELSE.String(),
+		token.T_ELSEIF.String(),
+		token.T_EMPTY.String(),
+		token.T_ENDDECLARE.String(),
+		token.T_ENDFOR.String(),
+		token.T_ENDFOREACH.String(),
+		token.T_ENDIF.String(),
+		token.T_ENDSWITCH.String(),
+		token.T_ENDWHILE.String(),
+		token.T_EVAL.String(),
+		token.T_EXIT.String(),
+		token.T_EXTENDS.String(),
+		token.T_FINAL.String(),
+		token.T_FINALLY.String(),
+		token.T_FOR.String(),
+		token.T_FOREACH.String(),
+		token.T_FUNCTION.String(),
+		token.T_FUNCTION.String(),
+		token.T_GLOBAL.String(),
+		token.T_GOTO.String(),
+		token.T_IF.String(),
+		token.T_ISSET.String(),
+		token.T_IMPLEMENTS.String(),
+		token.T_INSTANCEOF.String(),
+		token.T_INSTEADOF.String(),
+		token.T_INTERFACE.String(),
+		token.T_LIST.String(),
+		token.T_NAMESPACE.String(),
+		token.T_PRIVATE.String(),
+		token.T_PUBLIC.String(),
+		token.T_PRINT.String(),
+		token.T_PROTECTED.String(),
+		token.T_RETURN.String(),
+		token.T_STATIC.String(),
+		token.T_SWITCH.String(),
+		token.T_THROW.String(),
+		token.T_TRAIT.String(),
+		token.T_TRY.String(),
+		token.T_UNSET.String(),
+		token.T_USE.String(),
+		token.T_VAR.String(),
+		token.T_WHILE.String(),
+		token.T_YIELD_FROM.String(),
+		token.T_YIELD.String(),
+		token.T_INCLUDE.String(),
+		token.T_INCLUDE_ONCE.String(),
+		token.T_REQUIRE.String(),
+		token.T_REQUIRE_ONCE.String(),
 
-		T_CLASS_C.String(),
-		T_DIR.String(),
-		T_FILE.String(),
-		T_FUNC_C.String(),
-		T_LINE.String(),
-		T_NS_C.String(),
-		T_METHOD_C.String(),
-		T_TRAIT_C.String(),
-		T_HALT_COMPILER.String(),
+		token.T_CLASS_C.String(),
+		token.T_DIR.String(),
+		token.T_FILE.String(),
+		token.T_FUNC_C.String(),
+		token.T_LINE.String(),
+		token.T_NS_C.String(),
+		token.T_METHOD_C.String(),
+		token.T_TRAIT_C.String(),
+		token.T_HALT_COMPILER.String(),
 
-		T_NEW.String(),
-		T_LOGICAL_AND.String(),
-		T_LOGICAL_OR.String(),
-		T_LOGICAL_XOR.String(),
+		token.T_NEW.String(),
+		token.T_LOGICAL_AND.String(),
+		token.T_LOGICAL_OR.String(),
+		token.T_LOGICAL_XOR.String(),
 
-		T_NS_SEPARATOR.String(),
-		T_ELLIPSIS.String(),
-		T_PAAMAYIM_NEKUDOTAYIM.String(),
-		T_BOOLEAN_AND.String(),
-		T_BOOLEAN_OR.String(),
-		T_AND_EQUAL.String(),
-		T_OR_EQUAL.String(),
-		T_CONCAT_EQUAL.String(),
-		T_MUL_EQUAL.String(),
-		T_POW_EQUAL.String(),
-		T_DIV_EQUAL.String(),
-		T_PLUS_EQUAL.String(),
-		T_MINUS_EQUAL.String(),
-		T_XOR_EQUAL.String(),
-		T_MOD_EQUAL.String(),
-		T_DEC.String(),
-		T_INC.String(),
-		T_DOUBLE_ARROW.String(),
-		T_SPACESHIP.String(),
-		T_IS_NOT_EQUAL.String(),
-		T_IS_NOT_EQUAL.String(),
-		T_IS_NOT_IDENTICAL.String(),
-		T_IS_EQUAL.String(),
-		T_IS_IDENTICAL.String(),
-		T_SL_EQUAL.String(),
-		T_SR_EQUAL.String(),
-		T_IS_GREATER_OR_EQUAL.String(),
-		T_IS_SMALLER_OR_EQUAL.String(),
-		T_POW.String(),
-		T_SL.String(),
-		T_SR.String(),
-		T_COALESCE.String(),
+		token.T_NS_SEPARATOR.String(),
+		token.T_ELLIPSIS.String(),
+		token.T_PAAMAYIM_NEKUDOTAYIM.String(),
+		token.T_BOOLEAN_AND.String(),
+		token.T_BOOLEAN_OR.String(),
+		token.T_AND_EQUAL.String(),
+		token.T_OR_EQUAL.String(),
+		token.T_CONCAT_EQUAL.String(),
+		token.T_MUL_EQUAL.String(),
+		token.T_POW_EQUAL.String(),
+		token.T_DIV_EQUAL.String(),
+		token.T_PLUS_EQUAL.String(),
+		token.T_MINUS_EQUAL.String(),
+		token.T_XOR_EQUAL.String(),
+		token.T_MOD_EQUAL.String(),
+		token.T_DEC.String(),
+		token.T_INC.String(),
+		token.T_DOUBLE_ARROW.String(),
+		token.T_SPACESHIP.String(),
+		token.T_IS_NOT_EQUAL.String(),
+		token.T_IS_NOT_EQUAL.String(),
+		token.T_IS_NOT_IDENTICAL.String(),
+		token.T_IS_EQUAL.String(),
+		token.T_IS_IDENTICAL.String(),
+		token.T_SL_EQUAL.String(),
+		token.T_SR_EQUAL.String(),
+		token.T_IS_GREATER_OR_EQUAL.String(),
+		token.T_IS_SMALLER_OR_EQUAL.String(),
+		token.T_POW.String(),
+		token.T_SL.String(),
+		token.T_SR.String(),
+		token.T_COALESCE.String(),
 
-		TokenID(int(';')).String(),
-		TokenID(int(':')).String(),
-		TokenID(int(',')).String(),
-		TokenID(int('.')).String(),
-		TokenID(int('[')).String(),
-		TokenID(int(']')).String(),
-		TokenID(int('(')).String(),
-		TokenID(int(')')).String(),
-		TokenID(int('|')).String(),
-		TokenID(int('/')).String(),
-		TokenID(int('^')).String(),
-		TokenID(int('&')).String(),
-		TokenID(int('+')).String(),
-		TokenID(int('-')).String(),
-		TokenID(int('*')).String(),
-		TokenID(int('=')).String(),
-		TokenID(int('%')).String(),
-		TokenID(int('!')).String(),
-		TokenID(int('~')).String(),
-		TokenID(int('$')).String(),
-		TokenID(int('<')).String(),
-		TokenID(int('>')).String(),
-		TokenID(int('?')).String(),
-		TokenID(int('@')).String(),
-		TokenID(int('{')).String(),
-		TokenID(int('}')).String(),
+		token.ID(int(';')).String(),
+		token.ID(int(':')).String(),
+		token.ID(int(',')).String(),
+		token.ID(int('.')).String(),
+		token.ID(int('[')).String(),
+		token.ID(int(']')).String(),
+		token.ID(int('(')).String(),
+		token.ID(int(')')).String(),
+		token.ID(int('|')).String(),
+		token.ID(int('/')).String(),
+		token.ID(int('^')).String(),
+		token.ID(int('&')).String(),
+		token.ID(int('+')).String(),
+		token.ID(int('-')).String(),
+		token.ID(int('*')).String(),
+		token.ID(int('=')).String(),
+		token.ID(int('%')).String(),
+		token.ID(int('!')).String(),
+		token.ID(int('~')).String(),
+		token.ID(int('$')).String(),
+		token.ID(int('<')).String(),
+		token.ID(int('>')).String(),
+		token.ID(int('?')).String(),
+		token.ID(int('@')).String(),
+		token.ID(int('{')).String(),
+		token.ID(int('}')).String(),
 
-		T_VARIABLE.String(),
-		T_STRING.String(),
+		token.T_VARIABLE.String(),
+		token.T_STRING.String(),
 
-		T_OBJECT_OPERATOR.String(),
-		T_OBJECT_OPERATOR.String(),
-		T_STRING.String(),
+		token.T_OBJECT_OPERATOR.String(),
+		token.T_OBJECT_OPERATOR.String(),
+		token.T_STRING.String(),
 
-		T_ARRAY_CAST.String(),
-		T_BOOL_CAST.String(),
-		T_BOOL_CAST.String(),
-		T_DOUBLE_CAST.String(),
-		T_DOUBLE_CAST.String(),
-		T_DOUBLE_CAST.String(),
-		T_INT_CAST.String(),
-		T_INT_CAST.String(),
-		T_OBJECT_CAST.String(),
-		T_STRING_CAST.String(),
-		T_STRING_CAST.String(),
-		T_UNSET_CAST.String(),
+		token.T_ARRAY_CAST.String(),
+		token.T_BOOL_CAST.String(),
+		token.T_BOOL_CAST.String(),
+		token.T_DOUBLE_CAST.String(),
+		token.T_DOUBLE_CAST.String(),
+		token.T_DOUBLE_CAST.String(),
+		token.T_INT_CAST.String(),
+		token.T_INT_CAST.String(),
+		token.T_OBJECT_CAST.String(),
+		token.T_STRING_CAST.String(),
+		token.T_STRING_CAST.String(),
+		token.T_UNSET_CAST.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -381,15 +380,14 @@ func TestShebang(t *testing.T) {
 		"\n",
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	tkn := lexer.Lex()
-	assert.Equal(t, tkn.ID, T_DNUMBER)
+	assert.Equal(t, tkn.ID, token.T_DNUMBER)
 
-	l := len(tkn.Tokens)
-	for _, tt := range tkn.Tokens[:l-1] {
+	l := len(tkn.SkippedTokens)
+	for _, tt := range tkn.SkippedTokens[:l-1] {
 		actual = append(actual, string(tt.Value))
 	}
 
@@ -402,15 +400,14 @@ func TestShebangHtml(t *testing.T) {
 0.1
 `
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
-	assert.Equal(t, tkn.ID, T_INLINE_HTML)
-	assert.Equal(t, string(tkn.Tokens[0].Value), "#!/usr/bin/env php\n")
+	assert.Equal(t, tkn.ID, token.T_INLINE_HTML)
+	assert.Equal(t, string(tkn.SkippedTokens[0].Value), "#!/usr/bin/env php\n")
 
 	tkn = lexer.Lex()
-	assert.Equal(t, tkn.ID, T_DNUMBER)
+	assert.Equal(t, tkn.ID, token.T_DNUMBER)
 }
 
 func TestNumberTokens(t *testing.T) {
@@ -434,26 +431,25 @@ func TestNumberTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		T_DNUMBER.String(),
-		T_DNUMBER.String(),
-		T_DNUMBER.String(),
-		T_DNUMBER.String(),
+		token.T_DNUMBER.String(),
+		token.T_DNUMBER.String(),
+		token.T_DNUMBER.String(),
+		token.T_DNUMBER.String(),
 
-		T_LNUMBER.String(),
-		T_DNUMBER.String(),
+		token.T_LNUMBER.String(),
+		token.T_DNUMBER.String(),
 
-		T_LNUMBER.String(),
-		T_DNUMBER.String(),
+		token.T_LNUMBER.String(),
+		token.T_DNUMBER.String(),
 
-		T_LNUMBER.String(),
-		T_LNUMBER.String(),
+		token.T_LNUMBER.String(),
+		token.T_LNUMBER.String(),
 
-		T_DNUMBER.String(),
-		T_DNUMBER.String(),
+		token.T_DNUMBER.String(),
+		token.T_DNUMBER.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -490,27 +486,26 @@ func TestConstantStrings(t *testing.T) {
 	`
 
 	expected := []string{
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
 
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
 
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
 
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -547,16 +542,16 @@ func TestSingleQuoteStringTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -591,67 +586,66 @@ func TestTeplateStringTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		TokenID(int('"')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('"')).String(),
 
-		TokenID(int('"')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		T_CURLY_OPEN.String(),
-		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.T_CURLY_OPEN.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('}')).String(),
+		token.ID(int('"')).String(),
 
-		TokenID(int('"')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_CURLY_OPEN.String(),
-		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_DOLLAR_OPEN_CURLY_BRACES.String(),
-		T_STRING_VARNAME.String(),
-		TokenID(int('}')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_CURLY_OPEN.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('}')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_DOLLAR_OPEN_CURLY_BRACES.String(),
+		token.T_STRING_VARNAME.String(),
+		token.ID(int('}')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.ID(int('"')).String(),
 
-		TokenID(int('"')).String(),
-		T_CURLY_OPEN.String(),
-		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_CURLY_OPEN.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('}')).String(),
+		token.ID(int('"')).String(),
 
-		TokenID(int('"')).String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.ID(int('"')).String(),
 
-		TokenID(int('"')).String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.ID(int('"')).String(),
 
-		TokenID(int('"')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('"')).String(),
 
-		TokenID(int('"')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('"')).String(),
 
-		TokenID(int('"')).String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.ID(int('"')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -682,67 +676,66 @@ func TestBackquoteStringTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		TokenID(int('`')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('`')).String(),
+		token.ID(int('`')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('`')).String(),
 
-		TokenID(int('`')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		T_CURLY_OPEN.String(),
-		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		TokenID(int('`')).String(),
+		token.ID(int('`')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.T_CURLY_OPEN.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('}')).String(),
+		token.ID(int('`')).String(),
 
-		TokenID(int('`')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_CURLY_OPEN.String(),
-		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_DOLLAR_OPEN_CURLY_BRACES.String(),
-		T_STRING_VARNAME.String(),
-		TokenID(int('}')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('`')).String(),
+		token.ID(int('`')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_CURLY_OPEN.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('}')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_DOLLAR_OPEN_CURLY_BRACES.String(),
+		token.T_STRING_VARNAME.String(),
+		token.ID(int('}')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.ID(int('`')).String(),
 
-		TokenID(int('`')).String(),
-		T_CURLY_OPEN.String(),
-		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		TokenID(int('`')).String(),
+		token.ID(int('`')).String(),
+		token.T_CURLY_OPEN.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('}')).String(),
+		token.ID(int('`')).String(),
 
-		TokenID(int('`')).String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('`')).String(),
+		token.ID(int('`')).String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.ID(int('`')).String(),
 
-		TokenID(int('`')).String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('`')).String(),
+		token.ID(int('`')).String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.ID(int('`')).String(),
 
-		TokenID(int('`')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('`')).String(),
+		token.ID(int('`')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('`')).String(),
 
-		TokenID(int('`')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('`')).String(),
+		token.ID(int('`')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('`')).String(),
 
-		TokenID(int('`')).String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('`')).String(),
+		token.ID(int('`')).String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.ID(int('`')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -782,61 +775,60 @@ CAT;
 	`
 
 	expected := []string{
-		T_START_HEREDOC.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		token.T_START_HEREDOC.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(';')).String(),
 
-		T_START_HEREDOC.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		token.T_START_HEREDOC.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(';')).String(),
 
-		T_START_HEREDOC.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		T_OBJECT_OPERATOR.String(),
-		T_STRING.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
-		T_NUM_STRING.String(),
-		TokenID(int(']')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
-		T_NUM_STRING.String(),
-		TokenID(int(']')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
-		T_NUM_STRING.String(),
-		TokenID(int(']')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
-		T_STRING.String(),
-		TokenID(int(']')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
-		T_VARIABLE.String(),
-		TokenID(int(']')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_CURLY_OPEN.String(),
-		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_DOLLAR_OPEN_CURLY_BRACES.String(),
-		T_STRING_VARNAME.String(),
-		TokenID(int('}')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		token.T_START_HEREDOC.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.T_OBJECT_OPERATOR.String(),
+		token.T_STRING.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('[')).String(),
+		token.T_NUM_STRING.String(),
+		token.ID(int(']')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('[')).String(),
+		token.T_NUM_STRING.String(),
+		token.ID(int(']')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('[')).String(),
+		token.T_NUM_STRING.String(),
+		token.ID(int(']')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('[')).String(),
+		token.T_STRING.String(),
+		token.ID(int(']')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('[')).String(),
+		token.T_VARIABLE.String(),
+		token.ID(int(']')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_CURLY_OPEN.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('}')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_DOLLAR_OPEN_CURLY_BRACES.String(),
+		token.T_STRING_VARNAME.String(),
+		token.ID(int('}')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(';')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -875,41 +867,40 @@ CAT
 `
 
 	expected := []string{
-		T_START_HEREDOC.String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		token.T_START_HEREDOC.String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(';')).String(),
 
-		T_START_HEREDOC.String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		token.T_START_HEREDOC.String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(';')).String(),
 
-		T_START_HEREDOC.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		token.T_START_HEREDOC.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(';')).String(),
 
-		T_START_HEREDOC.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		token.T_START_HEREDOC.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(';')).String(),
 
-		T_START_HEREDOC.String(),
-		T_VARIABLE.String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
+		token.T_START_HEREDOC.String(),
+		token.T_VARIABLE.String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -934,21 +925,20 @@ CAT;
 
 	expected := []string{
 
-		T_START_HEREDOC.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_CURLY_OPEN.String(),
-		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		TokenID(int(']')).String(),
-		TokenID(int('}')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		token.T_START_HEREDOC.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_CURLY_OPEN.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('[')).String(),
+		token.T_CONSTANT_ENCAPSED_STRING.String(),
+		token.ID(int(']')).String(),
+		token.ID(int('}')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(';')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -971,15 +961,14 @@ func TestHereDocTokens73(t *testing.T) {
 
 	expected := []string{
 
-		T_START_HEREDOC.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(',')).String(),
-		T_VARIABLE.String(),
+		token.T_START_HEREDOC.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(',')).String(),
+		token.T_VARIABLE.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -1002,15 +991,14 @@ CAT;`
 
 	expected := []string{
 
-		T_START_HEREDOC.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		token.T_START_HEREDOC.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_END_HEREDOC.String(),
+		token.ID(int(';')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	lexer.phpVersion = "7.2"
-	lexer.withTokens = true
 	actual := []string{}
 
 	for {
@@ -1032,17 +1020,16 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		T_VARIABLE.String(),
-		TokenID(int(';')).String(),
-		T_INLINE_HTML.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int(';')).String(),
+		token.T_INLINE_HTML.String(),
 
-		T_VARIABLE.String(),
-		TokenID(int(';')).String(),
-		T_INLINE_HTML.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int(';')).String(),
+		token.T_INLINE_HTML.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 
 	for {
@@ -1061,11 +1048,11 @@ func TestStringTokensAfterVariable(t *testing.T) {
 	src := `<?php "test \"$var\""`
 
 	expected := []string{
-		TokenID(int('"')).String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('"')).String(),
+		token.ID(int('"')).String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.T_VARIABLE.String(),
+		token.T_ENCAPSED_AND_WHITESPACE.String(),
+		token.ID(int('"')).String(),
 	}
 
 	expectedTokens := []string{
@@ -1076,7 +1063,7 @@ func TestStringTokensAfterVariable(t *testing.T) {
 		"\"",
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 	actualTokens := []string{}
 
@@ -1098,9 +1085,9 @@ func TestSlashAfterVariable(t *testing.T) {
 	src := `<?php $foo/3`
 
 	expected := []string{
-		T_VARIABLE.String(),
-		TokenID(int('/')).String(),
-		T_LNUMBER.String(),
+		token.T_VARIABLE.String(),
+		token.ID(int('/')).String(),
+		token.T_LNUMBER.String(),
 	}
 
 	expectedTokens := []string{
@@ -1109,7 +1096,7 @@ func TestSlashAfterVariable(t *testing.T) {
 		"3",
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
+	lexer := NewLexer([]byte(src), "7.4", nil)
 	actual := []string{}
 	actualTokens := []string{}
 
@@ -1130,7 +1117,7 @@ func TestSlashAfterVariable(t *testing.T) {
 func TestCommentEnd(t *testing.T) {
 	src := `<?php //test`
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1146,13 +1133,15 @@ func TestCommentEnd(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1160,7 +1149,7 @@ func TestCommentEnd(t *testing.T) {
 func TestCommentNewLine(t *testing.T) {
 	src := "<?php //test\n$a"
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1176,13 +1165,15 @@ func TestCommentNewLine(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1190,7 +1181,7 @@ func TestCommentNewLine(t *testing.T) {
 func TestCommentNewLine1(t *testing.T) {
 	src := "<?php //test\r$a"
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1206,13 +1197,15 @@ func TestCommentNewLine1(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1220,7 +1213,7 @@ func TestCommentNewLine1(t *testing.T) {
 func TestCommentNewLine2(t *testing.T) {
 	src := "<?php #test\r\n$a"
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1236,13 +1229,15 @@ func TestCommentNewLine2(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1251,7 +1246,7 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 	src := `<?php
 	//test?> test`
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1267,13 +1262,15 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1282,7 +1279,7 @@ func TestInlineComment(t *testing.T) {
 	src := `<?php
 	/*test*/`
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1298,13 +1295,15 @@ func TestInlineComment(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1313,7 +1312,7 @@ func TestInlineComment2(t *testing.T) {
 	src := `<?php
 	/*/*/`
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1329,13 +1328,15 @@ func TestInlineComment2(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1344,7 +1345,7 @@ func TestEmptyInlineComment(t *testing.T) {
 	src := `<?php
 	/**/ `
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1364,13 +1365,15 @@ func TestEmptyInlineComment(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1379,7 +1382,7 @@ func TestEmptyInlineComment2(t *testing.T) {
 	src := `<?php
 	/***/`
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1395,13 +1398,15 @@ func TestEmptyInlineComment2(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 
 	assert.DeepEqual(t, expected, actual)
 }
@@ -1410,10 +1415,9 @@ func TestMethodCallTokens(t *testing.T) {
 	src := `<?php
 	$a -> bar ( '' ) ;`
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1424,74 +1428,95 @@ func TestMethodCallTokens(t *testing.T) {
 		},
 	}
 	tkn := lexer.Lex()
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []token.Token{
+	expected = []*token.Token{
 		{
 			ID:    token.T_WHITESPACE,
 			Value: []byte(" "),
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.Tokens)
-	actual = tkn.Tokens[:l-1]
+	l = len(tkn.SkippedTokens)
+	actual = tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []token.Token{
+	expected = []*token.Token{
 		{
 			ID:    token.T_WHITESPACE,
 			Value: []byte(" "),
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.Tokens)
-	actual = tkn.Tokens[:l-1]
+	l = len(tkn.SkippedTokens)
+	actual = tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []token.Token{
+	expected = []*token.Token{
 		{
 			ID:    token.T_WHITESPACE,
 			Value: []byte(" "),
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.Tokens)
-	actual = tkn.Tokens[:l-1]
+	l = len(tkn.SkippedTokens)
+	actual = tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []token.Token{
+	expected = []*token.Token{
 		{
 			ID:    token.T_WHITESPACE,
 			Value: []byte(" "),
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.Tokens)
-	actual = tkn.Tokens[:l-1]
+	l = len(tkn.SkippedTokens)
+	actual = tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []token.Token{
+	expected = []*token.Token{
 		{
 			ID:    token.T_WHITESPACE,
 			Value: []byte(" "),
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.Tokens)
-	actual = tkn.Tokens[:l-1]
+	l = len(tkn.SkippedTokens)
+	actual = tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []token.Token{
+	expected = []*token.Token{
 		{
 			ID:    token.T_WHITESPACE,
 			Value: []byte(" "),
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.Tokens)
-	actual = tkn.Tokens[:l-1]
+	l = len(tkn.SkippedTokens)
+	actual = tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -1499,10 +1524,9 @@ func TestYieldFromTokens(t *testing.T) {
 	src := `<?php
 	yield from $a`
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
-	lexer.withTokens = true
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
-	expected := []token.Token{
+	expected := []*token.Token{
 		{
 			ID:    token.T_OPEN_TAG,
 			Value: []byte("<?php"),
@@ -1513,26 +1537,32 @@ func TestYieldFromTokens(t *testing.T) {
 		},
 	}
 	tkn := lexer.Lex()
-	l := len(tkn.Tokens)
-	actual := tkn.Tokens[:l-1]
+	l := len(tkn.SkippedTokens)
+	actual := tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []token.Token{
+	expected = []*token.Token{
 		{
 			ID:    token.T_WHITESPACE,
 			Value: []byte(" "),
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.Tokens)
-	actual = tkn.Tokens[:l-1]
+	l = len(tkn.SkippedTokens)
+	actual = tkn.SkippedTokens[:l-1]
+	for _, v := range actual {
+		v.Position = nil
+	}
 	assert.DeepEqual(t, expected, actual)
 }
 
 func TestVarNameByteChars(t *testing.T) {
 	src := "<?php $\x80 $\xff"
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 	assert.Equal(t, "$\x80", string(tkn.Value))
@@ -1544,7 +1574,7 @@ func TestVarNameByteChars(t *testing.T) {
 func TestStringVarNameByteChars(t *testing.T) {
 	src := "<?php \"$\x80 $\xff\""
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	tkn := lexer.Lex()
 	assert.Equal(t, "\"", string(tkn.Value))
@@ -1566,7 +1596,7 @@ func TestIgnoreControllCharacters(t *testing.T) {
 	src := "<?php \004 echo $b;"
 
 	var actualErr *errors.Error
-	lexer := NewLexer([]byte(src), "7.4", false, func(e *errors.Error) {
+	lexer := NewLexer([]byte(src), "7.4", func(e *errors.Error) {
 		actualErr = e
 	})
 
@@ -1590,7 +1620,7 @@ func TestIgnoreControllCharacters(t *testing.T) {
 func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 	src := "<?php \"$a[test\004]\";"
 
-	lexer := NewLexer([]byte(src), "7.4", false, nil)
+	lexer := NewLexer([]byte(src), "7.4", nil)
 
 	expected := "\""
 	tkn := lexer.Lex()

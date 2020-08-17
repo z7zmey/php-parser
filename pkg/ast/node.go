@@ -16,6 +16,10 @@ func (n *Node) GetNode() *Node {
 	return n
 }
 
+func (n *Node) GetPosition() *position.Position {
+	return n.Position
+}
+
 // Root node
 type Root struct {
 	Node

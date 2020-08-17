@@ -1,5 +1,7 @@
 package token
 
+import "github.com/z7zmey/php-parser/pkg/position"
+
 //go:generate stringer -type=ID -output ./token_string.go
 type ID int
 
@@ -145,6 +147,13 @@ const (
 )
 
 type Token struct {
-	ID    ID
-	Value []byte
+	ID            ID
+	Value         []byte
+	Position      *position.Position
+	SkippedTokens []*Token
+	Skipped       []byte
+}
+
+func (t *Token) GetPosition() *position.Position {
+	return t.Position
 }

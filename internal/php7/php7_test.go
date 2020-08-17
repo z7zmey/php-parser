@@ -19595,11 +19595,12 @@ func TestPhp7(t *testing.T) {
 		},
 	}
 
-	lexer := scanner.NewLexer(src, "7.4", false, nil)
+	lexer := scanner.NewLexer(src, "7.4", nil)
 	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	traverser.NewDFS(new(visitor.FilterParserNodes)).Traverse(actual)
+	traverser.NewDFS(new(visitor.FilterTokens)).Traverse(actual)
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -19734,11 +19735,12 @@ func TestPhp5Strings(t *testing.T) {
 		},
 	}
 
-	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
+	lexer := scanner.NewLexer([]byte(src), "7.4", nil)
 	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	traverser.NewDFS(new(visitor.FilterParserNodes)).Traverse(actual)
+	traverser.NewDFS(new(visitor.FilterTokens)).Traverse(actual)
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -19962,11 +19964,12 @@ CAD;
 		},
 	}
 
-	lexer := scanner.NewLexer([]byte(src), "7.4", false, nil)
+	lexer := scanner.NewLexer([]byte(src), "7.4", nil)
 	php7parser := php7.NewParser(lexer, nil)
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	traverser.NewDFS(new(visitor.FilterParserNodes)).Traverse(actual)
+	traverser.NewDFS(new(visitor.FilterTokens)).Traverse(actual)
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -19989,7 +19992,7 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 		parserErrors = append(parserErrors, e)
 	}
 
-	lexer := scanner.NewLexer([]byte(src), "7.4", false, errorHandlerFunc)
+	lexer := scanner.NewLexer([]byte(src), "7.4", errorHandlerFunc)
 	php7parser := php7.NewParser(lexer, errorHandlerFunc)
 	php7parser.Parse()
 	assert.DeepEqual(t, expected, parserErrors)

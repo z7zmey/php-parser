@@ -29,7 +29,7 @@ func Parse(src []byte, ver string, cfg Config) (ast.Vertex, error) {
 		return nil, err
 	}
 
-	lexer := scanner.NewLexer(src, ver, cfg.WithTokens, cfg.ErrorHandlerFunc)
+	lexer := scanner.NewLexer(src, ver, cfg.ErrorHandlerFunc)
 
 	if r == -1 {
 		parser = php5.NewParser(lexer, cfg.ErrorHandlerFunc)

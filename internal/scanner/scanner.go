@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/z7zmey/php-parser/pkg/token"
 )
 
-// line internal/scanner/scanner.go:13
+// line internal/scanner/scanner.go:15
 const lexer_start int = 113
 const lexer_first_final int = 113
 const lexer_error int = 0
@@ -29,11 +31,11 @@ const lexer_en_halt_compiller_close_parenthesis int = 522
 const lexer_en_halt_compiller_close_semicolon int = 526
 const lexer_en_halt_compiller_end int = 530
 
-// line internal/scanner/scanner.rl:15
+// line internal/scanner/scanner.rl:17
 
 func initLexer(lex *Lexer) {
 
-	// line internal/scanner/scanner.go:41
+	// line internal/scanner/scanner.go:43
 	{
 		lex.cs = lexer_start
 		lex.top = 0
@@ -42,23 +44,24 @@ func initLexer(lex *Lexer) {
 		lex.act = 0
 	}
 
-	// line internal/scanner/scanner.rl:19
+	// line internal/scanner/scanner.rl:21
 }
 
-func (lex *Lexer) Lex() *Token {
+func (lex *Lexer) Lex() *token.Token {
 	eof := lex.pe
-	var tok TokenID
+	var tok token.ID
 
-	token := lex.tokenPool.Get()
-	token.Tokens = token.Tokens[:0]
-	token.Value = lex.data[0:0]
+	tkn := lex.tokenPool.Get()
+
+	lex.sts = 0
+	lex.ste = 0
 
 	lblStart := 0
 	lblEnd := 0
 
 	_, _ = lblStart, lblEnd
 
-	// line internal/scanner/scanner.go:67
+	// line internal/scanner/scanner.go:70
 	{
 		var _widec int16
 		if (lex.p) == (lex.pe) {
@@ -2215,7 +2218,7 @@ func (lex *Lexer) Lex() *Token {
 		goto st_out
 	tr0:
 		lex.cs = 113
-		// line internal/scanner/scanner.rl:129
+		// line internal/scanner/scanner.rl:132
 		(lex.p) = (lex.te) - 1
 		{
 			lex.cs = 116
@@ -2224,7 +2227,7 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr169:
 		lex.cs = 113
-		// line internal/scanner/scanner.rl:129
+		// line internal/scanner/scanner.rl:132
 		lex.te = (lex.p) + 1
 		{
 			lex.cs = 116
@@ -2233,7 +2236,7 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr171:
 		lex.cs = 113
-		// line internal/scanner/scanner.rl:129
+		// line internal/scanner/scanner.rl:132
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -2242,13 +2245,13 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr172:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:126
+		// line internal/scanner/scanner.rl:129
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_COMMENT, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_COMMENT, lex.ts, lex.te)
 		}
 		goto st113
 	st113:
@@ -2262,7 +2265,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:2271
+		// line internal/scanner/scanner.go:2274
 		if lex.data[(lex.p)] == 35 {
 			goto tr170
 		}
@@ -2277,13 +2280,13 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof114
 		}
 	st_case_114:
-		// line internal/scanner/scanner.go:2286
+		// line internal/scanner/scanner.go:2289
 		if lex.data[(lex.p)] == 33 {
 			goto st1
 		}
 		goto tr171
 	tr3:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -2299,7 +2302,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof1
 		}
 	st_case_1:
-		// line internal/scanner/scanner.go:2308
+		// line internal/scanner/scanner.go:2311
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr2
@@ -2308,7 +2311,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st1
 	tr2:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -2324,35 +2327,35 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof115
 		}
 	st_case_115:
-		// line internal/scanner/scanner.go:2333
+		// line internal/scanner/scanner.go:2336
 		goto tr172
 	tr4:
 		lex.cs = 116
-		// line internal/scanner/scanner.rl:142
+		// line internal/scanner/scanner.rl:145
 		(lex.p) = (lex.te) - 1
 		{
-			lex.addHiddenToken(token, T_OPEN_TAG, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_OPEN_TAG, lex.ts, lex.te)
 			lex.cs = 123
 		}
 		goto _again
 	tr7:
 		lex.cs = 116
-		// line internal/scanner/scanner.rl:146
+		// line internal/scanner/scanner.rl:149
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(lex.te - lex.ts - 5)
-			lex.addHiddenToken(token, T_OPEN_TAG, lex.ts, lex.ts+5)
+			lex.addSkippedToken(tkn, token.T_OPEN_TAG, lex.ts, lex.ts+5)
 			lex.cs = 123
 		}
 		goto _again
 	tr177:
-		// line internal/scanner/scanner.rl:136
+		// line internal/scanner/scanner.rl:139
 		lex.te = (lex.p)
 		(lex.p)--
 		{
 			lex.ungetStr("<")
-			lex.setTokenPosition(token)
-			tok = T_INLINE_HTML
+			lex.setTokenPosition(tkn)
+			tok = token.T_INLINE_HTML
 			{
 				(lex.p)++
 				lex.cs = 116
@@ -2361,15 +2364,15 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st116
 	tr179:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:136
+		// line internal/scanner/scanner.rl:139
 		lex.te = (lex.p)
 		(lex.p)--
 		{
 			lex.ungetStr("<")
-			lex.setTokenPosition(token)
-			tok = T_INLINE_HTML
+			lex.setTokenPosition(tkn)
+			tok = token.T_INLINE_HTML
 			{
 				(lex.p)++
 				lex.cs = 116
@@ -2379,21 +2382,21 @@ func (lex *Lexer) Lex() *Token {
 		goto st116
 	tr185:
 		lex.cs = 116
-		// line internal/scanner/scanner.rl:142
+		// line internal/scanner/scanner.rl:145
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_OPEN_TAG, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_OPEN_TAG, lex.ts, lex.te)
 			lex.cs = 123
 		}
 		goto _again
 	tr186:
 		lex.cs = 116
-		// line internal/scanner/scanner.rl:151
+		// line internal/scanner/scanner.rl:154
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_ECHO
+			lex.setTokenPosition(tkn)
+			tok = token.T_ECHO
 			lex.cs = 123
 			{
 				(lex.p)++
@@ -2403,14 +2406,14 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr188:
 		lex.cs = 116
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:146
+		// line internal/scanner/scanner.rl:149
 		lex.te = (lex.p)
 		(lex.p)--
 		{
 			lex.ungetCnt(lex.te - lex.ts - 5)
-			lex.addHiddenToken(token, T_OPEN_TAG, lex.ts, lex.ts+5)
+			lex.addSkippedToken(tkn, token.T_OPEN_TAG, lex.ts, lex.ts+5)
 			lex.cs = 123
 		}
 		goto _again
@@ -2425,7 +2428,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:2423
+		// line internal/scanner/scanner.go:2426
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr174
@@ -2436,7 +2439,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st117
 	tr175:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -2448,13 +2451,13 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st117
 	tr180:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st117
 	tr182:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -2470,7 +2473,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof117
 		}
 	st_case_117:
-		// line internal/scanner/scanner.go:2468
+		// line internal/scanner/scanner.go:2471
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr174
@@ -2481,7 +2484,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st117
 	tr174:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -2493,9 +2496,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st118
 	tr181:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -2511,7 +2514,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof118
 		}
 	st_case_118:
-		// line internal/scanner/scanner.go:2509
+		// line internal/scanner/scanner.go:2512
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr181
@@ -2522,7 +2525,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr180
 	tr183:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st119
 	st119:
@@ -2530,7 +2533,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof119
 		}
 	st_case_119:
-		// line internal/scanner/scanner.go:2528
+		// line internal/scanner/scanner.go:2531
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr174
@@ -2568,7 +2571,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof121
 		}
 	st_case_121:
-		// line internal/scanner/scanner.go:2566
+		// line internal/scanner/scanner.go:2569
 		switch lex.data[(lex.p)] {
 		case 61:
 			goto tr186
@@ -2619,7 +2622,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr4
 	tr8:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -2635,10 +2638,10 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof122
 		}
 	st_case_122:
-		// line internal/scanner/scanner.go:2633
+		// line internal/scanner/scanner.go:2636
 		goto tr188
 	tr9:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -2654,16 +2657,16 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof5
 		}
 	st_case_5:
-		// line internal/scanner/scanner.go:2652
+		// line internal/scanner/scanner.go:2655
 		if lex.data[(lex.p)] == 10 {
 			goto tr8
 		}
 		goto tr4
 	tr10:
-		// line internal/scanner/scanner.rl:160
+		// line internal/scanner/scanner.rl:163
 		(lex.p) = (lex.te) - 1
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st123
 	tr12:
@@ -2673,8 +2676,8 @@ func (lex *Lexer) Lex() *Token {
 		case 10:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_DNUMBER
+				lex.setTokenPosition(tkn)
+				tok = token.T_DNUMBER
 				{
 					(lex.p)++
 					goto _out
@@ -2688,16 +2691,16 @@ func (lex *Lexer) Lex() *Token {
 				_, err := strconv.ParseInt(s, 2, 0)
 
 				if err == nil {
-					lex.setTokenPosition(token)
-					tok = T_LNUMBER
+					lex.setTokenPosition(tkn)
+					tok = token.T_LNUMBER
 					{
 						(lex.p)++
 						goto _out
 					}
 				}
 
-				lex.setTokenPosition(token)
-				tok = T_DNUMBER
+				lex.setTokenPosition(tkn)
+				tok = token.T_DNUMBER
 				{
 					(lex.p)++
 					goto _out
@@ -2716,16 +2719,16 @@ func (lex *Lexer) Lex() *Token {
 				_, err := strconv.ParseInt(s, base, 0)
 
 				if err == nil {
-					lex.setTokenPosition(token)
-					tok = T_LNUMBER
+					lex.setTokenPosition(tkn)
+					tok = token.T_LNUMBER
 					{
 						(lex.p)++
 						goto _out
 					}
 				}
 
-				lex.setTokenPosition(token)
-				tok = T_DNUMBER
+				lex.setTokenPosition(tkn)
+				tok = token.T_DNUMBER
 				{
 					(lex.p)++
 					goto _out
@@ -2739,16 +2742,16 @@ func (lex *Lexer) Lex() *Token {
 				_, err := strconv.ParseInt(s, 16, 0)
 
 				if err == nil {
-					lex.setTokenPosition(token)
-					tok = T_LNUMBER
+					lex.setTokenPosition(tkn)
+					tok = token.T_LNUMBER
 					{
 						(lex.p)++
 						goto _out
 					}
 				}
 
-				lex.setTokenPosition(token)
-				tok = T_DNUMBER
+				lex.setTokenPosition(tkn)
+				tok = token.T_DNUMBER
 				{
 					(lex.p)++
 					goto _out
@@ -2757,8 +2760,8 @@ func (lex *Lexer) Lex() *Token {
 		case 14:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ABSTRACT
+				lex.setTokenPosition(tkn)
+				tok = token.T_ABSTRACT
 				{
 					(lex.p)++
 					goto _out
@@ -2767,8 +2770,8 @@ func (lex *Lexer) Lex() *Token {
 		case 15:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ARRAY
+				lex.setTokenPosition(tkn)
+				tok = token.T_ARRAY
 				{
 					(lex.p)++
 					goto _out
@@ -2777,8 +2780,8 @@ func (lex *Lexer) Lex() *Token {
 		case 16:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_AS
+				lex.setTokenPosition(tkn)
+				tok = token.T_AS
 				{
 					(lex.p)++
 					goto _out
@@ -2787,8 +2790,8 @@ func (lex *Lexer) Lex() *Token {
 		case 17:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_BREAK
+				lex.setTokenPosition(tkn)
+				tok = token.T_BREAK
 				{
 					(lex.p)++
 					goto _out
@@ -2797,8 +2800,8 @@ func (lex *Lexer) Lex() *Token {
 		case 18:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_CALLABLE
+				lex.setTokenPosition(tkn)
+				tok = token.T_CALLABLE
 				{
 					(lex.p)++
 					goto _out
@@ -2807,8 +2810,8 @@ func (lex *Lexer) Lex() *Token {
 		case 19:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_CASE
+				lex.setTokenPosition(tkn)
+				tok = token.T_CASE
 				{
 					(lex.p)++
 					goto _out
@@ -2817,8 +2820,8 @@ func (lex *Lexer) Lex() *Token {
 		case 20:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_CATCH
+				lex.setTokenPosition(tkn)
+				tok = token.T_CATCH
 				{
 					(lex.p)++
 					goto _out
@@ -2827,8 +2830,8 @@ func (lex *Lexer) Lex() *Token {
 		case 21:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_CLASS
+				lex.setTokenPosition(tkn)
+				tok = token.T_CLASS
 				{
 					(lex.p)++
 					goto _out
@@ -2837,8 +2840,8 @@ func (lex *Lexer) Lex() *Token {
 		case 22:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_CLONE
+				lex.setTokenPosition(tkn)
+				tok = token.T_CLONE
 				{
 					(lex.p)++
 					goto _out
@@ -2847,8 +2850,8 @@ func (lex *Lexer) Lex() *Token {
 		case 23:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_CONST
+				lex.setTokenPosition(tkn)
+				tok = token.T_CONST
 				{
 					(lex.p)++
 					goto _out
@@ -2857,8 +2860,8 @@ func (lex *Lexer) Lex() *Token {
 		case 24:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_CONTINUE
+				lex.setTokenPosition(tkn)
+				tok = token.T_CONTINUE
 				{
 					(lex.p)++
 					goto _out
@@ -2867,8 +2870,8 @@ func (lex *Lexer) Lex() *Token {
 		case 25:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_DECLARE
+				lex.setTokenPosition(tkn)
+				tok = token.T_DECLARE
 				{
 					(lex.p)++
 					goto _out
@@ -2877,8 +2880,8 @@ func (lex *Lexer) Lex() *Token {
 		case 26:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_DEFAULT
+				lex.setTokenPosition(tkn)
+				tok = token.T_DEFAULT
 				{
 					(lex.p)++
 					goto _out
@@ -2887,8 +2890,8 @@ func (lex *Lexer) Lex() *Token {
 		case 27:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_DO
+				lex.setTokenPosition(tkn)
+				tok = token.T_DO
 				{
 					(lex.p)++
 					goto _out
@@ -2897,8 +2900,8 @@ func (lex *Lexer) Lex() *Token {
 		case 28:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ECHO
+				lex.setTokenPosition(tkn)
+				tok = token.T_ECHO
 				{
 					(lex.p)++
 					goto _out
@@ -2907,8 +2910,8 @@ func (lex *Lexer) Lex() *Token {
 		case 30:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ELSEIF
+				lex.setTokenPosition(tkn)
+				tok = token.T_ELSEIF
 				{
 					(lex.p)++
 					goto _out
@@ -2917,8 +2920,8 @@ func (lex *Lexer) Lex() *Token {
 		case 31:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_EMPTY
+				lex.setTokenPosition(tkn)
+				tok = token.T_EMPTY
 				{
 					(lex.p)++
 					goto _out
@@ -2927,8 +2930,8 @@ func (lex *Lexer) Lex() *Token {
 		case 32:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ENDDECLARE
+				lex.setTokenPosition(tkn)
+				tok = token.T_ENDDECLARE
 				{
 					(lex.p)++
 					goto _out
@@ -2937,8 +2940,8 @@ func (lex *Lexer) Lex() *Token {
 		case 34:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ENDFOREACH
+				lex.setTokenPosition(tkn)
+				tok = token.T_ENDFOREACH
 				{
 					(lex.p)++
 					goto _out
@@ -2947,8 +2950,8 @@ func (lex *Lexer) Lex() *Token {
 		case 35:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ENDIF
+				lex.setTokenPosition(tkn)
+				tok = token.T_ENDIF
 				{
 					(lex.p)++
 					goto _out
@@ -2957,8 +2960,8 @@ func (lex *Lexer) Lex() *Token {
 		case 36:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ENDSWITCH
+				lex.setTokenPosition(tkn)
+				tok = token.T_ENDSWITCH
 				{
 					(lex.p)++
 					goto _out
@@ -2967,8 +2970,8 @@ func (lex *Lexer) Lex() *Token {
 		case 37:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ENDWHILE
+				lex.setTokenPosition(tkn)
+				tok = token.T_ENDWHILE
 				{
 					(lex.p)++
 					goto _out
@@ -2977,8 +2980,8 @@ func (lex *Lexer) Lex() *Token {
 		case 38:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_EVAL
+				lex.setTokenPosition(tkn)
+				tok = token.T_EVAL
 				{
 					(lex.p)++
 					goto _out
@@ -2987,8 +2990,8 @@ func (lex *Lexer) Lex() *Token {
 		case 39:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_EXIT
+				lex.setTokenPosition(tkn)
+				tok = token.T_EXIT
 				{
 					(lex.p)++
 					goto _out
@@ -2997,8 +3000,8 @@ func (lex *Lexer) Lex() *Token {
 		case 40:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_EXTENDS
+				lex.setTokenPosition(tkn)
+				tok = token.T_EXTENDS
 				{
 					(lex.p)++
 					goto _out
@@ -3007,8 +3010,8 @@ func (lex *Lexer) Lex() *Token {
 		case 42:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_FINALLY
+				lex.setTokenPosition(tkn)
+				tok = token.T_FINALLY
 				{
 					(lex.p)++
 					goto _out
@@ -3017,8 +3020,8 @@ func (lex *Lexer) Lex() *Token {
 		case 44:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_FOREACH
+				lex.setTokenPosition(tkn)
+				tok = token.T_FOREACH
 				{
 					(lex.p)++
 					goto _out
@@ -3027,8 +3030,8 @@ func (lex *Lexer) Lex() *Token {
 		case 45:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_FUNCTION
+				lex.setTokenPosition(tkn)
+				tok = token.T_FUNCTION
 				{
 					(lex.p)++
 					goto _out
@@ -3037,8 +3040,8 @@ func (lex *Lexer) Lex() *Token {
 		case 46:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_FN
+				lex.setTokenPosition(tkn)
+				tok = token.T_FN
 				{
 					(lex.p)++
 					goto _out
@@ -3047,8 +3050,8 @@ func (lex *Lexer) Lex() *Token {
 		case 47:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_GLOBAL
+				lex.setTokenPosition(tkn)
+				tok = token.T_GLOBAL
 				{
 					(lex.p)++
 					goto _out
@@ -3057,8 +3060,8 @@ func (lex *Lexer) Lex() *Token {
 		case 48:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_GOTO
+				lex.setTokenPosition(tkn)
+				tok = token.T_GOTO
 				{
 					(lex.p)++
 					goto _out
@@ -3067,8 +3070,8 @@ func (lex *Lexer) Lex() *Token {
 		case 49:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_IF
+				lex.setTokenPosition(tkn)
+				tok = token.T_IF
 				{
 					(lex.p)++
 					goto _out
@@ -3077,8 +3080,8 @@ func (lex *Lexer) Lex() *Token {
 		case 50:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_ISSET
+				lex.setTokenPosition(tkn)
+				tok = token.T_ISSET
 				{
 					(lex.p)++
 					goto _out
@@ -3087,8 +3090,8 @@ func (lex *Lexer) Lex() *Token {
 		case 51:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_IMPLEMENTS
+				lex.setTokenPosition(tkn)
+				tok = token.T_IMPLEMENTS
 				{
 					(lex.p)++
 					goto _out
@@ -3097,8 +3100,8 @@ func (lex *Lexer) Lex() *Token {
 		case 52:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_INSTANCEOF
+				lex.setTokenPosition(tkn)
+				tok = token.T_INSTANCEOF
 				{
 					(lex.p)++
 					goto _out
@@ -3107,8 +3110,8 @@ func (lex *Lexer) Lex() *Token {
 		case 53:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_INSTEADOF
+				lex.setTokenPosition(tkn)
+				tok = token.T_INSTEADOF
 				{
 					(lex.p)++
 					goto _out
@@ -3117,8 +3120,8 @@ func (lex *Lexer) Lex() *Token {
 		case 54:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_INTERFACE
+				lex.setTokenPosition(tkn)
+				tok = token.T_INTERFACE
 				{
 					(lex.p)++
 					goto _out
@@ -3127,8 +3130,8 @@ func (lex *Lexer) Lex() *Token {
 		case 55:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_LIST
+				lex.setTokenPosition(tkn)
+				tok = token.T_LIST
 				{
 					(lex.p)++
 					goto _out
@@ -3137,8 +3140,8 @@ func (lex *Lexer) Lex() *Token {
 		case 56:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_NAMESPACE
+				lex.setTokenPosition(tkn)
+				tok = token.T_NAMESPACE
 				{
 					(lex.p)++
 					goto _out
@@ -3147,8 +3150,8 @@ func (lex *Lexer) Lex() *Token {
 		case 57:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_PRIVATE
+				lex.setTokenPosition(tkn)
+				tok = token.T_PRIVATE
 				{
 					(lex.p)++
 					goto _out
@@ -3157,8 +3160,8 @@ func (lex *Lexer) Lex() *Token {
 		case 58:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_PUBLIC
+				lex.setTokenPosition(tkn)
+				tok = token.T_PUBLIC
 				{
 					(lex.p)++
 					goto _out
@@ -3167,8 +3170,8 @@ func (lex *Lexer) Lex() *Token {
 		case 59:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_PRINT
+				lex.setTokenPosition(tkn)
+				tok = token.T_PRINT
 				{
 					(lex.p)++
 					goto _out
@@ -3177,8 +3180,8 @@ func (lex *Lexer) Lex() *Token {
 		case 60:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_PROTECTED
+				lex.setTokenPosition(tkn)
+				tok = token.T_PROTECTED
 				{
 					(lex.p)++
 					goto _out
@@ -3187,8 +3190,8 @@ func (lex *Lexer) Lex() *Token {
 		case 61:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_RETURN
+				lex.setTokenPosition(tkn)
+				tok = token.T_RETURN
 				{
 					(lex.p)++
 					goto _out
@@ -3197,8 +3200,8 @@ func (lex *Lexer) Lex() *Token {
 		case 62:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_STATIC
+				lex.setTokenPosition(tkn)
+				tok = token.T_STATIC
 				{
 					(lex.p)++
 					goto _out
@@ -3207,8 +3210,8 @@ func (lex *Lexer) Lex() *Token {
 		case 63:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_SWITCH
+				lex.setTokenPosition(tkn)
+				tok = token.T_SWITCH
 				{
 					(lex.p)++
 					goto _out
@@ -3217,8 +3220,8 @@ func (lex *Lexer) Lex() *Token {
 		case 64:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_THROW
+				lex.setTokenPosition(tkn)
+				tok = token.T_THROW
 				{
 					(lex.p)++
 					goto _out
@@ -3227,8 +3230,8 @@ func (lex *Lexer) Lex() *Token {
 		case 65:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_TRAIT
+				lex.setTokenPosition(tkn)
+				tok = token.T_TRAIT
 				{
 					(lex.p)++
 					goto _out
@@ -3237,8 +3240,8 @@ func (lex *Lexer) Lex() *Token {
 		case 66:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_TRY
+				lex.setTokenPosition(tkn)
+				tok = token.T_TRY
 				{
 					(lex.p)++
 					goto _out
@@ -3247,8 +3250,8 @@ func (lex *Lexer) Lex() *Token {
 		case 67:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_UNSET
+				lex.setTokenPosition(tkn)
+				tok = token.T_UNSET
 				{
 					(lex.p)++
 					goto _out
@@ -3257,8 +3260,8 @@ func (lex *Lexer) Lex() *Token {
 		case 68:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_USE
+				lex.setTokenPosition(tkn)
+				tok = token.T_USE
 				{
 					(lex.p)++
 					goto _out
@@ -3267,8 +3270,8 @@ func (lex *Lexer) Lex() *Token {
 		case 69:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_VAR
+				lex.setTokenPosition(tkn)
+				tok = token.T_VAR
 				{
 					(lex.p)++
 					goto _out
@@ -3277,8 +3280,8 @@ func (lex *Lexer) Lex() *Token {
 		case 70:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_WHILE
+				lex.setTokenPosition(tkn)
+				tok = token.T_WHILE
 				{
 					(lex.p)++
 					goto _out
@@ -3287,8 +3290,8 @@ func (lex *Lexer) Lex() *Token {
 		case 71:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_YIELD_FROM
+				lex.setTokenPosition(tkn)
+				tok = token.T_YIELD_FROM
 				{
 					(lex.p)++
 					goto _out
@@ -3297,8 +3300,8 @@ func (lex *Lexer) Lex() *Token {
 		case 74:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_INCLUDE_ONCE
+				lex.setTokenPosition(tkn)
+				tok = token.T_INCLUDE_ONCE
 				{
 					(lex.p)++
 					goto _out
@@ -3307,8 +3310,8 @@ func (lex *Lexer) Lex() *Token {
 		case 76:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_REQUIRE_ONCE
+				lex.setTokenPosition(tkn)
+				tok = token.T_REQUIRE_ONCE
 				{
 					(lex.p)++
 					goto _out
@@ -3317,8 +3320,8 @@ func (lex *Lexer) Lex() *Token {
 		case 77:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_CLASS_C
+				lex.setTokenPosition(tkn)
+				tok = token.T_CLASS_C
 				{
 					(lex.p)++
 					goto _out
@@ -3327,8 +3330,8 @@ func (lex *Lexer) Lex() *Token {
 		case 78:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_DIR
+				lex.setTokenPosition(tkn)
+				tok = token.T_DIR
 				{
 					(lex.p)++
 					goto _out
@@ -3337,8 +3340,8 @@ func (lex *Lexer) Lex() *Token {
 		case 79:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_FILE
+				lex.setTokenPosition(tkn)
+				tok = token.T_FILE
 				{
 					(lex.p)++
 					goto _out
@@ -3347,8 +3350,8 @@ func (lex *Lexer) Lex() *Token {
 		case 80:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_FUNC_C
+				lex.setTokenPosition(tkn)
+				tok = token.T_FUNC_C
 				{
 					(lex.p)++
 					goto _out
@@ -3357,8 +3360,8 @@ func (lex *Lexer) Lex() *Token {
 		case 81:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_LINE
+				lex.setTokenPosition(tkn)
+				tok = token.T_LINE
 				{
 					(lex.p)++
 					goto _out
@@ -3367,8 +3370,8 @@ func (lex *Lexer) Lex() *Token {
 		case 82:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_NS_C
+				lex.setTokenPosition(tkn)
+				tok = token.T_NS_C
 				{
 					(lex.p)++
 					goto _out
@@ -3377,8 +3380,8 @@ func (lex *Lexer) Lex() *Token {
 		case 83:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_METHOD_C
+				lex.setTokenPosition(tkn)
+				tok = token.T_METHOD_C
 				{
 					(lex.p)++
 					goto _out
@@ -3387,8 +3390,8 @@ func (lex *Lexer) Lex() *Token {
 		case 84:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_TRAIT_C
+				lex.setTokenPosition(tkn)
+				tok = token.T_TRAIT_C
 				{
 					(lex.p)++
 					goto _out
@@ -3397,8 +3400,8 @@ func (lex *Lexer) Lex() *Token {
 		case 85:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_HALT_COMPILER
+				lex.setTokenPosition(tkn)
+				tok = token.T_HALT_COMPILER
 				lex.cs = 518
 				{
 					(lex.p)++
@@ -3408,8 +3411,8 @@ func (lex *Lexer) Lex() *Token {
 		case 86:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_NEW
+				lex.setTokenPosition(tkn)
+				tok = token.T_NEW
 				{
 					(lex.p)++
 					goto _out
@@ -3418,8 +3421,8 @@ func (lex *Lexer) Lex() *Token {
 		case 87:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_LOGICAL_AND
+				lex.setTokenPosition(tkn)
+				tok = token.T_LOGICAL_AND
 				{
 					(lex.p)++
 					goto _out
@@ -3428,8 +3431,8 @@ func (lex *Lexer) Lex() *Token {
 		case 88:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_LOGICAL_OR
+				lex.setTokenPosition(tkn)
+				tok = token.T_LOGICAL_OR
 				{
 					(lex.p)++
 					goto _out
@@ -3438,8 +3441,8 @@ func (lex *Lexer) Lex() *Token {
 		case 89:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_LOGICAL_XOR
+				lex.setTokenPosition(tkn)
+				tok = token.T_LOGICAL_XOR
 				{
 					(lex.p)++
 					goto _out
@@ -3448,8 +3451,8 @@ func (lex *Lexer) Lex() *Token {
 		case 118:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_SL
+				lex.setTokenPosition(tkn)
+				tok = token.T_SL
 				{
 					(lex.p)++
 					goto _out
@@ -3458,8 +3461,8 @@ func (lex *Lexer) Lex() *Token {
 		case 135:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_STRING
+				lex.setTokenPosition(tkn)
+				tok = token.T_STRING
 				{
 					(lex.p)++
 					goto _out
@@ -3468,8 +3471,8 @@ func (lex *Lexer) Lex() *Token {
 		case 140:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = TokenID(int('"'))
+				lex.setTokenPosition(tkn)
+				tok = token.ID(int('"'))
 				lex.cs = 493
 				{
 					(lex.p)++
@@ -3480,11 +3483,11 @@ func (lex *Lexer) Lex() *Token {
 
 		goto _again
 	tr15:
-		// line internal/scanner/scanner.rl:350
+		// line internal/scanner/scanner.rl:351
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_CONSTANT_ENCAPSED_STRING
+			lex.setTokenPosition(tkn)
+			tok = token.T_CONSTANT_ENCAPSED_STRING
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3493,7 +3496,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr19:
-		// line internal/scanner/scanner.rl:373
+		// line internal/scanner/scanner.rl:374
 		(lex.p) = (lex.te) - 1
 		{
 			c := lex.data[lex.p]
@@ -3501,13 +3504,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr23:
-		// line internal/scanner/scanner.rl:335
+		// line internal/scanner/scanner.rl:338
 		(lex.p) = (lex.te) - 1
 		{
-			// rune, _ := utf8.DecodeRune(lex.data[lex.ts:lex.te]);
-			// tok = TokenID(Rune2Class(rune));
-			lex.setTokenPosition(token)
-			tok = TokenID(int(lex.data[lex.ts]))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(lex.data[lex.ts]))
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3516,11 +3517,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr38:
-		// line internal/scanner/scanner.rl:310
+		// line internal/scanner/scanner.rl:313
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_ARRAY_CAST
+			lex.setTokenPosition(tkn)
+			tok = token.T_ARRAY_CAST
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3529,11 +3530,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr45:
-		// line internal/scanner/scanner.rl:315
+		// line internal/scanner/scanner.rl:318
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_STRING_CAST
+			lex.setTokenPosition(tkn)
+			tok = token.T_STRING_CAST
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3542,11 +3543,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr49:
-		// line internal/scanner/scanner.rl:311
+		// line internal/scanner/scanner.rl:314
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_BOOL_CAST
+			lex.setTokenPosition(tkn)
+			tok = token.T_BOOL_CAST
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3555,11 +3556,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr57:
-		// line internal/scanner/scanner.rl:312
+		// line internal/scanner/scanner.rl:315
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_DOUBLE_CAST
+			lex.setTokenPosition(tkn)
+			tok = token.T_DOUBLE_CAST
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3568,11 +3569,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr64:
-		// line internal/scanner/scanner.rl:313
+		// line internal/scanner/scanner.rl:316
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_INT_CAST
+			lex.setTokenPosition(tkn)
+			tok = token.T_INT_CAST
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3581,11 +3582,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr73:
-		// line internal/scanner/scanner.rl:314
+		// line internal/scanner/scanner.rl:317
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_OBJECT_CAST
+			lex.setTokenPosition(tkn)
+			tok = token.T_OBJECT_CAST
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3594,11 +3595,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr84:
-		// line internal/scanner/scanner.rl:316
+		// line internal/scanner/scanner.rl:319
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_UNSET_CAST
+			lex.setTokenPosition(tkn)
+			tok = token.T_UNSET_CAST
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3607,11 +3608,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr85:
-		// line internal/scanner/scanner.rl:278
+		// line internal/scanner/scanner.rl:281
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_ELLIPSIS
+			lex.setTokenPosition(tkn)
+			tok = token.T_ELLIPSIS
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3620,11 +3621,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr88:
-		// line internal/scanner/scanner.rl:164
+		// line internal/scanner/scanner.rl:167
 		(lex.p) = (lex.te) - 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_DNUMBER
+			lex.setTokenPosition(tkn)
+			tok = token.T_DNUMBER
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3633,7 +3634,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr98:
-		// line internal/scanner/scanner.rl:322
+		// line internal/scanner/scanner.rl:325
 		lex.te = (lex.p) + 1
 		{
 			isDocComment := false
@@ -3642,14 +3643,14 @@ func (lex *Lexer) Lex() *Token {
 			}
 
 			if isDocComment {
-				lex.addHiddenToken(token, T_DOC_COMMENT, lex.ts, lex.te)
+				lex.addSkippedToken(tkn, token.T_DOC_COMMENT, lex.ts, lex.te)
 			} else {
-				lex.addHiddenToken(token, T_COMMENT, lex.ts, lex.te)
+				lex.addSkippedToken(tkn, token.T_COMMENT, lex.ts, lex.te)
 			}
 		}
 		goto st123
 	tr99:
-		// line internal/scanner/scanner.rl:175
+		// line internal/scanner/scanner.rl:178
 		(lex.p) = (lex.te) - 1
 		{
 			base := 10
@@ -3661,8 +3662,8 @@ func (lex *Lexer) Lex() *Token {
 			_, err := strconv.ParseInt(s, base, 0)
 
 			if err == nil {
-				lex.setTokenPosition(token)
-				tok = T_LNUMBER
+				lex.setTokenPosition(tkn)
+				tok = token.T_LNUMBER
 				{
 					(lex.p)++
 					lex.cs = 123
@@ -3670,8 +3671,8 @@ func (lex *Lexer) Lex() *Token {
 				}
 			}
 
-			lex.setTokenPosition(token)
-			tok = T_DNUMBER
+			lex.setTokenPosition(tkn)
+			tok = token.T_DNUMBER
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3681,11 +3682,11 @@ func (lex *Lexer) Lex() *Token {
 		goto st123
 	tr112:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:162
+		// line internal/scanner/scanner.rl:165
 		(lex.p) = (lex.te) - 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(';'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(';'))
 			lex.cs = 116
 			{
 				(lex.p)++
@@ -3695,11 +3696,11 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr128:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:161
+		// line internal/scanner/scanner.rl:164
 		(lex.p) = (lex.te) - 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(';'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(';'))
 			lex.cs = 116
 			{
 				(lex.p)++
@@ -3708,11 +3709,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr130:
-		// line internal/scanner/scanner.rl:346
+		// line internal/scanner/scanner.rl:347
 		(lex.p) = (lex.te) - 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_STRING
+			lex.setTokenPosition(tkn)
+			tok = token.T_STRING
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3721,11 +3722,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr132:
-		// line internal/scanner/scanner.rl:259
+		// line internal/scanner/scanner.rl:262
 		(lex.p) = (lex.te) - 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_YIELD
+			lex.setTokenPosition(tkn)
+			tok = token.T_YIELD
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3734,11 +3735,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr143:
-		// line internal/scanner/scanner.rl:258
+		// line internal/scanner/scanner.rl:261
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_YIELD_FROM
+			lex.setTokenPosition(tkn)
+			tok = token.T_YIELD_FROM
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3747,7 +3748,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr189:
-		// line internal/scanner/scanner.rl:373
+		// line internal/scanner/scanner.rl:374
 		lex.te = (lex.p) + 1
 		{
 			c := lex.data[lex.p]
@@ -3755,13 +3756,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr200:
-		// line internal/scanner/scanner.rl:335
+		// line internal/scanner/scanner.rl:338
 		lex.te = (lex.p) + 1
 		{
-			// rune, _ := utf8.DecodeRune(lex.data[lex.ts:lex.te]);
-			// tok = TokenID(Rune2Class(rune));
-			lex.setTokenPosition(token)
-			tok = TokenID(int(lex.data[lex.ts]))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(lex.data[lex.ts]))
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3770,11 +3769,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr234:
-		// line internal/scanner/scanner.rl:277
+		// line internal/scanner/scanner.rl:280
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_NS_SEPARATOR
+			lex.setTokenPosition(tkn)
+			tok = token.T_NS_SEPARATOR
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3784,11 +3783,11 @@ func (lex *Lexer) Lex() *Token {
 		goto st123
 	tr237:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:370
+		// line internal/scanner/scanner.rl:371
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int('`'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int('`'))
 			lex.cs = 487
 			{
 				(lex.p)++
@@ -3797,45 +3796,45 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr238:
-		// line internal/scanner/scanner.rl:343
+		// line internal/scanner/scanner.rl:344
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int('{'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int('{'))
 			lex.call(123, 123)
 			goto _out
 		}
 		goto st123
 	tr240:
-		// line internal/scanner/scanner.rl:344
+		// line internal/scanner/scanner.rl:345
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int('}'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int('}'))
 			lex.ret(1)
 			goto _out
 		}
 		goto st123
 	tr241:
-		// line internal/scanner/scanner.rl:160
+		// line internal/scanner/scanner.rl:163
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st123
 	tr243:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:160
+		// line internal/scanner/scanner.rl:163
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st123
 	tr247:
-		// line internal/scanner/scanner.rl:373
+		// line internal/scanner/scanner.rl:374
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -3844,14 +3843,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr248:
-		// line internal/scanner/scanner.rl:335
+		// line internal/scanner/scanner.rl:338
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			// rune, _ := utf8.DecodeRune(lex.data[lex.ts:lex.te]);
-			// tok = TokenID(Rune2Class(rune));
-			lex.setTokenPosition(token)
-			tok = TokenID(int(lex.data[lex.ts]))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(lex.data[lex.ts]))
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3860,12 +3857,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr250:
-		// line internal/scanner/scanner.rl:296
+		// line internal/scanner/scanner.rl:299
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_IS_NOT_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_IS_NOT_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3874,11 +3871,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr251:
-		// line internal/scanner/scanner.rl:297
+		// line internal/scanner/scanner.rl:300
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_IS_NOT_IDENTICAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_IS_NOT_IDENTICAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3888,12 +3885,12 @@ func (lex *Lexer) Lex() *Token {
 		goto st123
 	tr252:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:371
+		// line internal/scanner/scanner.rl:372
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int('"'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int('"'))
 			lex.cs = 493
 			{
 				(lex.p)++
@@ -3902,32 +3899,32 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr253:
-		// line internal/scanner/scanner.rl:318
+		// line internal/scanner/scanner.rl:321
 		lex.te = (lex.p)
 		(lex.p)--
 		{
 			lex.ungetStr("?>")
-			lex.addHiddenToken(token, T_COMMENT, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_COMMENT, lex.ts, lex.te)
 		}
 		goto st123
 	tr256:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:318
+		// line internal/scanner/scanner.rl:321
 		lex.te = (lex.p)
 		(lex.p)--
 		{
 			lex.ungetStr("?>")
-			lex.addHiddenToken(token, T_COMMENT, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_COMMENT, lex.ts, lex.te)
 		}
 		goto st123
 	tr261:
-		// line internal/scanner/scanner.rl:345
+		// line internal/scanner/scanner.rl:346
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_VARIABLE
+			lex.setTokenPosition(tkn)
+			tok = token.T_VARIABLE
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3936,11 +3933,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr262:
-		// line internal/scanner/scanner.rl:291
+		// line internal/scanner/scanner.rl:294
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_MOD_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_MOD_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3949,11 +3946,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr263:
-		// line internal/scanner/scanner.rl:280
+		// line internal/scanner/scanner.rl:283
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_BOOLEAN_AND
+			lex.setTokenPosition(tkn)
+			tok = token.T_BOOLEAN_AND
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3962,11 +3959,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr264:
-		// line internal/scanner/scanner.rl:282
+		// line internal/scanner/scanner.rl:285
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_AND_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_AND_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3975,11 +3972,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr266:
-		// line internal/scanner/scanner.rl:285
+		// line internal/scanner/scanner.rl:288
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_MUL_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_MUL_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -3988,12 +3985,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr267:
-		// line internal/scanner/scanner.rl:304
+		// line internal/scanner/scanner.rl:307
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_POW
+			lex.setTokenPosition(tkn)
+			tok = token.T_POW
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4002,11 +3999,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr268:
-		// line internal/scanner/scanner.rl:286
+		// line internal/scanner/scanner.rl:289
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_POW_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_POW_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4015,11 +4012,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr269:
-		// line internal/scanner/scanner.rl:293
+		// line internal/scanner/scanner.rl:296
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_INC
+			lex.setTokenPosition(tkn)
+			tok = token.T_INC
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4028,11 +4025,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr270:
-		// line internal/scanner/scanner.rl:288
+		// line internal/scanner/scanner.rl:291
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_PLUS_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_PLUS_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4041,11 +4038,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr271:
-		// line internal/scanner/scanner.rl:292
+		// line internal/scanner/scanner.rl:295
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_DEC
+			lex.setTokenPosition(tkn)
+			tok = token.T_DEC
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4054,11 +4051,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr272:
-		// line internal/scanner/scanner.rl:289
+		// line internal/scanner/scanner.rl:292
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_MINUS_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_MINUS_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4068,11 +4065,11 @@ func (lex *Lexer) Lex() *Token {
 		goto st123
 	tr273:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:348
+		// line internal/scanner/scanner.rl:349
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_OBJECT_OPERATOR
+			lex.setTokenPosition(tkn)
+			tok = token.T_OBJECT_OPERATOR
 			lex.cs = 470
 			{
 				(lex.p)++
@@ -4081,11 +4078,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr275:
-		// line internal/scanner/scanner.rl:284
+		// line internal/scanner/scanner.rl:287
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_CONCAT_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_CONCAT_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4094,12 +4091,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr276:
-		// line internal/scanner/scanner.rl:164
+		// line internal/scanner/scanner.rl:167
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_DNUMBER
+			lex.setTokenPosition(tkn)
+			tok = token.T_DNUMBER
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4108,11 +4105,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr279:
-		// line internal/scanner/scanner.rl:287
+		// line internal/scanner/scanner.rl:290
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_DIV_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_DIV_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4121,7 +4118,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr280:
-		// line internal/scanner/scanner.rl:175
+		// line internal/scanner/scanner.rl:178
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -4134,8 +4131,8 @@ func (lex *Lexer) Lex() *Token {
 			_, err := strconv.ParseInt(s, base, 0)
 
 			if err == nil {
-				lex.setTokenPosition(token)
-				tok = T_LNUMBER
+				lex.setTokenPosition(tkn)
+				tok = token.T_LNUMBER
 				{
 					(lex.p)++
 					lex.cs = 123
@@ -4143,8 +4140,8 @@ func (lex *Lexer) Lex() *Token {
 				}
 			}
 
-			lex.setTokenPosition(token)
-			tok = T_DNUMBER
+			lex.setTokenPosition(tkn)
+			tok = token.T_DNUMBER
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4153,7 +4150,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr285:
-		// line internal/scanner/scanner.rl:165
+		// line internal/scanner/scanner.rl:168
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -4161,8 +4158,8 @@ func (lex *Lexer) Lex() *Token {
 			_, err := strconv.ParseInt(s, 2, 0)
 
 			if err == nil {
-				lex.setTokenPosition(token)
-				tok = T_LNUMBER
+				lex.setTokenPosition(tkn)
+				tok = token.T_LNUMBER
 				{
 					(lex.p)++
 					lex.cs = 123
@@ -4170,8 +4167,8 @@ func (lex *Lexer) Lex() *Token {
 				}
 			}
 
-			lex.setTokenPosition(token)
-			tok = T_DNUMBER
+			lex.setTokenPosition(tkn)
+			tok = token.T_DNUMBER
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4180,7 +4177,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr286:
-		// line internal/scanner/scanner.rl:190
+		// line internal/scanner/scanner.rl:193
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -4188,8 +4185,8 @@ func (lex *Lexer) Lex() *Token {
 			_, err := strconv.ParseInt(s, 16, 0)
 
 			if err == nil {
-				lex.setTokenPosition(token)
-				tok = T_LNUMBER
+				lex.setTokenPosition(tkn)
+				tok = token.T_LNUMBER
 				{
 					(lex.p)++
 					lex.cs = 123
@@ -4197,8 +4194,8 @@ func (lex *Lexer) Lex() *Token {
 				}
 			}
 
-			lex.setTokenPosition(token)
-			tok = T_DNUMBER
+			lex.setTokenPosition(tkn)
+			tok = token.T_DNUMBER
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4207,11 +4204,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr287:
-		// line internal/scanner/scanner.rl:279
+		// line internal/scanner/scanner.rl:282
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_PAAMAYIM_NEKUDOTAYIM
+			lex.setTokenPosition(tkn)
+			tok = token.T_PAAMAYIM_NEKUDOTAYIM
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4221,12 +4218,12 @@ func (lex *Lexer) Lex() *Token {
 		goto st123
 	tr288:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:162
+		// line internal/scanner/scanner.rl:165
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(';'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(';'))
 			lex.cs = 116
 			{
 				(lex.p)++
@@ -4236,14 +4233,14 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr290:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:162
+		// line internal/scanner/scanner.rl:165
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(';'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(';'))
 			lex.cs = 116
 			{
 				(lex.p)++
@@ -4252,11 +4249,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr293:
-		// line internal/scanner/scanner.rl:296
+		// line internal/scanner/scanner.rl:299
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_IS_NOT_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_IS_NOT_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4265,12 +4262,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr294:
-		// line internal/scanner/scanner.rl:305
+		// line internal/scanner/scanner.rl:308
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_SL
+			lex.setTokenPosition(tkn)
+			tok = token.T_SL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4279,11 +4276,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr295:
-		// line internal/scanner/scanner.rl:300
+		// line internal/scanner/scanner.rl:303
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_SL_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_SL_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4293,15 +4290,15 @@ func (lex *Lexer) Lex() *Token {
 		goto st123
 	tr296:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:356
+		// line internal/scanner/scanner.rl:357
 		lex.te = (lex.p)
 		(lex.p)--
 		{
 			lex.heredocLabel = lex.data[lblStart:lblEnd]
-			lex.setTokenPosition(token)
-			tok = T_START_HEREDOC
+			lex.setTokenPosition(tkn)
+			tok = token.T_START_HEREDOC
 
 			if lex.isHeredocEnd(lex.p + 1) {
 				lex.cs = 499
@@ -4317,12 +4314,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr297:
-		// line internal/scanner/scanner.rl:303
+		// line internal/scanner/scanner.rl:306
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_IS_SMALLER_OR_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_IS_SMALLER_OR_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4331,11 +4328,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr298:
-		// line internal/scanner/scanner.rl:295
+		// line internal/scanner/scanner.rl:298
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_SPACESHIP
+			lex.setTokenPosition(tkn)
+			tok = token.T_SPACESHIP
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4344,11 +4341,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr300:
-		// line internal/scanner/scanner.rl:294
+		// line internal/scanner/scanner.rl:297
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_DOUBLE_ARROW
+			lex.setTokenPosition(tkn)
+			tok = token.T_DOUBLE_ARROW
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4357,12 +4354,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr301:
-		// line internal/scanner/scanner.rl:298
+		// line internal/scanner/scanner.rl:301
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_IS_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_IS_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4371,11 +4368,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr302:
-		// line internal/scanner/scanner.rl:299
+		// line internal/scanner/scanner.rl:302
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_IS_IDENTICAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_IS_IDENTICAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4384,11 +4381,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr303:
-		// line internal/scanner/scanner.rl:302
+		// line internal/scanner/scanner.rl:305
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_IS_GREATER_OR_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_IS_GREATER_OR_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4397,12 +4394,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr305:
-		// line internal/scanner/scanner.rl:306
+		// line internal/scanner/scanner.rl:309
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_SR
+			lex.setTokenPosition(tkn)
+			tok = token.T_SR
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4411,11 +4408,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr306:
-		// line internal/scanner/scanner.rl:301
+		// line internal/scanner/scanner.rl:304
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_SR_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_SR_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4425,12 +4422,12 @@ func (lex *Lexer) Lex() *Token {
 		goto st123
 	tr309:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:161
+		// line internal/scanner/scanner.rl:164
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(';'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(';'))
 			lex.cs = 116
 			{
 				(lex.p)++
@@ -4440,14 +4437,14 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr311:
 		lex.cs = 123
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:161
+		// line internal/scanner/scanner.rl:164
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(';'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(';'))
 			lex.cs = 116
 			{
 				(lex.p)++
@@ -4456,12 +4453,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr312:
-		// line internal/scanner/scanner.rl:307
+		// line internal/scanner/scanner.rl:310
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_COALESCE
+			lex.setTokenPosition(tkn)
+			tok = token.T_COALESCE
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4470,11 +4467,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr313:
-		// line internal/scanner/scanner.rl:308
+		// line internal/scanner/scanner.rl:311
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_COALESCE_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_COALESCE_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4483,12 +4480,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr314:
-		// line internal/scanner/scanner.rl:346
+		// line internal/scanner/scanner.rl:347
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_STRING
+			lex.setTokenPosition(tkn)
+			tok = token.T_STRING
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4497,12 +4494,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr394:
-		// line internal/scanner/scanner.rl:216
+		// line internal/scanner/scanner.rl:219
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ELSE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ELSE
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4511,12 +4508,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr414:
-		// line internal/scanner/scanner.rl:220
+		// line internal/scanner/scanner.rl:223
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENDFOR
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENDFOR
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4525,12 +4522,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr443:
-		// line internal/scanner/scanner.rl:228
+		// line internal/scanner/scanner.rl:231
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_FINAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_FINAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4539,12 +4536,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr447:
-		// line internal/scanner/scanner.rl:230
+		// line internal/scanner/scanner.rl:233
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_FOR
+			lex.setTokenPosition(tkn)
+			tok = token.T_FOR
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4553,12 +4550,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr479:
-		// line internal/scanner/scanner.rl:260
+		// line internal/scanner/scanner.rl:263
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_INCLUDE
+			lex.setTokenPosition(tkn)
+			tok = token.T_INCLUDE
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4567,12 +4564,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr547:
-		// line internal/scanner/scanner.rl:262
+		// line internal/scanner/scanner.rl:265
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_REQUIRE
+			lex.setTokenPosition(tkn)
+			tok = token.T_REQUIRE
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4581,12 +4578,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr593:
-		// line internal/scanner/scanner.rl:259
+		// line internal/scanner/scanner.rl:262
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_YIELD
+			lex.setTokenPosition(tkn)
+			tok = token.T_YIELD
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4595,11 +4592,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr598:
-		// line internal/scanner/scanner.rl:290
+		// line internal/scanner/scanner.rl:293
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_XOR_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_XOR_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4608,11 +4605,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr672:
-		// line internal/scanner/scanner.rl:283
+		// line internal/scanner/scanner.rl:286
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_OR_EQUAL
+			lex.setTokenPosition(tkn)
+			tok = token.T_OR_EQUAL
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4621,11 +4618,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st123
 	tr673:
-		// line internal/scanner/scanner.rl:281
+		// line internal/scanner/scanner.rl:284
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_BOOLEAN_OR
+			lex.setTokenPosition(tkn)
+			tok = token.T_BOOLEAN_OR
 			{
 				(lex.p)++
 				lex.cs = 123
@@ -4644,7 +4641,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:3509
+		// line internal/scanner/scanner.go:3506
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr11
@@ -4829,7 +4826,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st124
 	st124:
@@ -4837,7 +4834,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof124
 		}
 	st_case_124:
-		// line internal/scanner/scanner.go:3702
+		// line internal/scanner/scanner.go:3699
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr11
@@ -4854,7 +4851,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -4869,9 +4866,9 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -4887,7 +4884,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof125
 		}
 	st_case_125:
-		// line internal/scanner/scanner.go:3752
+		// line internal/scanner/scanner.go:3749
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr245
@@ -4901,7 +4898,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr243
 	tr242:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -4913,9 +4910,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st6
 	tr246:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -4931,13 +4928,13 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof6
 		}
 	st_case_6:
-		// line internal/scanner/scanner.go:3796
+		// line internal/scanner/scanner.go:3793
 		if lex.data[(lex.p)] == 10 {
 			goto tr11
 		}
 		goto tr10
 	tr191:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -4953,7 +4950,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof126
 		}
 	st_case_126:
-		// line internal/scanner/scanner.go:3818
+		// line internal/scanner/scanner.go:3815
 		if lex.data[(lex.p)] == 10 {
 			goto tr11
 		}
@@ -4980,7 +4977,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:371
+		// line internal/scanner/scanner.rl:372
 		lex.act = 140
 		goto st129
 	st129:
@@ -4988,7 +4985,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof129
 		}
 	st_case_129:
-		// line internal/scanner/scanner.go:3853
+		// line internal/scanner/scanner.go:3850
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr14
@@ -5005,7 +5002,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st7
 	tr14:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -5021,7 +5018,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof7
 		}
 	st_case_7:
-		// line internal/scanner/scanner.go:3886
+		// line internal/scanner/scanner.go:3883
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr14
@@ -5098,7 +5095,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st7
 	tr255:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -5110,13 +5107,13 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st130
 	tr257:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st130
 	tr259:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -5132,7 +5129,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof130
 		}
 	st_case_130:
-		// line internal/scanner/scanner.go:3997
+		// line internal/scanner/scanner.go:3994
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -5182,7 +5179,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr253
 	tr254:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -5194,9 +5191,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st131
 	tr258:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -5212,7 +5209,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof131
 		}
 	st_case_131:
-		// line internal/scanner/scanner.go:4077
+		// line internal/scanner/scanner.go:4074
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -5339,7 +5336,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof136
 		}
 	st_case_136:
-		// line internal/scanner/scanner.go:4204
+		// line internal/scanner/scanner.go:4201
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr21
@@ -5352,7 +5349,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st11
 	tr21:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -5368,7 +5365,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof11
 		}
 	st_case_11:
-		// line internal/scanner/scanner.go:4233
+		// line internal/scanner/scanner.go:4230
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr21
@@ -5402,7 +5399,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof137
 		}
 	st_case_137:
-		// line internal/scanner/scanner.go:4267
+		// line internal/scanner/scanner.go:4264
 		switch lex.data[(lex.p)] {
 		case 9:
 			goto st13
@@ -6250,7 +6247,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof142
 		}
 	st_case_142:
-		// line internal/scanner/scanner.go:5115
+		// line internal/scanner/scanner.go:5112
 		switch lex.data[(lex.p)] {
 		case 46:
 			goto st67
@@ -6274,7 +6271,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:164
+		// line internal/scanner/scanner.rl:167
 		lex.act = 10
 		goto st143
 	st143:
@@ -6282,7 +6279,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof143
 		}
 	st_case_143:
-		// line internal/scanner/scanner.go:5147
+		// line internal/scanner/scanner.go:5144
 		switch lex.data[(lex.p)] {
 		case 69:
 			goto st68
@@ -6323,7 +6320,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:164
+		// line internal/scanner/scanner.rl:167
 		lex.act = 10
 		goto st144
 	st144:
@@ -6331,7 +6328,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof144
 		}
 	st_case_144:
-		// line internal/scanner/scanner.go:5196
+		// line internal/scanner/scanner.go:5193
 		if lex.data[(lex.p)] == 95 {
 			goto st69
 		}
@@ -6358,7 +6355,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof145
 		}
 	st_case_145:
-		// line internal/scanner/scanner.go:5223
+		// line internal/scanner/scanner.go:5220
 		switch lex.data[(lex.p)] {
 		case 42:
 			goto st71
@@ -6369,7 +6366,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr248
 	tr92:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6381,13 +6378,13 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st71
 	tr94:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st71
 	tr96:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6403,7 +6400,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof71
 		}
 	st_case_71:
-		// line internal/scanner/scanner.go:5268
+		// line internal/scanner/scanner.go:5265
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr91
@@ -6414,7 +6411,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st71
 	tr91:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6426,9 +6423,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st72
 	tr95:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6444,7 +6441,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof72
 		}
 	st_case_72:
-		// line internal/scanner/scanner.go:5309
+		// line internal/scanner/scanner.go:5306
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr95
@@ -6455,7 +6452,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr94
 	tr97:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st73
 	st73:
@@ -6463,7 +6460,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof73
 		}
 	st_case_73:
-		// line internal/scanner/scanner.go:5328
+		// line internal/scanner/scanner.go:5325
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr91
@@ -6479,7 +6476,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:175
+		// line internal/scanner/scanner.rl:178
 		lex.act = 12
 		goto st146
 	st146:
@@ -6487,7 +6484,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof146
 		}
 	st_case_146:
-		// line internal/scanner/scanner.go:5352
+		// line internal/scanner/scanner.go:5349
 		switch lex.data[(lex.p)] {
 		case 46:
 			goto tr281
@@ -6510,7 +6507,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:164
+		// line internal/scanner/scanner.rl:167
 		lex.act = 10
 		goto st147
 	st147:
@@ -6518,7 +6515,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof147
 		}
 	st_case_147:
-		// line internal/scanner/scanner.go:5383
+		// line internal/scanner/scanner.go:5380
 		switch lex.data[(lex.p)] {
 		case 69:
 			goto st68
@@ -6533,7 +6530,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:175
+		// line internal/scanner/scanner.rl:178
 		lex.act = 12
 		goto st148
 	st148:
@@ -6541,7 +6538,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof148
 		}
 	st_case_148:
-		// line internal/scanner/scanner.go:5406
+		// line internal/scanner/scanner.go:5403
 		switch lex.data[(lex.p)] {
 		case 46:
 			goto tr281
@@ -6578,7 +6575,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:165
+		// line internal/scanner/scanner.rl:168
 		lex.act = 11
 		goto st149
 	st149:
@@ -6586,7 +6583,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof149
 		}
 	st_case_149:
-		// line internal/scanner/scanner.go:5451
+		// line internal/scanner/scanner.go:5448
 		if lex.data[(lex.p)] == 95 {
 			goto st75
 		}
@@ -6616,7 +6613,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:190
+		// line internal/scanner/scanner.rl:193
 		lex.act = 13
 		goto st150
 	st150:
@@ -6624,7 +6621,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof150
 		}
 	st_case_150:
-		// line internal/scanner/scanner.go:5489
+		// line internal/scanner/scanner.go:5486
 		if lex.data[(lex.p)] == 95 {
 			goto st76
 		}
@@ -6660,7 +6657,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof152
 		}
 	st_case_152:
-		// line internal/scanner/scanner.go:5525
+		// line internal/scanner/scanner.go:5522
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr104
@@ -6676,7 +6673,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr248
 	tr107:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st77
 	st77:
@@ -6684,7 +6681,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof77
 		}
 	st_case_77:
-		// line internal/scanner/scanner.go:5549
+		// line internal/scanner/scanner.go:5546
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr104
@@ -6700,7 +6697,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr23
 	tr104:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6712,9 +6709,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st78
 	tr108:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6730,7 +6727,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof78
 		}
 	st_case_78:
-		// line internal/scanner/scanner.go:5595
+		// line internal/scanner/scanner.go:5592
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr108
@@ -6746,7 +6743,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr23
 	tr105:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6758,9 +6755,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st79
 	tr109:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6776,13 +6773,13 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof79
 		}
 	st_case_79:
-		// line internal/scanner/scanner.go:5641
+		// line internal/scanner/scanner.go:5638
 		if lex.data[(lex.p)] == 10 {
 			goto tr104
 		}
 		goto tr23
 	tr110:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st80
 	st80:
@@ -6790,7 +6787,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof80
 		}
 	st_case_80:
-		// line internal/scanner/scanner.go:5655
+		// line internal/scanner/scanner.go:5652
 		if lex.data[(lex.p)] == 62 {
 			goto tr111
 		}
@@ -6805,7 +6802,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof153
 		}
 	st_case_153:
-		// line internal/scanner/scanner.go:5670
+		// line internal/scanner/scanner.go:5667
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr113
@@ -6814,7 +6811,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr288
 	tr113:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6830,10 +6827,10 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof154
 		}
 	st_case_154:
-		// line internal/scanner/scanner.go:5695
+		// line internal/scanner/scanner.go:5692
 		goto tr290
 	tr289:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -6849,7 +6846,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof81
 		}
 	st_case_81:
-		// line internal/scanner/scanner.go:5714
+		// line internal/scanner/scanner.go:5711
 		if lex.data[(lex.p)] == 10 {
 			goto tr113
 		}
@@ -6872,7 +6869,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:305
+		// line internal/scanner/scanner.rl:308
 		lex.act = 118
 		goto st156
 	st156:
@@ -6880,7 +6877,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof156
 		}
 	st_case_156:
-		// line internal/scanner/scanner.go:5745
+		// line internal/scanner/scanner.go:5742
 		switch lex.data[(lex.p)] {
 		case 60:
 			goto st82
@@ -6940,7 +6937,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr118
 	tr118:
-		// line internal/scanner/scanner.rl:35
+		// line internal/scanner/scanner.rl:38
 		lblStart = lex.p
 		goto st84
 	st84:
@@ -6948,7 +6945,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof84
 		}
 	st_case_84:
-		// line internal/scanner/scanner.go:5813
+		// line internal/scanner/scanner.go:5810
 		switch lex.data[(lex.p)] {
 		case 34:
 			goto tr119
@@ -6974,7 +6971,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st84
 	tr119:
-		// line internal/scanner/scanner.rl:36
+		// line internal/scanner/scanner.rl:39
 		lblEnd = lex.p
 		goto st85
 	st85:
@@ -6982,7 +6979,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof85
 		}
 	st_case_85:
-		// line internal/scanner/scanner.go:5847
+		// line internal/scanner/scanner.go:5844
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr121
@@ -6991,7 +6988,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr12
 	tr121:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -7003,9 +7000,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st157
 	tr125:
-		// line internal/scanner/scanner.rl:36
+		// line internal/scanner/scanner.rl:39
 		lblEnd = lex.p
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -7021,10 +7018,10 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof157
 		}
 	st_case_157:
-		// line internal/scanner/scanner.go:5886
+		// line internal/scanner/scanner.go:5883
 		goto tr296
 	tr122:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -7036,9 +7033,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st86
 	tr126:
-		// line internal/scanner/scanner.rl:36
+		// line internal/scanner/scanner.rl:39
 		lblEnd = lex.p
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -7054,7 +7051,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof86
 		}
 	st_case_86:
-		// line internal/scanner/scanner.go:5919
+		// line internal/scanner/scanner.go:5916
 		if lex.data[(lex.p)] == 10 {
 			goto tr121
 		}
@@ -7081,7 +7078,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr123
 	tr123:
-		// line internal/scanner/scanner.rl:35
+		// line internal/scanner/scanner.rl:38
 		lblStart = lex.p
 		goto st88
 	st88:
@@ -7089,7 +7086,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof88
 		}
 	st_case_88:
-		// line internal/scanner/scanner.go:5954
+		// line internal/scanner/scanner.go:5951
 		switch lex.data[(lex.p)] {
 		case 39:
 			goto tr119
@@ -7115,7 +7112,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st88
 	tr117:
-		// line internal/scanner/scanner.rl:35
+		// line internal/scanner/scanner.rl:38
 		lblStart = lex.p
 		goto st89
 	st89:
@@ -7123,7 +7120,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof89
 		}
 	st_case_89:
-		// line internal/scanner/scanner.go:5988
+		// line internal/scanner/scanner.go:5985
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr125
@@ -7223,7 +7220,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof164
 		}
 	st_case_164:
-		// line internal/scanner/scanner.go:6088
+		// line internal/scanner/scanner.go:6085
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr129
@@ -7232,7 +7229,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr309
 	tr129:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -7248,10 +7245,10 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof165
 		}
 	st_case_165:
-		// line internal/scanner/scanner.go:6113
+		// line internal/scanner/scanner.go:6110
 		goto tr311
 	tr310:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -7267,7 +7264,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof90
 		}
 	st_case_90:
-		// line internal/scanner/scanner.go:6132
+		// line internal/scanner/scanner.go:6129
 		if lex.data[(lex.p)] == 10 {
 			goto tr129
 		}
@@ -7328,490 +7325,490 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:346
+		// line internal/scanner/scanner.rl:347
 		lex.act = 135
 		goto st168
 	tr318:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:203
+		// line internal/scanner/scanner.rl:206
 		lex.act = 16
 		goto st168
 	tr324:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:201
+		// line internal/scanner/scanner.rl:204
 		lex.act = 14
 		goto st168
 	tr325:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:274
+		// line internal/scanner/scanner.rl:277
 		lex.act = 87
 		goto st168
 	tr328:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:202
+		// line internal/scanner/scanner.rl:205
 		lex.act = 15
 		goto st168
 	tr333:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:204
+		// line internal/scanner/scanner.rl:207
 		lex.act = 17
 		goto st168
 	tr345:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:205
+		// line internal/scanner/scanner.rl:208
 		lex.act = 18
 		goto st168
 	tr346:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:206
+		// line internal/scanner/scanner.rl:209
 		lex.act = 19
 		goto st168
 	tr348:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:207
+		// line internal/scanner/scanner.rl:210
 		lex.act = 20
 		goto st168
 	tr355:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:232
+		// line internal/scanner/scanner.rl:235
 		lex.act = 45
 		goto st168
 	tr359:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:208
+		// line internal/scanner/scanner.rl:211
 		lex.act = 21
 		goto st168
 	tr361:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:209
+		// line internal/scanner/scanner.rl:212
 		lex.act = 22
 		goto st168
 	tr365:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:210
+		// line internal/scanner/scanner.rl:213
 		lex.act = 23
 		goto st168
 	tr369:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:211
+		// line internal/scanner/scanner.rl:214
 		lex.act = 24
 		goto st168
 	tr372:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:214
+		// line internal/scanner/scanner.rl:217
 		lex.act = 27
 		goto st168
 	tr378:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:212
+		// line internal/scanner/scanner.rl:215
 		lex.act = 25
 		goto st168
 	tr382:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:213
+		// line internal/scanner/scanner.rl:216
 		lex.act = 26
 		goto st168
 	tr383:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:226
+		// line internal/scanner/scanner.rl:229
 		lex.act = 39
 		goto st168
 	tr391:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:215
+		// line internal/scanner/scanner.rl:218
 		lex.act = 28
 		goto st168
 	tr396:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:217
+		// line internal/scanner/scanner.rl:220
 		lex.act = 30
 		goto st168
 	tr399:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:218
+		// line internal/scanner/scanner.rl:221
 		lex.act = 31
 		goto st168
 	tr411:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:219
+		// line internal/scanner/scanner.rl:222
 		lex.act = 32
 		goto st168
 	tr418:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:221
+		// line internal/scanner/scanner.rl:224
 		lex.act = 34
 		goto st168
 	tr419:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:222
+		// line internal/scanner/scanner.rl:225
 		lex.act = 35
 		goto st168
 	tr424:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:223
+		// line internal/scanner/scanner.rl:226
 		lex.act = 36
 		goto st168
 	tr428:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:224
+		// line internal/scanner/scanner.rl:227
 		lex.act = 37
 		goto st168
 	tr430:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:225
+		// line internal/scanner/scanner.rl:228
 		lex.act = 38
 		goto st168
 	tr436:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:227
+		// line internal/scanner/scanner.rl:230
 		lex.act = 40
 		goto st168
 	tr438:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:233
+		// line internal/scanner/scanner.rl:236
 		lex.act = 46
 		goto st168
 	tr445:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:229
+		// line internal/scanner/scanner.rl:232
 		lex.act = 42
 		goto st168
 	tr451:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:231
+		// line internal/scanner/scanner.rl:234
 		lex.act = 44
 		goto st168
 	tr457:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:234
+		// line internal/scanner/scanner.rl:237
 		lex.act = 47
 		goto st168
 	tr459:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:235
+		// line internal/scanner/scanner.rl:238
 		lex.act = 48
 		goto st168
 	tr460:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:236
+		// line internal/scanner/scanner.rl:239
 		lex.act = 49
 		goto st168
 	tr471:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:238
+		// line internal/scanner/scanner.rl:241
 		lex.act = 51
 		goto st168
 	tr484:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:261
+		// line internal/scanner/scanner.rl:264
 		lex.act = 74
 		goto st168
 	tr492:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:239
+		// line internal/scanner/scanner.rl:242
 		lex.act = 52
 		goto st168
 	tr496:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:240
+		// line internal/scanner/scanner.rl:243
 		lex.act = 53
 		goto st168
 	tr502:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:241
+		// line internal/scanner/scanner.rl:244
 		lex.act = 54
 		goto st168
 	tr505:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:237
+		// line internal/scanner/scanner.rl:240
 		lex.act = 50
 		goto st168
 	tr508:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:242
+		// line internal/scanner/scanner.rl:245
 		lex.act = 55
 		goto st168
 	tr517:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:243
+		// line internal/scanner/scanner.rl:246
 		lex.act = 56
 		goto st168
 	tr518:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:273
+		// line internal/scanner/scanner.rl:276
 		lex.act = 86
 		goto st168
 	tr519:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:275
+		// line internal/scanner/scanner.rl:278
 		lex.act = 88
 		goto st168
 	tr526:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:246
+		// line internal/scanner/scanner.rl:249
 		lex.act = 59
 		goto st168
 	tr529:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:244
+		// line internal/scanner/scanner.rl:247
 		lex.act = 57
 		goto st168
 	tr535:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:247
+		// line internal/scanner/scanner.rl:250
 		lex.act = 60
 		goto st168
 	tr539:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:245
+		// line internal/scanner/scanner.rl:248
 		lex.act = 58
 		goto st168
 	tr552:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:263
+		// line internal/scanner/scanner.rl:266
 		lex.act = 76
 		goto st168
 	tr555:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:248
+		// line internal/scanner/scanner.rl:251
 		lex.act = 61
 		goto st168
 	tr561:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:249
+		// line internal/scanner/scanner.rl:252
 		lex.act = 62
 		goto st168
 	tr565:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:250
+		// line internal/scanner/scanner.rl:253
 		lex.act = 63
 		goto st168
 	tr570:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:251
+		// line internal/scanner/scanner.rl:254
 		lex.act = 64
 		goto st168
 	tr572:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:253
+		// line internal/scanner/scanner.rl:256
 		lex.act = 66
 		goto st168
 	tr574:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:252
+		// line internal/scanner/scanner.rl:255
 		lex.act = 65
 		goto st168
 	tr579:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:254
+		// line internal/scanner/scanner.rl:257
 		lex.act = 67
 		goto st168
 	tr580:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:255
+		// line internal/scanner/scanner.rl:258
 		lex.act = 68
 		goto st168
 	tr582:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:256
+		// line internal/scanner/scanner.rl:259
 		lex.act = 69
 		goto st168
 	tr586:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:257
+		// line internal/scanner/scanner.rl:260
 		lex.act = 70
 		goto st168
 	tr588:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:276
+		// line internal/scanner/scanner.rl:279
 		lex.act = 89
 		goto st168
 	tr597:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:258
+		// line internal/scanner/scanner.rl:261
 		lex.act = 71
 		goto st168
 	tr613:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:264
+		// line internal/scanner/scanner.rl:267
 		lex.act = 77
 		goto st168
 	tr617:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:265
+		// line internal/scanner/scanner.rl:268
 		lex.act = 78
 		goto st168
 	tr623:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:266
+		// line internal/scanner/scanner.rl:269
 		lex.act = 79
 		goto st168
 	tr631:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:267
+		// line internal/scanner/scanner.rl:270
 		lex.act = 80
 		goto st168
 	tr643:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:272
+		// line internal/scanner/scanner.rl:275
 		lex.act = 85
 		goto st168
 	tr648:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:268
+		// line internal/scanner/scanner.rl:271
 		lex.act = 81
 		goto st168
 	tr655:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:270
+		// line internal/scanner/scanner.rl:273
 		lex.act = 83
 		goto st168
 	tr665:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:269
+		// line internal/scanner/scanner.rl:272
 		lex.act = 82
 		goto st168
 	tr671:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:271
+		// line internal/scanner/scanner.rl:274
 		lex.act = 84
 		goto st168
 	st168:
@@ -7819,7 +7816,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof168
 		}
 	st_case_168:
-		// line internal/scanner/scanner.go:6684
+		// line internal/scanner/scanner.go:6681
 		if lex.data[(lex.p)] == 96 {
 			goto tr12
 		}
@@ -8155,7 +8152,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:346
+		// line internal/scanner/scanner.rl:347
 		lex.act = 135
 		goto st179
 	st179:
@@ -8163,7 +8160,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof179
 		}
 	st_case_179:
-		// line internal/scanner/scanner.go:7028
+		// line internal/scanner/scanner.go:7025
 		switch lex.data[(lex.p)] {
 		case 34:
 			goto st7
@@ -15157,7 +15154,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof399
 		}
 	st_case_399:
-		// line internal/scanner/scanner.go:14022
+		// line internal/scanner/scanner.go:14019
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr134
@@ -15200,7 +15197,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr220
 	tr137:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st93
 	st93:
@@ -15208,7 +15205,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof93
 		}
 	st_case_93:
-		// line internal/scanner/scanner.go:14073
+		// line internal/scanner/scanner.go:14070
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr134
@@ -15226,7 +15223,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr132
 	tr134:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -15238,9 +15235,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st94
 	tr138:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -15256,7 +15253,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof94
 		}
 	st_case_94:
-		// line internal/scanner/scanner.go:14121
+		// line internal/scanner/scanner.go:14118
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr138
@@ -15274,7 +15271,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr132
 	tr135:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -15286,9 +15283,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st95
 	tr139:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -15304,13 +15301,13 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof95
 		}
 	st_case_95:
-		// line internal/scanner/scanner.go:14169
+		// line internal/scanner/scanner.go:14166
 		if lex.data[(lex.p)] == 10 {
 			goto tr134
 		}
 		goto tr132
 	tr140:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st96
 	st96:
@@ -15318,7 +15315,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof96
 		}
 	st_case_96:
-		// line internal/scanner/scanner.go:14183
+		// line internal/scanner/scanner.go:14180
 		switch lex.data[(lex.p)] {
 		case 82:
 			goto st97
@@ -17422,14 +17419,14 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr248
 	tr144:
-		// line internal/scanner/scanner.rl:380
+		// line internal/scanner/scanner.rl:381
 		(lex.p) = (lex.te) - 1
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st470
 	tr674:
-		// line internal/scanner/scanner.rl:383
+		// line internal/scanner/scanner.rl:384
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
@@ -17439,25 +17436,25 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st470
 	tr679:
-		// line internal/scanner/scanner.rl:380
+		// line internal/scanner/scanner.rl:381
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st470
 	tr681:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:380
+		// line internal/scanner/scanner.rl:381
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st470
 	tr685:
-		// line internal/scanner/scanner.rl:383
+		// line internal/scanner/scanner.rl:384
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -17468,11 +17465,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st470
 	tr686:
-		// line internal/scanner/scanner.rl:381
+		// line internal/scanner/scanner.rl:382
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_OBJECT_OPERATOR
+			lex.setTokenPosition(tkn)
+			tok = token.T_OBJECT_OPERATOR
 			{
 				(lex.p)++
 				lex.cs = 470
@@ -17482,12 +17479,12 @@ func (lex *Lexer) Lex() *Token {
 		goto st470
 	tr687:
 		lex.cs = 470
-		// line internal/scanner/scanner.rl:382
+		// line internal/scanner/scanner.rl:383
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_STRING
+			lex.setTokenPosition(tkn)
+			tok = token.T_STRING
 			lex.cs = 123
 			{
 				(lex.p)++
@@ -17506,7 +17503,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:16339
+		// line internal/scanner/scanner.go:16336
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr145
@@ -17551,7 +17548,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st471
 	st471:
@@ -17559,7 +17556,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof471
 		}
 	st_case_471:
-		// line internal/scanner/scanner.go:16392
+		// line internal/scanner/scanner.go:16389
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr145
@@ -17576,7 +17573,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -17591,9 +17588,9 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -17609,7 +17606,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof472
 		}
 	st_case_472:
-		// line internal/scanner/scanner.go:16442
+		// line internal/scanner/scanner.go:16439
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr683
@@ -17623,7 +17620,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr681
 	tr680:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -17635,9 +17632,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st99
 	tr684:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -17653,13 +17650,13 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof99
 		}
 	st_case_99:
-		// line internal/scanner/scanner.go:16486
+		// line internal/scanner/scanner.go:16483
 		if lex.data[(lex.p)] == 10 {
 			goto tr145
 		}
 		goto tr144
 	tr676:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -17675,7 +17672,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof473
 		}
 	st_case_473:
-		// line internal/scanner/scanner.go:16508
+		// line internal/scanner/scanner.go:16505
 		if lex.data[(lex.p)] == 10 {
 			goto tr145
 		}
@@ -17729,8 +17726,8 @@ func (lex *Lexer) Lex() *Token {
 			{
 				(lex.p) = (lex.te) - 1
 
-				lex.setTokenPosition(token)
-				tok = T_ENCAPSED_AND_WHITESPACE
+				lex.setTokenPosition(tkn)
+				tok = token.T_ENCAPSED_AND_WHITESPACE
 				lex.cs = 499
 				{
 					(lex.p)++
@@ -17742,14 +17739,14 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr692:
 		lex.cs = 476
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:387
+		// line internal/scanner/scanner.rl:388
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 			lex.cs = 499
 			{
 				(lex.p)++
@@ -17759,12 +17756,12 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr696:
 		lex.cs = 476
-		// line internal/scanner/scanner.rl:387
+		// line internal/scanner/scanner.rl:388
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 			lex.cs = 499
 			{
 				(lex.p)++
@@ -17786,7 +17783,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:16605
+		// line internal/scanner/scanner.go:16602
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -17843,16 +17840,16 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:387
+		// line internal/scanner/scanner.rl:388
 		lex.act = 146
 		goto st477
 	tr693:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:387
+		// line internal/scanner/scanner.rl:388
 		lex.act = 146
 		goto st477
 	st477:
@@ -17860,7 +17857,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof477
 		}
 	st_case_477:
-		// line internal/scanner/scanner.go:16679
+		// line internal/scanner/scanner.go:16676
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -17910,7 +17907,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr691
 	tr689:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -17922,9 +17919,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st478
 	tr694:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -17940,7 +17937,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof478
 		}
 	st_case_478:
-		// line internal/scanner/scanner.go:16759
+		// line internal/scanner/scanner.go:16756
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -17990,7 +17987,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr692
 	tr690:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -18002,9 +17999,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st479
 	tr695:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -18020,7 +18017,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof479
 		}
 	st_case_479:
-		// line internal/scanner/scanner.go:16839
+		// line internal/scanner/scanner.go:16836
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -18070,18 +18067,18 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr696
 	tr146:
-		// line internal/scanner/scanner.rl:396
+		// line internal/scanner/scanner.rl:397
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
-			lex.setTokenPosition(token)
-			tok = T_CURLY_OPEN
+			lex.setTokenPosition(tkn)
+			tok = token.T_CURLY_OPEN
 			lex.call(480, 123)
 			goto _out
 		}
 		goto st480
 	tr704:
-		// line internal/scanner/scanner.rl:398
+		// line internal/scanner/scanner.rl:399
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -18097,11 +18094,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st480
 	tr705:
-		// line internal/scanner/scanner.rl:397
+		// line internal/scanner/scanner.rl:398
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_DOLLAR_OPEN_CURLY_BRACES
+			lex.setTokenPosition(tkn)
+			tok = token.T_DOLLAR_OPEN_CURLY_BRACES
 			lex.call(480, 516)
 			goto _out
 		}
@@ -18114,16 +18111,16 @@ func (lex *Lexer) Lex() *Token {
 			{
 				(lex.p) = (lex.te) - 1
 				lex.ungetCnt(1)
-				lex.setTokenPosition(token)
-				tok = T_CURLY_OPEN
+				lex.setTokenPosition(tkn)
+				tok = token.T_CURLY_OPEN
 				lex.call(480, 123)
 				goto _out
 			}
 		case 148:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_DOLLAR_OPEN_CURLY_BRACES
+				lex.setTokenPosition(tkn)
+				tok = token.T_DOLLAR_OPEN_CURLY_BRACES
 				lex.call(480, 516)
 				goto _out
 			}
@@ -18131,8 +18128,8 @@ func (lex *Lexer) Lex() *Token {
 			{
 				(lex.p) = (lex.te) - 1
 
-				lex.setTokenPosition(token)
-				tok = T_ENCAPSED_AND_WHITESPACE
+				lex.setTokenPosition(tkn)
+				tok = token.T_ENCAPSED_AND_WHITESPACE
 
 				if len(lex.data) > lex.p+1 && lex.data[lex.p+1] != '$' && lex.data[lex.p+1] != '{' {
 					lex.cs = 499
@@ -18147,14 +18144,14 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr707:
 		lex.cs = 480
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:399
+		// line internal/scanner/scanner.rl:400
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 
 			if len(lex.data) > lex.p+1 && lex.data[lex.p+1] != '$' && lex.data[lex.p+1] != '{' {
 				lex.cs = 499
@@ -18167,12 +18164,12 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr711:
 		lex.cs = 480
-		// line internal/scanner/scanner.rl:399
+		// line internal/scanner/scanner.rl:400
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 
 			if len(lex.data) > lex.p+1 && lex.data[lex.p+1] != '$' && lex.data[lex.p+1] != '{' {
 				lex.cs = 499
@@ -18194,7 +18191,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:16971
+		// line internal/scanner/scanner.go:16968
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -18273,30 +18270,30 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:399
+		// line internal/scanner/scanner.rl:400
 		lex.act = 150
 		goto st482
 	tr708:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:399
+		// line internal/scanner/scanner.rl:400
 		lex.act = 150
 		goto st482
 	tr712:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:397
+		// line internal/scanner/scanner.rl:398
 		lex.act = 148
 		goto st482
 	tr713:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:396
+		// line internal/scanner/scanner.rl:397
 		lex.act = 147
 		goto st482
 	st482:
@@ -18304,7 +18301,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof482
 		}
 	st_case_482:
-		// line internal/scanner/scanner.go:17081
+		// line internal/scanner/scanner.go:17078
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -18354,7 +18351,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr706
 	tr700:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -18366,9 +18363,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st483
 	tr709:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -18384,7 +18381,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof483
 		}
 	st_case_483:
-		// line internal/scanner/scanner.go:17161
+		// line internal/scanner/scanner.go:17158
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -18434,7 +18431,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr707
 	tr701:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -18446,9 +18443,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st484
 	tr710:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -18464,7 +18461,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof484
 		}
 	st_case_484:
-		// line internal/scanner/scanner.go:17241
+		// line internal/scanner/scanner.go:17238
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -18628,7 +18625,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr711
 	tr148:
-		// line internal/scanner/scanner.rl:413
+		// line internal/scanner/scanner.rl:414
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(2)
@@ -18643,33 +18640,33 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st487
 	tr149:
-		// line internal/scanner/scanner.rl:412
+		// line internal/scanner/scanner.rl:413
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_DOLLAR_OPEN_CURLY_BRACES
+			lex.setTokenPosition(tkn)
+			tok = token.T_DOLLAR_OPEN_CURLY_BRACES
 			lex.call(487, 516)
 			goto _out
 		}
 		goto st487
 	tr150:
-		// line internal/scanner/scanner.rl:411
+		// line internal/scanner/scanner.rl:412
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
-			lex.setTokenPosition(token)
-			tok = T_CURLY_OPEN
+			lex.setTokenPosition(tkn)
+			tok = token.T_CURLY_OPEN
 			lex.call(487, 123)
 			goto _out
 		}
 		goto st487
 	tr715:
 		lex.cs = 487
-		// line internal/scanner/scanner.rl:414
+		// line internal/scanner/scanner.rl:415
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int('`'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int('`'))
 			lex.cs = 123
 			{
 				(lex.p)++
@@ -18685,16 +18682,16 @@ func (lex *Lexer) Lex() *Token {
 			{
 				(lex.p) = (lex.te) - 1
 				lex.ungetCnt(1)
-				lex.setTokenPosition(token)
-				tok = T_CURLY_OPEN
+				lex.setTokenPosition(tkn)
+				tok = token.T_CURLY_OPEN
 				lex.call(487, 123)
 				goto _out
 			}
 		case 152:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_DOLLAR_OPEN_CURLY_BRACES
+				lex.setTokenPosition(tkn)
+				tok = token.T_DOLLAR_OPEN_CURLY_BRACES
 				lex.call(487, 516)
 				goto _out
 			}
@@ -18714,8 +18711,8 @@ func (lex *Lexer) Lex() *Token {
 		case 154:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = TokenID(int('`'))
+				lex.setTokenPosition(tkn)
+				tok = token.ID(int('`'))
 				lex.cs = 123
 				{
 					(lex.p)++
@@ -18726,8 +18723,8 @@ func (lex *Lexer) Lex() *Token {
 			{
 				(lex.p) = (lex.te) - 1
 
-				lex.setTokenPosition(token)
-				tok = T_ENCAPSED_AND_WHITESPACE
+				lex.setTokenPosition(tkn)
+				tok = token.T_ENCAPSED_AND_WHITESPACE
 				{
 					(lex.p)++
 					goto _out
@@ -18737,14 +18734,14 @@ func (lex *Lexer) Lex() *Token {
 
 		goto _again
 	tr724:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:415
+		// line internal/scanner/scanner.rl:416
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 			{
 				(lex.p)++
 				lex.cs = 487
@@ -18753,12 +18750,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st487
 	tr728:
-		// line internal/scanner/scanner.rl:415
+		// line internal/scanner/scanner.rl:416
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 			{
 				(lex.p)++
 				lex.cs = 487
@@ -18777,7 +18774,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:17484
+		// line internal/scanner/scanner.go:17481
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -18875,44 +18872,44 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:415
+		// line internal/scanner/scanner.rl:416
 		lex.act = 155
 		goto st488
 	tr721:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:414
+		// line internal/scanner/scanner.rl:415
 		lex.act = 154
 		goto st488
 	tr725:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:415
+		// line internal/scanner/scanner.rl:416
 		lex.act = 155
 		goto st488
 	tr729:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:413
+		// line internal/scanner/scanner.rl:414
 		lex.act = 153
 		goto st488
 	tr730:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:412
+		// line internal/scanner/scanner.rl:413
 		lex.act = 152
 		goto st488
 	tr731:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:411
+		// line internal/scanner/scanner.rl:412
 		lex.act = 151
 		goto st488
 	st488:
@@ -18920,7 +18917,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof488
 		}
 	st_case_488:
-		// line internal/scanner/scanner.go:17627
+		// line internal/scanner/scanner.go:17624
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -18970,7 +18967,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr723
 	tr718:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -18982,9 +18979,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st489
 	tr726:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -19000,7 +18997,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof489
 		}
 	st_case_489:
-		// line internal/scanner/scanner.go:17707
+		// line internal/scanner/scanner.go:17704
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -19050,7 +19047,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr724
 	tr719:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -19062,9 +19059,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st490
 	tr727:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -19080,7 +19077,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof490
 		}
 	st_case_490:
-		// line internal/scanner/scanner.go:17787
+		// line internal/scanner/scanner.go:17784
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -19285,7 +19282,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr728
 	tr151:
-		// line internal/scanner/scanner.rl:425
+		// line internal/scanner/scanner.rl:426
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(2)
@@ -19300,33 +19297,33 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st493
 	tr152:
-		// line internal/scanner/scanner.rl:424
+		// line internal/scanner/scanner.rl:425
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_DOLLAR_OPEN_CURLY_BRACES
+			lex.setTokenPosition(tkn)
+			tok = token.T_DOLLAR_OPEN_CURLY_BRACES
 			lex.call(493, 516)
 			goto _out
 		}
 		goto st493
 	tr153:
-		// line internal/scanner/scanner.rl:423
+		// line internal/scanner/scanner.rl:424
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
-			lex.setTokenPosition(token)
-			tok = T_CURLY_OPEN
+			lex.setTokenPosition(tkn)
+			tok = token.T_CURLY_OPEN
 			lex.call(493, 123)
 			goto _out
 		}
 		goto st493
 	tr732:
 		lex.cs = 493
-		// line internal/scanner/scanner.rl:426
+		// line internal/scanner/scanner.rl:427
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int('"'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int('"'))
 			lex.cs = 123
 			{
 				(lex.p)++
@@ -19342,16 +19339,16 @@ func (lex *Lexer) Lex() *Token {
 			{
 				(lex.p) = (lex.te) - 1
 				lex.ungetCnt(1)
-				lex.setTokenPosition(token)
-				tok = T_CURLY_OPEN
+				lex.setTokenPosition(tkn)
+				tok = token.T_CURLY_OPEN
 				lex.call(493, 123)
 				goto _out
 			}
 		case 157:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = T_DOLLAR_OPEN_CURLY_BRACES
+				lex.setTokenPosition(tkn)
+				tok = token.T_DOLLAR_OPEN_CURLY_BRACES
 				lex.call(493, 516)
 				goto _out
 			}
@@ -19371,8 +19368,8 @@ func (lex *Lexer) Lex() *Token {
 		case 159:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.setTokenPosition(token)
-				tok = TokenID(int('"'))
+				lex.setTokenPosition(tkn)
+				tok = token.ID(int('"'))
 				lex.cs = 123
 				{
 					(lex.p)++
@@ -19383,8 +19380,8 @@ func (lex *Lexer) Lex() *Token {
 			{
 				(lex.p) = (lex.te) - 1
 
-				lex.setTokenPosition(token)
-				tok = T_ENCAPSED_AND_WHITESPACE
+				lex.setTokenPosition(tkn)
+				tok = token.T_ENCAPSED_AND_WHITESPACE
 				{
 					(lex.p)++
 					goto _out
@@ -19394,14 +19391,14 @@ func (lex *Lexer) Lex() *Token {
 
 		goto _again
 	tr742:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:427
+		// line internal/scanner/scanner.rl:428
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 			{
 				(lex.p)++
 				lex.cs = 493
@@ -19410,12 +19407,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st493
 	tr746:
-		// line internal/scanner/scanner.rl:427
+		// line internal/scanner/scanner.rl:428
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 			{
 				(lex.p)++
 				lex.cs = 493
@@ -19434,7 +19431,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:18071
+		// line internal/scanner/scanner.go:18068
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -19532,44 +19529,44 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:427
+		// line internal/scanner/scanner.rl:428
 		lex.act = 160
 		goto st494
 	tr738:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:426
+		// line internal/scanner/scanner.rl:427
 		lex.act = 159
 		goto st494
 	tr743:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:427
+		// line internal/scanner/scanner.rl:428
 		lex.act = 160
 		goto st494
 	tr747:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:425
+		// line internal/scanner/scanner.rl:426
 		lex.act = 158
 		goto st494
 	tr748:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:424
+		// line internal/scanner/scanner.rl:425
 		lex.act = 157
 		goto st494
 	tr749:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:423
+		// line internal/scanner/scanner.rl:424
 		lex.act = 156
 		goto st494
 	st494:
@@ -19577,7 +19574,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof494
 		}
 	st_case_494:
-		// line internal/scanner/scanner.go:18214
+		// line internal/scanner/scanner.go:18211
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -19627,7 +19624,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr741
 	tr736:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -19639,9 +19636,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st495
 	tr744:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -19657,7 +19654,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof495
 		}
 	st_case_495:
-		// line internal/scanner/scanner.go:18294
+		// line internal/scanner/scanner.go:18291
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -19707,7 +19704,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr742
 	tr737:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -19719,9 +19716,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st496
 	tr745:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -19737,7 +19734,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof496
 		}
 	st_case_496:
-		// line internal/scanner/scanner.go:18374
+		// line internal/scanner/scanner.go:18371
 		_widec = int16(lex.data[(lex.p)])
 		switch {
 		case lex.data[(lex.p)] < 11:
@@ -19943,12 +19940,12 @@ func (lex *Lexer) Lex() *Token {
 		goto tr746
 	tr751:
 		lex.cs = 499
-		// line internal/scanner/scanner.rl:435
+		// line internal/scanner/scanner.rl:436
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_END_HEREDOC
+			lex.setTokenPosition(tkn)
+			tok = token.T_END_HEREDOC
 			lex.cs = 123
 			{
 				(lex.p)++
@@ -19967,7 +19964,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:18601
+		// line internal/scanner/scanner.go:18598
 		if lex.data[(lex.p)] == 96 {
 			goto st0
 		}
@@ -20011,7 +20008,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st500
 	tr154:
-		// line internal/scanner/scanner.rl:454
+		// line internal/scanner/scanner.rl:455
 		(lex.p) = (lex.te) - 1
 		{
 			lex.ungetCnt(1)
@@ -20023,12 +20020,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st501
 	tr155:
-		// line internal/scanner/scanner.rl:451
+		// line internal/scanner/scanner.rl:452
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
-			lex.setTokenPosition(token)
-			tok = T_OBJECT_OPERATOR
+			lex.setTokenPosition(tkn)
+			tok = token.T_OBJECT_OPERATOR
 			{
 				(lex.p)++
 				lex.cs = 501
@@ -20037,7 +20034,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st501
 	tr752:
-		// line internal/scanner/scanner.rl:454
+		// line internal/scanner/scanner.rl:455
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
@@ -20049,17 +20046,17 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st501
 	tr756:
-		// line internal/scanner/scanner.rl:453
+		// line internal/scanner/scanner.rl:454
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int('['))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int('['))
 			lex.call(501, 506)
 			goto _out
 		}
 		goto st501
 	tr757:
-		// line internal/scanner/scanner.rl:454
+		// line internal/scanner/scanner.rl:455
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -20072,12 +20069,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st501
 	tr759:
-		// line internal/scanner/scanner.rl:450
+		// line internal/scanner/scanner.rl:451
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_VARIABLE
+			lex.setTokenPosition(tkn)
+			tok = token.T_VARIABLE
 			{
 				(lex.p)++
 				lex.cs = 501
@@ -20086,12 +20083,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st501
 	tr761:
-		// line internal/scanner/scanner.rl:452
+		// line internal/scanner/scanner.rl:453
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_STRING
+			lex.setTokenPosition(tkn)
+			tok = token.T_STRING
 			{
 				(lex.p)++
 				lex.cs = 501
@@ -20110,7 +20107,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:18693
+		// line internal/scanner/scanner.go:18690
 		switch lex.data[(lex.p)] {
 		case 36:
 			goto st502
@@ -20191,7 +20188,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof504
 		}
 	st_case_504:
-		// line internal/scanner/scanner.go:18774
+		// line internal/scanner/scanner.go:18771
 		if lex.data[(lex.p)] == 62 {
 			goto st105
 		}
@@ -20244,11 +20241,11 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st505
 	tr156:
-		// line internal/scanner/scanner.rl:458
+		// line internal/scanner/scanner.rl:459
 		(lex.p) = (lex.te) - 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_NUM_STRING
+			lex.setTokenPosition(tkn)
+			tok = token.T_NUM_STRING
 			{
 				(lex.p)++
 				lex.cs = 506
@@ -20257,7 +20254,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st506
 	tr762:
-		// line internal/scanner/scanner.rl:464
+		// line internal/scanner/scanner.rl:465
 		lex.te = (lex.p) + 1
 		{
 			c := lex.data[lex.p]
@@ -20265,21 +20262,21 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st506
 	tr763:
-		// line internal/scanner/scanner.rl:461
+		// line internal/scanner/scanner.rl:462
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 			lex.ret(2)
 			goto _out
 		}
 		goto st506
 	tr766:
-		// line internal/scanner/scanner.rl:462
+		// line internal/scanner/scanner.rl:463
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(lex.data[lex.ts]))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(lex.data[lex.ts]))
 			{
 				(lex.p)++
 				lex.cs = 506
@@ -20288,30 +20285,30 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st506
 	tr770:
-		// line internal/scanner/scanner.rl:463
+		// line internal/scanner/scanner.rl:464
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(']'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(']'))
 			lex.ret(2)
 			goto _out
 		}
 		goto st506
 	tr771:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:461
+		// line internal/scanner/scanner.rl:462
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_ENCAPSED_AND_WHITESPACE
+			lex.setTokenPosition(tkn)
+			tok = token.T_ENCAPSED_AND_WHITESPACE
 			lex.ret(2)
 			goto _out
 		}
 		goto st506
 	tr772:
-		// line internal/scanner/scanner.rl:464
+		// line internal/scanner/scanner.rl:465
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -20320,12 +20317,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st506
 	tr773:
-		// line internal/scanner/scanner.rl:462
+		// line internal/scanner/scanner.rl:463
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(lex.data[lex.ts]))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(lex.data[lex.ts]))
 			{
 				(lex.p)++
 				lex.cs = 506
@@ -20334,12 +20331,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st506
 	tr775:
-		// line internal/scanner/scanner.rl:459
+		// line internal/scanner/scanner.rl:460
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_VARIABLE
+			lex.setTokenPosition(tkn)
+			tok = token.T_VARIABLE
 			{
 				(lex.p)++
 				lex.cs = 506
@@ -20348,12 +20345,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st506
 	tr776:
-		// line internal/scanner/scanner.rl:458
+		// line internal/scanner/scanner.rl:459
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_NUM_STRING
+			lex.setTokenPosition(tkn)
+			tok = token.T_NUM_STRING
 			{
 				(lex.p)++
 				lex.cs = 506
@@ -20362,12 +20359,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st506
 	tr780:
-		// line internal/scanner/scanner.rl:460
+		// line internal/scanner/scanner.rl:461
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.setTokenPosition(token)
-			tok = T_STRING
+			lex.setTokenPosition(tkn)
+			tok = token.T_STRING
 			{
 				(lex.p)++
 				lex.cs = 506
@@ -20386,7 +20383,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:18906
+		// line internal/scanner/scanner.go:18903
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr764
@@ -20452,7 +20449,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st515
 	tr764:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -20468,10 +20465,10 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof507
 		}
 	st_case_507:
-		// line internal/scanner/scanner.go:18988
+		// line internal/scanner/scanner.go:18985
 		goto tr771
 	tr765:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -20487,7 +20484,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof508
 		}
 	st_case_508:
-		// line internal/scanner/scanner.go:19007
+		// line internal/scanner/scanner.go:19004
 		if lex.data[(lex.p)] == 10 {
 			goto tr764
 		}
@@ -20549,7 +20546,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof511
 		}
 	st_case_511:
-		// line internal/scanner/scanner.go:19069
+		// line internal/scanner/scanner.go:19066
 		switch lex.data[(lex.p)] {
 		case 95:
 			goto st106
@@ -20572,7 +20569,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof512
 		}
 	st_case_512:
-		// line internal/scanner/scanner.go:19092
+		// line internal/scanner/scanner.go:19089
 		if lex.data[(lex.p)] == 95 {
 			goto st106
 		}
@@ -20608,7 +20605,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof513
 		}
 	st_case_513:
-		// line internal/scanner/scanner.go:19128
+		// line internal/scanner/scanner.go:19125
 		if lex.data[(lex.p)] == 95 {
 			goto st107
 		}
@@ -20644,7 +20641,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof514
 		}
 	st_case_514:
-		// line internal/scanner/scanner.go:19164
+		// line internal/scanner/scanner.go:19161
 		if lex.data[(lex.p)] == 95 {
 			goto st108
 		}
@@ -20689,7 +20686,7 @@ func (lex *Lexer) Lex() *Token {
 		goto st515
 	tr160:
 		lex.cs = 516
-		// line internal/scanner/scanner.rl:472
+		// line internal/scanner/scanner.rl:473
 		(lex.p) = (lex.te) - 1
 		{
 			lex.ungetCnt(1)
@@ -20698,12 +20695,12 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr162:
 		lex.cs = 516
-		// line internal/scanner/scanner.rl:471
+		// line internal/scanner/scanner.rl:472
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
-			lex.setTokenPosition(token)
-			tok = T_STRING_VARNAME
+			lex.setTokenPosition(tkn)
+			tok = token.T_STRING_VARNAME
 			lex.cs = 123
 			{
 				(lex.p)++
@@ -20713,7 +20710,7 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr781:
 		lex.cs = 516
-		// line internal/scanner/scanner.rl:472
+		// line internal/scanner/scanner.rl:473
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
@@ -20722,7 +20719,7 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr783:
 		lex.cs = 516
-		// line internal/scanner/scanner.rl:472
+		// line internal/scanner/scanner.rl:473
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -20741,7 +20738,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:19243
+		// line internal/scanner/scanner.go:19240
 		if lex.data[(lex.p)] == 96 {
 			goto tr781
 		}
@@ -20768,7 +20765,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof517
 		}
 	st_case_517:
-		// line internal/scanner/scanner.go:19270
+		// line internal/scanner/scanner.go:19267
 		switch lex.data[(lex.p)] {
 		case 91:
 			goto tr162
@@ -20827,15 +20824,15 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto st109
 	tr163:
-		// line internal/scanner/scanner.rl:476
+		// line internal/scanner/scanner.rl:477
 		(lex.p) = (lex.te) - 1
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st518
 	tr784:
 		lex.cs = 518
-		// line internal/scanner/scanner.rl:478
+		// line internal/scanner/scanner.rl:479
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
@@ -20844,11 +20841,11 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr787:
 		lex.cs = 518
-		// line internal/scanner/scanner.rl:477
+		// line internal/scanner/scanner.rl:478
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int('('))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int('('))
 			lex.cs = 522
 			{
 				(lex.p)++
@@ -20857,26 +20854,26 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr788:
-		// line internal/scanner/scanner.rl:476
+		// line internal/scanner/scanner.rl:477
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st518
 	tr790:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:476
+		// line internal/scanner/scanner.rl:477
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st518
 	tr794:
 		lex.cs = 518
-		// line internal/scanner/scanner.rl:478
+		// line internal/scanner/scanner.rl:479
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -20895,7 +20892,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:19377
+		// line internal/scanner/scanner.go:19374
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr164
@@ -20919,7 +20916,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st519
 	st519:
@@ -20927,7 +20924,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof519
 		}
 	st_case_519:
-		// line internal/scanner/scanner.go:19409
+		// line internal/scanner/scanner.go:19406
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr164
@@ -20944,7 +20941,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -20959,9 +20956,9 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -20977,7 +20974,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof520
 		}
 	st_case_520:
-		// line internal/scanner/scanner.go:19459
+		// line internal/scanner/scanner.go:19456
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr792
@@ -20991,7 +20988,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr790
 	tr789:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21003,9 +21000,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st110
 	tr793:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21021,13 +21018,13 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof110
 		}
 	st_case_110:
-		// line internal/scanner/scanner.go:19503
+		// line internal/scanner/scanner.go:19500
 		if lex.data[(lex.p)] == 10 {
 			goto tr164
 		}
 		goto tr163
 	tr786:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21043,21 +21040,21 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof521
 		}
 	st_case_521:
-		// line internal/scanner/scanner.go:19525
+		// line internal/scanner/scanner.go:19522
 		if lex.data[(lex.p)] == 10 {
 			goto tr164
 		}
 		goto tr794
 	tr165:
-		// line internal/scanner/scanner.rl:482
+		// line internal/scanner/scanner.rl:483
 		(lex.p) = (lex.te) - 1
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st522
 	tr795:
 		lex.cs = 522
-		// line internal/scanner/scanner.rl:484
+		// line internal/scanner/scanner.rl:485
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
@@ -21066,11 +21063,11 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr798:
 		lex.cs = 522
-		// line internal/scanner/scanner.rl:483
+		// line internal/scanner/scanner.rl:484
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(')'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(')'))
 			lex.cs = 526
 			{
 				(lex.p)++
@@ -21079,26 +21076,26 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr799:
-		// line internal/scanner/scanner.rl:482
+		// line internal/scanner/scanner.rl:483
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st522
 	tr801:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:482
+		// line internal/scanner/scanner.rl:483
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st522
 	tr805:
 		lex.cs = 522
-		// line internal/scanner/scanner.rl:484
+		// line internal/scanner/scanner.rl:485
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -21117,7 +21114,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:19579
+		// line internal/scanner/scanner.go:19576
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr166
@@ -21141,7 +21138,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st523
 	st523:
@@ -21149,7 +21146,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof523
 		}
 	st_case_523:
-		// line internal/scanner/scanner.go:19611
+		// line internal/scanner/scanner.go:19608
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr166
@@ -21166,7 +21163,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21181,9 +21178,9 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21199,7 +21196,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof524
 		}
 	st_case_524:
-		// line internal/scanner/scanner.go:19661
+		// line internal/scanner/scanner.go:19658
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr803
@@ -21213,7 +21210,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr801
 	tr800:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21225,9 +21222,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st111
 	tr804:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21243,13 +21240,13 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof111
 		}
 	st_case_111:
-		// line internal/scanner/scanner.go:19705
+		// line internal/scanner/scanner.go:19702
 		if lex.data[(lex.p)] == 10 {
 			goto tr166
 		}
 		goto tr165
 	tr797:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21265,21 +21262,21 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof525
 		}
 	st_case_525:
-		// line internal/scanner/scanner.go:19727
+		// line internal/scanner/scanner.go:19724
 		if lex.data[(lex.p)] == 10 {
 			goto tr166
 		}
 		goto tr805
 	tr167:
-		// line internal/scanner/scanner.rl:488
+		// line internal/scanner/scanner.rl:489
 		(lex.p) = (lex.te) - 1
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st526
 	tr806:
 		lex.cs = 526
-		// line internal/scanner/scanner.rl:490
+		// line internal/scanner/scanner.rl:491
 		lex.te = (lex.p) + 1
 		{
 			lex.ungetCnt(1)
@@ -21288,11 +21285,11 @@ func (lex *Lexer) Lex() *Token {
 		goto _again
 	tr809:
 		lex.cs = 526
-		// line internal/scanner/scanner.rl:489
+		// line internal/scanner/scanner.rl:490
 		lex.te = (lex.p) + 1
 		{
-			lex.setTokenPosition(token)
-			tok = TokenID(int(';'))
+			lex.setTokenPosition(tkn)
+			tok = token.ID(int(';'))
 			lex.cs = 530
 			{
 				(lex.p)++
@@ -21301,26 +21298,26 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto _again
 	tr810:
-		// line internal/scanner/scanner.rl:488
+		// line internal/scanner/scanner.rl:489
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st526
 	tr812:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:488
+		// line internal/scanner/scanner.rl:489
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_WHITESPACE, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)
 		}
 		goto st526
 	tr816:
 		lex.cs = 526
-		// line internal/scanner/scanner.rl:490
+		// line internal/scanner/scanner.rl:491
 		lex.te = (lex.p)
 		(lex.p)--
 		{
@@ -21339,7 +21336,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:19781
+		// line internal/scanner/scanner.go:19778
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr168
@@ -21363,7 +21360,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
 		goto st527
 	st527:
@@ -21371,7 +21368,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof527
 		}
 	st_case_527:
-		// line internal/scanner/scanner.go:19813
+		// line internal/scanner/scanner.go:19810
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr168
@@ -21388,7 +21385,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21403,9 +21400,9 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21421,7 +21418,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof528
 		}
 	st_case_528:
-		// line internal/scanner/scanner.go:19863
+		// line internal/scanner/scanner.go:19860
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr814
@@ -21435,7 +21432,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr812
 	tr811:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21447,9 +21444,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st112
 	tr815:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21465,13 +21462,13 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof112
 		}
 	st_case_112:
-		// line internal/scanner/scanner.go:19907
+		// line internal/scanner/scanner.go:19904
 		if lex.data[(lex.p)] == 10 {
 			goto tr168
 		}
 		goto tr167
 	tr808:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21487,7 +21484,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof529
 		}
 	st_case_529:
-		// line internal/scanner/scanner.go:19929
+		// line internal/scanner/scanner.go:19926
 		if lex.data[(lex.p)] == 10 {
 			goto tr168
 		}
@@ -21504,27 +21501,27 @@ func (lex *Lexer) Lex() *Token {
 		case 186:
 			{
 				(lex.p) = (lex.te) - 1
-				lex.addHiddenToken(token, T_HALT_COMPILER, lex.ts, lex.te)
+				lex.addSkippedToken(tkn, token.T_HALT_COMPILER, lex.ts, lex.te)
 			}
 		}
 
 		goto st530
 	tr821:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:494
+		// line internal/scanner/scanner.rl:495
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_HALT_COMPILER, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_HALT_COMPILER, lex.ts, lex.te)
 		}
 		goto st530
 	tr825:
-		// line internal/scanner/scanner.rl:494
+		// line internal/scanner/scanner.rl:495
 		lex.te = (lex.p)
 		(lex.p)--
 		{
-			lex.addHiddenToken(token, T_HALT_COMPILER, lex.ts, lex.te)
+			lex.addSkippedToken(tkn, token.T_HALT_COMPILER, lex.ts, lex.te)
 		}
 		goto st530
 	st530:
@@ -21541,7 +21538,7 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.ts = (lex.p)
 
-		// line internal/scanner/scanner.go:19973
+		// line internal/scanner/scanner.go:19970
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr818
@@ -21553,16 +21550,16 @@ func (lex *Lexer) Lex() *Token {
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:494
+		// line internal/scanner/scanner.rl:495
 		lex.act = 186
 		goto st531
 	tr822:
 		// line NONE:1
 		lex.te = (lex.p) + 1
 
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:494
+		// line internal/scanner/scanner.rl:495
 		lex.act = 186
 		goto st531
 	st531:
@@ -21570,7 +21567,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof531
 		}
 	st_case_531:
-		// line internal/scanner/scanner.go:20002
+		// line internal/scanner/scanner.go:19999
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr818
@@ -21579,7 +21576,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr817
 	tr818:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21591,9 +21588,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st532
 	tr823:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21609,7 +21606,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof532
 		}
 	st_case_532:
-		// line internal/scanner/scanner.go:20041
+		// line internal/scanner/scanner.go:20038
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr823
@@ -21618,7 +21615,7 @@ func (lex *Lexer) Lex() *Token {
 		}
 		goto tr822
 	tr819:
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21630,9 +21627,9 @@ func (lex *Lexer) Lex() *Token {
 
 		goto st533
 	tr824:
-		// line internal/scanner/scanner.rl:54
+		// line internal/scanner/scanner.rl:57
 
-		// line internal/scanner/scanner.rl:38
+		// line internal/scanner/scanner.rl:41
 
 		if lex.data[lex.p] == '\n' {
 			lex.newLines.Append(lex.p + 1)
@@ -21648,7 +21645,7 @@ func (lex *Lexer) Lex() *Token {
 			goto _test_eof533
 		}
 	st_case_533:
-		// line internal/scanner/scanner.go:20080
+		// line internal/scanner/scanner.go:20077
 		switch lex.data[(lex.p)] {
 		case 10:
 			goto tr818
@@ -24294,11 +24291,12 @@ func (lex *Lexer) Lex() *Token {
 		}
 	}
 
-	// line internal/scanner/scanner.rl:498
+	// line internal/scanner/scanner.rl:499
 
-	token.Value = lex.data[lex.ts:lex.te]
-	token.ID = tok
-	lex.addHiddenToken(token, tok, lex.ts, lex.te)
+	tkn.Value = lex.data[lex.ts:lex.te]
+	tkn.ID = token.ID(tok)
+	tkn.Skipped = lex.data[lex.sts:lex.ste]
+	lex.addSkippedToken(tkn, tok, lex.ts, lex.te)
 
-	return token
+	return tkn
 }
