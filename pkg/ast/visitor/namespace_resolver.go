@@ -13,9 +13,7 @@ type NamespaceResolver struct {
 	Namespace     *Namespace
 	ResolvedNames map[ast.Vertex]string
 
-	goDeep    bool
-	useType   string
-	usePrefix []ast.Vertex
+	goDeep bool
 }
 
 // NewNamespaceResolver NamespaceResolver type constructor
@@ -47,28 +45,28 @@ func (nsr *NamespaceResolver) StmtNamespace(n *ast.StmtNamespace) {
 	}
 }
 
-func (nsr *NamespaceResolver) StmtUseType(n *ast.StmtUseType) {
+func (nsr *NamespaceResolver) StmtUse(n *ast.StmtUse) {
+	useType := ""
 	if n.Type != nil {
-		nsr.useType = string(n.Type.(*ast.Identifier).Value)
+		useType = string(n.Type.(*ast.Identifier).Value)
 	}
+
+	for _, nn := range n.UseDeclarations {
+		nsr.AddAlias(useType, nn, nil)
+	}
+
+	nsr.goDeep = false
 }
 
-func (nsr *NamespaceResolver) StmtGroupUseList(n *ast.StmtGroupUseList) {
-	if n.Prefix != nil {
-		nsr.usePrefix = n.Prefix.(*ast.NameName).Parts
-	}
-}
-
-func (nsr *NamespaceResolver) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
-	useNameParts := n.Use.(*ast.NameName).Parts
-	var alias string
-	if n.Alias == nil {
-		alias = string(useNameParts[len(useNameParts)-1].(*ast.NameNamePart).Value)
-	} else {
-		alias = string(n.Alias.(*ast.Identifier).Value)
+func (nsr *NamespaceResolver) StmtGroupUse(n *ast.StmtGroupUse) {
+	useType := ""
+	if n.Type != nil {
+		useType = string(n.Type.(*ast.Identifier).Value)
 	}
 
-	nsr.Namespace.AddAlias(nsr.useType, concatNameParts(nsr.usePrefix, useNameParts), alias)
+	for _, nn := range n.UseDeclarations {
+		nsr.AddAlias(useType, nn, n.Prefix.(*ast.NameName).Parts)
+	}
 
 	nsr.goDeep = false
 }
@@ -215,10 +213,26 @@ func (nsr *NamespaceResolver) LeaveNode(n ast.Vertex) {
 		if nn.Stmts != nil {
 			nsr.Namespace = NewNamespace("")
 		}
-	case *ast.StmtUseType:
-		nsr.useType = ""
-	case *ast.StmtGroupUseList:
-		nsr.usePrefix = nil
+	}
+}
+
+// AddAlias adds a new alias
+func (nsr *NamespaceResolver) AddAlias(useType string, nn ast.Vertex, prefix []ast.Vertex) {
+	switch use := nn.(type) {
+	case *ast.StmtUseDeclaration:
+		if use.Type != nil {
+			useType = string(use.Type.(*ast.Identifier).Value)
+		}
+
+		useNameParts := use.Use.(*ast.NameName).Parts
+		var alias string
+		if use.Alias == nil {
+			alias = string(useNameParts[len(useNameParts)-1].(*ast.NameNamePart).Value)
+		} else {
+			alias = string(use.Alias.(*ast.Identifier).Value)
+		}
+
+		nsr.Namespace.AddAlias(useType, concatNameParts(prefix, useNameParts), alias)
 	}
 }
 

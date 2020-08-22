@@ -169,6 +169,28 @@ func (v *Dump) printNode(n *ast.Node) {
 	v.print("},\n")
 }
 
+func (v *Dump) printToken(key string, t *token.Token) {
+	if t == nil {
+		return
+	}
+
+	v.printIndent(v.indent)
+	v.print(key)
+	v.print(": &token.Token{\n")
+
+	v.printIndent(v.indent + 1)
+	v.print("ID:      token." + t.ID.String() + ",\n")
+
+	v.printIndent(v.indent + 1)
+	v.print("Value:   []byte(" + strconv.Quote(string(t.Value)) + "),\n")
+
+	v.printIndent(v.indent + 1)
+	v.print("Skipped: []byte(" + strconv.Quote(string(t.Skipped)) + "),\n")
+
+	v.printIndent(v.indent)
+	v.print("},\n")
+}
+
 func (v *Dump) Root(n *ast.Root) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.Root{\n")
@@ -588,30 +610,30 @@ func (v *Dump) StmtUse(n *ast.StmtUse) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtUse{\n")
 	v.printNode(n.GetNode())
+	v.printToken("UseTkn", n.UseTkn)
+	v.printToken("SemiColonTkn", n.SemiColonTkn)
+
 }
 
-func (v *Dump) StmtGroupUseList(n *ast.StmtGroupUseList) {
+func (v *Dump) StmtGroupUse(n *ast.StmtGroupUse) {
 	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtGroupUseList{\n")
+	v.print("&ast.StmtGroupUse{\n")
 	v.printNode(n.GetNode())
-}
-
-func (v *Dump) StmtUseList(n *ast.StmtUseList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtUseList{\n")
-	v.printNode(n.GetNode())
+	v.printToken("UseTkn", n.UseTkn)
+	v.printToken("LeadingNsSeparatorTkn", n.LeadingNsSeparatorTkn)
+	v.printToken("NsSeparatorTkn", n.NsSeparatorTkn)
+	v.printToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.printToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+	v.printToken("SemiColonTkn", n.SemiColonTkn)
 }
 
 func (v *Dump) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtUseDeclaration{\n")
 	v.printNode(n.GetNode())
-}
-
-func (v *Dump) StmtUseType(n *ast.StmtUseType) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtUseType{\n")
-	v.printNode(n.GetNode())
+	v.printToken("NsSeparatorTkn", n.NsSeparatorTkn)
+	v.printToken("AsTkn", n.AsTkn)
+	v.printToken("CommaTkn", n.CommaTkn)
 }
 
 func (v *Dump) StmtWhile(n *ast.StmtWhile) {

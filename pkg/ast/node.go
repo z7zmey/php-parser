@@ -796,54 +796,47 @@ func (n *StmtUnset) Accept(v NodeVisitor) {
 // StmtUse node
 type StmtUse struct {
 	Node
-	UseList Vertex
+	UseTkn          *token.Token
+	Type            Vertex
+	UseDeclarations []Vertex
+	SemiColonTkn    *token.Token
 }
 
 func (n *StmtUse) Accept(v NodeVisitor) {
 	v.StmtUse(n)
 }
 
-// StmtGroupUseList node
-type StmtGroupUseList struct {
+// StmtGroupUse node
+type StmtGroupUse struct {
 	Node
-	Prefix  Vertex
-	UseList Vertex
+	UseTkn                *token.Token
+	Type                  Vertex
+	LeadingNsSeparatorTkn *token.Token
+	Prefix                Vertex
+	NsSeparatorTkn        *token.Token
+	OpenCurlyBracketTkn   *token.Token
+	UseDeclarations       []Vertex
+	CloseCurlyBracketTkn  *token.Token
+	SemiColonTkn          *token.Token
 }
 
-func (n *StmtGroupUseList) Accept(v NodeVisitor) {
-	v.StmtGroupUseList(n)
-}
-
-// StmtUseList node
-type StmtUseList struct {
-	Node
-	UseDeclarations []Vertex
-}
-
-func (n *StmtUseList) Accept(v NodeVisitor) {
-	v.StmtUseList(n)
+func (n *StmtGroupUse) Accept(v NodeVisitor) {
+	v.StmtGroupUse(n)
 }
 
 // StmtUseDeclaration node
 type StmtUseDeclaration struct {
 	Node
-	Use   Vertex
-	Alias Vertex
+	Type           Vertex
+	NsSeparatorTkn *token.Token
+	Use            Vertex
+	AsTkn          *token.Token
+	Alias          Vertex
+	CommaTkn       *token.Token
 }
 
 func (n *StmtUseDeclaration) Accept(v NodeVisitor) {
 	v.StmtUseDeclaration(n)
-}
-
-// StmtUseType node
-type StmtUseType struct {
-	Node
-	Type Vertex
-	Use  Vertex
-}
-
-func (n *StmtUseType) Accept(v NodeVisitor) {
-	v.StmtUseType(n)
 }
 
 // StmtWhile node

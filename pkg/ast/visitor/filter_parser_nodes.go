@@ -13,34 +13,6 @@ func (v *FilterParserNodes) EnterNode(n ast.Vertex) bool {
 	return true
 }
 
-func (v *FilterParserNodes) StmtGroupUseList(n *ast.StmtGroupUseList) {
-	if nn, ok := n.Prefix.(*ast.ParserNsSeparator); ok {
-		n.Prefix = nn.Child
-	}
-
-	if nn, ok := n.UseList.(*ast.ParserNsSeparator); ok {
-		n.UseList = nn.Child
-	}
-
-	if nn, ok := n.UseList.(*ast.ParserBrackets); ok {
-		n.UseList = nn.Child
-	}
-}
-
-func (v *FilterParserNodes) StmtUseList(n *ast.StmtUseList) {
-	for k, v := range n.UseDeclarations {
-		if nn, ok := v.(*ast.ParserNsSeparator); ok {
-			n.UseDeclarations[k] = nn.Child
-		}
-	}
-}
-
-func (v *FilterParserNodes) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
-	if nn, ok := n.Alias.(*ast.ParserAs); ok {
-		n.Alias = nn.Child
-	}
-}
-
 func (v *FilterParserNodes) StmtAltIf(n *ast.StmtAltIf) {
 	for {
 		if nn, ok := n.Cond.(*ast.ParserBrackets); ok {

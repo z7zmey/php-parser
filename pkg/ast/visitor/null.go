@@ -282,19 +282,11 @@ func (v *Null) StmtUse(_ *ast.StmtUse) {
 	// do nothing
 }
 
-func (v *Null) StmtGroupUseList(_ *ast.StmtGroupUseList) {
-	// do nothing
-}
-
-func (v *Null) StmtUseList(_ *ast.StmtUseList) {
+func (v *Null) StmtGroupUse(_ *ast.StmtGroupUse) {
 	// do nothing
 }
 
 func (v *Null) StmtUseDeclaration(_ *ast.StmtUseDeclaration) {
-	// do nothing
-}
-
-func (v *Null) StmtUseType(_ *ast.StmtUseType) {
 	// do nothing
 }
 

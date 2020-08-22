@@ -399,14 +399,10 @@ func (p *PrettyPrinter) printNode(n ast.Vertex) {
 		p.printStmtUnset(n)
 	case *ast.StmtUse:
 		p.printStmtUse(n)
-	case *ast.StmtGroupUseList:
-		p.printStmtGroupUseList(n)
-	case *ast.StmtUseList:
-		p.printStmtUseList(n)
+	case *ast.StmtGroupUse:
+		p.printStmtGroupUse(n)
 	case *ast.StmtUseDeclaration:
 		p.printStmtUseDeclaration(n)
-	case *ast.StmtUseType:
-		p.printStmtUseType(n)
 	case *ast.StmtWhile:
 		p.printStmtWhile(n)
 	}
@@ -2139,29 +2135,40 @@ func (p *PrettyPrinter) printStmtUse(n ast.Vertex) {
 
 	io.WriteString(p.w, "use ")
 
-	p.Print(nn.UseList)
+	if nn.Type != nil {
+		p.Print(nn.Type)
+		io.WriteString(p.w, " ")
+	}
+
+	p.joinPrint(", ", nn.UseDeclarations)
 
 	io.WriteString(p.w, ";")
 }
 
-func (p *PrettyPrinter) printStmtGroupUseList(n ast.Vertex) {
-	nn := n.(*ast.StmtGroupUseList)
+func (p *PrettyPrinter) printStmtGroupUse(n ast.Vertex) {
+	nn := n.(*ast.StmtGroupUse)
+
+	io.WriteString(p.w, "use ")
+
+	if nn.Type != nil {
+		p.Print(nn.Type)
+		io.WriteString(p.w, " ")
+	}
 
 	p.Print(nn.Prefix)
 
 	io.WriteString(p.w, "\\{")
-	p.Print(nn.UseList)
-	io.WriteString(p.w, "}")
-}
-
-func (p *PrettyPrinter) printStmtUseList(n ast.Vertex) {
-	nn := n.(*ast.StmtUseList)
-
 	p.joinPrint(", ", nn.UseDeclarations)
+	io.WriteString(p.w, "}")
 }
 
 func (p *PrettyPrinter) printStmtUseDeclaration(n ast.Vertex) {
 	nn := n.(*ast.StmtUseDeclaration)
+
+	if nn.Type != nil {
+		p.Print(nn.Type)
+		io.WriteString(p.w, " ")
+	}
 
 	p.Print(nn.Use)
 
@@ -2169,15 +2176,6 @@ func (p *PrettyPrinter) printStmtUseDeclaration(n ast.Vertex) {
 		io.WriteString(p.w, " as ")
 		p.Print(nn.Alias)
 	}
-}
-
-func (p *PrettyPrinter) printStmtUseType(n ast.Vertex) {
-	nn := n.(*ast.StmtUseType)
-
-	p.Print(nn.Type)
-	io.WriteString(p.w, " ")
-
-	p.Print(nn.Use)
 }
 
 func (p *PrettyPrinter) printStmtWhile(n ast.Vertex) {

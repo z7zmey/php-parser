@@ -1159,7 +1159,8 @@ func TestParseAndPrintGoto(t *testing.T) {
 }
 
 func TestParseAndPrintGroupUse(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	use function Foo \ { Bar as Baz , Quuz , } ;
 	use Foo \ { function Bar as Baz , const Quuz } ;
 	use \ Foo \ { function Bar as Baz , const Quuz , } ;
@@ -1440,7 +1441,8 @@ func TestParseAndPrintUnset(t *testing.T) {
 }
 
 func TestParseAndPrintUseList(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	use Foo ;
 	use \ Foo as Bar ;
 	use function \ Foo as Bar ;

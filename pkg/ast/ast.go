@@ -84,10 +84,8 @@ type NodeVisitor interface {
 	StmtTry(n *StmtTry)
 	StmtUnset(n *StmtUnset)
 	StmtUse(n *StmtUse)
-	StmtGroupUseList(n *StmtGroupUseList)
-	StmtUseList(n *StmtUseList)
+	StmtGroupUse(n *StmtGroupUse)
 	StmtUseDeclaration(n *StmtUseDeclaration)
-	StmtUseType(n *StmtUseType)
 	StmtWhile(n *StmtWhile)
 
 	ExprArray(n *ExprArray)

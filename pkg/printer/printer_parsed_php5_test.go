@@ -1308,7 +1308,8 @@ func TestParseAndPrintPhp5Unset(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5UseList(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	use Foo ;
 	use \ Foo as Bar ;
 	use function \ Foo as Bar ;

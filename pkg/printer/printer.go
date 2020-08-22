@@ -76,6 +76,23 @@ func (p *Printer) printFreeFloatingOrDefault(n ast.Vertex, pos token.Position, d
 	}
 }
 
+func (p *Printer) printToken(t *token.Token, def string) {
+	if t != nil {
+		p.w.Write(t.Skipped)
+		p.w.Write(t.Value)
+		p.bufStart = ""
+		return
+	}
+
+	if def != "" {
+		p.w.Write([]byte(p.bufStart))
+		p.bufStart = ""
+
+		p.w.Write([]byte(def))
+		return
+	}
+}
+
 func (p *Printer) printFreeFloating(n ast.Vertex, pos token.Position) {
 	if n == nil {
 		return
@@ -87,7 +104,7 @@ func (p *Printer) printFreeFloating(n ast.Vertex, pos token.Position) {
 }
 
 func (p *Printer) printNode(n ast.Vertex) {
-	switch n.(type) {
+	switch n := n.(type) {
 
 	// node
 
@@ -438,14 +455,10 @@ func (p *Printer) printNode(n ast.Vertex) {
 		p.printStmtUnset(n)
 	case *ast.StmtUse:
 		p.printStmtUse(n)
-	case *ast.StmtGroupUseList:
-		p.printStmtGroupUseList(n)
-	case *ast.StmtUseList:
-		p.printStmtUseList(n)
+	case *ast.StmtGroupUse:
+		p.printStmtGroupUse(n)
 	case *ast.StmtUseDeclaration:
 		p.printStmtUseDeclaration(n)
-	case *ast.StmtUseType:
-		p.printStmtUseType(n)
 	case *ast.StmtWhile:
 		p.printStmtWhile(n)
 	case *ast.ParserAs:
@@ -3260,74 +3273,66 @@ func (p *Printer) printStmtUnset(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtUse(n ast.Vertex) {
-	nn := n.(*ast.StmtUse)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "use")
+func (p *Printer) printStmtUse(n *ast.StmtUse) {
+	p.printToken(n.UseTkn, "use")
 
 	p.bufStart = " "
-	p.Print(nn.UseList)
+	p.Print(n.Type)
 
-	p.printFreeFloatingOrDefault(nn, token.End, ";")
+	p.bufStart = " "
+	p.joinPrint(",", n.UseDeclarations)
+
+	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtGroupUseList(n ast.Vertex) {
-	nn := n.(*ast.StmtGroupUseList)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtGroupUse(n *ast.StmtGroupUse) {
+	p.printToken(n.UseTkn, "use")
 
-	p.Print(nn.Prefix)
+	p.bufStart = " "
+	p.Print(n.Type)
 
-	if _, ok := nn.UseList.(*ast.ParserNsSeparator); !ok {
-		io.WriteString(p.w, "\\{")
-	}
+	p.bufStart = " "
+	p.printToken(n.LeadingNsSeparatorTkn, "")
 
-	p.Print(nn.UseList)
+	p.Print(n.Prefix)
+	p.printToken(n.NsSeparatorTkn, "\\")
+	p.printToken(n.OpenCurlyBracketTkn, "{")
 
-	if _, ok := nn.UseList.(*ast.ParserNsSeparator); !ok {
-		io.WriteString(p.w, "}")
-	}
-
-	p.printFreeFloating(nn, token.End)
-}
-
-func (p *Printer) printStmtUseList(n ast.Vertex) {
-	nn := n.(*ast.StmtUseList)
-	p.printFreeFloating(nn, token.Start)
-
-	p.joinPrint(",", nn.UseDeclarations)
-
-	p.printFreeFloating(nn, token.End)
-}
-
-func (p *Printer) printStmtUseDeclaration(n ast.Vertex) {
-	nn := n.(*ast.StmtUseDeclaration)
-	p.printFreeFloating(nn, token.Start)
-
-	p.Print(nn.Use)
-
-	if nn.Alias != nil {
-		if _, ok := nn.Alias.(*ast.ParserAs); !ok {
-			io.WriteString(p.w, " as")
+	for k, v := range n.UseDeclarations {
+		p.Print(v)
+		var def string
+		if k != len(n.UseDeclarations)-1 {
+			def = ","
 		}
-
-		p.bufStart = " "
-		p.Print(nn.Alias)
+		if decl, ok := v.(*ast.StmtUseDeclaration); ok {
+			p.printToken(decl.CommaTkn, def)
+		}
 	}
 
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.CloseCurlyBracketTkn, "}")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtUseType(n ast.Vertex) {
-	nn := n.(*ast.StmtUseType)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtUseDeclaration(n *ast.StmtUseDeclaration) {
+	p.Print(n.Type)
 
-	p.Print(nn.Type)
+	if n.Type != nil {
+		p.bufStart = " "
+	}
+
+	p.printToken(n.NsSeparatorTkn, "")
+
+	p.Print(n.Use)
+
+	if n.Alias == nil {
+		return
+	}
 
 	p.bufStart = " "
-	p.Print(nn.Use)
+	p.printToken(n.AsTkn, "as")
 
-	p.printFreeFloating(nn, token.End)
+	p.bufStart = " "
+	p.Print(n.Alias)
 }
 
 func (p *Printer) printStmtWhile(n ast.Vertex) {
