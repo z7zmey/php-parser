@@ -344,14 +344,15 @@ top_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = &ast.StmtHaltCompiler{ast.Node{}}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($2.SkippedTokens, append($3.SkippedTokens, $4.SkippedTokens...)...))
+                $$ = &ast.StmtHaltCompiler{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    HaltCompilerTkn:     $1,
+                    OpenParenthesisTkn:  $2,
+                    CloseParenthesisTkn: $3,
+                    SemiColonTkn:        $4,
+                }
             }
     |   T_NAMESPACE namespace_name ';'
             {
@@ -799,14 +800,15 @@ inner_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = &ast.StmtHaltCompiler{ast.Node{}}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($2.SkippedTokens, append($3.SkippedTokens, $4.SkippedTokens...)...))
+                $$ = &ast.StmtHaltCompiler{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    HaltCompilerTkn:     $1,
+                    OpenParenthesisTkn:  $2,
+                    CloseParenthesisTkn: $3,
+                    SemiColonTkn:        $4,
+                }
             }
 ;
 

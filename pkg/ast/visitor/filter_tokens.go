@@ -60,3 +60,10 @@ func (v *FilterTokens) StmtNamespace(n *ast.StmtNamespace) {
 	n.CloseCurlyBracket = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtHaltCompiler(n *ast.StmtHaltCompiler) {
+	n.HaltCompilerTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.CloseParenthesisTkn = nil
+	n.SemiColonTkn = nil
+}

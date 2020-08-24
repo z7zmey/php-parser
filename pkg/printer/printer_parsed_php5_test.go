@@ -1049,7 +1049,8 @@ func TestParseAndPrintPhp5Goto(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5HaltCompiler(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	__halt_compiler ( ) ;
 	this text is ignored by parser
 	`

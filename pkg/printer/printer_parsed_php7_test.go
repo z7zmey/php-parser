@@ -1182,7 +1182,8 @@ func TestParseAndPrintGroupUse(t *testing.T) {
 }
 
 func TestParseAndPrintHaltCompiler(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	__halt_compiler ( ) ;
 	this text is ignored by parser
 	`

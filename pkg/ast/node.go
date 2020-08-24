@@ -539,6 +539,10 @@ func (n *StmtGoto) Accept(v NodeVisitor) {
 // StmtHaltCompiler node
 type StmtHaltCompiler struct {
 	Node
+	HaltCompilerTkn     *token.Token
+	OpenParenthesisTkn  *token.Token
+	CloseParenthesisTkn *token.Token
+	SemiColonTkn        *token.Token
 }
 
 func (n *StmtHaltCompiler) Accept(v NodeVisitor) {

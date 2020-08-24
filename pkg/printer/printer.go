@@ -2823,13 +2823,11 @@ func (p *Printer) printStmtGoto(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtHaltCompiler(n ast.Vertex) {
-	nn := n.(*ast.StmtHaltCompiler)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "__halt_compiler")
-
-	p.printFreeFloatingOrDefault(nn, token.End, "();")
+func (p *Printer) printStmtHaltCompiler(n *ast.StmtHaltCompiler) {
+	p.printToken(n.HaltCompilerTkn, "__halt_compiler")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtIf(n ast.Vertex) {
