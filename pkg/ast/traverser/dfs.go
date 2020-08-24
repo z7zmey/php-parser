@@ -487,10 +487,10 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
-		if nn.ConstantName != nil {
-			t.visitor.Enter("ConstantName", true)
-			t.Traverse(nn.ConstantName)
-			t.visitor.Leave("ConstantName", true)
+		if nn.Name != nil {
+			t.visitor.Enter("Name", true)
+			t.Traverse(nn.Name)
+			t.visitor.Leave("Name", true)
 		}
 		if nn.Expr != nil {
 			t.visitor.Enter("Expr", true)
@@ -1334,9 +1334,9 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.visitor.Leave("Class", true)
 		}
 		if nn.ConstantName != nil {
-			t.visitor.Enter("ConstantName", true)
+			t.visitor.Enter("Name", true)
 			t.Traverse(nn.ConstantName)
-			t.visitor.Leave("ConstantName", true)
+			t.visitor.Leave("Name", true)
 		}
 	case *ast.ExprClone:
 		if nn == nil {

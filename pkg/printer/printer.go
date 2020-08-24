@@ -2421,69 +2421,27 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtClassConstList(n ast.Vertex) {
-	nn := n.(*ast.StmtClassConstList)
-	p.printFreeFloating(nn, token.Start)
-
-	if nn.Modifiers != nil {
-		for k, m := range nn.Modifiers {
-			if k > 0 && m.GetNode().Tokens.IsEmpty() {
-				io.WriteString(p.w, " ")
-			}
-			p.Print(m)
-		}
-
-		if nn.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-	}
-	p.printFreeFloating(nn, token.ModifierList)
-	io.WriteString(p.w, "const")
-
-	if nn.Consts[0].GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
-	p.joinPrint(",", nn.Consts)
-	p.printFreeFloating(nn, token.ConstList)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtClassConstList(n *ast.StmtClassConstList) {
+	p.joinPrintRefactored(" ", n.Modifiers)
+	p.bufStart = " "
+	p.printToken(n.ConstTkn, "const")
+	p.bufStart = " "
+	p.joinPrintRefactored(",", n.Consts)
+	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtConstList(n ast.Vertex) {
-	nn := n.(*ast.StmtConstList)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "const")
-
-	if nn.Consts[0].GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
-	p.joinPrint(",", nn.Consts)
-	p.printFreeFloating(nn, token.Stmts)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtConstList(n *ast.StmtConstList) {
+	p.printToken(n.ConstTkn, "const")
+	p.bufStart = " "
+	p.joinPrintRefactored(",", n.Consts)
+	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtConstant(n ast.Vertex) {
-	nn := n.(*ast.StmtConstant)
-	p.printFreeFloating(nn, token.Start)
-
-	p.Print(nn.ConstantName)
-	p.printFreeFloating(nn, token.Name)
-	io.WriteString(p.w, "=")
-	p.Print(nn.Expr)
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtConstant(n *ast.StmtConstant) {
+	p.Print(n.Name)
+	p.printToken(n.EqualTkn, "=")
+	p.Print(n.Expr)
+	p.printToken(n.CommaTkn, "")
 }
 
 func (p *Printer) printStmtContinue(n ast.Vertex) {
@@ -2515,7 +2473,7 @@ func (p *Printer) printStmtDeclare(n ast.Vertex) {
 	io.WriteString(p.w, "declare")
 	p.printFreeFloating(nn, token.Declare)
 	io.WriteString(p.w, "(")
-	p.joinPrint(",", nn.Consts)
+	p.joinPrintRefactored(",", nn.Consts)
 	p.printFreeFloating(nn, token.ConstList)
 	io.WriteString(p.w, ")")
 

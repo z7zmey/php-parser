@@ -3134,7 +3134,7 @@ func TestPhp5(t *testing.T) {
 										EndPos:    1071,
 									},
 								},
-								ConstantName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 58,
@@ -3166,7 +3166,7 @@ func TestPhp5(t *testing.T) {
 										EndPos:    1080,
 									},
 								},
-								ConstantName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 58,
@@ -3793,7 +3793,7 @@ func TestPhp5(t *testing.T) {
 								EndPos:    1409,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 67,
@@ -3825,7 +3825,7 @@ func TestPhp5(t *testing.T) {
 								EndPos:    1418,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 67,
@@ -4020,7 +4020,7 @@ func TestPhp5(t *testing.T) {
 								EndPos:    1512,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 71,
@@ -4074,7 +4074,7 @@ func TestPhp5(t *testing.T) {
 								EndPos:    1530,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 72,
@@ -4106,7 +4106,7 @@ func TestPhp5(t *testing.T) {
 								EndPos:    1546,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 72,
@@ -4162,7 +4162,7 @@ func TestPhp5(t *testing.T) {
 								EndPos:    1566,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 73,

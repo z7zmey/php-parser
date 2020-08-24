@@ -3028,8 +3028,8 @@ func TestPrinterPrintStmtClass(t *testing.T) {
 				},
 				Consts: []ast.Vertex{
 					&ast.StmtConstant{
-						ConstantName: &ast.Identifier{Value: []byte("FOO")},
-						Expr:         &ast.ScalarString{Value: []byte("'bar'")},
+						Name: &ast.Identifier{Value: []byte("FOO")},
+						Expr: &ast.ScalarString{Value: []byte("'bar'")},
 					},
 				},
 			},
@@ -3078,8 +3078,8 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 				Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
 				Consts: []ast.Vertex{
 					&ast.StmtConstant{
-						ConstantName: &ast.Identifier{Value: []byte("FOO")},
-						Expr:         &ast.ScalarString{Value: []byte("'bar'")},
+						Name: &ast.Identifier{Value: []byte("FOO")},
+						Expr: &ast.ScalarString{Value: []byte("'bar'")},
 					},
 				},
 			},
@@ -3102,12 +3102,12 @@ func TestPrinterPrintStmtClassConstList(t *testing.T) {
 		Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
 		Consts: []ast.Vertex{
 			&ast.StmtConstant{
-				ConstantName: &ast.Identifier{Value: []byte("FOO")},
-				Expr:         &ast.ScalarString{Value: []byte("'a'")},
+				Name: &ast.Identifier{Value: []byte("FOO")},
+				Expr: &ast.ScalarString{Value: []byte("'a'")},
 			},
 			&ast.StmtConstant{
-				ConstantName: &ast.Identifier{Value: []byte("BAR")},
-				Expr:         &ast.ScalarString{Value: []byte("'b'")},
+				Name: &ast.Identifier{Value: []byte("BAR")},
+				Expr: &ast.ScalarString{Value: []byte("'b'")},
 			},
 		},
 	})
@@ -3127,12 +3127,12 @@ func TestPrinterPrintStmtConstList(t *testing.T) {
 	p.Print(&ast.StmtConstList{
 		Consts: []ast.Vertex{
 			&ast.StmtConstant{
-				ConstantName: &ast.Identifier{Value: []byte("FOO")},
-				Expr:         &ast.ScalarString{Value: []byte("'a'")},
+				Name: &ast.Identifier{Value: []byte("FOO")},
+				Expr: &ast.ScalarString{Value: []byte("'a'")},
 			},
 			&ast.StmtConstant{
-				ConstantName: &ast.Identifier{Value: []byte("BAR")},
-				Expr:         &ast.ScalarString{Value: []byte("'b'")},
+				Name: &ast.Identifier{Value: []byte("BAR")},
+				Expr: &ast.ScalarString{Value: []byte("'b'")},
 			},
 		},
 	})
@@ -3150,8 +3150,8 @@ func TestPrinterPrintStmtConstant(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&ast.StmtConstant{
-		ConstantName: &ast.Identifier{Value: []byte("FOO")},
-		Expr:         &ast.ScalarString{Value: []byte("'BAR'")},
+		Name: &ast.Identifier{Value: []byte("FOO")},
+		Expr: &ast.ScalarString{Value: []byte("'BAR'")},
 	})
 
 	expected := "FOO='BAR'"
@@ -3187,8 +3187,8 @@ func TestPrinterPrintStmtDeclareStmts(t *testing.T) {
 	p.Print(&ast.StmtDeclare{
 		Consts: []ast.Vertex{
 			&ast.StmtConstant{
-				ConstantName: &ast.Identifier{Value: []byte("FOO")},
-				Expr:         &ast.ScalarString{Value: []byte("'bar'")},
+				Name: &ast.Identifier{Value: []byte("FOO")},
+				Expr: &ast.ScalarString{Value: []byte("'bar'")},
 			},
 		},
 		Stmt: &ast.StmtStmtList{
@@ -3213,8 +3213,8 @@ func TestPrinterPrintStmtDeclareExpr(t *testing.T) {
 	p.Print(&ast.StmtDeclare{
 		Consts: []ast.Vertex{
 			&ast.StmtConstant{
-				ConstantName: &ast.Identifier{Value: []byte("FOO")},
-				Expr:         &ast.ScalarString{Value: []byte("'bar'")},
+				Name: &ast.Identifier{Value: []byte("FOO")},
+				Expr: &ast.ScalarString{Value: []byte("'bar'")},
 			},
 		},
 		Stmt: &ast.StmtExpression{Expr: &ast.ScalarString{Value: []byte("'bar'")}},
@@ -3235,8 +3235,8 @@ func TestPrinterPrintStmtDeclareNop(t *testing.T) {
 	p.Print(&ast.StmtDeclare{
 		Consts: []ast.Vertex{
 			&ast.StmtConstant{
-				ConstantName: &ast.Identifier{Value: []byte("FOO")},
-				Expr:         &ast.ScalarString{Value: []byte("'bar'")},
+				Name: &ast.Identifier{Value: []byte("FOO")},
+				Expr: &ast.ScalarString{Value: []byte("'bar'")},
 			},
 		},
 		Stmt: &ast.StmtNop{},

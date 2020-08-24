@@ -1603,7 +1603,7 @@ func (p *PrettyPrinter) printStmtClassConstList(n ast.Vertex) {
 func (p *PrettyPrinter) printStmtConstant(n ast.Vertex) {
 	nn := n.(*ast.StmtConstant)
 
-	p.Print(nn.ConstantName)
+	p.Print(nn.Name)
 	io.WriteString(p.w, " = ")
 	p.Print(nn.Expr)
 }

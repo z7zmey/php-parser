@@ -447,14 +447,9 @@ top_statement:
             }
     |   constant_declaration ';'
             {
+                $1.(*ast.StmtConstList).SemiColonTkn = $2
+                $1.(*ast.StmtConstList).Node.Position = position.NewNodeTokenPosition($1, $2)
                 $$ = $1
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
             }
 ;
 
@@ -725,39 +720,52 @@ use_const_declaration:
 constant_declaration:
         constant_declaration ',' T_STRING '=' static_scalar
             {
-                name := &ast.Identifier{ast.Node{}, $3.Value}
-                constant := &ast.StmtConstant{ast.Node{}, name, $5}
                 constList := $1.(*ast.StmtConstList)
-                lastConst := lastNode(constList.Consts)
-                constList.Consts = append(constList.Consts, constant)
+                constList.Node.Position = position.NewNodesPosition($1, $5)
+                lastNode(constList.Consts).(*ast.StmtConstant).CommaTkn = $2
+                constList.Consts = append(constList.Consts, &ast.StmtConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($3, $5),
+                    },
+                    Name: &ast.Identifier{
+                        Node:  ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        Value: $3.Value,
+                    },
+                    EqualTkn: $4,
+                    Expr:     $5,
+                })
+
                 $$ = $1
 
-                // save position
-                name.GetNode().Position = position.NewTokenPosition($3)
-                constant.GetNode().Position = position.NewTokenNodePosition($3, $5)
-                $$.GetNode().Position = position.NewNodeNodeListPosition($1, constList.Consts)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastConst, token.End, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Start, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Name, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.StmtConstList).Consts).(*ast.StmtConstant).Name, token.Start, $3.SkippedTokens)
             }
     |   T_CONST T_STRING '=' static_scalar
             {
-                name := &ast.Identifier{ast.Node{}, $2.Value}
-                constant := &ast.StmtConstant{ast.Node{}, name, $4}
-                constList := []ast.Vertex{constant}
-                $$ = &ast.StmtConstList{ast.Node{}, constList}
+                $$ = &ast.StmtConstList{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $4),
+                    },
+                    ConstTkn: $1,
+                    Consts: []ast.Vertex{
+                        &ast.StmtConstant{
+                            Node: ast.Node{
+                                Position: position.NewTokenNodePosition($2, $4),
+                            },
+                            Name: &ast.Identifier{
+                                Node:  ast.Node{
+                                    Position: position.NewTokenPosition($2),
+                                },
+                                Value: $2.Value,
+                            },
+                            EqualTkn: $3,
+                            Expr:     $4,
+                        },
+                    },
+                }
 
-                // save position
-                name.GetNode().Position = position.NewTokenPosition($2)
-                constant.GetNode().Position = position.NewTokenNodePosition($2, $4)
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, constList)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Name, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.StmtConstList).Consts).(*ast.StmtConstant).Name, token.Start, $2.SkippedTokens)
             }
 ;
 
@@ -1735,32 +1743,42 @@ declare_statement:
 declare_list:
         T_STRING '=' static_scalar
             {
-                name := &ast.Identifier{ast.Node{}, $1.Value}
-                constant := &ast.StmtConstant{ast.Node{}, name, $3}
-                $$ = []ast.Vertex{constant}
+                $$ = []ast.Vertex{
+                    &ast.StmtConstant{
+                        Node: ast.Node{
+                            Position: position.NewTokenNodePosition($1, $3),
+                        },
+                        Name: &ast.Identifier{
+                            Node:  ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            Value: $1.Value,
+                        },
+                        EqualTkn: $2,
+                        Expr:     $3,
+                    },
+                }
 
-                // save position
-                name.GetNode().Position = position.NewTokenPosition($1)
-                constant.GetNode().Position = position.NewTokenNodePosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(constant, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Name, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(lastNode($$).(*ast.StmtConstant).Name, token.Start, $1.SkippedTokens)
             }
     |   declare_list ',' T_STRING '=' static_scalar
             {
-                name := &ast.Identifier{ast.Node{}, $3.Value}
-                constant := &ast.StmtConstant{ast.Node{}, name, $5}
-                $$ = append($1, constant)
+                lastNode($1).(*ast.StmtConstant).CommaTkn = $2
+                $$ = append($1, &ast.StmtConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($3, $5),
+                    },
+                    Name: &ast.Identifier{
+                        Node:  ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        Value: $3.Value,
+                    },
+                    EqualTkn: $4,
+                    Expr:     $5,
+                })
 
-                // save position
-                name.GetNode().Position = position.NewTokenPosition($3)
-                constant.GetNode().Position = position.NewTokenNodePosition($3, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Start, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Name, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(lastNode($$).(*ast.StmtConstant).Name, token.Start, $3.SkippedTokens)
             }
 ;
 
@@ -2359,14 +2377,9 @@ class_statement:
             }
     |   class_constant_declaration ';'
             {
+                $1.(*ast.StmtClassConstList).SemiColonTkn = $2
+                $1.(*ast.StmtClassConstList).Node.Position = position.NewNodeTokenPosition($1, $2)
                 $$ = $1
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.ConstList, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
             }
     |   trait_use_statement
             {
@@ -2797,38 +2810,52 @@ class_variable_declaration:
 class_constant_declaration:
         class_constant_declaration ',' T_STRING '=' static_scalar
             {
-                name := &ast.Identifier{ast.Node{}, $3.Value}
-                constant := &ast.StmtConstant{ast.Node{}, name, $5}
                 constList := $1.(*ast.StmtClassConstList)
-                lastConst := lastNode(constList.Consts)
-                constList.Consts = append(constList.Consts, constant)
+                constList.Node.Position = position.NewNodesPosition($1, $5)
+                lastNode($$.(*ast.StmtClassConstList).Consts).(*ast.StmtConstant).CommaTkn = $2
+                constList.Consts = append(constList.Consts, &ast.StmtConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($3, $5),
+                    },
+                    Name: &ast.Identifier{
+                        Node:  ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        Value: $3.Value,
+                    },
+                    EqualTkn: $4,
+                    Expr:     $5,
+                })
+
                 $$ = $1
 
-                // save position
-                name.GetNode().Position = position.NewTokenPosition($3)
-                constant.GetNode().Position = position.NewTokenNodePosition($3, $5)
-                $1.GetNode().Position = position.NewNodesPosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastConst, token.End, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Start, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Name, $4.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.StmtClassConstList).Consts).(*ast.StmtConstant).Name, token.Start, $3.SkippedTokens)
             }
     |   T_CONST T_STRING '=' static_scalar
             {
-                name := &ast.Identifier{ast.Node{}, $2.Value}
-                constant := &ast.StmtConstant{ast.Node{}, name, $4}
-                $$ = &ast.StmtClassConstList{ast.Node{}, nil, []ast.Vertex{constant}}
+                $$ = &ast.StmtClassConstList{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $4),
+                    },
+                    ConstTkn: $1,
+                    Consts: []ast.Vertex{
+                        &ast.StmtConstant{
+                            Node: ast.Node{
+                                Position: position.NewTokenNodePosition($2, $4),
+                            },
+                            Name: &ast.Identifier{
+                                Node:  ast.Node{
+                                    Position: position.NewTokenPosition($2),
+                                },
+                                Value: $2.Value,
+                            },
+                            EqualTkn: $3,
+                            Expr:     $4,
+                        },
+                    },
+                }
 
-                // save position
-                name.GetNode().Position = position.NewTokenPosition($2)
-                constant.GetNode().Position = position.NewTokenNodePosition($2, $4)
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(constant, token.Name, $3.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.StmtClassConstList).Consts).(*ast.StmtConstant).Name, token.Start, $2.SkippedTokens)
             }
 ;
 

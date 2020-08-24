@@ -67,3 +67,18 @@ func (v *FilterTokens) StmtHaltCompiler(n *ast.StmtHaltCompiler) {
 	n.CloseParenthesisTkn = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtConstList(n *ast.StmtConstList) {
+	n.ConstTkn = nil
+	n.SemiColonTkn = nil
+}
+
+func (v *FilterTokens) StmtClassConstList(n *ast.StmtClassConstList) {
+	n.ConstTkn = nil
+	n.SemiColonTkn = nil
+}
+
+func (v *FilterTokens) StmtConstant(n *ast.StmtConstant) {
+	n.EqualTkn = nil
+	n.CommaTkn = nil
+}

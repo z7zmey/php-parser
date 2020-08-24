@@ -141,7 +141,7 @@ func (nsr *NamespaceResolver) StmtPropertyList(n *ast.StmtPropertyList) {
 
 func (nsr *NamespaceResolver) StmtConstList(n *ast.StmtConstList) {
 	for _, constant := range n.Consts {
-		nsr.AddNamespacedName(constant, string(constant.(*ast.StmtConstant).ConstantName.(*ast.Identifier).Value))
+		nsr.AddNamespacedName(constant, string(constant.(*ast.StmtConstant).Name.(*ast.Identifier).Value))
 	}
 }
 

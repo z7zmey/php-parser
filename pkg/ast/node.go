@@ -318,8 +318,10 @@ func (n *StmtClass) Accept(v NodeVisitor) {
 // StmtClassConstList node
 type StmtClassConstList struct {
 	Node
-	Modifiers []Vertex
-	Consts    []Vertex
+	Modifiers    []Vertex
+	ConstTkn     *token.Token
+	Consts       []Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtClassConstList) Accept(v NodeVisitor) {
@@ -364,7 +366,9 @@ func (n *StmtClassMethod) Accept(v NodeVisitor) {
 // StmtConstList node
 type StmtConstList struct {
 	Node
-	Consts []Vertex
+	ConstTkn     *token.Token
+	Consts       []Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtConstList) Accept(v NodeVisitor) {
@@ -374,8 +378,10 @@ func (n *StmtConstList) Accept(v NodeVisitor) {
 // StmtConstant node
 type StmtConstant struct {
 	Node
-	ConstantName Vertex
-	Expr         Vertex
+	Name     Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
+	CommaTkn *token.Token
 }
 
 func (n *StmtConstant) Accept(v NodeVisitor) {

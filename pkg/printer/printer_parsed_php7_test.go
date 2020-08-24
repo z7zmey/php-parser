@@ -1012,7 +1012,8 @@ func TestParseAndPrintClassConstList(t *testing.T) {
 }
 
 func TestParseAndPrintConstList(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	const FOO = 1 , BAR = 2 ;
 	`
 
@@ -1040,7 +1041,7 @@ func TestParseAndPrintContinue(t *testing.T) {
 
 func TestParseAndPrintDeclare(t *testing.T) {
 	src := `<?php
-	declare ( FOO = 'bar' ) ;
+	declare ( FOO = 'bar' , BAR = "foo" ) ;
 	declare ( FOO = 'bar' ) $a ;
 	declare ( FOO = 'bar' ) { }
 

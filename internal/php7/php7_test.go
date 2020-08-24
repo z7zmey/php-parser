@@ -3919,7 +3919,7 @@ func TestPhp7(t *testing.T) {
 										EndPos:    1322,
 									},
 								},
-								ConstantName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 70,
@@ -3951,7 +3951,7 @@ func TestPhp7(t *testing.T) {
 										EndPos:    1331,
 									},
 								},
-								ConstantName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 70,
@@ -4018,7 +4018,7 @@ func TestPhp7(t *testing.T) {
 										EndPos:    1359,
 									},
 								},
-								ConstantName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 71,
@@ -4050,7 +4050,7 @@ func TestPhp7(t *testing.T) {
 										EndPos:    1368,
 									},
 								},
-								ConstantName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 71,
@@ -4732,7 +4732,7 @@ func TestPhp7(t *testing.T) {
 								EndPos:    1693,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 81,
@@ -4764,7 +4764,7 @@ func TestPhp7(t *testing.T) {
 								EndPos:    1702,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 81,
@@ -4959,7 +4959,7 @@ func TestPhp7(t *testing.T) {
 								EndPos:    1796,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 85,
@@ -5013,7 +5013,7 @@ func TestPhp7(t *testing.T) {
 								EndPos:    1814,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 86,
@@ -5069,7 +5069,7 @@ func TestPhp7(t *testing.T) {
 								EndPos:    1834,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 87,

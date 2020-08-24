@@ -594,12 +594,12 @@ func TestResolveConstantsName(t *testing.T) {
 	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
 
 	constantB := &ast.StmtConstant{
-		ConstantName: &ast.Identifier{Value: []byte("B")},
-		Expr:         &ast.ScalarLnumber{Value: []byte("1")},
+		Name: &ast.Identifier{Value: []byte("B")},
+		Expr: &ast.ScalarLnumber{Value: []byte("1")},
 	}
 	constantC := &ast.StmtConstant{
-		ConstantName: &ast.Identifier{Value: []byte("C")},
-		Expr:         &ast.ScalarLnumber{Value: []byte("1")},
+		Name: &ast.Identifier{Value: []byte("C")},
+		Expr: &ast.ScalarLnumber{Value: []byte("1")},
 	}
 
 	stxTree := &ast.StmtStmtList{
@@ -638,12 +638,12 @@ func TestResolveNamespaces(t *testing.T) {
 	relativeNameCE := &ast.NameRelative{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("C")}, &ast.NameNamePart{Value: []byte("E")}}}
 
 	constantB := &ast.StmtConstant{
-		ConstantName: &ast.Identifier{Value: []byte("B")},
-		Expr:         &ast.ScalarLnumber{Value: []byte("1")},
+		Name: &ast.Identifier{Value: []byte("B")},
+		Expr: &ast.ScalarLnumber{Value: []byte("1")},
 	}
 	constantC := &ast.StmtConstant{
-		ConstantName: &ast.Identifier{Value: []byte("C")},
-		Expr:         &ast.ScalarLnumber{Value: []byte("1")},
+		Name: &ast.Identifier{Value: []byte("C")},
+		Expr: &ast.ScalarLnumber{Value: []byte("1")},
 	}
 
 	stxTree := &ast.StmtStmtList{

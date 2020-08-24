@@ -4154,7 +4154,7 @@ func TestStmtClassConstList_WithoutModifiers(t *testing.T) {
 										EndPos:    27,
 									},
 								},
-								ConstantName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -4186,7 +4186,7 @@ func TestStmtClassConstList_WithoutModifiers(t *testing.T) {
 										EndPos:    36,
 									},
 								},
-								ConstantName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Node: ast.Node{
 										Position: &position.Position{
 											StartLine: 1,
@@ -5124,7 +5124,7 @@ func TestStmtConstList(t *testing.T) {
 								EndPos:    16,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -5156,7 +5156,7 @@ func TestStmtConstList(t *testing.T) {
 								EndPos:    25,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -5451,7 +5451,7 @@ func TestStmtDeclare(t *testing.T) {
 								EndPos:    18,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -5530,7 +5530,7 @@ func TestStmtDeclare_Stmts(t *testing.T) {
 								EndPos:    18,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -5562,7 +5562,7 @@ func TestStmtDeclare_Stmts(t *testing.T) {
 								EndPos:    34,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,
@@ -5642,7 +5642,7 @@ func TestStmtDeclare_Alt(t *testing.T) {
 								EndPos:    18,
 							},
 						},
-						ConstantName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 1,

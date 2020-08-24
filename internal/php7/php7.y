@@ -536,15 +536,14 @@ top_statement:
             }
     |   T_CONST const_list ';'
             {
-                $$ = &ast.StmtConstList{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = &ast.StmtConstList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    ConstTkn:     $1,
+                    Consts:       $2,
+                    SemiColonTkn: $3,
+                }
             }
 ;
 
@@ -782,10 +781,9 @@ use_declaration:
 const_list:
         const_list ',' const_decl
             {
-                $$ = append($1, $3)
+                lastNode($1).(*ast.StmtConstant).CommaTkn = $2
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = append($1, $3)
             }
     |   const_decl
             {
@@ -2198,20 +2196,15 @@ class_statement:
             }
     |   method_modifiers T_CONST class_const_list ';'
             {
-                $$ = &ast.StmtClassConstList{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewOptionalListTokensPosition($1, $2, $4)
-
-                // save comments
-                if len($1) > 0 {
-                    yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                    yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.SkippedTokens)
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Start, $2.SkippedTokens)
+                $$ = &ast.StmtClassConstList{
+                    Node: ast.Node{
+                        Position: position.NewOptionalListTokensPosition($1, $2, $4),
+                    },
+                    Modifiers:    $1,
+                    ConstTkn:     $2,
+                    Consts:       $3,
+                    SemiColonTkn: $4,
                 }
-                yylex.(*Parser).setFreeFloating($$, token.ConstList, $4.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
     |   T_USE name_list trait_adaptations
             {
@@ -2616,10 +2609,9 @@ property:
 class_const_list:
         class_const_list ',' class_const_decl
             {
-                $$ = append($1, $3)
+                lastNode($1).(*ast.StmtConstant).CommaTkn = $2
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = append($1, $3)
             }
     |   class_const_decl
             {
@@ -2630,32 +2622,42 @@ class_const_list:
 class_const_decl:
         identifier '=' expr backup_doc_comment
             {
-                name := &ast.Identifier{ast.Node{}, $1.Value}
-                $$ = &ast.StmtConstant{ast.Node{}, name, $3}
+                $$ = &ast.StmtConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $3),
+                    },
+                    Name: &ast.Identifier{
+                        Node:  ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        Value: $1.Value,
+                    },
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
 
-                // save position
-                name.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$.(*ast.StmtConstant).Name, token.Start, $1.SkippedTokens)
             }
 ;
 
 const_decl:
         T_STRING '=' expr backup_doc_comment
             {
-                name := &ast.Identifier{ast.Node{}, $1.Value}
-                $$ = &ast.StmtConstant{ast.Node{}, name, $3}
+                $$ = &ast.StmtConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $3),
+                    },
+                    Name: &ast.Identifier{
+                        Node:  ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        Value: $1.Value,
+                    },
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
 
-                // save position
-                name.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating($$.(*ast.StmtConstant).Name, token.Start, $1.SkippedTokens)
             }
 ;
 
