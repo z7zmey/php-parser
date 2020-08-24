@@ -845,10 +845,10 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
-		if nn.NamespaceName != nil {
-			t.visitor.Enter("NamespaceName", true)
-			t.Traverse(nn.NamespaceName)
-			t.visitor.Leave("NamespaceName", true)
+		if nn.Name != nil {
+			t.visitor.Enter("Name", true)
+			t.Traverse(nn.Name)
+			t.visitor.Leave("Name", true)
 		}
 		if nn.Stmts != nil {
 			t.visitor.Enter("Stmts", false)

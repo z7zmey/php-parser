@@ -33,3 +33,30 @@ func (v *FilterTokens) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
 	n.AsTkn = nil
 	n.CommaTkn = nil
 }
+
+func (v *FilterTokens) NameNamePart(n *ast.NameNamePart) {
+	n.NsSeparatorTkn = nil
+	n.StringTkn = nil
+}
+
+func (v *FilterTokens) NameName(n *ast.NameName) {
+	n.ListSeparatorTkn = nil
+}
+
+func (v *FilterTokens) NameFullyQualified(n *ast.NameFullyQualified) {
+	n.NsSeparatorTkn = nil
+	n.ListSeparatorTkn = nil
+}
+
+func (v *FilterTokens) NameRelative(n *ast.NameRelative) {
+	n.NsTkn = nil
+	n.NsSeparatorTkn = nil
+	n.ListSeparatorTkn = nil
+}
+
+func (v *FilterTokens) StmtNamespace(n *ast.StmtNamespace) {
+	n.NsTkn = nil
+	n.OpenCurlyBracket = nil
+	n.CloseCurlyBracket = nil
+	n.SemiColonTkn = nil
+}

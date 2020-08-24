@@ -1931,9 +1931,9 @@ func (p *PrettyPrinter) printStmtNamespace(n ast.Vertex) {
 
 	io.WriteString(p.w, "namespace")
 
-	if nn.NamespaceName != nil {
+	if nn.Name != nil {
 		io.WriteString(p.w, " ")
-		p.Print(nn.NamespaceName)
+		p.Print(nn.Name)
 	}
 
 	if nn.Stmts != nil {

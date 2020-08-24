@@ -37,10 +37,10 @@ func (nsr *NamespaceResolver) EnterNode(n ast.Vertex) bool {
 }
 
 func (nsr *NamespaceResolver) StmtNamespace(n *ast.StmtNamespace) {
-	if n.NamespaceName == nil {
+	if n.Name == nil {
 		nsr.Namespace = NewNamespace("")
 	} else {
-		NSParts := n.NamespaceName.(*ast.NameName).Parts
+		NSParts := n.Name.(*ast.NameName).Parts
 		nsr.Namespace = NewNamespace(concatNameParts(NSParts))
 	}
 }

@@ -603,8 +603,12 @@ func (n *StmtLabel) Accept(v NodeVisitor) {
 // StmtNamespace node
 type StmtNamespace struct {
 	Node
-	NamespaceName Vertex
-	Stmts         []Vertex
+	NsTkn             *token.Token
+	Name              Vertex
+	OpenCurlyBracket  *token.Token
+	Stmts             []Vertex
+	CloseCurlyBracket *token.Token
+	SemiColonTkn      *token.Token
 }
 
 func (n *StmtNamespace) Accept(v NodeVisitor) {
@@ -1840,7 +1844,8 @@ func (n *ExprBinarySpaceship) Accept(v NodeVisitor) {
 
 type NameName struct {
 	Node
-	Parts []Vertex
+	Parts            []Vertex
+	ListSeparatorTkn *token.Token
 }
 
 func (n *NameName) Accept(v NodeVisitor) {
@@ -1849,7 +1854,9 @@ func (n *NameName) Accept(v NodeVisitor) {
 
 type NameFullyQualified struct {
 	Node
-	Parts []Vertex
+	NsSeparatorTkn   *token.Token
+	Parts            []Vertex
+	ListSeparatorTkn *token.Token
 }
 
 func (n *NameFullyQualified) Accept(v NodeVisitor) {
@@ -1858,7 +1865,10 @@ func (n *NameFullyQualified) Accept(v NodeVisitor) {
 
 type NameRelative struct {
 	Node
-	Parts []Vertex
+	NsTkn            *token.Token
+	NsSeparatorTkn   *token.Token
+	Parts            []Vertex
+	ListSeparatorTkn *token.Token
 }
 
 func (n *NameRelative) Accept(v NodeVisitor) {
@@ -1867,7 +1877,9 @@ func (n *NameRelative) Accept(v NodeVisitor) {
 
 type NameNamePart struct {
 	Node
-	Value []byte
+	NsSeparatorTkn *token.Token
+	StringTkn      *token.Token
+	Value          []byte
 }
 
 func (n *NameNamePart) Accept(v NodeVisitor) {

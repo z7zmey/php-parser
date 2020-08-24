@@ -45,8 +45,8 @@ func TestParseAndPrintPhp5Root(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Identifier(t *testing.T) {
-
-	src := `<?
+	// TODO: remove ; after <?php
+	src := `<? ;
 	/* Foo */
 	Foo ( ) ;
 	`
@@ -73,8 +73,8 @@ func TestParseAndPrintPhp5Parameter(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Argument(t *testing.T) {
-
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	foo ( $a , $b
 		, $c
 	) ; `
@@ -89,7 +89,8 @@ func TestParseAndPrintPhp5Argument(t *testing.T) {
 // test name
 
 func TestParseAndPrintPhp5Names(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	foo ( ) ;
 	\ foo ( ) ;
 	namespace \ foo ( ) ;
@@ -168,7 +169,8 @@ func TestParseAndPrintPhp5String(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Heredoc(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	foo(<<<EAP
 test
 EAP
@@ -289,7 +291,8 @@ func TestParseAndPrintPhp5Cast(t *testing.T) {
 // test expr
 
 func TestParseAndPrintPhp5ArrayDimFetch(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	FOO [ ] ;
 	FOO [ 1 ] ;
 	$a [ ] ;
@@ -415,7 +418,8 @@ func TestParseAndPrintPhp5Closure(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5ConstFetch(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	null ;
 	`
 
@@ -481,7 +485,8 @@ func TestParseAndPrintPhp5Exit(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5FunctionCall(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	foo ( ) ;
 	$var ( $a , ... $b , $c ) ;
 	`
@@ -551,7 +556,8 @@ func TestParseAndPrintPhp5MethodCall(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5New(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 
 	new Foo ;
 
@@ -664,7 +670,8 @@ func TestParseAndPrintPhp5ShortArray(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5StaticCall(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	Foo :: bar ( $a , $b ) ;`
 
 	actual := printPhp5(parsePhp5(src))
@@ -675,7 +682,8 @@ func TestParseAndPrintPhp5StaticCall(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5StaticPropertyFetch(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	Foo :: $bar ;`
 
 	actual := printPhp5(parsePhp5(src))
@@ -1117,7 +1125,8 @@ func TestParseAndPrintPhp5GotoLabel(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Namespace(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	namespace Foo \ Bar ; 
 	namespace Baz {
 

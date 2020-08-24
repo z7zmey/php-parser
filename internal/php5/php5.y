@@ -301,26 +301,26 @@ top_statement_list:
 namespace_name:
         T_STRING
             {
-                namePart := &ast.NameNamePart{ast.Node{}, $1.Value}
-                $$ = []ast.Vertex{namePart}
-
-                // save position
-                namePart.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(namePart, token.Start, $1.SkippedTokens)
+                $$ = []ast.Vertex{
+                    &ast.NameNamePart{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        StringTkn: $1,
+                        Value:     $1.Value,
+                    },
+                }
             }
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
-                namePart := &ast.NameNamePart{ast.Node{}, $3.Value}
-                $$ = append($1, namePart)
-
-                // save position
-                namePart.GetNode().Position = position.NewTokenPosition($3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(namePart, token.Start, $3.SkippedTokens)
+                $$ = append($1, &ast.NameNamePart{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($2, $3),
+                    },
+                    NsSeparatorTkn: $2,
+                    StringTkn:      $3,
+                    Value:          $3.Value,
+                })
             }
 ;
 
@@ -355,43 +355,49 @@ top_statement:
             }
     |   T_NAMESPACE namespace_name ';'
             {
-                name := &ast.NameName{ast.Node{}, $2}
-                $$ = &ast.StmtNamespace{ast.Node{}, name, nil}
-
-                // save position
-                name.GetNode().Position = position.NewNodeListPosition($2)
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(name, token.End, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = &ast.StmtNamespace{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    NsTkn: $1,
+                    Name: &ast.NameName{
+                        Node:  ast.Node{
+                            Position: position.NewNodeListPosition($2),
+                        },
+                        Parts: $2,
+                    },
+                    SemiColonTkn: $3,
+                }
             }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
             {
-                name := &ast.NameName{ast.Node{}, $2}
-                $$ = &ast.StmtNamespace{ast.Node{}, name, $4}
-
-                // save position
-                name.GetNode().Position = position.NewNodeListPosition($2)
-                $$.GetNode().Position = position.NewTokensPosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(name, token.End, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $5.SkippedTokens)
+                $$ = &ast.StmtNamespace{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $5),
+                    },
+                    NsTkn: $1,
+                    Name: &ast.NameName{
+                        Node:  ast.Node{
+                            Position: position.NewNodeListPosition($2),
+                        },
+                        Parts: $2,
+                    },
+                    OpenCurlyBracket:  $3,
+                    Stmts:             $4,
+                    CloseCurlyBracket: $5,
+                }
             }
     |   T_NAMESPACE '{' top_statement_list '}'
             {
-                $$ = &ast.StmtNamespace{ast.Node{}, nil, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Namespace, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.SkippedTokens)
+                $$ = &ast.StmtNamespace{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    NsTkn:             $1,
+                    OpenCurlyBracket:  $2,
+                    Stmts:             $3,
+                    CloseCurlyBracket: $4,
+                }
             }
     |   T_USE use_declarations ';'
             {
@@ -1595,10 +1601,12 @@ interface_list:
             }
     |   interface_list ',' fully_qualified_class_name
             {
+                switch n := lastNode($1).(type) {
+                    case *ast.NameName: n.ListSeparatorTkn = $2
+                    case *ast.NameFullyQualified: n.ListSeparatorTkn = $2
+                    case *ast.NameRelative: n.ListSeparatorTkn = $2
+                }
                 $$ = append($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
 ;
 
@@ -2413,10 +2421,12 @@ trait_list:
             }
     |   trait_list ',' fully_qualified_class_name
             {
+                switch n := lastNode($1).(type) {
+                    case *ast.NameName: n.ListSeparatorTkn = $2
+                    case *ast.NameFullyQualified: n.ListSeparatorTkn = $2
+                    case *ast.NameRelative: n.ListSeparatorTkn = $2
+                }
                 $$ = append($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
             }
 ;
 
@@ -3992,37 +4002,45 @@ lexical_var_list:
 function_call:
         namespace_name function_call_parameter_list
             {
-                name := &ast.NameName{ast.Node{}, $1}
+                name := &ast.NameName{
+                    Node:  ast.Node{
+                        Position: position.NewNodeListPosition($1),
+                    },
+                    Parts: $1,
+                }
                 $$ = &ast.ExprFunctionCall{ast.Node{}, name, $2.(*ast.ArgumentList)}
 
                 // save position
-                name.GetNode().Position = position.NewNodeListPosition($1)
                 $$.GetNode().Position = position.NewNodesPosition(name, $2)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name function_call_parameter_list
             {
-                funcName := &ast.NameRelative{ast.Node{}, $3}
-                $$ = &ast.ExprFunctionCall{ast.Node{}, funcName, $4.(*ast.ArgumentList)}
+                name := &ast.NameRelative{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $3),
+                    },
+                    NsTkn:          $1,
+                    NsSeparatorTkn: $2,
+                    Parts:          $3,
+                }
+                $$ = &ast.ExprFunctionCall{ast.Node{}, name, $4.(*ast.ArgumentList)}
 
                 // save position
-                funcName.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
-                $$.GetNode().Position = position.NewNodesPosition(funcName, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(funcName, token.Namespace, $2.SkippedTokens)
+                $$.GetNode().Position = position.NewNodesPosition(name, $4)
             }
     |   T_NS_SEPARATOR namespace_name function_call_parameter_list
             {
-                funcName := &ast.NameFullyQualified{ast.Node{}, $2}
-                $$ = &ast.ExprFunctionCall{ast.Node{}, funcName, $3.(*ast.ArgumentList)}
+                name := &ast.NameFullyQualified{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $2),
+                    },
+                    NsSeparatorTkn: $1,
+                    Parts:          $2,
+                }
+                $$ = &ast.ExprFunctionCall{ast.Node{}, name, $3.(*ast.ArgumentList)}
 
                 // save position
-                funcName.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
-                $$.GetNode().Position = position.NewNodesPosition(funcName, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$.GetNode().Position = position.NewNodesPosition(name, $3)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
@@ -4093,62 +4111,66 @@ class_name:
             }
     |   namespace_name
             {
-                $$ = &ast.NameName{ast.Node{}, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeListPosition($1)
+                $$ = &ast.NameName{
+                    Node:  ast.Node{
+                        Position: position.NewNodeListPosition($1),
+                    },
+                    Parts: $1,
+                }
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                $$ = &ast.NameRelative{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Namespace, $2.SkippedTokens)
+                $$ = &ast.NameRelative{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $3),
+                    },
+                    NsTkn:          $1,
+                    NsSeparatorTkn: $2,
+                    Parts:          $3,
+                }
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                $$ = &ast.NameFullyQualified{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.NameFullyQualified{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $2),
+                    },
+                    NsSeparatorTkn: $1,
+                    Parts:          $2,
+                }
             }
 ;
 
 fully_qualified_class_name:
         namespace_name
             {
-                $$ = &ast.NameName{ast.Node{}, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeListPosition($1)
+                $$ = &ast.NameName{
+                    Node:  ast.Node{
+                        Position: position.NewNodeListPosition($1),
+                    },
+                    Parts: $1,
+                }
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                $$ = &ast.NameRelative{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Namespace, $2.SkippedTokens)
+                $$ = &ast.NameRelative{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $3),
+                    },
+                    NsTkn:          $1,
+                    NsSeparatorTkn: $2,
+                    Parts:          $3,
+                }
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                $$ = &ast.NameFullyQualified{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.NameFullyQualified{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $2),
+                    },
+                    NsSeparatorTkn: $1,
+                    Parts:          $2,
+                }
             }
 ;
 
@@ -4444,37 +4466,45 @@ static_scalar_value:
             }
     |   namespace_name
             {
-                name := &ast.NameName{ast.Node{}, $1}
+                name := &ast.NameName{
+                    Node:  ast.Node{
+                        Position: position.NewNodeListPosition($1),
+                    },
+                    Parts: $1,
+                }
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = position.NewNodeListPosition($1)
                 $$.GetNode().Position = position.NewNodePosition(name)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                name := &ast.NameRelative{ast.Node{}, $3}
+                name := &ast.NameRelative{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $3),
+                    },
+                    NsTkn:          $1,
+                    NsSeparatorTkn: $2,
+                    Parts:          $3,
+                }
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
                 $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Namespace, $2.SkippedTokens)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                name := &ast.NameFullyQualified{ast.Node{}, $2}
+                name := &ast.NameFullyQualified{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $2),
+                    },
+                    NsSeparatorTkn: $1,
+                    Parts:          $2,
+                }
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
                 $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_ARRAY '(' static_array_pair_list ')'
             {
@@ -4888,37 +4918,45 @@ general_constant:
             }
     |   namespace_name
             {
-                name := &ast.NameName{ast.Node{}, $1}
+                name := &ast.NameName{
+                    Node:  ast.Node{
+                        Position: position.NewNodeListPosition($1),
+                    },
+                    Parts: $1,
+                }
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = position.NewNodeListPosition($1)
                 $$.GetNode().Position = position.NewNodePosition(name)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                name := &ast.NameRelative{ast.Node{}, $3}
+                name := &ast.NameRelative{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $3),
+                    },
+                    NsTkn:          $1,
+                    NsSeparatorTkn: $2,
+                    Parts:          $3,
+                }
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
                 $$.GetNode().Position = position.NewNodePosition(name)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(name, token.Namespace, $2.SkippedTokens)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                name := &ast.NameFullyQualified{ast.Node{}, $2}
+                name := &ast.NameFullyQualified{
+                    Node:  ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $2),
+                    },
+                    NsSeparatorTkn: $1,
+                    Parts:          $2,
+                }
                 $$ = &ast.ExprConstFetch{ast.Node{}, name}
 
                 // save position
-                name.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
                 $$.GetNode().Position = position.NewNodePosition(name)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
 ;
 

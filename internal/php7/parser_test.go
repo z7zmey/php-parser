@@ -9214,7 +9214,7 @@ func TestStmtNamespace(t *testing.T) {
 						EndPos:    17,
 					},
 				},
-				NamespaceName: &ast.NameName{
+				Name: &ast.NameName{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,
@@ -9272,7 +9272,7 @@ func TestStmtNamespace_Stmts(t *testing.T) {
 						EndPos:    19,
 					},
 				},
-				NamespaceName: &ast.NameName{
+				Name: &ast.NameName{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 1,

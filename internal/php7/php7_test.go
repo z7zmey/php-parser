@@ -6962,7 +6962,7 @@ func TestPhp7(t *testing.T) {
 						EndPos:    2525,
 					},
 				},
-				NamespaceName: &ast.NameName{
+				Name: &ast.NameName{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 115,
@@ -6995,7 +6995,7 @@ func TestPhp7(t *testing.T) {
 						EndPos:    2542,
 					},
 				},
-				NamespaceName: &ast.NameName{
+				Name: &ast.NameName{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 116,
@@ -17695,7 +17695,7 @@ func TestPhp7(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 318,
 										EndLine:   318,
-										StartPos:  5212,
+										StartPos:  5211,
 										EndPos:    5215,
 									},
 								},

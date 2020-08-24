@@ -55,6 +55,16 @@ func (p *Printer) joinPrint(glue string, nn []ast.Vertex) {
 	}
 }
 
+func (p *Printer) joinPrintRefactored(glue string, nn []ast.Vertex) {
+	for k, n := range nn {
+		if k > 0 {
+			p.bufStart = glue
+		}
+
+		p.Print(n)
+	}
+}
+
 func (p *Printer) printNodes(nn []ast.Vertex) {
 	for _, n := range nn {
 		p.Print(n)
@@ -558,50 +568,36 @@ func (p *Printer) printNodeArgument(n ast.Vertex) {
 
 // name
 
-func (p *Printer) printNameNamePart(n ast.Vertex) {
-	nn := n.(*ast.NameNamePart)
-	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
-	p.bufStart = ""
-
-	io.WriteString(p.w, string(nn.Value))
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printNameNamePart(n *ast.NameNamePart) {
+	p.printToken(n.NsSeparatorTkn, "")
+	p.printToken(n.StringTkn, string(n.Value))
 }
 
-func (p *Printer) printNameName(n ast.Vertex) {
-	nn := n.(*ast.NameName)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printNameName(n *ast.NameName) {
+	p.printFreeFloating(n, token.Start)
 
-	p.joinPrint("\\", nn.Parts)
+	p.joinPrintRefactored("\\", n.Parts)
 
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.ListSeparatorTkn, "")
 }
 
-func (p *Printer) printNameFullyQualified(n ast.Vertex) {
-	nn := n.(*ast.NameFullyQualified)
-	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
-	p.bufStart = ""
+func (p *Printer) printNameFullyQualified(n *ast.NameFullyQualified) {
+	p.printFreeFloating(n, token.Start)
+	p.printToken(n.NsSeparatorTkn, "\\")
 
-	io.WriteString(p.w, "\\")
-	p.joinPrint("\\", nn.Parts)
+	p.joinPrintRefactored("\\", n.Parts)
 
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.ListSeparatorTkn, "")
 }
 
-func (p *Printer) printNameRelative(n ast.Vertex) {
-	nn := n.(*ast.NameRelative)
-	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
-	p.bufStart = ""
+func (p *Printer) printNameRelative(n *ast.NameRelative) {
+	p.printFreeFloating(n, token.Start)
+	p.printToken(n.NsTkn, "namespace")
+	p.printToken(n.NsSeparatorTkn, "\\")
 
-	io.WriteString(p.w, "namespace")
-	p.printFreeFloating(nn, token.Namespace)
+	p.joinPrintRefactored("\\", n.Parts)
 
-	for _, part := range nn.Parts {
-		io.WriteString(p.w, "\\")
-		p.Print(part)
-	}
-
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.ListSeparatorTkn, "")
 }
 
 // scalar
@@ -2299,7 +2295,9 @@ func (p *Printer) printStmtCatch(n ast.Vertex) {
 	io.WriteString(p.w, "catch")
 	p.printFreeFloating(nn, token.Catch)
 	io.WriteString(p.w, "(")
-	p.joinPrint("|", nn.Types)
+
+	p.joinPrintRefactored("|", nn.Types)
+
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
 	io.WriteString(p.w, ")")
@@ -2409,10 +2407,9 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 			io.WriteString(p.w, " ")
 		}
 		io.WriteString(p.w, "implements")
-		if nn.Implements.InterfaceNames[0].GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-		p.joinPrint(",", nn.Implements.InterfaceNames)
+		p.bufStart = " "
+		p.joinPrintRefactored(",", nn.Implements.InterfaceNames)
+
 	}
 
 	p.printFreeFloating(nn, token.Name)
@@ -2896,10 +2893,8 @@ func (p *Printer) printStmtInterface(n ast.Vertex) {
 			io.WriteString(p.w, " ")
 		}
 		io.WriteString(p.w, "extends")
-		if nn.Extends.InterfaceNames[0].GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-		p.joinPrint(",", nn.Extends.InterfaceNames)
+		p.bufStart = " "
+		p.joinPrintRefactored(",", nn.Extends.InterfaceNames)
 	}
 
 	p.printFreeFloating(nn, token.Name)
@@ -2923,32 +2918,28 @@ func (p *Printer) printStmtLabel(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtNamespace(n ast.Vertex) {
-	nn := n.(*ast.StmtNamespace)
-	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "namespace")
+func (p *Printer) printStmtNamespace(n *ast.StmtNamespace) {
+	p.printToken(n.NsTkn, "namespace")
 
-	if nn.NamespaceName != nil {
-		if nn.NamespaceName.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-		p.Print(nn.NamespaceName)
+	if n.Name != nil {
+		p.bufStart = " "
+		p.Print(n.Name)
 	}
 
-	if nn.Stmts != nil {
-		p.printFreeFloating(nn, token.Namespace)
-		io.WriteString(p.w, "{")
-		p.printNodes(nn.Stmts)
-		p.printFreeFloating(nn, token.Stmts)
-		io.WriteString(p.w, "}")
-	} else {
-		p.printFreeFloating(nn, token.SemiColon)
-		if nn.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, ";")
-		}
+	if n.Stmts != nil {
+		p.printToken(n.OpenCurlyBracket, "{")
+		p.printNodes(n.Stmts)
+		p.printToken(n.CloseCurlyBracket, "}")
+		return
 	}
 
-	p.printFreeFloating(nn, token.End)
+	if n.OpenCurlyBracket != nil {
+		p.printToken(n.OpenCurlyBracket, "{")
+		p.printToken(n.CloseCurlyBracket, "}")
+		return
+	}
+
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtNop(n ast.Vertex) {
@@ -3202,10 +3193,8 @@ func (p *Printer) printStmtTraitUse(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	io.WriteString(p.w, "use")
-	if nn.Traits[0].GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
-	p.joinPrint(",", nn.Traits)
+	p.bufStart = " "
+	p.joinPrintRefactored(",", nn.Traits)
 
 	p.Print(nn.TraitAdaptationList)
 
@@ -3276,11 +3265,13 @@ func (p *Printer) printStmtUnset(n ast.Vertex) {
 func (p *Printer) printStmtUse(n *ast.StmtUse) {
 	p.printToken(n.UseTkn, "use")
 
-	p.bufStart = " "
-	p.Print(n.Type)
+	if n.Type != nil {
+		p.bufStart = " "
+		p.Print(n.Type)
+	}
 
 	p.bufStart = " "
-	p.joinPrint(",", n.UseDeclarations)
+	p.joinPrintRefactored(",", n.UseDeclarations)
 
 	p.printToken(n.SemiColonTkn, ";")
 }
@@ -3298,16 +3289,7 @@ func (p *Printer) printStmtGroupUse(n *ast.StmtGroupUse) {
 	p.printToken(n.NsSeparatorTkn, "\\")
 	p.printToken(n.OpenCurlyBracketTkn, "{")
 
-	for k, v := range n.UseDeclarations {
-		p.Print(v)
-		var def string
-		if k != len(n.UseDeclarations)-1 {
-			def = ","
-		}
-		if decl, ok := v.(*ast.StmtUseDeclaration); ok {
-			p.printToken(decl.CommaTkn, def)
-		}
-	}
+	p.joinPrintRefactored(",", n.UseDeclarations)
 
 	p.printToken(n.CloseCurlyBracketTkn, "}")
 	p.printToken(n.SemiColonTkn, ";")
@@ -3325,6 +3307,7 @@ func (p *Printer) printStmtUseDeclaration(n *ast.StmtUseDeclaration) {
 	p.Print(n.Use)
 
 	if n.Alias == nil {
+		p.printToken(n.CommaTkn, "")
 		return
 	}
 
@@ -3333,6 +3316,8 @@ func (p *Printer) printStmtUseDeclaration(n *ast.StmtUseDeclaration) {
 
 	p.bufStart = " "
 	p.Print(n.Alias)
+
+	p.printToken(n.CommaTkn, "")
 }
 
 func (p *Printer) printStmtWhile(n ast.Vertex) {

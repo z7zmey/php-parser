@@ -22,7 +22,7 @@ abstract class Bar extends Baz
 	rootNode := &ast.Root{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				NamespaceName: &ast.NameName{
+				Name: &ast.NameName{
 					Parts: []ast.Vertex{
 						&ast.NameNamePart{Value: []byte("Foo")},
 					},
@@ -3454,7 +3454,7 @@ func TestPrintNamespace(t *testing.T) {
 
 	p := printer.NewPrettyPrinter(o, "    ")
 	p.Print(&ast.StmtNamespace{
-		NamespaceName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Name: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
 	})
 
 	expected := `namespace Foo;`
@@ -3472,7 +3472,7 @@ func TestPrintNamespaceWithStmts(t *testing.T) {
 	p.Print(&ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				NamespaceName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+				Name: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
 				Stmts: []ast.Vertex{
 					&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}}},
 				},

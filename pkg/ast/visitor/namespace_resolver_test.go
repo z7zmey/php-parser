@@ -605,7 +605,7 @@ func TestResolveConstantsName(t *testing.T) {
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				NamespaceName: nameAB,
+				Name: nameAB,
 			},
 			&ast.StmtConstList{
 				Consts: []ast.Vertex{
@@ -649,7 +649,7 @@ func TestResolveNamespaces(t *testing.T) {
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				NamespaceName: namespaceAB,
+				Name: namespaceAB,
 			},
 			&ast.StmtConstList{
 				Consts: []ast.Vertex{
@@ -666,7 +666,7 @@ func TestResolveNamespaces(t *testing.T) {
 				Stmts: []ast.Vertex{},
 			},
 			&ast.StmtNamespace{
-				NamespaceName: namespaceCD,
+				Name: namespaceCD,
 				Stmts: []ast.Vertex{
 					&ast.StmtUse{
 						UseDeclarations: []ast.Vertex{
@@ -749,7 +749,7 @@ func TestDoNotResolveReservedConstants(t *testing.T) {
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				NamespaceName: namespaceName,
+				Name: namespaceName,
 			},
 			&ast.StmtExpression{
 				Expr: &ast.ExprConstFetch{
@@ -877,7 +877,7 @@ func TestDoNotResolveReservedNames(t *testing.T) {
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				NamespaceName: &ast.NameName{
+				Name: &ast.NameName{
 					Parts: []ast.Vertex{
 						&ast.NameNamePart{Value: []byte("Foo")},
 					},
@@ -955,7 +955,7 @@ func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				NamespaceName: &ast.NameName{
+				Name: &ast.NameName{
 					Parts: []ast.Vertex{
 						&ast.NameNamePart{Value: []byte("Foo")},
 					},
@@ -1007,7 +1007,7 @@ func TestResolvePropertyTypeName(t *testing.T) {
 	stmts := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				NamespaceName: &ast.NameName{
+				Name: &ast.NameName{
 					Parts: []ast.Vertex{
 						&ast.NameNamePart{Value: []byte("Foo")},
 					},

@@ -13,7 +13,8 @@ import (
 )
 
 func ExamplePrinter() {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 
 namespace Foo;
 
@@ -37,7 +38,7 @@ abstract class Bar extends Baz
 
 	// change namespace
 
-	parts := &rootNode.(*ast.Root).Stmts[0].(*ast.StmtNamespace).NamespaceName.(*ast.NameName).Parts
+	parts := &rootNode.(*ast.Root).Stmts[1].(*ast.StmtNamespace).Name.(*ast.NameName).Parts
 	*parts = append(*parts, &ast.NameNamePart{Value: []byte("Quuz")})
 
 	// print
@@ -46,7 +47,7 @@ abstract class Bar extends Baz
 	p.Print(rootNode)
 
 	// Output:
-	//<?php
+	//<?php ;
 	//
 	// namespace Foo\Quuz;
 	//
@@ -94,8 +95,8 @@ func TestParseAndPrintRoot(t *testing.T) {
 }
 
 func TestParseAndPrintIdentifier(t *testing.T) {
-
-	src := `<?
+	// TODO: remove ; after <?php
+	src := `<? ;
 	/* Foo */
 	Foo ( ) ;
 	`
@@ -151,8 +152,8 @@ func TestParseAndPrintNullable(t *testing.T) {
 }
 
 func TestParseAndPrintArgument(t *testing.T) {
-
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	foo ( $a , $b
 		, ... $c ,
 	) ; `
@@ -167,7 +168,8 @@ func TestParseAndPrintArgument(t *testing.T) {
 // test name
 
 func TestParseAndPrintNames(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	foo ( ) ;
 	\ foo ( ) ;
 	namespace \ foo ( ) ;
@@ -246,7 +248,8 @@ func TestParseAndPrintString(t *testing.T) {
 }
 
 func TestParseAndPrintHeredoc(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	foo(<<<EAP
 test
 EAP
@@ -370,7 +373,8 @@ func TestParseAndPrintCast(t *testing.T) {
 // test expr
 
 func TestParseAndPrintArrayDimFetch(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	FOO [ ] ;
 	FOO [ 1 ] ;
 	$a [ ] ;
@@ -509,7 +513,8 @@ func TestParseAndPrintArrowFunction(t *testing.T) {
 }
 
 func TestParseAndPrintConstFetch(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	null ;
 	`
 
@@ -575,7 +580,8 @@ func TestParseAndPrintExit(t *testing.T) {
 }
 
 func TestParseAndPrintFunctionCall(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	foo ( ) ;
 	$var ( $a , ... $b , $c ) ;
 	`
@@ -776,7 +782,8 @@ func TestParseAndPrintShortList(t *testing.T) {
 }
 
 func TestParseAndPrintStaticCall(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	Foo :: bar ( $a , $b ) ;`
 
 	actual := print(parse(src))
@@ -787,7 +794,8 @@ func TestParseAndPrintStaticCall(t *testing.T) {
 }
 
 func TestParseAndPrintStaticPropertyFetch(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	Foo :: $bar ;`
 
 	actual := print(parse(src))
@@ -1250,7 +1258,8 @@ func TestParseAndPrintGotoLabel(t *testing.T) {
 }
 
 func TestParseAndPrintNamespace(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	namespace Foo \ Bar ; 
 	namespace Baz {
 
