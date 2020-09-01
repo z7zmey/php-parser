@@ -1278,6 +1278,25 @@ func TestPrintExprArrayItem(t *testing.T) {
 	}
 }
 
+func TestPrintExprArrayItemUnpack(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrettyPrinter(o, "    ")
+	p.Print(&expr.ArrayItem{
+		Unpack: true,
+		Val: &expr.Variable{
+			VarName: &node.Identifier{Value: "world"},
+		},
+	})
+
+	expected := `...$world`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintExprArray(t *testing.T) {
 	o := bytes.NewBufferString("")
 
