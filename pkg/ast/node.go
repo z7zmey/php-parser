@@ -691,7 +691,9 @@ func (n *StmtStaticVar) Accept(v NodeVisitor) {
 // StmtStmtList node
 type StmtStmtList struct {
 	Node
-	Stmts []Vertex
+	OpenCurlyBracket  *token.Token
+	Stmts             []Vertex
+	CloseCurlyBracket *token.Token
 }
 
 func (n *StmtStmtList) Accept(v NodeVisitor) {

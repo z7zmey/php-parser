@@ -82,3 +82,8 @@ func (v *FilterTokens) StmtConstant(n *ast.StmtConstant) {
 	n.EqualTkn = nil
 	n.CommaTkn = nil
 }
+
+func (v *FilterTokens) StmtStmtList(n *ast.StmtStmtList) {
+	n.OpenCurlyBracket = nil
+	n.CloseCurlyBracket = nil
+}

@@ -1211,7 +1211,8 @@ func TestParseAndPrintPhp5StaticVar(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5StmtList(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	{
 		;
 	}

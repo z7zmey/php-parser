@@ -1344,7 +1344,8 @@ func TestParseAndPrintStaticVar(t *testing.T) {
 }
 
 func TestParseAndPrintStmtList(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	{
 		;
 	}

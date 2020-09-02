@@ -2530,6 +2530,7 @@ func (p *Printer) printStmtDo(n ast.Vertex) {
 	}
 
 	p.Print(nn.Stmt)
+
 	p.printFreeFloating(nn, token.Stmts)
 
 	io.WriteString(p.w, "while")
@@ -3001,16 +3002,10 @@ func (p *Printer) printStmtStatic(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtStmtList(n ast.Vertex) {
-	nn := n.(*ast.StmtStmtList)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "{")
-	p.printNodes(nn.Stmts)
-	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtStmtList(n *ast.StmtStmtList) {
+	p.printToken(n.OpenCurlyBracket, "{")
+	p.printNodes(n.Stmts)
+	p.printToken(n.CloseCurlyBracket, "}")
 }
 
 func (p *Printer) printStmtSwitch(n ast.Vertex) {

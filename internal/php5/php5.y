@@ -844,14 +844,14 @@ statement:
 unticked_statement:
         '{' inner_statement_list '}'
             {
-                $$ = &ast.StmtStmtList{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
+                $$ = &ast.StmtStmtList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenCurlyBracket:  $1,
+                    Stmts:             $2,
+                    CloseCurlyBracket: $3,
+                }
             }
     |   T_IF parenthesis_expr statement elseif_list else_single
             {
@@ -871,12 +871,16 @@ unticked_statement:
             }
     |   T_IF parenthesis_expr ':' inner_statement_list new_elseif_list new_else_single T_ENDIF ';'
             {
-                stmts := &ast.StmtStmtList{ast.Node{}, $4}
+                stmts := &ast.StmtStmtList{
+                    Node: ast.Node{
+                        Position: position.NewNodeListPosition($4),
+                    },
+                    Stmts: $4,
+                }
                 stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
                 $$ = &ast.StmtAltIf{ast.Node{}, $2, stmtsBrackets, $5, $6}
 
                 // save position
-                stmts.GetNode().Position = position.NewNodeListPosition($4)
                 stmtsBrackets.GetNode().Position = position.NewTokenNodeListPosition($3, $4)
                 $$.GetNode().Position = position.NewTokensPosition($1, $8)
 
@@ -1673,11 +1677,15 @@ for_statement:
             }
     |   ':' inner_statement_list T_ENDFOR ';'
             {
-                stmtList := &ast.StmtStmtList{ast.Node{}, $2}
+                stmtList := &ast.StmtStmtList{
+                    Node: ast.Node{
+                        Position: position.NewNodeListPosition($2),
+                    },
+                    Stmts: $2,
+                }
                 $$ = &ast.StmtAltFor{ast.Node{}, nil, nil, nil, stmtList}
 
                 // save position
-                stmtList.GetNode().Position = position.NewNodeListPosition($2)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
@@ -1698,11 +1706,15 @@ foreach_statement:
             }
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
-                stmtList := &ast.StmtStmtList{ast.Node{}, $2}
+                stmtList := &ast.StmtStmtList{
+                    Node: ast.Node{
+                        Position: position.NewNodeListPosition($2),
+                    },
+                    Stmts: $2,
+                }
                 $$ = &ast.StmtAltForeach{ast.Node{}, nil, nil, nil, stmtList}
 
                 // save position
-                stmtList.GetNode().Position = position.NewNodeListPosition($2)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
@@ -1724,11 +1736,15 @@ declare_statement:
             }
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
-                stmtList := &ast.StmtStmtList{ast.Node{}, $2}
+                stmtList := &ast.StmtStmtList{
+                    Node: ast.Node{
+                        Position: position.NewNodeListPosition($2),
+                    },
+                    Stmts: $2,
+                }
                 $$ = &ast.StmtDeclare{ast.Node{}, true, nil, stmtList}
 
                 // save position
-                stmtList.GetNode().Position = position.NewNodeListPosition($2)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
@@ -1902,11 +1918,15 @@ while_statement:
             }
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
-                stmtList := &ast.StmtStmtList{ast.Node{}, $2}
+                stmtList := &ast.StmtStmtList{
+                    Node: ast.Node{
+                        Position: position.NewNodeListPosition($2),
+                    },
+                    Stmts: $2,
+                }
                 $$ = &ast.StmtAltWhile{ast.Node{}, nil, stmtList}
 
                 // save position
-                stmtList.GetNode().Position = position.NewNodeListPosition($2)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
@@ -1945,13 +1965,17 @@ new_elseif_list:
             }
     |   new_elseif_list T_ELSEIF parenthesis_expr ':' inner_statement_list
             {
-                stmts := &ast.StmtStmtList{ast.Node{}, $5}
+                stmts := &ast.StmtStmtList{
+                    Node: ast.Node{
+                        Position: position.NewNodeListPosition($5),
+                    },
+                    Stmts: $5,
+                }
                 stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
                 _elseIf := &ast.StmtAltElseIf{ast.Node{}, $3, stmtsBrackets}
                 $$ = append($1, _elseIf)
 
                 // save position
-                stmts.GetNode().Position = position.NewNodeListPosition($5)
                 stmtsBrackets.GetNode().Position = position.NewTokenNodeListPosition($4, $5)
                 _elseIf.GetNode().Position = position.NewTokenNodeListPosition($2, $5)
 
@@ -1987,12 +2011,16 @@ new_else_single:
             }
     |   T_ELSE ':' inner_statement_list
             {
-                stmts := &ast.StmtStmtList{ast.Node{}, $3}
+                stmts := &ast.StmtStmtList{
+                    Node: ast.Node{
+                        Position: position.NewNodeListPosition($3),
+                    },
+                    Stmts: $3,
+                }
                 stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
                 $$ = &ast.StmtAltElse{ast.Node{}, stmtsBrackets}
 
                 // save position
-                stmts.GetNode().Position = position.NewNodeListPosition($3)
                 stmtsBrackets.GetNode().Position = position.NewTokenNodeListPosition($2, $3)
                 $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
 
@@ -2626,14 +2654,14 @@ method_body:
             }
     |   '{' inner_statement_list '}'
             {
-                $$ = &ast.StmtStmtList{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
+                $$ = &ast.StmtStmtList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenCurlyBracket:  $1,
+                    Stmts:             $2,
+                    CloseCurlyBracket: $3,
+                }
             }
 ;
 
