@@ -972,6 +972,10 @@ func (p *PrettyPrinter) printExprArrayDimFetch(n node.Node) {
 func (p *PrettyPrinter) printExprArrayItem(n node.Node) {
 	nn := n.(*expr.ArrayItem)
 
+	if nn.Unpack {
+		io.WriteString(p.w, "...")
+	}
+
 	if nn.Key != nil {
 		p.Print(nn.Key)
 		io.WriteString(p.w, " => ")
