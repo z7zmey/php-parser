@@ -2090,7 +2090,8 @@ func TestPrintAltElseIf(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrettyPrinter(o, "    ")
-	p.Print(&ast.StmtAltElseIf{
+	p.Print(&ast.StmtElseIf{
+		Alt: true,
 		Cond: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}},
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
@@ -2112,7 +2113,8 @@ func TestPrintAltElseIfEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrettyPrinter(o, "    ")
-	p.Print(&ast.StmtAltElseIf{
+	p.Print(&ast.StmtElseIf{
+		Alt: true,
 		Cond: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}},
 		Stmt: &ast.StmtStmtList{},
 	})
@@ -2129,7 +2131,8 @@ func TestPrintAltElse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrettyPrinter(o, "    ")
-	p.Print(&ast.StmtAltElse{
+	p.Print(&ast.StmtElse{
+		Alt: true,
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}}},
@@ -2150,7 +2153,8 @@ func TestPrintAltElseEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrettyPrinter(o, "    ")
-	p.Print(&ast.StmtAltElse{
+	p.Print(&ast.StmtElse{
+		Alt: true,
 		Stmt: &ast.StmtStmtList{},
 	})
 
@@ -2236,7 +2240,8 @@ func TestPrintAltIf(t *testing.T) {
 	p := printer.NewPrettyPrinter(o, "    ")
 	p.Print(&ast.StmtNamespace{
 		Stmts: []ast.Vertex{
-			&ast.StmtAltIf{
+			&ast.StmtIf{
+				Alt: true,
 				Cond: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}},
 				Stmt: &ast.StmtStmtList{
 					Stmts: []ast.Vertex{
@@ -2244,7 +2249,8 @@ func TestPrintAltIf(t *testing.T) {
 					},
 				},
 				ElseIf: []ast.Vertex{
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
+						Alt: true,
 						Cond: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}},
 						Stmt: &ast.StmtStmtList{
 							Stmts: []ast.Vertex{
@@ -2252,12 +2258,14 @@ func TestPrintAltIf(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
+						Alt: true,
 						Cond: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("c")}},
 						Stmt: &ast.StmtStmtList{},
 					},
 				},
-				Else: &ast.StmtAltElse{
+				Else: &ast.StmtElse{
+					Alt: true,
 					Stmt: &ast.StmtStmtList{
 						Stmts: []ast.Vertex{
 							&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}}},

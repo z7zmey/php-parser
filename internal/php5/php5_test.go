@@ -2603,7 +2603,7 @@ func TestPhp5(t *testing.T) {
 					},
 				},
 			},
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 41,
@@ -2612,6 +2612,7 @@ func TestPhp5(t *testing.T) {
 						EndPos:    867,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -2645,7 +2646,7 @@ func TestPhp5(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 			},
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 43,
@@ -2654,6 +2655,7 @@ func TestPhp5(t *testing.T) {
 						EndPos:    897,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -2687,7 +2689,7 @@ func TestPhp5(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 				ElseIf: []ast.Vertex{
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 44,
@@ -2696,6 +2698,7 @@ func TestPhp5(t *testing.T) {
 								EndPos:    -1,
 							},
 						},
+						Alt: true,
 						Cond: &ast.ExprVariable{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -2731,7 +2734,7 @@ func TestPhp5(t *testing.T) {
 					},
 				},
 			},
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 46,
@@ -2740,6 +2743,7 @@ func TestPhp5(t *testing.T) {
 						EndPos:    920,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -2772,7 +2776,7 @@ func TestPhp5(t *testing.T) {
 					},
 					Stmts: []ast.Vertex{},
 				},
-				Else: &ast.StmtAltElse{
+				Else: &ast.StmtElse{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 47,
@@ -2781,6 +2785,7 @@ func TestPhp5(t *testing.T) {
 							EndPos:    -1,
 						},
 					},
+					Alt: true,
 					Stmt: &ast.StmtStmtList{
 						Node: ast.Node{
 							Position: &position.Position{
@@ -2794,7 +2799,7 @@ func TestPhp5(t *testing.T) {
 					},
 				},
 			},
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 49,
@@ -2803,6 +2808,7 @@ func TestPhp5(t *testing.T) {
 						EndPos:    969,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -2836,7 +2842,7 @@ func TestPhp5(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 				ElseIf: []ast.Vertex{
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 50,
@@ -2845,6 +2851,7 @@ func TestPhp5(t *testing.T) {
 								EndPos:    -1,
 							},
 						},
+						Alt: true,
 						Cond: &ast.ExprVariable{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -2878,7 +2885,7 @@ func TestPhp5(t *testing.T) {
 							Stmts: []ast.Vertex{},
 						},
 					},
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 51,
@@ -2887,6 +2894,7 @@ func TestPhp5(t *testing.T) {
 								EndPos:    -1,
 							},
 						},
+						Alt: true,
 						Cond: &ast.ExprVariable{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -2921,7 +2929,7 @@ func TestPhp5(t *testing.T) {
 						},
 					},
 				},
-				Else: &ast.StmtAltElse{
+				Else: &ast.StmtElse{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 52,
@@ -2930,6 +2938,7 @@ func TestPhp5(t *testing.T) {
 							EndPos:    -1,
 						},
 					},
+					Alt: true,
 					Stmt: &ast.StmtStmtList{
 						Node: ast.Node{
 							Position: &position.Position{

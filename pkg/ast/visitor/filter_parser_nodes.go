@@ -13,60 +13,6 @@ func (v *FilterParserNodes) EnterNode(n ast.Vertex) bool {
 	return true
 }
 
-func (v *FilterParserNodes) StmtAltIf(n *ast.StmtAltIf) {
-	for {
-		if nn, ok := n.Cond.(*ast.ParserBrackets); ok {
-			n.Cond = nn.Child
-		} else {
-			break
-		}
-	}
-
-	if nn, ok := n.Stmt.(*ast.ParserBrackets); ok {
-		n.Stmt = nn.Child
-	}
-}
-
-func (v *FilterParserNodes) StmtAltElseIf(n *ast.StmtAltElseIf) {
-	for {
-		if nn, ok := n.Cond.(*ast.ParserBrackets); ok {
-			n.Cond = nn.Child
-		} else {
-			break
-		}
-	}
-
-	if nn, ok := n.Stmt.(*ast.ParserBrackets); ok {
-		n.Stmt = nn.Child
-	}
-}
-
-func (v *FilterParserNodes) StmtAltElse(n *ast.StmtAltElse) {
-	if nn, ok := n.Stmt.(*ast.ParserBrackets); ok {
-		n.Stmt = nn.Child
-	}
-}
-
-func (v *FilterParserNodes) StmtIf(n *ast.StmtIf) {
-	for {
-		if nn, ok := n.Cond.(*ast.ParserBrackets); ok {
-			n.Cond = nn.Child
-		} else {
-			break
-		}
-	}
-}
-
-func (v *FilterParserNodes) StmtElseIf(n *ast.StmtElseIf) {
-	for {
-		if nn, ok := n.Cond.(*ast.ParserBrackets); ok {
-			n.Cond = nn.Child
-		} else {
-			break
-		}
-	}
-}
-
 func (v *FilterParserNodes) StmtWhile(n *ast.StmtWhile) {
 	for {
 		if nn, ok := n.Cond.(*ast.ParserBrackets); ok {

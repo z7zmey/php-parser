@@ -2565,7 +2565,8 @@ func TestPrinterPrintAltElseIf(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtAltElseIf{
+	p.Print(&ast.StmtElseIf{
+		Alt: true,
 		Cond: &ast.ExprVariable{
 			VarName: &ast.Identifier{Value: []byte("$a")},
 		},
@@ -2590,7 +2591,8 @@ func TestPrinterPrintAltElseIfEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtAltElseIf{
+	p.Print(&ast.StmtElseIf{
+		Alt: true,
 		Cond: &ast.ExprVariable{
 			VarName: &ast.Identifier{Value: []byte("$a")},
 		},
@@ -2609,7 +2611,8 @@ func TestPrinterPrintAltElse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtAltElse{
+	p.Print(&ast.StmtElse{
+		Alt: true,
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
@@ -2631,7 +2634,8 @@ func TestPrinterPrintAltElseEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtAltElse{
+	p.Print(&ast.StmtElse{
+		Alt: true,
 		Stmt: &ast.StmtStmtList{},
 	})
 
@@ -2715,7 +2719,8 @@ func TestPrinterPrintAltIf(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtAltIf{
+	p.Print(&ast.StmtIf{
+		Alt: true,
 		Cond: &ast.ExprVariable{
 			VarName: &ast.Identifier{Value: []byte("$a")},
 		},
@@ -2727,7 +2732,8 @@ func TestPrinterPrintAltIf(t *testing.T) {
 			},
 		},
 		ElseIf: []ast.Vertex{
-			&ast.StmtAltElseIf{
+			&ast.StmtElseIf{
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					VarName: &ast.Identifier{Value: []byte("$b")},
 				},
@@ -2739,14 +2745,16 @@ func TestPrinterPrintAltIf(t *testing.T) {
 					},
 				},
 			},
-			&ast.StmtAltElseIf{
+			&ast.StmtElseIf{
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					VarName: &ast.Identifier{Value: []byte("$c")},
 				},
 				Stmt: &ast.StmtStmtList{},
 			},
 		},
-		Else: &ast.StmtAltElse{
+		Else: &ast.StmtElse{
+			Alt: true,
 			Stmt: &ast.StmtStmtList{
 				Stmts: []ast.Vertex{
 					&ast.StmtExpression{Expr: &ast.ExprVariable{
@@ -3453,7 +3461,7 @@ func TestPrinterPrintStmtElseStmts(t *testing.T) {
 		},
 	})
 
-	expected := `else{;}`
+	expected := `else {;}`
 	actual := o.String()
 
 	if expected != actual {

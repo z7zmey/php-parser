@@ -119,35 +119,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Expr)
 			t.visitor.Leave("Expr", true)
 		}
-	case *ast.StmtAltElse:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Stmt != nil {
-			t.visitor.Enter("Stmt", true)
-			t.Traverse(nn.Stmt)
-			t.visitor.Leave("Stmt", true)
-		}
-	case *ast.StmtAltElseIf:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Cond != nil {
-			t.visitor.Enter("Cond", true)
-			t.Traverse(nn.Cond)
-			t.visitor.Leave("Cond", true)
-		}
-		if nn.Stmt != nil {
-			t.visitor.Enter("Stmt", true)
-			t.Traverse(nn.Stmt)
-			t.visitor.Leave("Stmt", true)
-		}
 	case *ast.StmtAltFor:
 		if nn == nil {
 			return
@@ -207,35 +178,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.visitor.Enter("Stmt", true)
 			t.Traverse(nn.Stmt)
 			t.visitor.Leave("Stmt", true)
-		}
-	case *ast.StmtAltIf:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Cond != nil {
-			t.visitor.Enter("Cond", true)
-			t.Traverse(nn.Cond)
-			t.visitor.Leave("Cond", true)
-		}
-		if nn.Stmt != nil {
-			t.visitor.Enter("Stmt", true)
-			t.Traverse(nn.Stmt)
-			t.visitor.Leave("Stmt", true)
-		}
-		if nn.ElseIf != nil {
-			t.visitor.Enter("ElseIf", false)
-			for _, c := range nn.ElseIf {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("ElseIf", false)
-		}
-		if nn.Else != nil {
-			t.visitor.Enter("Else", true)
-			t.Traverse(nn.Else)
-			t.visitor.Leave("Else", true)
 		}
 	case *ast.StmtAltSwitch:
 		if nn == nil {

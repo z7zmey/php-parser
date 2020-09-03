@@ -3375,7 +3375,7 @@ func TestPhp7(t *testing.T) {
 					},
 				},
 			},
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 53,
@@ -3384,6 +3384,7 @@ func TestPhp7(t *testing.T) {
 						EndPos:    1111,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -3417,7 +3418,7 @@ func TestPhp7(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 			},
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 55,
@@ -3426,6 +3427,7 @@ func TestPhp7(t *testing.T) {
 						EndPos:    1141,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -3459,7 +3461,7 @@ func TestPhp7(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 				ElseIf: []ast.Vertex{
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 56,
@@ -3468,6 +3470,7 @@ func TestPhp7(t *testing.T) {
 								EndPos:    -1,
 							},
 						},
+						Alt: true,
 						Cond: &ast.ExprVariable{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -3503,7 +3506,7 @@ func TestPhp7(t *testing.T) {
 					},
 				},
 			},
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 58,
@@ -3512,6 +3515,7 @@ func TestPhp7(t *testing.T) {
 						EndPos:    1164,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -3544,7 +3548,7 @@ func TestPhp7(t *testing.T) {
 					},
 					Stmts: []ast.Vertex{},
 				},
-				Else: &ast.StmtAltElse{
+				Else: &ast.StmtElse{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 59,
@@ -3553,6 +3557,7 @@ func TestPhp7(t *testing.T) {
 							EndPos:    -1,
 						},
 					},
+					Alt: true,
 					Stmt: &ast.StmtStmtList{
 						Node: ast.Node{
 							Position: &position.Position{
@@ -3566,7 +3571,7 @@ func TestPhp7(t *testing.T) {
 					},
 				},
 			},
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 61,
@@ -3575,6 +3580,7 @@ func TestPhp7(t *testing.T) {
 						EndPos:    1213,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -3608,7 +3614,7 @@ func TestPhp7(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 				ElseIf: []ast.Vertex{
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 62,
@@ -3617,6 +3623,7 @@ func TestPhp7(t *testing.T) {
 								EndPos:    -1,
 							},
 						},
+						Alt: true,
 						Cond: &ast.ExprVariable{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -3650,7 +3657,7 @@ func TestPhp7(t *testing.T) {
 							Stmts: []ast.Vertex{},
 						},
 					},
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 63,
@@ -3659,6 +3666,7 @@ func TestPhp7(t *testing.T) {
 								EndPos:    -1,
 							},
 						},
+						Alt: true,
 						Cond: &ast.ExprVariable{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -3693,7 +3701,7 @@ func TestPhp7(t *testing.T) {
 						},
 					},
 				},
-				Else: &ast.StmtAltElse{
+				Else: &ast.StmtElse{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 64,
@@ -3702,6 +3710,7 @@ func TestPhp7(t *testing.T) {
 							EndPos:    -1,
 						},
 					},
+					Alt: true,
 					Stmt: &ast.StmtStmtList{
 						Node: ast.Node{
 							Position: &position.Position{

@@ -870,7 +870,14 @@ statement:
             }
     |   T_WHILE '(' expr ')' while_statement
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
+                exprBrackets := &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($2, $4),
+                    },
+                    OpenBracketTkn:  $2,
+                    Child:           $3,
+                    CloseBracketTkn: $4,
+                }
 
                 switch n := $5.(type) {
                 case *ast.StmtWhile :
@@ -882,7 +889,6 @@ statement:
                 $$ = $5
 
                 // save position
-                exprBrackets.GetNode().Position = position.NewTokensPosition($2, $4)
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
 
                 // save comments
@@ -892,11 +898,17 @@ statement:
             }
     |   T_DO statement T_WHILE '(' expr ')' ';'
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $5}
+                exprBrackets := &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($4, $6),
+                    },
+                    OpenBracketTkn:  $4,
+                    Child:           $5,
+                    CloseBracketTkn: $6,
+                }
                 $$ = &ast.StmtDo{ast.Node{}, $2, exprBrackets}
 
                 // save position
-                exprBrackets.GetNode().Position = position.NewTokensPosition($4, $6)
                 $$.GetNode().Position = position.NewTokensPosition($1, $7)
 
                 // save comments
@@ -933,7 +945,14 @@ statement:
             }
     |   T_SWITCH '(' expr ')' switch_case_list
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
+                exprBrackets := &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($2, $4),
+                    },
+                    OpenBracketTkn:  $2,
+                    Child:           $3,
+                    CloseBracketTkn: $4,
+                }
 
                 switch n := $5.(type) {
                 case *ast.StmtSwitch:
@@ -1750,35 +1769,33 @@ while_statement:
 if_stmt_without_else:
         T_IF '(' expr ')' statement
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
-                $$ = &ast.StmtIf{ast.Node{}, exprBrackets, $5, nil, nil}
-
-                // save position
-                exprBrackets.GetNode().Position = position.NewTokensPosition($2, $4)
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
+                $$ = &ast.StmtIf{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $5),
+                    },
+                    IfTkn:               $1,
+                    OpenParenthesisTkn:  $2,
+                    Cond:                $3,
+                    CloseParenthesisTkn: $4,
+                    Stmt:                $5,
+                }
             }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $4}
-                _elseIf := &ast.StmtElseIf{ast.Node{}, exprBrackets, $6}
-                $1.(*ast.StmtIf).ElseIf = append($1.(*ast.StmtIf).ElseIf, _elseIf)
+                $1.(*ast.StmtIf).ElseIf = append($1.(*ast.StmtIf).ElseIf, &ast.StmtElseIf{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($2, $6),
+                    },
+                    ElseIfTkn:           $2,
+                    OpenParenthesisTkn:  $3,
+                    Cond:                $4,
+                    CloseParenthesisTkn: $5,
+                    Stmt:                $6,
+                })
+
+                $1.(*ast.StmtIf).Node.Position = position.NewNodesPosition($1, $6)
 
                 $$ = $1
-
-                // save position
-                exprBrackets.GetNode().Position = position.NewTokensPosition($3, $5)
-                _elseIf.GetNode().Position = position.NewTokenNodePosition($2, $6)
-                $$.GetNode().Position = position.NewNodesPosition($1, $6)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $5.SkippedTokens)
             }
 ;
 
@@ -1789,113 +1806,95 @@ if_stmt:
             }
     |   if_stmt_without_else T_ELSE statement
             {
-                _else := &ast.StmtElse{ast.Node{}, $3}
-                $1.(*ast.StmtIf).Else = _else
+                $1.(*ast.StmtIf).Else = &ast.StmtElse{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($2, $3),
+                    },
+                    ElseTkn: $2,
+                    Stmt:    $3,
+                }
+
+                $1.(*ast.StmtIf).Node.Position = position.NewNodesPosition($1, $3)
 
                 $$ = $1
-
-                // save position
-                _else.GetNode().Position = position.NewTokenNodePosition($2, $3)
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(_else, token.Start, $2.SkippedTokens)
             }
 ;
 
 alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
-                stmts := &ast.StmtStmtList{
+                $$ = &ast.StmtIf{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($6),
+                        Position: position.NewTokenNodeListPosition($1, $6),
                     },
-                    Stmts: $6,
+                    Alt:                 true,
+                    IfTkn:               $1,
+                    OpenParenthesisTkn:  $2,
+                    Cond:                $3,
+                    CloseParenthesisTkn: $4,
+                    ColonTkn:            $5,
+                    Stmt: &ast.StmtStmtList{
+                        Node: ast.Node{
+                            Position: position.NewNodeListPosition($6),
+                        },
+                        Stmts: $6,
+                    },
                 }
-                stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
-                $$ = &ast.StmtAltIf{ast.Node{}, exprBrackets, stmtsBrackets, nil, nil}
-
-                // save position
-                exprBrackets.GetNode().Position = position.NewTokensPosition($2, $4)
-                stmtsBrackets.GetNode().Position = position.NewTokenNodeListPosition($5, $6)
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $6)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $5.SkippedTokens)
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $4}
-                stmts := &ast.StmtStmtList{
+                $1.(*ast.StmtIf).ElseIf = append($1.(*ast.StmtIf).ElseIf, &ast.StmtElseIf{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($7),
+                        Position: position.NewTokenNodeListPosition($2, $7),
                     },
-                    Stmts: $7,
-                }
-                stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
-                _elseIf := &ast.StmtAltElseIf{ast.Node{}, exprBrackets, stmtsBrackets}
-                $1.(*ast.StmtAltIf).ElseIf = append($1.(*ast.StmtAltIf).ElseIf, _elseIf)
+                    Alt:                 true,
+                    ElseIfTkn:           $2,
+                    OpenParenthesisTkn:  $3,
+                    Cond:                $4,
+                    CloseParenthesisTkn: $5,
+                    ColonTkn:            $6,
+                    Stmt: &ast.StmtStmtList{
+                        Node: ast.Node{
+                            Position: position.NewNodeListPosition($7),
+                        },
+                        Stmts: $7,
+                    },
+                })
 
                 $$ = $1
-
-                // save position
-                exprBrackets.GetNode().Position = position.NewTokensPosition($3, $5)
-                stmtsBrackets.GetNode().Position = position.NewTokenNodeListPosition($6, $7)
-                _elseIf.GetNode().Position = position.NewTokenNodeListPosition($2, $7)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(_elseIf, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $6.SkippedTokens)
             }
 ;
 
 alt_if_stmt:
         alt_if_stmt_without_else T_ENDIF ';'
             {
+                $1.(*ast.StmtIf).EndIfTkn = $2
+                $1.(*ast.StmtIf).SemiColonTkn = $3
+                $1.(*ast.StmtIf).Node.Position = position.NewNodeTokenPosition($1, $3)
+
                 $$ = $1
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                altif := $$.(*ast.StmtAltIf)
-                if len(altif.ElseIf) > 0 {
-                    yylex.(*Parser).setFreeFloating(altif.ElseIf[len(altif.ElseIf)-1], token.End, append($2.SkippedTokens, $3.SkippedTokens...))
-                } else {
-                    yylex.(*Parser).setFreeFloating(altif.Stmt, token.End, append($2.SkippedTokens, $3.SkippedTokens...))
-                }
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
-                stmts := &ast.StmtStmtList{
+                $1.(*ast.StmtIf).Else = &ast.StmtElse{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($4),
+                        Position: position.NewTokenNodeListPosition($2, $4),
                     },
-                    Stmts: $4,
+                    Alt:      true,
+                    ElseTkn:  $2,
+                    ColonTkn: $3,
+                    Stmt: &ast.StmtStmtList{
+                        Node: ast.Node{
+                            Position: position.NewNodeListPosition($4),
+                        },
+                        Stmts: $4,
+                    },
                 }
-                stmtsBrackets := &ast.ParserBrackets{ast.Node{}, stmts}
-                _else := &ast.StmtAltElse{ast.Node{}, stmtsBrackets}
-                $1.(*ast.StmtAltIf).Else = _else
+                $1.(*ast.StmtIf).EndIfTkn = $5
+                $1.(*ast.StmtIf).SemiColonTkn = $6
+                $1.(*ast.StmtIf).Node.Position = position.NewNodeTokenPosition($1, $6)
 
                 $$ = $1
-
-                // save position
-                stmtsBrackets.GetNode().Position = position.NewTokensPosition($3, $5)
-                _else.GetNode().Position = position.NewTokenNodeListPosition($2, $4)
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $6)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(_else, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(stmtsBrackets, token.Start, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(stmtsBrackets, token.End, append($5.SkippedTokens, $6.SkippedTokens...))
-                yylex.(*Parser).setToken($$, token.SemiColon, $6.SkippedTokens)
             }
 ;
 
@@ -3368,10 +3367,14 @@ expr_without_variable:
             }
     |   '(' expr ')'
             {
-                $$ = &ast.ParserBrackets{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
+                $$ = &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Child:           $2,
+                    CloseBracketTkn: $3,
+                }
 
                 // save comments
                 yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
@@ -3825,10 +3828,14 @@ exit_expr:
             }
     |   '(' optional_expr ')'
             {
-                $$ = &ast.ParserBrackets{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
+                $$ = &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Child:           $2,
+                    CloseBracketTkn: $3,
+                }
 
                 // save comments
                 yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
@@ -4132,10 +4139,14 @@ dereferencable:
             }
     |   '(' expr ')'
             {
-                $$ = &ast.ParserBrackets{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
+                $$ = &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Child:           $2,
+                    CloseBracketTkn: $3,
+                }
 
                 // save comments
                 yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
@@ -4154,10 +4165,14 @@ callable_expr:
             }
     |   '(' expr ')'
             {
-                $$ = &ast.ParserBrackets{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
+                $$ = &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Child:           $2,
+                    CloseBracketTkn: $3,
+                }
 
                 // save comments
                 yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
@@ -4768,11 +4783,17 @@ internal_functions_in_yacc:
             }
     |   T_EMPTY '(' expr ')'
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
+                exprBrackets := &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($2, $4),
+                    },
+                    OpenBracketTkn:  $2,
+                    Child:           $3,
+                    CloseBracketTkn: $4,
+                }
                 $$ = &ast.ExprEmpty{ast.Node{}, exprBrackets}
 
                 // save position
-                exprBrackets.GetNode().Position = position.NewTokensPosition($2, $4)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments
@@ -4802,11 +4823,17 @@ internal_functions_in_yacc:
             }
     |   T_EVAL '(' expr ')'
             {
-                exprBrackets := &ast.ParserBrackets{ast.Node{}, $3}
+                exprBrackets := &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($2, $4),
+                    },
+                    OpenBracketTkn:  $2,
+                    Child:           $3,
+                    CloseBracketTkn: $4,
+                }
                 $$ = &ast.ExprEval{ast.Node{}, exprBrackets}
 
                 // save position
-                exprBrackets.GetNode().Position = position.NewTokensPosition($2, $4)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
 
                 // save comments

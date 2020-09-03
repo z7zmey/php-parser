@@ -743,7 +743,8 @@ func TestParseAndPrintPhp5Yield(t *testing.T) {
 // test stmt
 
 func TestParseAndPrintPhp5AltIf(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	if ( 1 ) :
 		// do nothing
 	elseif ( 2 ) :
@@ -1064,7 +1065,8 @@ func TestParseAndPrintPhp5HaltCompiler(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5IfElseIfElse(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	if ( 1 ) ;
 	elseif ( 2 ) {
 		;

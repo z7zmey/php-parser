@@ -856,7 +856,8 @@ func TestParseAndPrintYield(t *testing.T) {
 // test stmt
 
 func TestParseAndPrintAltIf(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	if ( 1 ) :
 		// do nothing
 	elseif ( 2 ) :
@@ -1197,7 +1198,8 @@ func TestParseAndPrintHaltCompiler(t *testing.T) {
 }
 
 func TestParseAndPrintIfElseIfElse(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	if ( 1 ) ;
 	elseif ( 2 ) {
 		;

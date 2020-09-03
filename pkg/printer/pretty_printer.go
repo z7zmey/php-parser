@@ -297,16 +297,10 @@ func (p *PrettyPrinter) printNode(n ast.Vertex) {
 
 		// stmt
 
-	case *ast.StmtAltElseIf:
-		p.printStmtAltElseIf(n)
-	case *ast.StmtAltElse:
-		p.printStmtAltElse(n)
 	case *ast.StmtAltFor:
 		p.printStmtAltFor(n)
 	case *ast.StmtAltForeach:
 		p.printStmtAltForeach(n)
-	case *ast.StmtAltIf:
-		p.printStmtAltIf(n)
 	case *ast.StmtAltSwitch:
 		p.printStmtAltSwitch(n)
 	case *ast.StmtAltWhile:
@@ -1348,7 +1342,7 @@ func (p *PrettyPrinter) printExprYield(n ast.Vertex) {
 // smtm
 
 func (p *PrettyPrinter) printStmtAltElseIf(n ast.Vertex) {
-	nn := n.(*ast.StmtAltElseIf)
+	nn := n.(*ast.StmtElseIf)
 
 	io.WriteString(p.w, "elseif (")
 	p.Print(nn.Cond)
@@ -1361,7 +1355,7 @@ func (p *PrettyPrinter) printStmtAltElseIf(n ast.Vertex) {
 }
 
 func (p *PrettyPrinter) printStmtAltElse(n ast.Vertex) {
-	nn := n.(*ast.StmtAltElse)
+	nn := n.(*ast.StmtElse)
 
 	io.WriteString(p.w, "else :")
 
@@ -1415,7 +1409,7 @@ func (p *PrettyPrinter) printStmtAltForeach(n ast.Vertex) {
 }
 
 func (p *PrettyPrinter) printStmtAltIf(n ast.Vertex) {
-	nn := n.(*ast.StmtAltIf)
+	nn := n.(*ast.StmtIf)
 
 	io.WriteString(p.w, "if (")
 	p.Print(nn.Cond)
@@ -1687,6 +1681,11 @@ func (p *PrettyPrinter) printStmtEcho(n ast.Vertex) {
 func (p *PrettyPrinter) printStmtElseif(n ast.Vertex) {
 	nn := n.(*ast.StmtElseIf)
 
+	if nn.Alt {
+		p.printStmtAltElseIf(nn)
+		return
+	}
+
 	io.WriteString(p.w, "elseif (")
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ")")
@@ -1709,6 +1708,11 @@ func (p *PrettyPrinter) printStmtElseif(n ast.Vertex) {
 
 func (p *PrettyPrinter) printStmtElse(n ast.Vertex) {
 	nn := n.(*ast.StmtElse)
+
+	if nn.Alt {
+		p.printStmtAltElse(nn)
+		return
+	}
 
 	io.WriteString(p.w, "else")
 
@@ -1853,6 +1857,11 @@ func (p *PrettyPrinter) printStmtHaltCompiler(n ast.Vertex) {
 
 func (p *PrettyPrinter) printStmtIf(n ast.Vertex) {
 	nn := n.(*ast.StmtIf)
+
+	if nn.Alt {
+		p.printStmtAltIf(nn)
+		return
+	}
 
 	io.WriteString(p.w, "if (")
 	p.Print(nn.Cond)

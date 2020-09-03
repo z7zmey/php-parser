@@ -87,3 +87,29 @@ func (v *FilterTokens) StmtStmtList(n *ast.StmtStmtList) {
 	n.OpenCurlyBracket = nil
 	n.CloseCurlyBracket = nil
 }
+
+func (v *FilterTokens) StmtIf(n *ast.StmtIf) {
+	n.IfTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.CloseParenthesisTkn = nil
+	n.ColonTkn = nil
+	n.EndIfTkn = nil
+	n.SemiColonTkn = nil
+}
+
+func (v *FilterTokens) StmtElseIf(n *ast.StmtElseIf) {
+	n.ElseIfTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.CloseParenthesisTkn = nil
+	n.ColonTkn = nil
+}
+
+func (v *FilterTokens) StmtElse(n *ast.StmtElse) {
+	n.ElseTkn = nil
+	n.ColonTkn = nil
+}
+
+func (v *FilterTokens) ParserBrackets(n *ast.ParserBrackets) {
+	n.OpenBracketTkn = nil
+	n.CloseBracketTkn = nil
+}

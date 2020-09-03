@@ -3811,7 +3811,7 @@ func TestStmtAltIf_AltIf(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 2,
@@ -3820,6 +3820,7 @@ func TestStmtAltIf_AltIf(t *testing.T) {
 						EndPos:    23,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -3882,7 +3883,7 @@ func TestStmtAltIf_AltElseIf(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 2,
@@ -3891,6 +3892,7 @@ func TestStmtAltIf_AltElseIf(t *testing.T) {
 						EndPos:    38,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -3924,7 +3926,7 @@ func TestStmtAltIf_AltElseIf(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 				ElseIf: []ast.Vertex{
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 3,
@@ -3933,6 +3935,7 @@ func TestStmtAltIf_AltElseIf(t *testing.T) {
 								EndPos:    -1,
 							},
 						},
+						Alt: true,
 						Cond: &ast.ExprVariable{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -3997,7 +4000,7 @@ func TestStmtAltIf_AltElse(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 2,
@@ -4006,6 +4009,7 @@ func TestStmtAltIf_AltElse(t *testing.T) {
 						EndPos:    31,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -4038,7 +4042,7 @@ func TestStmtAltIf_AltElse(t *testing.T) {
 					},
 					Stmts: []ast.Vertex{},
 				},
-				Else: &ast.StmtAltElse{
+				Else: &ast.StmtElse{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 3,
@@ -4047,6 +4051,7 @@ func TestStmtAltIf_AltElse(t *testing.T) {
 							EndPos:    -1,
 						},
 					},
+					Alt: true,
 					Stmt: &ast.StmtStmtList{
 						Node: ast.Node{
 							Position: &position.Position{
@@ -4091,7 +4096,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtAltIf{
+			&ast.StmtIf{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 2,
@@ -4100,6 +4105,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 						EndPos:    61,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -4133,7 +4139,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 				ElseIf: []ast.Vertex{
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 3,
@@ -4142,6 +4148,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 								EndPos:    -1,
 							},
 						},
+						Alt: true,
 						Cond: &ast.ExprVariable{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -4175,7 +4182,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 							Stmts: []ast.Vertex{},
 						},
 					},
-					&ast.StmtAltElseIf{
+					&ast.StmtElseIf{
 						Node: ast.Node{
 							Position: &position.Position{
 								StartLine: 4,
@@ -4184,6 +4191,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 								EndPos:    -1,
 							},
 						},
+						Alt: true,
 						Cond: &ast.ExprVariable{
 							Node: ast.Node{
 								Position: &position.Position{
@@ -4218,7 +4226,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 						},
 					},
 				},
-				Else: &ast.StmtAltElse{
+				Else: &ast.StmtElse{
 					Node: ast.Node{
 						Position: &position.Position{
 							StartLine: 5,
@@ -4227,6 +4235,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 							EndPos:    -1,
 						},
 					},
+					Alt: true,
 					Stmt: &ast.StmtStmtList{
 						Node: ast.Node{
 							Position: &position.Position{

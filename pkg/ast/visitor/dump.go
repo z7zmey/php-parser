@@ -252,18 +252,6 @@ func (v *Dump) Argument(n *ast.Argument) {
 	}
 }
 
-func (v *Dump) StmtAltElse(n *ast.StmtAltElse) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtAltElse{\n")
-	v.printNode(n.GetNode())
-}
-
-func (v *Dump) StmtAltElseIf(n *ast.StmtAltElseIf) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtAltElseIf{\n")
-	v.printNode(n.GetNode())
-}
-
 func (v *Dump) StmtAltFor(n *ast.StmtAltFor) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtAltFor{\n")
@@ -273,12 +261,6 @@ func (v *Dump) StmtAltFor(n *ast.StmtAltFor) {
 func (v *Dump) StmtAltForeach(n *ast.StmtAltForeach) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtAltForeach{\n")
-	v.printNode(n.GetNode())
-}
-
-func (v *Dump) StmtAltIf(n *ast.StmtAltIf) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtAltIf{\n")
 	v.printNode(n.GetNode())
 }
 
@@ -404,12 +386,22 @@ func (v *Dump) StmtElse(n *ast.StmtElse) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtElse{\n")
 	v.printNode(n.GetNode())
+
+	if n.Alt {
+		v.printIndent(v.indent)
+		v.print("Alt: true,\n")
+	}
 }
 
 func (v *Dump) StmtElseIf(n *ast.StmtElseIf) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtElseIf{\n")
 	v.printNode(n.GetNode())
+
+	if n.Alt {
+		v.printIndent(v.indent)
+		v.print("Alt: true,\n")
+	}
 }
 
 func (v *Dump) StmtExpression(n *ast.StmtExpression) {
@@ -469,6 +461,11 @@ func (v *Dump) StmtIf(n *ast.StmtIf) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtIf{\n")
 	v.printNode(n.GetNode())
+
+	if n.Alt {
+		v.printIndent(v.indent)
+		v.print("Alt: true,\n")
+	}
 }
 
 func (v *Dump) StmtInlineHtml(n *ast.StmtInlineHtml) {

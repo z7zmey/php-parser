@@ -359,16 +359,10 @@ func (p *Printer) printNode(n ast.Vertex) {
 
 	// stmt
 
-	case *ast.StmtAltElseIf:
-		p.printStmtAltElseIf(n)
-	case *ast.StmtAltElse:
-		p.printStmtAltElse(n)
 	case *ast.StmtAltFor:
 		p.printStmtAltFor(n)
 	case *ast.StmtAltForeach:
 		p.printStmtAltForeach(n)
-	case *ast.StmtAltIf:
-		p.printStmtAltIf(n)
 	case *ast.StmtAltSwitch:
 		p.printStmtAltSwitch(n)
 	case *ast.StmtAltWhile:
@@ -1981,68 +1975,6 @@ func (p *Printer) printExprYield(n ast.Vertex) {
 
 // smtm
 
-func (p *Printer) printStmtAltElseIf(n ast.Vertex) {
-	nn := n.(*ast.StmtAltElseIf)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "elseif")
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
-	}
-
-	p.Print(nn.Cond)
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
-	}
-
-	stmtList, _ := nn.Stmt.(*ast.StmtStmtList)
-	brackets, ok := nn.Stmt.(*ast.ParserBrackets)
-	if ok {
-		p.printFreeFloating(brackets, token.Start)
-		stmtList = brackets.Child.(*ast.StmtStmtList)
-	} else {
-		io.WriteString(p.w, ":")
-	}
-
-	p.printFreeFloating(stmtList, token.Stmts)
-	p.printNodes(stmtList.Stmts)
-	p.printFreeFloating(stmtList, token.End)
-
-	if ok {
-		p.printFreeFloating(brackets, token.End)
-	}
-
-	p.printFreeFloating(nn, token.End)
-}
-
-func (p *Printer) printStmtAltElse(n ast.Vertex) {
-	nn := n.(*ast.StmtAltElse)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "else")
-
-	stmtList, _ := nn.Stmt.(*ast.StmtStmtList)
-	brackets, ok := nn.Stmt.(*ast.ParserBrackets)
-	if ok {
-		p.printFreeFloating(brackets, token.Start)
-		stmtList = brackets.Child.(*ast.StmtStmtList)
-	} else {
-		io.WriteString(p.w, ":")
-	}
-
-	p.printFreeFloating(stmtList, token.Stmts)
-	p.printNodes(stmtList.Stmts)
-	p.printFreeFloating(stmtList, token.End)
-
-	if ok {
-		p.printFreeFloating(brackets, token.End)
-	}
-
-	p.printFreeFloating(nn, token.End)
-}
-
 func (p *Printer) printStmtAltFor(n ast.Vertex) {
 	nn := n.(*ast.StmtAltFor)
 	p.printFreeFloating(nn, token.Start)
@@ -2116,59 +2048,6 @@ func (p *Printer) printStmtAltForeach(n ast.Vertex) {
 
 	io.WriteString(p.w, "endforeach")
 	p.printFreeFloating(nn, token.AltEnd)
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
-}
-
-func (p *Printer) printStmtAltIf(n ast.Vertex) {
-	nn := n.(*ast.StmtAltIf)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "if")
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
-	}
-
-	p.Print(nn.Cond)
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
-	}
-
-	stmtList, _ := nn.Stmt.(*ast.StmtStmtList)
-	brackets, ok := nn.Stmt.(*ast.ParserBrackets)
-	if ok {
-		p.printFreeFloating(brackets, token.Start)
-		stmtList = brackets.Child.(*ast.StmtStmtList)
-	} else {
-		io.WriteString(p.w, ":")
-	}
-
-	p.printFreeFloating(stmtList, token.Stmts)
-	p.printNodes(stmtList.Stmts)
-	p.printFreeFloating(stmtList, token.End)
-
-	if ok {
-		p.printFreeFloating(brackets, token.End)
-	}
-
-	for _, elseif := range nn.ElseIf {
-		p.Print(elseif)
-	}
-
-	if nn.Else != nil {
-		p.Print(nn.Else)
-	}
-
-	if !ok {
-		io.WriteString(p.w, "endif")
-	}
-
 	p.printFreeFloating(nn, token.SemiColon)
 	if nn.GetNode().Tokens.IsEmpty() {
 		io.WriteString(p.w, ";")
@@ -2579,42 +2458,54 @@ func (p *Printer) printStmtEcho(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtElseif(n ast.Vertex) {
-	nn := n.(*ast.StmtElseIf)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "elseif")
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
+func (p *Printer) printStmtElseif(n *ast.StmtElseIf) {
+	if n.Alt {
+		p.printStmtAltElseIf(n)
+		return
 	}
 
-	p.Print(nn.Cond)
+	p.printToken(n.ElseIfTkn, "elseif")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Cond)
+	p.printToken(n.CloseParenthesisTkn, ")")
 
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
-	}
-
-	p.Print(nn.Stmt)
-
-	p.printFreeFloating(nn, token.End)
+	p.Print(n.Stmt)
 }
 
-func (p *Printer) printStmtElse(n ast.Vertex) {
-	nn := n.(*ast.StmtElse)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtAltElseIf(n *ast.StmtElseIf) {
+	p.printToken(n.ElseIfTkn, "elseif")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Cond)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.ColonTkn, ":")
 
-	io.WriteString(p.w, "else")
+	if stmtList, ok := n.Stmt.(*ast.StmtStmtList); ok {
+		p.printNodes(stmtList.Stmts)
+	} else {
+		p.Print(n.Stmt)
+	}
+}
 
-	if _, ok := nn.Stmt.(*ast.StmtStmtList); !ok {
-		if nn.Stmt.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
+func (p *Printer) printStmtElse(n *ast.StmtElse) {
+	if n.Alt {
+		p.printStmtAltElse(n)
+		return
 	}
 
-	p.Print(nn.Stmt)
+	p.printToken(n.ElseTkn, "else")
+	p.bufStart = " "
+	p.Print(n.Stmt)
+}
 
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtAltElse(n *ast.StmtElse) {
+	p.printToken(n.ElseTkn, "else")
+	p.printToken(n.ColonTkn, ":")
+
+	if stmtList, ok := n.Stmt.(*ast.StmtStmtList); ok {
+		p.printNodes(stmtList.Stmts)
+	} else {
+		p.Print(n.Stmt)
+	}
 }
 
 func (p *Printer) printStmtExpression(n ast.Vertex) {
@@ -2789,33 +2680,40 @@ func (p *Printer) printStmtHaltCompiler(n *ast.StmtHaltCompiler) {
 	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtIf(n ast.Vertex) {
-	nn := n.(*ast.StmtIf)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "if")
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
+func (p *Printer) printStmtIf(n *ast.StmtIf) {
+	if n.Alt {
+		p.printStmtAltIf(n)
+		return
 	}
 
-	p.Print(nn.Cond)
+	p.printToken(n.IfTkn, "if")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Cond)
+	p.printToken(n.CloseParenthesisTkn, ")")
 
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
+	p.Print(n.Stmt)
+	p.printNodes(n.ElseIf)
+	p.Print(n.Else)
+}
+
+func (p *Printer) printStmtAltIf(n *ast.StmtIf) {
+	p.printToken(n.IfTkn, "if")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Cond)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.ColonTkn, ":")
+
+	if stmtList, ok := n.Stmt.(*ast.StmtStmtList); ok {
+		p.printNodes(stmtList.Stmts)
+	} else {
+		p.Print(n.Stmt)
 	}
 
-	p.Print(nn.Stmt)
+	p.printNodes(n.ElseIf)
+	p.Print(n.Else)
 
-	if nn.ElseIf != nil {
-		p.printNodes(nn.ElseIf)
-	}
-
-	if nn.Else != nil {
-		p.Print(nn.Else)
-	}
-
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.EndIfTkn, "endif")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtInlineHTML(n ast.Vertex) {
@@ -2900,7 +2798,7 @@ func (p *Printer) printStmtNamespace(n *ast.StmtNamespace) {
 }
 
 func (p *Printer) printStmtNop(n ast.Vertex) {
-	p.printFreeFloating(n, token.Start)
+	p.printFreeFloatingOrDefault(n, token.Start, p.bufStart)
 	p.printFreeFloating(n, token.SemiColon)
 	if n.GetNode().Tokens.IsEmpty() {
 		io.WriteString(p.w, ";")

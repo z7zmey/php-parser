@@ -175,27 +175,6 @@ func (n *ScalarString) Accept(v NodeVisitor) {
 	v.ScalarString(n)
 }
 
-// StmtAltElse node
-type StmtAltElse struct {
-	Node
-	Stmt Vertex
-}
-
-func (n *StmtAltElse) Accept(v NodeVisitor) {
-	v.StmtAltElse(n)
-}
-
-// StmtAltElseIf node
-type StmtAltElseIf struct {
-	Node
-	Cond Vertex
-	Stmt Vertex
-}
-
-func (n *StmtAltElseIf) Accept(v NodeVisitor) {
-	v.StmtAltElseIf(n)
-}
-
 // StmtAltFor node
 type StmtAltFor struct {
 	Node
@@ -220,19 +199,6 @@ type StmtAltForeach struct {
 
 func (n *StmtAltForeach) Accept(v NodeVisitor) {
 	v.StmtAltForeach(n)
-}
-
-// StmtAltIf node
-type StmtAltIf struct {
-	Node
-	Cond   Vertex
-	Stmt   Vertex
-	ElseIf []Vertex
-	Else   Vertex
-}
-
-func (n *StmtAltIf) Accept(v NodeVisitor) {
-	v.StmtAltIf(n)
 }
 
 // StmtAltSwitch node
@@ -444,7 +410,10 @@ func (n *StmtEcho) Accept(v NodeVisitor) {
 // StmtElse node
 type StmtElse struct {
 	Node
-	Stmt Vertex
+	Alt      bool
+	ElseTkn  *token.Token
+	ColonTkn *token.Token
+	Stmt     Vertex
 }
 
 func (n *StmtElse) Accept(v NodeVisitor) {
@@ -454,8 +423,13 @@ func (n *StmtElse) Accept(v NodeVisitor) {
 // StmtElseIf node
 type StmtElseIf struct {
 	Node
-	Cond Vertex
-	Stmt Vertex
+	Alt                 bool
+	ElseIfTkn           *token.Token
+	OpenParenthesisTkn  *token.Token
+	Cond                Vertex
+	CloseParenthesisTkn *token.Token
+	ColonTkn            *token.Token
+	Stmt                Vertex
 }
 
 func (n *StmtElseIf) Accept(v NodeVisitor) {
@@ -558,10 +532,17 @@ func (n *StmtHaltCompiler) Accept(v NodeVisitor) {
 // StmtIf node
 type StmtIf struct {
 	Node
-	Cond   Vertex
-	Stmt   Vertex
-	ElseIf []Vertex
-	Else   Vertex
+	Alt                 bool
+	IfTkn               *token.Token
+	OpenParenthesisTkn  *token.Token
+	Cond                Vertex
+	CloseParenthesisTkn *token.Token
+	ColonTkn            *token.Token
+	Stmt                Vertex
+	ElseIf              []Vertex
+	Else                Vertex
+	EndIfTkn            *token.Token
+	SemiColonTkn        *token.Token
 }
 
 func (n *StmtIf) Accept(v NodeVisitor) {
@@ -1918,7 +1899,9 @@ func (n *ParserNsSeparator) Accept(v NodeVisitor) {
 
 type ParserBrackets struct {
 	Node
-	Child Vertex
+	OpenBracketTkn  *token.Token
+	Child           Vertex
+	CloseBracketTkn *token.Token
 }
 
 func (n *ParserBrackets) Accept(v NodeVisitor) {

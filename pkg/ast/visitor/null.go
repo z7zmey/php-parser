@@ -54,23 +54,11 @@ func (v *Null) Argument(_ *ast.Argument) {
 	// do nothing
 }
 
-func (v *Null) StmtAltElse(_ *ast.StmtAltElse) {
-	// do nothing
-}
-
-func (v *Null) StmtAltElseIf(_ *ast.StmtAltElseIf) {
-	// do nothing
-}
-
 func (v *Null) StmtAltFor(_ *ast.StmtAltFor) {
 	// do nothing
 }
 
 func (v *Null) StmtAltForeach(_ *ast.StmtAltForeach) {
-	// do nothing
-}
-
-func (v *Null) StmtAltIf(_ *ast.StmtAltIf) {
 	// do nothing
 }
 
