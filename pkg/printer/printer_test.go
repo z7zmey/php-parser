@@ -3331,7 +3331,7 @@ func TestPrinterPrintStmtDo_StmtList(t *testing.T) {
 		},
 	})
 
-	expected := `do{$a;}while(1);`
+	expected := `do {$a;}while(1);`
 	actual := o.String()
 
 	if expected != actual {

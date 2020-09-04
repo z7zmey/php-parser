@@ -378,8 +378,13 @@ func (n *StmtDefault) Accept(v NodeVisitor) {
 // StmtDo node
 type StmtDo struct {
 	Node
-	Stmt Vertex
-	Cond Vertex
+	DoTkn               *token.Token
+	Stmt                Vertex
+	WhileTkn            *token.Token
+	OpenParenthesisTkn  *token.Token
+	Cond                Vertex
+	CloseParenthesisTkn *token.Token
+	SemiColonTkn        *token.Token
 }
 
 func (n *StmtDo) Accept(v NodeVisitor) {

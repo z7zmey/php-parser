@@ -122,3 +122,11 @@ func (v *FilterTokens) StmtWhile(n *ast.StmtWhile) {
 	n.EndWhileTkn = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtDo(n *ast.StmtDo) {
+	n.DoTkn = nil
+	n.WhileTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.CloseParenthesisTkn = nil
+	n.SemiColonTkn = nil
+}

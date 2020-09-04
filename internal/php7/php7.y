@@ -880,25 +880,18 @@ statement:
             }
     |   T_DO statement T_WHILE '(' expr ')' ';'
             {
-                exprBrackets := &ast.ParserBrackets{
+                $$ = &ast.StmtDo{
                     Node: ast.Node{
-                        Position: position.NewTokensPosition($4, $6),
+                        Position: position.NewTokensPosition($1, $7),
                     },
-                    OpenBracketTkn:  $4,
-                    Child:           $5,
-                    CloseBracketTkn: $6,
+                    DoTkn:               $1,
+                    Stmt:                $2,
+                    WhileTkn:            $3,
+                    OpenParenthesisTkn:  $4,
+                    Cond:                $5,
+                    CloseParenthesisTkn: $6,
+                    SemiColonTkn:        $7,
                 }
-                $$ = &ast.StmtDo{ast.Node{}, $2, exprBrackets}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $7)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $4.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(exprBrackets, token.End, append($6.SkippedTokens, $7.SkippedTokens...))
-                yylex.(*Parser).setToken($$, token.SemiColon, $7.SkippedTokens)
             }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {

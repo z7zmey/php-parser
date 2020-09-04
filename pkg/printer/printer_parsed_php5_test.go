@@ -945,7 +945,8 @@ func TestParseAndPrintPhp5Declare(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5DoWhile(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	do {
 		;
 	} while ( $a ) ;

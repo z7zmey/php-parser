@@ -13,16 +13,6 @@ func (v *FilterParserNodes) EnterNode(n ast.Vertex) bool {
 	return true
 }
 
-func (v *FilterParserNodes) StmtDo(n *ast.StmtDo) {
-	for {
-		if nn, ok := n.Cond.(*ast.ParserBrackets); ok {
-			n.Cond = nn.Child
-		} else {
-			break
-		}
-	}
-}
-
 func (v *FilterParserNodes) StmtSwitch(n *ast.StmtSwitch) {
 	for {
 		if nn, ok := n.Cond.(*ast.ParserBrackets); ok {

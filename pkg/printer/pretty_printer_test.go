@@ -2343,7 +2343,7 @@ func TestPrintAltWhile(t *testing.T) {
 	p.Print(&ast.StmtNamespace{
 		Stmts: []ast.Vertex{
 			&ast.StmtWhile{
-				Alt: true,
+				Alt:  true,
 				Cond: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}},
 				Stmt: &ast.StmtStmtList{
 					Stmts: []ast.Vertex{

@@ -911,16 +911,18 @@ unticked_statement:
             }
     |   T_DO statement T_WHILE parenthesis_expr ';'
             {
-                $$ = &ast.StmtDo{ast.Node{}, $2, $4}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($4, token.End, $5.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $5.SkippedTokens)
+                $$ = &ast.StmtDo{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $5),
+                    },
+                    DoTkn:               $1,
+                    Stmt:                $2,
+                    WhileTkn:            $3,
+                    OpenParenthesisTkn:  $4.(*ast.ParserBrackets).OpenBracketTkn,
+                    Cond:                $4.(*ast.ParserBrackets).Child,
+                    CloseParenthesisTkn: $4.(*ast.ParserBrackets).CloseBracketTkn,
+                    SemiColonTkn:        $5,
+                }
             }
     |   T_FOR '(' for_expr ';' for_expr ';' for_expr ')' for_statement
             {

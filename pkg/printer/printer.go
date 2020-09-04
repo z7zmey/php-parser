@@ -2361,42 +2361,17 @@ func (p *Printer) printStmtDefault(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtDo(n ast.Vertex) {
-	nn := n.(*ast.StmtDo)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtDo(n *ast.StmtDo) {
+	p.printToken(n.DoTkn, "do")
+	p.bufStart = " "
 
-	io.WriteString(p.w, "do")
+	p.Print(n.Stmt)
 
-	if _, ok := nn.Stmt.(*ast.StmtStmtList); !ok {
-		if nn.Stmt.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-	}
-
-	p.Print(nn.Stmt)
-
-	p.printFreeFloating(nn, token.Stmts)
-
-	io.WriteString(p.w, "while")
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
-	}
-
-	p.Print(nn.Cond)
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
-	}
-
-	p.printFreeFloating(nn, token.Cond)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.WhileTkn, "while")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Cond)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtEcho(n ast.Vertex) {
