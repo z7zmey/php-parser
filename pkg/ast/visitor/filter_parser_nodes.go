@@ -209,44 +209,6 @@ func (v *FilterParserNodes) ExprVariable(n *ast.ExprVariable) {
 	}
 }
 
-func (v *FilterParserNodes) StmtFor(n *ast.StmtFor) {
-	for k, v := range n.Init {
-		for {
-			if nn, ok := v.(*ast.ParserBrackets); ok {
-				v = nn.Child
-			} else {
-				break
-			}
-		}
-
-		n.Init[k] = v
-	}
-
-	for k, v := range n.Cond {
-		for {
-			if nn, ok := v.(*ast.ParserBrackets); ok {
-				v = nn.Child
-			} else {
-				break
-			}
-		}
-
-		n.Cond[k] = v
-	}
-
-	for k, v := range n.Loop {
-		for {
-			if nn, ok := v.(*ast.ParserBrackets); ok {
-				v = nn.Child
-			} else {
-				break
-			}
-		}
-
-		n.Loop[k] = v
-	}
-}
-
 func (v *FilterParserNodes) ExprAssign(n *ast.ExprAssign) {
 	for {
 		if nn, ok := n.Expr.(*ast.ParserBrackets); ok {

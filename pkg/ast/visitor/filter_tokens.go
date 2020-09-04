@@ -130,3 +130,14 @@ func (v *FilterTokens) StmtDo(n *ast.StmtDo) {
 	n.CloseParenthesisTkn = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtFor(n *ast.StmtFor) {
+	n.ForTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.InitSemiColonTkn = nil
+	n.CondSemiColonTkn = nil
+	n.CloseParenthesisTkn = nil
+	n.ColonTkn = nil
+	n.EndForTkn = nil
+	n.SemiColonTkn = nil
+}

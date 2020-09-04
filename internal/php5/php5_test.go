@@ -4490,7 +4490,7 @@ func TestPhp5(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 			},
-			&ast.StmtAltFor{
+			&ast.StmtFor{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 78,
@@ -4499,6 +4499,7 @@ func TestPhp5(t *testing.T) {
 						EndPos:    1685,
 					},
 				},
+				Alt: true,
 				Cond: []ast.Vertex{
 					&ast.ExprBinarySmaller{
 						Node: ast.Node{

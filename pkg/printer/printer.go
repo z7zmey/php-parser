@@ -359,8 +359,6 @@ func (p *Printer) printNode(n ast.Vertex) {
 
 	// stmt
 
-	case *ast.StmtAltFor:
-		p.printStmtAltFor(n)
 	case *ast.StmtAltForeach:
 		p.printStmtAltForeach(n)
 	case *ast.StmtAltSwitch:
@@ -1973,39 +1971,6 @@ func (p *Printer) printExprYield(n ast.Vertex) {
 
 // smtm
 
-func (p *Printer) printStmtAltFor(n ast.Vertex) {
-	nn := n.(*ast.StmtAltFor)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "for")
-	p.printFreeFloating(nn, token.For)
-	io.WriteString(p.w, "(")
-	p.joinPrint(",", nn.Init)
-	p.printFreeFloating(nn, token.InitExpr)
-	io.WriteString(p.w, ";")
-	p.joinPrint(",", nn.Cond)
-	p.printFreeFloating(nn, token.CondExpr)
-	io.WriteString(p.w, ";")
-	p.joinPrint(",", nn.Loop)
-	p.printFreeFloating(nn, token.IncExpr)
-	io.WriteString(p.w, ")")
-	p.printFreeFloating(nn, token.Cond)
-	io.WriteString(p.w, ":")
-
-	s := nn.Stmt.(*ast.StmtStmtList)
-	p.printNodes(s.Stmts)
-	p.printFreeFloating(nn, token.Stmts)
-
-	io.WriteString(p.w, "endfor")
-	p.printFreeFloating(nn, token.AltEnd)
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
-}
-
 func (p *Printer) printStmtAltForeach(n ast.Vertex) {
 	nn := n.(*ast.StmtAltForeach)
 	p.printFreeFloating(nn, token.Start)
@@ -2477,26 +2442,43 @@ func (p *Printer) printStmtFinally(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtFor(n ast.Vertex) {
-	nn := n.(*ast.StmtFor)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtFor(n *ast.StmtFor) {
+	if n.Alt {
+		p.printStmtAltFor(n)
+		return
+	}
 
-	io.WriteString(p.w, "for")
-	p.printFreeFloating(nn, token.For)
-	io.WriteString(p.w, "(")
-	p.joinPrint(",", nn.Init)
-	p.printFreeFloating(nn, token.InitExpr)
-	io.WriteString(p.w, ";")
-	p.joinPrint(",", nn.Cond)
-	p.printFreeFloating(nn, token.CondExpr)
-	io.WriteString(p.w, ";")
-	p.joinPrint(",", nn.Loop)
-	p.printFreeFloating(nn, token.IncExpr)
-	io.WriteString(p.w, ")")
+	p.printToken(n.ForTkn, "for")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.joinPrint(",", n.Init)
+	p.printToken(n.InitSemiColonTkn, ";")
+	p.joinPrint(",", n.Cond)
+	p.printToken(n.CondSemiColonTkn, ";")
+	p.joinPrint(",", n.Loop)
+	p.printToken(n.CloseParenthesisTkn, ")")
 
-	p.Print(nn.Stmt)
+	p.Print(n.Stmt)
+}
 
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtAltFor(n *ast.StmtFor) {
+	p.printToken(n.ForTkn, "for")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.joinPrint(",", n.Init)
+	p.printToken(n.InitSemiColonTkn, ";")
+	p.joinPrint(",", n.Cond)
+	p.printToken(n.CondSemiColonTkn, ";")
+	p.joinPrint(",", n.Loop)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.ColonTkn, ":")
+
+	if stmtList, ok := n.Stmt.(*ast.StmtStmtList); ok {
+		p.printNodes(stmtList.Stmts)
+	} else {
+		p.printNode(n.Stmt)
+	}
+
+	p.printToken(n.EndForTkn, "endfor")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtForeach(n ast.Vertex) {

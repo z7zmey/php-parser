@@ -175,19 +175,6 @@ func (n *ScalarString) Accept(v NodeVisitor) {
 	v.ScalarString(n)
 }
 
-// StmtAltFor node
-type StmtAltFor struct {
-	Node
-	Init []Vertex
-	Cond []Vertex
-	Loop []Vertex
-	Stmt Vertex
-}
-
-func (n *StmtAltFor) Accept(v NodeVisitor) {
-	v.StmtAltFor(n)
-}
-
 // StmtAltForeach node
 type StmtAltForeach struct {
 	Node
@@ -453,10 +440,19 @@ func (n *StmtFinally) Accept(v NodeVisitor) {
 // StmtFor node
 type StmtFor struct {
 	Node
-	Init []Vertex
-	Cond []Vertex
-	Loop []Vertex
-	Stmt Vertex
+	Alt                 bool
+	ForTkn              *token.Token
+	OpenParenthesisTkn  *token.Token
+	Init                []Vertex
+	InitSemiColonTkn    *token.Token
+	Cond                []Vertex
+	CondSemiColonTkn    *token.Token
+	Loop                []Vertex
+	CloseParenthesisTkn *token.Token
+	ColonTkn            *token.Token
+	Stmt                Vertex
+	EndForTkn           *token.Token
+	SemiColonTkn        *token.Token
 }
 
 func (n *StmtFor) Accept(v NodeVisitor) {

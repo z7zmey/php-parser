@@ -895,28 +895,17 @@ statement:
             }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
-                switch n := $9.(type) {
-                case *ast.StmtFor :
-                    n.Init = $3
-                    n.Cond = $5
-                    n.Loop = $7
-                case *ast.StmtAltFor :
-                    n.Init = $3
-                    n.Cond = $5
-                    n.Loop = $7
-                }
+                $9.(*ast.StmtFor).ForTkn = $1
+                $9.(*ast.StmtFor).OpenParenthesisTkn = $2
+                $9.(*ast.StmtFor).Init = $3
+                $9.(*ast.StmtFor).InitSemiColonTkn = $4
+                $9.(*ast.StmtFor).Cond = $5
+                $9.(*ast.StmtFor).CondSemiColonTkn = $6
+                $9.(*ast.StmtFor).Loop = $7
+                $9.(*ast.StmtFor).CloseParenthesisTkn = $8
+                $9.(*ast.StmtFor).Node.Position = position.NewTokenNodePosition($1, $9)
 
                 $$ = $9
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $9)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.For, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.InitExpr, $4.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.CondExpr, $6.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.IncExpr, $8.SkippedTokens)
             }
     |   T_SWITCH '(' expr ')' switch_case_list
             {
@@ -1522,29 +1511,30 @@ foreach_variable:
 for_statement:
         statement
             {
-                $$ = &ast.StmtFor{ast.Node{}, nil, nil, nil, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
+                $$ = &ast.StmtFor{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    Stmt: $1,
+                }
             }
     |   ':' inner_statement_list T_ENDFOR ';'
             {
-                stmtList := &ast.StmtStmtList{
+                $$ = &ast.StmtFor{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($2),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    Stmts: $2,
+                    Alt:      true,
+                    ColonTkn: $1,
+                    Stmt: &ast.StmtStmtList{
+                        Node: ast.Node{
+                            Position: position.NewNodeListPosition($2),
+                        },
+                        Stmts: $2,
+                    },
+                    EndForTkn:    $3,
+                    SemiColonTkn: $4,
                 }
-                $$ = &ast.StmtAltFor{ast.Node{}, nil, nil, nil, stmtList}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
 ;
 

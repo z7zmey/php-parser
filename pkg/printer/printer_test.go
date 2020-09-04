@@ -2651,7 +2651,8 @@ func TestPrinterPrintAltFor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtAltFor{
+	p.Print(&ast.StmtFor{
+		Alt: true,
 		Init: []ast.Vertex{
 			&ast.ExprVariable{
 				VarName: &ast.Identifier{Value: []byte("$a")},

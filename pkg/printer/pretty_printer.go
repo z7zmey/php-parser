@@ -297,8 +297,6 @@ func (p *PrettyPrinter) printNode(n ast.Vertex) {
 
 		// stmt
 
-	case *ast.StmtAltFor:
-		p.printStmtAltFor(n)
 	case *ast.StmtAltForeach:
 		p.printStmtAltForeach(n)
 	case *ast.StmtAltSwitch:
@@ -1363,25 +1361,6 @@ func (p *PrettyPrinter) printStmtAltElse(n ast.Vertex) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtAltFor(n ast.Vertex) {
-	nn := n.(*ast.StmtAltFor)
-
-	io.WriteString(p.w, "for (")
-	p.joinPrint(", ", nn.Init)
-	io.WriteString(p.w, "; ")
-	p.joinPrint(", ", nn.Cond)
-	io.WriteString(p.w, "; ")
-	p.joinPrint(", ", nn.Loop)
-	io.WriteString(p.w, ") :\n")
-
-	s := nn.Stmt.(*ast.StmtStmtList)
-	p.printNodes(s.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-
-	io.WriteString(p.w, "endfor;")
-}
-
 func (p *PrettyPrinter) printStmtAltForeach(n ast.Vertex) {
 	nn := n.(*ast.StmtAltForeach)
 
@@ -1736,6 +1715,11 @@ func (p *PrettyPrinter) printStmtFinally(n ast.Vertex) {
 func (p *PrettyPrinter) printStmtFor(n ast.Vertex) {
 	nn := n.(*ast.StmtFor)
 
+	if nn.Alt {
+		p.printStmtAltFor(nn)
+		return
+	}
+
 	io.WriteString(p.w, "for (")
 	p.joinPrint(", ", nn.Init)
 	io.WriteString(p.w, "; ")
@@ -1758,6 +1742,25 @@ func (p *PrettyPrinter) printStmtFor(n ast.Vertex) {
 		p.Print(s)
 		p.indentDepth--
 	}
+}
+
+func (p *PrettyPrinter) printStmtAltFor(n ast.Vertex) {
+	nn := n.(*ast.StmtFor)
+
+	io.WriteString(p.w, "for (")
+	p.joinPrint(", ", nn.Init)
+	io.WriteString(p.w, "; ")
+	p.joinPrint(", ", nn.Cond)
+	io.WriteString(p.w, "; ")
+	p.joinPrint(", ", nn.Loop)
+	io.WriteString(p.w, ") :\n")
+
+	s := nn.Stmt.(*ast.StmtStmtList)
+	p.printNodes(s.Stmts)
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+
+	io.WriteString(p.w, "endfor;")
 }
 
 func (p *PrettyPrinter) printStmtForeach(n ast.Vertex) {

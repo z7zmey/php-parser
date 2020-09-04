@@ -875,7 +875,8 @@ func TestParseAndPrintAltIf(t *testing.T) {
 }
 
 func TestParseAndPrintAltFor(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	for ( $a ; $b ; $c ) :
 	endfor ;
 	
@@ -1106,7 +1107,8 @@ func TestParseAndPrintIfExpression(t *testing.T) {
 }
 
 func TestParseAndPrintFor(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	for ( $i = 0 ; $i < 3 ; $i ++ ) 
 		echo $i . PHP_EOL;
 	

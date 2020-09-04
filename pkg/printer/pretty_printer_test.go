@@ -2172,7 +2172,8 @@ func TestPrintAltFor(t *testing.T) {
 	p := printer.NewPrettyPrinter(o, "    ")
 	p.Print(&ast.StmtNamespace{
 		Stmts: []ast.Vertex{
-			&ast.StmtAltFor{
+			&ast.StmtFor{
+				Alt: true,
 				Init: []ast.Vertex{
 					&ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}},
 				},

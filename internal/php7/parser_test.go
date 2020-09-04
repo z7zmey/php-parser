@@ -6738,7 +6738,7 @@ func TestStmtFor_Alt(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtAltFor{
+			&ast.StmtFor{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -6747,6 +6747,7 @@ func TestStmtFor_Alt(t *testing.T) {
 						EndPos:    33,
 					},
 				},
+				Alt: true,
 				Cond: []ast.Vertex{
 					&ast.ExprBinarySmaller{
 						Node: ast.Node{

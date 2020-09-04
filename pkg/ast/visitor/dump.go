@@ -252,12 +252,6 @@ func (v *Dump) Argument(n *ast.Argument) {
 	}
 }
 
-func (v *Dump) StmtAltFor(n *ast.StmtAltFor) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtAltFor{\n")
-	v.printNode(n.GetNode())
-}
-
 func (v *Dump) StmtAltForeach(n *ast.StmtAltForeach) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtAltForeach{\n")
@@ -414,6 +408,11 @@ func (v *Dump) StmtFor(n *ast.StmtFor) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtFor{\n")
 	v.printNode(n.GetNode())
+
+	if n.Alt {
+		v.printIndent(v.indent)
+		v.print("Alt: true,\n")
+	}
 }
 
 func (v *Dump) StmtForeach(n *ast.StmtForeach) {
