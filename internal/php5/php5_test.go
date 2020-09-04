@@ -3049,7 +3049,7 @@ func TestPhp5(t *testing.T) {
 					},
 				},
 			},
-			&ast.StmtAltWhile{
+			&ast.StmtWhile{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 57,
@@ -3058,6 +3058,7 @@ func TestPhp5(t *testing.T) {
 						EndPos:    1046,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ScalarLnumber{
 					Node: ast.Node{
 						Position: &position.Position{

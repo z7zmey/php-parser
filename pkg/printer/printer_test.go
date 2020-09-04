@@ -2635,7 +2635,7 @@ func TestPrinterPrintAltElseEmpty(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&ast.StmtElse{
-		Alt: true,
+		Alt:  true,
 		Stmt: &ast.StmtStmtList{},
 	})
 
@@ -2815,7 +2815,8 @@ func TestPrinterPrintAltWhile(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtAltWhile{
+	p.Print(&ast.StmtWhile{
+		Alt: true,
 		Cond: &ast.ExprVariable{
 			VarName: &ast.Identifier{Value: []byte("$a")},
 		},

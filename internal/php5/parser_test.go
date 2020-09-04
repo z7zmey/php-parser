@@ -12762,7 +12762,7 @@ func TestStmtBreak(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtAltWhile{
+			&ast.StmtWhile{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -12771,6 +12771,7 @@ func TestStmtBreak(t *testing.T) {
 						EndPos:    34,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ScalarLnumber{
 					Node: ast.Node{
 						Position: &position.Position{

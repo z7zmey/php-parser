@@ -196,23 +196,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.CaseList)
 			t.visitor.Leave("CaseList", true)
 		}
-	case *ast.StmtAltWhile:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Cond != nil {
-			t.visitor.Enter("Cond", true)
-			t.Traverse(nn.Cond)
-			t.visitor.Leave("Cond", true)
-		}
-		if nn.Stmt != nil {
-			t.visitor.Enter("Stmt", true)
-			t.Traverse(nn.Stmt)
-			t.visitor.Leave("Stmt", true)
-		}
 	case *ast.StmtBreak:
 		if nn == nil {
 			return

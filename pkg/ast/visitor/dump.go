@@ -270,12 +270,6 @@ func (v *Dump) StmtAltSwitch(n *ast.StmtAltSwitch) {
 	v.printNode(n.GetNode())
 }
 
-func (v *Dump) StmtAltWhile(n *ast.StmtAltWhile) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtAltWhile{\n")
-	v.printNode(n.GetNode())
-}
-
 func (v *Dump) StmtBreak(n *ast.StmtBreak) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtBreak{\n")
@@ -637,6 +631,11 @@ func (v *Dump) StmtWhile(n *ast.StmtWhile) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtWhile{\n")
 	v.printNode(n.GetNode())
+
+	if n.Alt {
+		v.printIndent(v.indent)
+		v.print("Alt: true,\n")
+	}
 }
 
 func (v *Dump) ExprArray(n *ast.ExprArray) {

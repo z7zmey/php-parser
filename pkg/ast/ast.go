@@ -30,7 +30,6 @@ type NodeVisitor interface {
 	StmtAltFor(n *StmtAltFor)
 	StmtAltForeach(n *StmtAltForeach)
 	StmtAltSwitch(n *StmtAltSwitch)
-	StmtAltWhile(n *StmtAltWhile)
 	StmtBreak(n *StmtBreak)
 	StmtCase(n *StmtCase)
 	StmtCaseList(n *StmtCaseList)

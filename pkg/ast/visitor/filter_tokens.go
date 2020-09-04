@@ -113,3 +113,12 @@ func (v *FilterTokens) ParserBrackets(n *ast.ParserBrackets) {
 	n.OpenBracketTkn = nil
 	n.CloseBracketTkn = nil
 }
+
+func (v *FilterTokens) StmtWhile(n *ast.StmtWhile) {
+	n.WhileTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.CloseParenthesisTkn = nil
+	n.ColonTkn = nil
+	n.EndWhileTkn = nil
+	n.SemiColonTkn = nil
+}

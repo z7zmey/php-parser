@@ -66,10 +66,6 @@ func (v *Null) StmtAltSwitch(_ *ast.StmtAltSwitch) {
 	// do nothing
 }
 
-func (v *Null) StmtAltWhile(_ *ast.StmtAltWhile) {
-	// do nothing
-}
-
 func (v *Null) StmtBreak(_ *ast.StmtBreak) {
 	// do nothing
 }

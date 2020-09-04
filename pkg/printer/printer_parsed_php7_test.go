@@ -933,7 +933,8 @@ func TestParseAndPrintAltSwitch(t *testing.T) {
 }
 
 func TestParseAndPrintAltWhile(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 
 	while ( $a ) :
 		// do nothing
@@ -1471,7 +1472,8 @@ func TestParseAndPrintUseList(t *testing.T) {
 }
 
 func TestParseAndPrintWhile(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	while ( $a ) echo '' ;
 	while ( $a ) { }
 	while ( $a ) ;

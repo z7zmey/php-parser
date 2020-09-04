@@ -303,8 +303,6 @@ func (p *PrettyPrinter) printNode(n ast.Vertex) {
 		p.printStmtAltForeach(n)
 	case *ast.StmtAltSwitch:
 		p.printStmtAltSwitch(n)
-	case *ast.StmtAltWhile:
-		p.printStmtAltWhile(n)
 	case *ast.StmtBreak:
 		p.printStmtBreak(n)
 	case *ast.StmtCase:
@@ -1450,21 +1448,6 @@ func (p *PrettyPrinter) printStmtAltSwitch(n ast.Vertex) {
 	io.WriteString(p.w, "endswitch;")
 }
 
-func (p *PrettyPrinter) printStmtAltWhile(n ast.Vertex) {
-	nn := n.(*ast.StmtAltWhile)
-
-	io.WriteString(p.w, "while (")
-	p.Print(nn.Cond)
-	io.WriteString(p.w, ") :\n")
-
-	s := nn.Stmt.(*ast.StmtStmtList)
-	p.printNodes(s.Stmts)
-
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "endwhile;")
-}
-
 func (p *PrettyPrinter) printStmtBreak(n ast.Vertex) {
 	nn := n.(*ast.StmtBreak)
 
@@ -2190,6 +2173,11 @@ func (p *PrettyPrinter) printStmtUseDeclaration(n ast.Vertex) {
 func (p *PrettyPrinter) printStmtWhile(n ast.Vertex) {
 	nn := n.(*ast.StmtWhile)
 
+	if nn.Alt {
+		p.printStmtAltWhile(nn)
+		return
+	}
+
 	io.WriteString(p.w, "while (")
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ")")
@@ -2208,4 +2196,19 @@ func (p *PrettyPrinter) printStmtWhile(n ast.Vertex) {
 		p.Print(s)
 		p.indentDepth--
 	}
+}
+
+func (p *PrettyPrinter) printStmtAltWhile(n ast.Vertex) {
+	nn := n.(*ast.StmtWhile)
+
+	io.WriteString(p.w, "while (")
+	p.Print(nn.Cond)
+	io.WriteString(p.w, ") :\n")
+
+	s := nn.Stmt.(*ast.StmtStmtList)
+	p.printNodes(s.Stmts)
+
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "endwhile;")
 }

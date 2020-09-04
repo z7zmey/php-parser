@@ -212,17 +212,6 @@ func (n *StmtAltSwitch) Accept(v NodeVisitor) {
 	v.StmtAltSwitch(n)
 }
 
-// StmtAltWhile node
-type StmtAltWhile struct {
-	Node
-	Cond Vertex
-	Stmt Vertex
-}
-
-func (n *StmtAltWhile) Accept(v NodeVisitor) {
-	v.StmtAltWhile(n)
-}
-
 // StmtBreak node
 type StmtBreak struct {
 	Node
@@ -839,8 +828,15 @@ func (n *StmtUseDeclaration) Accept(v NodeVisitor) {
 // StmtWhile node
 type StmtWhile struct {
 	Node
-	Cond Vertex
-	Stmt Vertex
+	Alt                 bool
+	WhileTkn            *token.Token
+	OpenParenthesisTkn  *token.Token
+	Cond                Vertex
+	CloseParenthesisTkn *token.Token
+	ColonTkn            *token.Token
+	Stmt                Vertex
+	EndWhileTkn         *token.Token
+	SemiColonTkn        *token.Token
 }
 
 func (n *StmtWhile) Accept(v NodeVisitor) {

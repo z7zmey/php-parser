@@ -365,8 +365,6 @@ func (p *Printer) printNode(n ast.Vertex) {
 		p.printStmtAltForeach(n)
 	case *ast.StmtAltSwitch:
 		p.printStmtAltSwitch(n)
-	case *ast.StmtAltWhile:
-		p.printStmtAltWhile(n)
 	case *ast.StmtBreak:
 		p.printStmtBreak(n)
 	case *ast.StmtCase:
@@ -2091,39 +2089,6 @@ func (p *Printer) printStmtAltSwitch(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtAltWhile(n ast.Vertex) {
-	nn := n.(*ast.StmtAltWhile)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "while")
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
-	}
-
-	p.Print(nn.Cond)
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
-	}
-
-	p.printFreeFloating(nn, token.Cond)
-	io.WriteString(p.w, ":")
-
-	s := nn.Stmt.(*ast.StmtStmtList)
-	p.printNodes(s.Stmts)
-	p.printFreeFloating(nn, token.Stmts)
-
-	io.WriteString(p.w, "endwhile")
-	p.printFreeFloating(nn, token.AltEnd)
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
-}
-
 func (p *Printer) printStmtBreak(n ast.Vertex) {
 	nn := n.(*ast.StmtBreak)
 	p.printFreeFloating(nn, token.Start)
@@ -3169,25 +3134,35 @@ func (p *Printer) printStmtUseDeclaration(n *ast.StmtUseDeclaration) {
 	p.printToken(n.CommaTkn, "")
 }
 
-func (p *Printer) printStmtWhile(n ast.Vertex) {
-	nn := n.(*ast.StmtWhile)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "while")
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
+func (p *Printer) printStmtWhile(n *ast.StmtWhile) {
+	if n.Alt {
+		p.printStmtAltWhile(n)
+		return
 	}
 
-	p.Print(nn.Cond)
+	p.printToken(n.WhileTkn, "while")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Cond)
+	p.printToken(n.CloseParenthesisTkn, ")")
 
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
+	p.Print(n.Stmt)
+}
+
+func (p *Printer) printStmtAltWhile(n *ast.StmtWhile) {
+	p.printToken(n.WhileTkn, "while")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Cond)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.ColonTkn, ":")
+
+	if stmtList, ok := n.Stmt.(*ast.StmtStmtList); ok {
+		p.printNodes(stmtList.Stmts)
+	} else {
+		p.Print(n.Stmt)
 	}
 
-	p.Print(nn.Stmt)
-
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.EndWhileTkn, "endwhile")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printParserAs(n ast.Vertex) {

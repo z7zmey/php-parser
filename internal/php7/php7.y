@@ -870,31 +870,13 @@ statement:
             }
     |   T_WHILE '(' expr ')' while_statement
             {
-                exprBrackets := &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
-                    },
-                    OpenBracketTkn:  $2,
-                    Child:           $3,
-                    CloseBracketTkn: $4,
-                }
-
-                switch n := $5.(type) {
-                case *ast.StmtWhile :
-                    n.Cond = exprBrackets
-                case *ast.StmtAltWhile :
-                    n.Cond = exprBrackets
-                }
+                $5.(*ast.StmtWhile).WhileTkn = $1
+                $5.(*ast.StmtWhile).OpenParenthesisTkn = $2
+                $5.(*ast.StmtWhile).Cond = $3
+                $5.(*ast.StmtWhile).CloseParenthesisTkn = $4
+                $5.(*ast.StmtWhile).Node.Position = position.NewTokenNodePosition($1, $5)
 
                 $$ = $5
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   T_DO statement T_WHILE '(' expr ')' ';'
             {
@@ -1740,29 +1722,30 @@ case_separator:
 while_statement:
         statement
             {
-                $$ = &ast.StmtWhile{ast.Node{}, nil, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
+                $$ = &ast.StmtWhile{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    Stmt: $1,
+                }
             }
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
-                stmtList := &ast.StmtStmtList{
+                $$ = &ast.StmtWhile{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($2),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    Stmts: $2,
+                    Alt:      true,
+                    ColonTkn: $1,
+                    Stmt: &ast.StmtStmtList{
+                        Node: ast.Node{
+                            Position: position.NewNodeListPosition($2),
+                        },
+                        Stmts: $2,
+                    },
+                    EndWhileTkn:  $3,
+                    SemiColonTkn: $4,
                 }
-                $$ = &ast.StmtAltWhile{ast.Node{}, nil, stmtList}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
 ;
 
