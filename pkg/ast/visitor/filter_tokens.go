@@ -141,3 +141,25 @@ func (v *FilterTokens) StmtFor(n *ast.StmtFor) {
 	n.EndForTkn = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtSwitch(n *ast.StmtSwitch) {
+	n.SwitchTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.CloseParenthesisTkn = nil
+	n.OpenCurlyBracketTkn = nil
+	n.CaseSeparatorTkn = nil
+	n.ColonTkn = nil
+	n.CloseCurlyBracketTkn = nil
+	n.EndSwitchTkn = nil
+	n.SemiColonTkn = nil
+}
+
+func (v *FilterTokens) StmtCase(n *ast.StmtCase) {
+	n.CaseTkn = nil
+	n.CaseSeparatorTkn = nil
+}
+
+func (v *FilterTokens) StmtDefault(n *ast.StmtDefault) {
+	n.DefaultTkn = nil
+	n.CaseSeparatorTkn = nil
+}

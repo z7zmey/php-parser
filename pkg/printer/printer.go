@@ -361,8 +361,6 @@ func (p *Printer) printNode(n ast.Vertex) {
 
 	case *ast.StmtAltForeach:
 		p.printStmtAltForeach(n)
-	case *ast.StmtAltSwitch:
-		p.printStmtAltSwitch(n)
 	case *ast.StmtBreak:
 		p.printStmtBreak(n)
 	case *ast.StmtCase:
@@ -2019,41 +2017,6 @@ func (p *Printer) printStmtAltForeach(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtAltSwitch(n ast.Vertex) {
-	nn := n.(*ast.StmtAltSwitch)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "switch")
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
-	}
-
-	p.Print(nn.Cond)
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
-	}
-
-	p.printFreeFloating(nn, token.Cond)
-	io.WriteString(p.w, ":")
-
-	p.printFreeFloating(nn.CaseList, token.Start)
-	p.printFreeFloating(nn.CaseList, token.CaseListStart)
-	p.printNodes(nn.CaseList.Cases)
-	p.printFreeFloating(nn.CaseList, token.CaseListEnd)
-	p.printFreeFloating(nn.CaseList, token.End)
-
-	io.WriteString(p.w, "endswitch")
-	p.printFreeFloating(nn, token.AltEnd)
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
-}
-
 func (p *Printer) printStmtBreak(n ast.Vertex) {
 	nn := n.(*ast.StmtBreak)
 	p.printFreeFloating(nn, token.Start)
@@ -2075,26 +2038,12 @@ func (p *Printer) printStmtBreak(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtCase(n ast.Vertex) {
-	nn := n.(*ast.StmtCase)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "case")
-	if nn.Cond.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
-	p.Print(nn.Cond)
-	p.printFreeFloating(nn, token.Expr)
-	p.printFreeFloating(nn, token.CaseSeparator)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ":")
-	}
-
-	if len(nn.Stmts) > 0 {
-		p.printNodes(nn.Stmts)
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtCase(n *ast.StmtCase) {
+	p.printToken(n.CaseTkn, "case")
+	p.bufStart = " "
+	p.Print(n.Cond)
+	p.printToken(n.CaseSeparatorTkn, ":")
+	p.printNodes(n.Stmts)
 }
 
 func (p *Printer) printStmtCatch(n ast.Vertex) {
@@ -2308,22 +2257,10 @@ func (p *Printer) printStmtDeclare(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtDefault(n ast.Vertex) {
-	nn := n.(*ast.StmtDefault)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "default")
-	p.printFreeFloating(nn, token.Default)
-	p.printFreeFloating(nn, token.CaseSeparator)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ":")
-	}
-
-	if len(nn.Stmts) > 0 {
-		p.printNodes(nn.Stmts)
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtDefault(n *ast.StmtDefault) {
+	p.printToken(n.DefaultTkn, "default")
+	p.printToken(n.CaseSeparatorTkn, ":")
+	p.printNodes(n.Stmts)
 }
 
 func (p *Printer) printStmtDo(n *ast.StmtDo) {
@@ -2828,31 +2765,32 @@ func (p *Printer) printStmtStmtList(n *ast.StmtStmtList) {
 	p.printToken(n.CloseCurlyBracket, "}")
 }
 
-func (p *Printer) printStmtSwitch(n ast.Vertex) {
-	nn := n.(*ast.StmtSwitch)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "switch")
-
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
+func (p *Printer) printStmtSwitch(n *ast.StmtSwitch) {
+	if n.Alt {
+		p.printStmtAltSwitch(n)
+		return
 	}
 
-	p.Print(nn.Cond)
+	p.printToken(n.SwitchTkn, "switch")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Cond)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.OpenCurlyBracketTkn, "{")
+	p.printToken(n.CaseSeparatorTkn, "")
+	p.printNodes(n.CaseList)
+	p.printToken(n.CloseCurlyBracketTkn, "}")
+}
 
-	if _, ok := nn.Cond.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
-	}
-
-	p.printFreeFloating(nn.CaseList, token.Start)
-	io.WriteString(p.w, "{")
-	p.printFreeFloating(nn.CaseList, token.CaseListStart)
-	p.printNodes(nn.CaseList.Cases)
-	p.printFreeFloating(nn.CaseList, token.CaseListEnd)
-	io.WriteString(p.w, "}")
-	p.printFreeFloating(nn.CaseList, token.End)
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtAltSwitch(n *ast.StmtSwitch) {
+	p.printToken(n.SwitchTkn, "switch")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Cond)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.ColonTkn, ":")
+	p.printToken(n.CaseSeparatorTkn, "")
+	p.printNodes(n.CaseList)
+	p.printToken(n.EndSwitchTkn, "endswitch")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtThrow(n ast.Vertex) {

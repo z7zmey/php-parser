@@ -58,19 +58,11 @@ func (v *Null) StmtAltForeach(_ *ast.StmtAltForeach) {
 	// do nothing
 }
 
-func (v *Null) StmtAltSwitch(_ *ast.StmtAltSwitch) {
-	// do nothing
-}
-
 func (v *Null) StmtBreak(_ *ast.StmtBreak) {
 	// do nothing
 }
 
 func (v *Null) StmtCase(_ *ast.StmtCase) {
-	// do nothing
-}
-
-func (v *Null) StmtCaseList(_ *ast.StmtCaseList) {
 	// do nothing
 }
 

@@ -188,17 +188,6 @@ func (n *StmtAltForeach) Accept(v NodeVisitor) {
 	v.StmtAltForeach(n)
 }
 
-// StmtAltSwitch node
-type StmtAltSwitch struct {
-	Node
-	Cond     Vertex
-	CaseList *StmtCaseList
-}
-
-func (n *StmtAltSwitch) Accept(v NodeVisitor) {
-	v.StmtAltSwitch(n)
-}
-
 // StmtBreak node
 type StmtBreak struct {
 	Node
@@ -212,22 +201,14 @@ func (n *StmtBreak) Accept(v NodeVisitor) {
 // StmtCase node
 type StmtCase struct {
 	Node
-	Cond  Vertex
-	Stmts []Vertex
+	CaseTkn          *token.Token
+	Cond             Vertex
+	CaseSeparatorTkn *token.Token
+	Stmts            []Vertex
 }
 
 func (n *StmtCase) Accept(v NodeVisitor) {
 	v.StmtCase(n)
-}
-
-// StmtCaseList node
-type StmtCaseList struct {
-	Node
-	Cases []Vertex
-}
-
-func (n *StmtCaseList) Accept(v NodeVisitor) {
-	v.StmtCaseList(n)
 }
 
 // StmtCatch node
@@ -355,7 +336,9 @@ func (n *StmtDeclare) Accept(v NodeVisitor) {
 // StmtDefault node
 type StmtDefault struct {
 	Node
-	Stmts []Vertex
+	DefaultTkn       *token.Token
+	CaseSeparatorTkn *token.Token
+	Stmts            []Vertex
 }
 
 func (n *StmtDefault) Accept(v NodeVisitor) {
@@ -674,8 +657,18 @@ func (n *StmtStmtList) Accept(v NodeVisitor) {
 // StmtSwitch node
 type StmtSwitch struct {
 	Node
-	Cond     Vertex
-	CaseList *StmtCaseList
+	Alt                  bool
+	SwitchTkn            *token.Token
+	OpenParenthesisTkn   *token.Token
+	Cond                 Vertex
+	CloseParenthesisTkn  *token.Token
+	ColonTkn             *token.Token
+	OpenCurlyBracketTkn  *token.Token
+	CaseSeparatorTkn     *token.Token
+	CaseList             []Vertex
+	CloseCurlyBracketTkn *token.Token
+	EndSwitchTkn         *token.Token
+	SemiColonTkn         *token.Token
 }
 
 func (n *StmtSwitch) Accept(v NodeVisitor) {

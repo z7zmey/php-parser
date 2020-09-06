@@ -2300,21 +2300,20 @@ func TestPrintStmtAltSwitch(t *testing.T) {
 	p := printer.NewPrettyPrinter(o, "    ")
 	p.Print(&ast.StmtNamespace{
 		Stmts: []ast.Vertex{
-			&ast.StmtAltSwitch{
+			&ast.StmtSwitch{
+				Alt:  true,
 				Cond: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}},
-				CaseList: &ast.StmtCaseList{
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
-							Cond: &ast.ScalarString{Value: []byte("'a'")},
-							Stmts: []ast.Vertex{
-								&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}}},
-							},
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Cond: &ast.ScalarString{Value: []byte("'a'")},
+						Stmts: []ast.Vertex{
+							&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}}},
 						},
-						&ast.StmtCase{
-							Cond: &ast.ScalarString{Value: []byte("'b'")},
-							Stmts: []ast.Vertex{
-								&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}}},
-							},
+					},
+					&ast.StmtCase{
+						Cond: &ast.ScalarString{Value: []byte("'b'")},
+						Stmts: []ast.Vertex{
+							&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}}},
 						},
 					},
 				},
@@ -3682,19 +3681,17 @@ func TestPrintStmtSwitch(t *testing.T) {
 		Stmts: []ast.Vertex{
 			&ast.StmtSwitch{
 				Cond: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}},
-				CaseList: &ast.StmtCaseList{
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
-							Cond: &ast.ScalarString{Value: []byte("'a'")},
-							Stmts: []ast.Vertex{
-								&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}}},
-							},
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Cond: &ast.ScalarString{Value: []byte("'a'")},
+						Stmts: []ast.Vertex{
+							&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("a")}}},
 						},
-						&ast.StmtCase{
-							Cond: &ast.ScalarString{Value: []byte("'b'")},
-							Stmts: []ast.Vertex{
-								&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}}},
-							},
+					},
+					&ast.StmtCase{
+						Cond: &ast.ScalarString{Value: []byte("'b'")},
+						Stmts: []ast.Vertex{
+							&ast.StmtExpression{Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("b")}}},
 						},
 					},
 				},

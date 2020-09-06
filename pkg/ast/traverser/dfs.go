@@ -146,23 +146,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Stmt)
 			t.visitor.Leave("Stmt", true)
 		}
-	case *ast.StmtAltSwitch:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Cond != nil {
-			t.visitor.Enter("Cond", true)
-			t.Traverse(nn.Cond)
-			t.visitor.Leave("Cond", true)
-		}
-		if nn.CaseList != nil {
-			t.visitor.Enter("CaseList", true)
-			t.Traverse(nn.CaseList)
-			t.visitor.Leave("CaseList", true)
-		}
 	case *ast.StmtBreak:
 		if nn == nil {
 			return
@@ -193,20 +176,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 				t.Traverse(c)
 			}
 			t.visitor.Leave("Stmts", false)
-		}
-	case *ast.StmtCaseList:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Cases != nil {
-			t.visitor.Enter("Cases", false)
-			for _, c := range nn.Cases {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("Cases", false)
 		}
 	case *ast.StmtCatch:
 		if nn == nil {
@@ -869,9 +838,11 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.visitor.Leave("Cond", true)
 		}
 		if nn.CaseList != nil {
-			t.visitor.Enter("CaseList", true)
-			t.Traverse(nn.CaseList)
-			t.visitor.Leave("CaseList", true)
+			t.visitor.Enter("CaseList", false)
+			for _, c := range nn.CaseList {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("CaseList", false)
 		}
 	case *ast.StmtThrow:
 		if nn == nil {

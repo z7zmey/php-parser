@@ -940,22 +940,13 @@ unticked_statement:
             }
     |   T_SWITCH parenthesis_expr switch_case_list
             {
-                switch n := $3.(type) {
-                case *ast.StmtSwitch:
-                    n.Cond = $2
-                case *ast.StmtAltSwitch:
-                    n.Cond = $2
-                default:
-                    panic("unexpected node type")
-                }
+                $3.(*ast.StmtSwitch).SwitchTkn = $1
+                $3.(*ast.StmtSwitch).OpenParenthesisTkn = $2.(*ast.ParserBrackets).OpenBracketTkn
+                $3.(*ast.StmtSwitch).Cond = $2.(*ast.ParserBrackets).Child
+                $3.(*ast.StmtSwitch).CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
+                $3.(*ast.StmtSwitch).Node.Position = position.NewTokenNodePosition($1, $3)
 
                 $$ = $3
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_BREAK ';'
             {
@@ -1790,62 +1781,53 @@ declare_list:
 switch_case_list:
         '{' case_list '}'
             {
-                caseList := &ast.StmtCaseList{ast.Node{}, $2}
-                $$ = &ast.StmtSwitch{ast.Node{}, nil, caseList}
-
-                // save position
-                caseList.GetNode().Position = position.NewTokensPosition($1, $3)
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(caseList, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $3.SkippedTokens)
+                $$ = &ast.StmtSwitch{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenCurlyBracketTkn:  $1,
+                    CaseList:             $2,
+                    CloseCurlyBracketTkn: $3,
+                }
             }
     |   '{' ';' case_list '}'
             {
-                caseList := &ast.StmtCaseList{ast.Node{}, $3}
-                $$ = &ast.StmtSwitch{ast.Node{}, nil, caseList}
-
-                // save position
-                caseList.GetNode().Position = position.NewTokensPosition($1, $4)
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(caseList, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(caseList, token.CaseListStart, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $4.SkippedTokens)
+                $$ = &ast.StmtSwitch{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    OpenCurlyBracketTkn:  $1,
+                    CaseSeparatorTkn:     $2,
+                    CaseList:             $3,
+                    CloseCurlyBracketTkn: $4,
+                }
             }
     |   ':' case_list T_ENDSWITCH ';'
             {
-                caseList := &ast.StmtCaseList{ast.Node{}, $2}
-                $$ = &ast.StmtAltSwitch{ast.Node{}, nil, caseList}
-
-                // save position
-                caseList.GetNode().Position = position.NewNodeListPosition($2)
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
+                $$ = &ast.StmtSwitch{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    Alt:          true,
+                    ColonTkn:     $1,
+                    CaseList:     $2,
+                    EndSwitchTkn: $3,
+                    SemiColonTkn: $4,
+                }
             }
     |   ':' ';' case_list T_ENDSWITCH ';'
             {
-
-                caseList := &ast.StmtCaseList{ast.Node{}, $3}
-                $$ = &ast.StmtAltSwitch{ast.Node{}, nil, caseList}
-
-                // save position
-                caseList.GetNode().Position = position.NewNodeListPosition($3)
-                $$.GetNode().Position = position.NewTokensPosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(caseList, token.CaseListStart, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(caseList, token.CaseListEnd, $4.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $5.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $5.SkippedTokens)
+                $$ = &ast.StmtSwitch{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $5),
+                    },
+                    Alt:              true,
+                    ColonTkn:         $1,
+                    CaseSeparatorTkn: $2,
+                    CaseList:         $3,
+                    EndSwitchTkn:     $4,
+                    SemiColonTkn:     $5,
+                }
             }
 ;
 
@@ -1853,33 +1835,30 @@ switch_case_list:
 case_list:
         /* empty */
             {
-                $$ = []ast.Vertex{}
+                $$ = nil
             }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                _case := &ast.StmtCase{ast.Node{}, $3, $5}
-                $$ = append($1, _case)
-
-                // save position
-                _case.GetNode().Position = position.NewTokenNodeListPosition($2, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(_case, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(_case, token.Expr, $4.SkippedTokens)
-                yylex.(*Parser).setToken(_case, token.CaseSeparator, $4.SkippedTokens)
+                $$ = append($1, &ast.StmtCase{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodeListPosition($2, $5),
+                    },
+                    CaseTkn:          $2,
+                    Cond:             $3,
+                    CaseSeparatorTkn: $4,
+                    Stmts:            $5,
+                })
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                _default := &ast.StmtDefault{ast.Node{}, $4}
-                $$ = append($1, _default)
-
-                // save position
-                _default.GetNode().Position = position.NewTokenNodeListPosition($2, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(_default, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(_default, token.Default, $3.SkippedTokens)
-                yylex.(*Parser).setToken(_default, token.CaseSeparator, $3.SkippedTokens)
+                $$ = append($1, &ast.StmtDefault{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodeListPosition($2, $4),
+                    },
+                    DefaultTkn:       $2,
+                    CaseSeparatorTkn: $3,
+                    Stmts:            $4,
+                })
             }
 ;
 

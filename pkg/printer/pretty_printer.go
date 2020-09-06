@@ -299,8 +299,6 @@ func (p *PrettyPrinter) printNode(n ast.Vertex) {
 
 	case *ast.StmtAltForeach:
 		p.printStmtAltForeach(n)
-	case *ast.StmtAltSwitch:
-		p.printStmtAltSwitch(n)
 	case *ast.StmtBreak:
 		p.printStmtBreak(n)
 	case *ast.StmtCase:
@@ -1412,21 +1410,6 @@ func (p *PrettyPrinter) printStmtAltIf(n ast.Vertex) {
 	io.WriteString(p.w, "endif;")
 }
 
-func (p *PrettyPrinter) printStmtAltSwitch(n ast.Vertex) {
-	nn := n.(*ast.StmtAltSwitch)
-
-	io.WriteString(p.w, "switch (")
-	p.Print(nn.Cond)
-	io.WriteString(p.w, ") :\n")
-
-	s := nn.CaseList.Cases
-	p.printNodes(s)
-
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "endswitch;")
-}
-
 func (p *PrettyPrinter) printStmtBreak(n ast.Vertex) {
 	nn := n.(*ast.StmtBreak)
 
@@ -2005,15 +1988,35 @@ func (p *PrettyPrinter) printStmtStmtList(n ast.Vertex) {
 func (p *PrettyPrinter) printStmtSwitch(n ast.Vertex) {
 	nn := n.(*ast.StmtSwitch)
 
+	if nn.Alt {
+		p.printStmtAltSwitch(n)
+		return
+	}
+
 	io.WriteString(p.w, "switch (")
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ")")
 
 	io.WriteString(p.w, " {\n")
-	p.printNodes(nn.CaseList.Cases)
+	p.printNodes(nn.CaseList)
 	io.WriteString(p.w, "\n")
 	p.printIndent()
 	io.WriteString(p.w, "}")
+}
+
+func (p *PrettyPrinter) printStmtAltSwitch(n ast.Vertex) {
+	nn := n.(*ast.StmtSwitch)
+
+	io.WriteString(p.w, "switch (")
+	p.Print(nn.Cond)
+	io.WriteString(p.w, ") :\n")
+
+	s := nn.CaseList
+	p.printNodes(s)
+
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "endswitch;")
 }
 
 func (p *PrettyPrinter) printStmtThrow(n ast.Vertex) {

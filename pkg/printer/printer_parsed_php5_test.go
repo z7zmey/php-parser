@@ -791,7 +791,8 @@ func TestParseAndPrintPhp5AltForeach(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5AltSwitch(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 
 	switch ( $a ) : 
 	case 1 : 
@@ -1232,7 +1233,8 @@ func TestParseAndPrintPhp5StmtList(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Switch(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 
 	switch ( $a ) {
 		case 1 : ;

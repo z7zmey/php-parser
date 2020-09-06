@@ -10226,78 +10226,68 @@ func TestStmtSwitch(t *testing.T) {
 					},
 					Value: []byte("1"),
 				},
-				CaseList: &ast.StmtCaseList{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 2,
-							EndLine:   5,
-							StartPos:  17,
-							EndPos:    58,
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 3,
+								EndLine:   3,
+								StartPos:  22,
+								EndPos:    36,
+							},
 						},
-					},
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 3,
 									EndLine:   3,
-									StartPos:  22,
-									EndPos:    36,
+									StartPos:  27,
+									EndPos:    28,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
+							Value: []byte("1"),
+						},
+						Stmts: []ast.Vertex{
+							&ast.StmtBreak{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 3,
 										EndLine:   3,
-										StartPos:  27,
-										EndPos:    28,
-									},
-								},
-								Value: []byte("1"),
-							},
-							Stmts: []ast.Vertex{
-								&ast.StmtBreak{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 3,
-											EndLine:   3,
-											StartPos:  30,
-											EndPos:    36,
-										},
+										StartPos:  30,
+										EndPos:    36,
 									},
 								},
 							},
 						},
-						&ast.StmtCase{
+					},
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 4,
+								EndLine:   4,
+								StartPos:  40,
+								EndPos:    54,
+							},
+						},
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 4,
 									EndLine:   4,
-									StartPos:  40,
-									EndPos:    54,
+									StartPos:  45,
+									EndPos:    46,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
+							Value: []byte("2"),
+						},
+						Stmts: []ast.Vertex{
+							&ast.StmtBreak{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
-										StartPos:  45,
-										EndPos:    46,
-									},
-								},
-								Value: []byte("2"),
-							},
-							Stmts: []ast.Vertex{
-								&ast.StmtBreak{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 4,
-											EndLine:   4,
-											StartPos:  48,
-											EndPos:    54,
-										},
+										StartPos:  48,
+										EndPos:    54,
 									},
 								},
 							},
@@ -10355,78 +10345,68 @@ func TestStmtSwitch_Semicolon(t *testing.T) {
 					},
 					Value: []byte("1"),
 				},
-				CaseList: &ast.StmtCaseList{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 2,
-							EndLine:   5,
-							StartPos:  17,
-							EndPos:    59,
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 3,
+								EndLine:   3,
+								StartPos:  23,
+								EndPos:    37,
+							},
 						},
-					},
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 3,
 									EndLine:   3,
-									StartPos:  23,
-									EndPos:    37,
+									StartPos:  28,
+									EndPos:    29,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
+							Value: []byte("1"),
+						},
+						Stmts: []ast.Vertex{
+							&ast.StmtBreak{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 3,
 										EndLine:   3,
-										StartPos:  28,
-										EndPos:    29,
-									},
-								},
-								Value: []byte("1"),
-							},
-							Stmts: []ast.Vertex{
-								&ast.StmtBreak{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 3,
-											EndLine:   3,
-											StartPos:  31,
-											EndPos:    37,
-										},
+										StartPos:  31,
+										EndPos:    37,
 									},
 								},
 							},
 						},
-						&ast.StmtCase{
+					},
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 4,
+								EndLine:   4,
+								StartPos:  41,
+								EndPos:    55,
+							},
+						},
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 4,
 									EndLine:   4,
-									StartPos:  41,
-									EndPos:    55,
+									StartPos:  46,
+									EndPos:    47,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
+							Value: []byte("2"),
+						},
+						Stmts: []ast.Vertex{
+							&ast.StmtBreak{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
-										StartPos:  46,
-										EndPos:    47,
-									},
-								},
-								Value: []byte("2"),
-							},
-							Stmts: []ast.Vertex{
-								&ast.StmtBreak{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 4,
-											EndLine:   4,
-											StartPos:  49,
-											EndPos:    55,
-										},
+										StartPos:  49,
+										EndPos:    55,
 									},
 								},
 							},
@@ -10465,7 +10445,7 @@ func TestStmtSwitch_Alt(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtAltSwitch{
+			&ast.StmtSwitch{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 2,
@@ -10474,6 +10454,7 @@ func TestStmtSwitch_Alt(t *testing.T) {
 						EndPos:    65,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ScalarLnumber{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -10485,71 +10466,61 @@ func TestStmtSwitch_Alt(t *testing.T) {
 					},
 					Value: []byte("1"),
 				},
-				CaseList: &ast.StmtCaseList{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 3,
-							EndLine:   -1,
-							StartPos:  22,
-							EndPos:    -1,
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 3,
+								EndLine:   -1,
+								StartPos:  22,
+								EndPos:    -1,
+							},
 						},
-					},
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 3,
-									EndLine:   -1,
-									StartPos:  22,
-									EndPos:    -1,
+									EndLine:   3,
+									StartPos:  27,
+									EndPos:    28,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
-								Node: ast.Node{
-									Position: &position.Position{
-										StartLine: 3,
-										EndLine:   3,
-										StartPos:  27,
-										EndPos:    28,
-									},
-								},
-								Value: []byte("1"),
-							},
-							Stmts: []ast.Vertex{},
+							Value: []byte("1"),
 						},
-						&ast.StmtDefault{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 4,
-									EndLine:   -1,
-									StartPos:  33,
-									EndPos:    -1,
-								},
+						Stmts: []ast.Vertex{},
+					},
+					&ast.StmtDefault{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 4,
+								EndLine:   -1,
+								StartPos:  33,
+								EndPos:    -1,
 							},
-							Stmts: []ast.Vertex{},
 						},
-						&ast.StmtCase{
+						Stmts: []ast.Vertex{},
+					},
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 5,
+								EndLine:   -1,
+								StartPos:  45,
+								EndPos:    -1,
+							},
+						},
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 5,
-									EndLine:   -1,
-									StartPos:  45,
-									EndPos:    -1,
+									EndLine:   5,
+									StartPos:  50,
+									EndPos:    51,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
-								Node: ast.Node{
-									Position: &position.Position{
-										StartLine: 5,
-										EndLine:   5,
-										StartPos:  50,
-										EndPos:    51,
-									},
-								},
-								Value: []byte("2"),
-							},
-							Stmts: []ast.Vertex{},
+							Value: []byte("2"),
 						},
+						Stmts: []ast.Vertex{},
 					},
 				},
 			},
@@ -10583,7 +10554,7 @@ func TestStmtSwitch_AltSemicolon(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtAltSwitch{
+			&ast.StmtSwitch{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 2,
@@ -10592,6 +10563,7 @@ func TestStmtSwitch_AltSemicolon(t *testing.T) {
 						EndPos:    54,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ScalarLnumber{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -10603,60 +10575,50 @@ func TestStmtSwitch_AltSemicolon(t *testing.T) {
 					},
 					Value: []byte("1"),
 				},
-				CaseList: &ast.StmtCaseList{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 3,
-							EndLine:   -1,
-							StartPos:  23,
-							EndPos:    -1,
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 3,
+								EndLine:   -1,
+								StartPos:  23,
+								EndPos:    -1,
+							},
 						},
-					},
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 3,
-									EndLine:   -1,
-									StartPos:  23,
-									EndPos:    -1,
+									EndLine:   3,
+									StartPos:  28,
+									EndPos:    29,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
-								Node: ast.Node{
-									Position: &position.Position{
-										StartLine: 3,
-										EndLine:   3,
-										StartPos:  28,
-										EndPos:    29,
-									},
-								},
-								Value: []byte("1"),
-							},
-							Stmts: []ast.Vertex{},
+							Value: []byte("1"),
 						},
-						&ast.StmtCase{
+						Stmts: []ast.Vertex{},
+					},
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 4,
+								EndLine:   -1,
+								StartPos:  34,
+								EndPos:    -1,
+							},
+						},
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 4,
-									EndLine:   -1,
-									StartPos:  34,
-									EndPos:    -1,
+									EndLine:   4,
+									StartPos:  39,
+									EndPos:    40,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
-								Node: ast.Node{
-									Position: &position.Position{
-										StartLine: 4,
-										EndLine:   4,
-										StartPos:  39,
-										EndPos:    40,
-									},
-								},
-								Value: []byte("2"),
-							},
-							Stmts: []ast.Vertex{},
+							Value: []byte("2"),
 						},
+						Stmts: []ast.Vertex{},
 					},
 				},
 			},

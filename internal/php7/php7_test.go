@@ -7338,7 +7338,7 @@ func TestPhp7(t *testing.T) {
 					},
 				},
 			},
-			&ast.StmtAltSwitch{
+			&ast.StmtSwitch{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 122,
@@ -7347,6 +7347,7 @@ func TestPhp7(t *testing.T) {
 						EndPos:    2694,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ScalarLnumber{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -7358,75 +7359,65 @@ func TestPhp7(t *testing.T) {
 					},
 					Value: []byte("1"),
 				},
-				CaseList: &ast.StmtCaseList{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 123,
-							EndLine:   -1,
-							StartPos:  2651,
-							EndPos:    -1,
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 123,
+								EndLine:   -1,
+								StartPos:  2651,
+								EndPos:    -1,
+							},
 						},
-					},
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 123,
-									EndLine:   -1,
-									StartPos:  2651,
-									EndPos:    -1,
+									EndLine:   123,
+									StartPos:  2656,
+									EndPos:    2657,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
-								Node: ast.Node{
-									Position: &position.Position{
-										StartLine: 123,
-										EndLine:   123,
-										StartPos:  2656,
-										EndPos:    2657,
-									},
-								},
-								Value: []byte("1"),
-							},
-							Stmts: []ast.Vertex{},
+							Value: []byte("1"),
 						},
-						&ast.StmtDefault{
-							Node: ast.Node{
-								Position: &position.Position{
-									StartLine: 124,
-									EndLine:   -1,
-									StartPos:  2663,
-									EndPos:    -1,
-								},
+						Stmts: []ast.Vertex{},
+					},
+					&ast.StmtDefault{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 124,
+								EndLine:   -1,
+								StartPos:  2663,
+								EndPos:    -1,
 							},
-							Stmts: []ast.Vertex{},
 						},
-						&ast.StmtCase{
+						Stmts: []ast.Vertex{},
+					},
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 125,
+								EndLine:   -1,
+								StartPos:  2676,
+								EndPos:    -1,
+							},
+						},
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 125,
-									EndLine:   -1,
-									StartPos:  2676,
-									EndPos:    -1,
+									EndLine:   125,
+									StartPos:  2681,
+									EndPos:    2682,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
-								Node: ast.Node{
-									Position: &position.Position{
-										StartLine: 125,
-										EndLine:   125,
-										StartPos:  2681,
-										EndPos:    2682,
-									},
-								},
-								Value: []byte("2"),
-							},
-							Stmts: []ast.Vertex{},
+							Value: []byte("2"),
 						},
+						Stmts: []ast.Vertex{},
 					},
 				},
 			},
-			&ast.StmtAltSwitch{
+			&ast.StmtSwitch{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 128,
@@ -7435,6 +7426,7 @@ func TestPhp7(t *testing.T) {
 						EndPos:    2744,
 					},
 				},
+				Alt: true,
 				Cond: &ast.ScalarLnumber{
 					Node: ast.Node{
 						Position: &position.Position{
@@ -7446,60 +7438,50 @@ func TestPhp7(t *testing.T) {
 					},
 					Value: []byte("1"),
 				},
-				CaseList: &ast.StmtCaseList{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 129,
-							EndLine:   -1,
-							StartPos:  2714,
-							EndPos:    -1,
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 129,
+								EndLine:   -1,
+								StartPos:  2714,
+								EndPos:    -1,
+							},
 						},
-					},
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 129,
-									EndLine:   -1,
-									StartPos:  2714,
-									EndPos:    -1,
+									EndLine:   129,
+									StartPos:  2719,
+									EndPos:    2720,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
-								Node: ast.Node{
-									Position: &position.Position{
-										StartLine: 129,
-										EndLine:   129,
-										StartPos:  2719,
-										EndPos:    2720,
-									},
-								},
-								Value: []byte("1"),
-							},
-							Stmts: []ast.Vertex{},
+							Value: []byte("1"),
 						},
-						&ast.StmtCase{
+						Stmts: []ast.Vertex{},
+					},
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 130,
+								EndLine:   -1,
+								StartPos:  2726,
+								EndPos:    -1,
+							},
+						},
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 130,
-									EndLine:   -1,
-									StartPos:  2726,
-									EndPos:    -1,
+									EndLine:   130,
+									StartPos:  2731,
+									EndPos:    2732,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
-								Node: ast.Node{
-									Position: &position.Position{
-										StartLine: 130,
-										EndLine:   130,
-										StartPos:  2731,
-										EndPos:    2732,
-									},
-								},
-								Value: []byte("2"),
-							},
-							Stmts: []ast.Vertex{},
+							Value: []byte("2"),
 						},
+						Stmts: []ast.Vertex{},
 					},
 				},
 			},
@@ -7523,78 +7505,68 @@ func TestPhp7(t *testing.T) {
 					},
 					Value: []byte("1"),
 				},
-				CaseList: &ast.StmtCaseList{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 133,
-							EndLine:   136,
-							StartPos:  2757,
-							EndPos:    2798,
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 134,
+								EndLine:   134,
+								StartPos:  2763,
+								EndPos:    2777,
+							},
 						},
-					},
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 134,
 									EndLine:   134,
-									StartPos:  2763,
-									EndPos:    2777,
+									StartPos:  2768,
+									EndPos:    2769,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
+							Value: []byte("1"),
+						},
+						Stmts: []ast.Vertex{
+							&ast.StmtBreak{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 134,
 										EndLine:   134,
-										StartPos:  2768,
-										EndPos:    2769,
-									},
-								},
-								Value: []byte("1"),
-							},
-							Stmts: []ast.Vertex{
-								&ast.StmtBreak{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 134,
-											EndLine:   134,
-											StartPos:  2771,
-											EndPos:    2777,
-										},
+										StartPos:  2771,
+										EndPos:    2777,
 									},
 								},
 							},
 						},
-						&ast.StmtCase{
+					},
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 135,
+								EndLine:   135,
+								StartPos:  2782,
+								EndPos:    2796,
+							},
+						},
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 135,
 									EndLine:   135,
-									StartPos:  2782,
-									EndPos:    2796,
+									StartPos:  2787,
+									EndPos:    2788,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
+							Value: []byte("2"),
+						},
+						Stmts: []ast.Vertex{
+							&ast.StmtBreak{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 135,
 										EndLine:   135,
-										StartPos:  2787,
-										EndPos:    2788,
-									},
-								},
-								Value: []byte("2"),
-							},
-							Stmts: []ast.Vertex{
-								&ast.StmtBreak{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 135,
-											EndLine:   135,
-											StartPos:  2790,
-											EndPos:    2796,
-										},
+										StartPos:  2790,
+										EndPos:    2796,
 									},
 								},
 							},
@@ -7622,78 +7594,68 @@ func TestPhp7(t *testing.T) {
 					},
 					Value: []byte("1"),
 				},
-				CaseList: &ast.StmtCaseList{
-					Node: ast.Node{
-						Position: &position.Position{
-							StartLine: 138,
-							EndLine:   141,
-							StartPos:  2811,
-							EndPos:    2853,
+				CaseList: []ast.Vertex{
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 139,
+								EndLine:   139,
+								StartPos:  2818,
+								EndPos:    2832,
+							},
 						},
-					},
-					Cases: []ast.Vertex{
-						&ast.StmtCase{
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 139,
 									EndLine:   139,
-									StartPos:  2818,
-									EndPos:    2832,
+									StartPos:  2823,
+									EndPos:    2824,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
+							Value: []byte("1"),
+						},
+						Stmts: []ast.Vertex{
+							&ast.StmtBreak{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 139,
 										EndLine:   139,
-										StartPos:  2823,
-										EndPos:    2824,
-									},
-								},
-								Value: []byte("1"),
-							},
-							Stmts: []ast.Vertex{
-								&ast.StmtBreak{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 139,
-											EndLine:   139,
-											StartPos:  2826,
-											EndPos:    2832,
-										},
+										StartPos:  2826,
+										EndPos:    2832,
 									},
 								},
 							},
 						},
-						&ast.StmtCase{
+					},
+					&ast.StmtCase{
+						Node: ast.Node{
+							Position: &position.Position{
+								StartLine: 140,
+								EndLine:   140,
+								StartPos:  2837,
+								EndPos:    2851,
+							},
+						},
+						Cond: &ast.ScalarLnumber{
 							Node: ast.Node{
 								Position: &position.Position{
 									StartLine: 140,
 									EndLine:   140,
-									StartPos:  2837,
-									EndPos:    2851,
+									StartPos:  2842,
+									EndPos:    2843,
 								},
 							},
-							Cond: &ast.ScalarLnumber{
+							Value: []byte("2"),
+						},
+						Stmts: []ast.Vertex{
+							&ast.StmtBreak{
 								Node: ast.Node{
 									Position: &position.Position{
 										StartLine: 140,
 										EndLine:   140,
-										StartPos:  2842,
-										EndPos:    2843,
-									},
-								},
-								Value: []byte("2"),
-							},
-							Stmts: []ast.Vertex{
-								&ast.StmtBreak{
-									Node: ast.Node{
-										Position: &position.Position{
-											StartLine: 140,
-											EndLine:   140,
-											StartPos:  2845,
-											EndPos:    2851,
-										},
+										StartPos:  2845,
+										EndPos:    2851,
 									},
 								},
 							},

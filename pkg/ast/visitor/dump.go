@@ -258,12 +258,6 @@ func (v *Dump) StmtAltForeach(n *ast.StmtAltForeach) {
 	v.printNode(n.GetNode())
 }
 
-func (v *Dump) StmtAltSwitch(n *ast.StmtAltSwitch) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtAltSwitch{\n")
-	v.printNode(n.GetNode())
-}
-
 func (v *Dump) StmtBreak(n *ast.StmtBreak) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtBreak{\n")
@@ -273,12 +267,6 @@ func (v *Dump) StmtBreak(n *ast.StmtBreak) {
 func (v *Dump) StmtCase(n *ast.StmtCase) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtCase{\n")
-	v.printNode(n.GetNode())
-}
-
-func (v *Dump) StmtCaseList(n *ast.StmtCaseList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtCaseList{\n")
 	v.printNode(n.GetNode())
 }
 
@@ -540,6 +528,11 @@ func (v *Dump) StmtSwitch(n *ast.StmtSwitch) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtSwitch{\n")
 	v.printNode(n.GetNode())
+
+	if n.Alt {
+		v.printIndent(v.indent)
+		v.print("Alt: true,\n")
+	}
 }
 
 func (v *Dump) StmtThrow(n *ast.StmtThrow) {
