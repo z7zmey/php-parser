@@ -163,3 +163,13 @@ func (v *FilterTokens) StmtDefault(n *ast.StmtDefault) {
 	n.DefaultTkn = nil
 	n.CaseSeparatorTkn = nil
 }
+
+func (v *FilterTokens) StmtBreak(n *ast.StmtBreak) {
+	n.BreakTkn = nil
+	n.SemiColonTkn = nil
+}
+
+func (v *FilterTokens) StmtContinue(n *ast.StmtContinue) {
+	n.ContinueTkn = nil
+	n.SemiColonTkn = nil
+}

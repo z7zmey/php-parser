@@ -919,27 +919,25 @@ statement:
             }
     |   T_BREAK optional_expr ';'
             {
-                $$ = &ast.StmtBreak{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = &ast.StmtBreak{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    BreakTkn:     $1,
+                    Expr:         $2,
+                    SemiColonTkn: $3,
+                }
             }
     |   T_CONTINUE optional_expr ';'
             {
-                $$ = &ast.StmtContinue{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = &ast.StmtContinue{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    ContinueTkn:  $1,
+                    Expr:         $2,
+                    SemiColonTkn: $3,
+                }
             }
     |   T_RETURN optional_expr ';'
             {

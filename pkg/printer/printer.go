@@ -2017,25 +2017,15 @@ func (p *Printer) printStmtAltForeach(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtBreak(n ast.Vertex) {
-	nn := n.(*ast.StmtBreak)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtBreak(n *ast.StmtBreak) {
+	p.printToken(n.BreakTkn, "break")
 
-	io.WriteString(p.w, "break")
-	if nn.Expr != nil {
-		if nn.Expr.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-		p.Print(nn.Expr)
-	}
-	p.printFreeFloating(nn, token.Expr)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+	if n.Expr != nil {
+		p.bufStart = " "
 	}
 
-	p.printFreeFloating(nn, token.End)
+	p.Print(n.Expr)
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtCase(n *ast.StmtCase) {
@@ -2202,26 +2192,15 @@ func (p *Printer) printStmtConstant(n *ast.StmtConstant) {
 	p.printToken(n.CommaTkn, "")
 }
 
-func (p *Printer) printStmtContinue(n ast.Vertex) {
-	nn := n.(*ast.StmtContinue)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtContinue(n *ast.StmtContinue) {
+	p.printToken(n.ContinueTkn, "continue")
 
-	io.WriteString(p.w, "continue")
-
-	if nn.Expr != nil {
-		if nn.Expr.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
-		p.Print(nn.Expr)
-	}
-	p.printFreeFloating(nn, token.Expr)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+	if n.Expr != nil {
+		p.bufStart = " "
 	}
 
-	p.printFreeFloating(nn, token.End)
+	p.Print(n.Expr)
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtDeclare(n ast.Vertex) {

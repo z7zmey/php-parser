@@ -191,7 +191,9 @@ func (n *StmtAltForeach) Accept(v NodeVisitor) {
 // StmtBreak node
 type StmtBreak struct {
 	Node
-	Expr Vertex
+	BreakTkn     *token.Token
+	Expr         Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtBreak) Accept(v NodeVisitor) {
@@ -314,7 +316,9 @@ func (n *StmtConstant) Accept(v NodeVisitor) {
 // StmtContinue node
 type StmtContinue struct {
 	Node
-	Expr Vertex
+	ContinueTkn  *token.Token
+	Expr         Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtContinue) Accept(v NodeVisitor) {

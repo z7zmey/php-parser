@@ -950,7 +950,8 @@ func TestParseAndPrintAltWhile(t *testing.T) {
 }
 
 func TestParseAndPrintBreak(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 
 	break ;
 	break 1 ;
@@ -1029,7 +1030,8 @@ func TestParseAndPrintConstList(t *testing.T) {
 }
 
 func TestParseAndPrintContinue(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 
 	continue ;
 	continue 1 ;

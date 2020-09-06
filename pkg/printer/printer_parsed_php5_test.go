@@ -837,7 +837,8 @@ func TestParseAndPrintPhp5AltWhile(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Break(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 
 	break ;
 	break 1 ;
@@ -913,7 +914,8 @@ func TestParseAndPrintPhp5ConstList(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Continue(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 
 	continue ;
 	continue 1 ;
