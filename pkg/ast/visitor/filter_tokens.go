@@ -173,3 +173,8 @@ func (v *FilterTokens) StmtContinue(n *ast.StmtContinue) {
 	n.ContinueTkn = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtReturn(n *ast.StmtReturn) {
+	n.ReturnTkn = nil
+	n.SemiColonTkn = nil
+}

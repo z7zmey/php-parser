@@ -2690,21 +2690,15 @@ func (p *Printer) printStmtProperty(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtReturn(n ast.Vertex) {
-	nn := n.(*ast.StmtReturn)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtReturn(n *ast.StmtReturn) {
+	p.printToken(n.ReturnTkn, "return")
 
-	io.WriteString(p.w, "return")
-	p.bufStart = " "
-	p.Print(nn.Expr)
-	p.printFreeFloating(nn, token.Expr)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+	if n.Expr != nil {
+		p.bufStart = " "
 	}
+	p.Print(n.Expr)
 
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtStaticVar(n ast.Vertex) {

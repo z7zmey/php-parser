@@ -618,7 +618,9 @@ func (n *StmtPropertyList) Accept(v NodeVisitor) {
 // StmtReturn node
 type StmtReturn struct {
 	Node
-	Expr Vertex
+	ReturnTkn    *token.Token
+	Expr         Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtReturn) Accept(v NodeVisitor) {

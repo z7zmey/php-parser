@@ -941,15 +941,14 @@ statement:
             }
     |   T_RETURN optional_expr ';'
             {
-                $$ = &ast.StmtReturn{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = &ast.StmtReturn{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    ReturnTkn:    $1,
+                    Expr:         $2,
+                    SemiColonTkn: $3,
+                }
             }
     |   T_GLOBAL global_var_list ';'
             {
