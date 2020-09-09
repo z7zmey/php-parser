@@ -178,3 +178,19 @@ func (v *FilterTokens) StmtReturn(n *ast.StmtReturn) {
 	n.ReturnTkn = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtGlobal(n *ast.StmtGlobal) {
+	n.GlobalTkn = nil
+	n.SeparatorTkns = nil
+	n.SemiColonTkn = nil
+}
+
+func (v *FilterTokens) StmtStatic(n *ast.StmtStatic) {
+	n.StaticTkn = nil
+	n.SeparatorTkns = nil
+	n.SemiColonTkn = nil
+}
+
+func (v *FilterTokens) StmtStaticVar(n *ast.StmtStaticVar) {
+	n.EqualTkn = nil
+}

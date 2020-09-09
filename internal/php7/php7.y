@@ -241,8 +241,8 @@ import (
 %type <node> const_decl inner_statement
 %type <node> expr optional_expr
 %type <node> declare_statement finally_statement unset_variable variable
-%type <node> parameter optional_type argument expr_without_variable global_var
-%type <node> static_var class_statement trait_adaptation trait_precedence trait_alias
+%type <node> parameter optional_type argument expr_without_variable global_var_list global_var
+%type <node> static_var_list static_var class_statement trait_adaptation trait_precedence trait_alias
 %type <node> absolute_trait_method_reference trait_method_reference property echo_expr
 %type <node> new_expr anonymous_class class_name class_name_reference simple_variable
 %type <node> internal_functions_in_yacc
@@ -275,8 +275,8 @@ import (
 
 
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
-%type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
-%type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
+%type <list> const_list echo_expr_list for_exprs non_empty_for_exprs
+%type <list> unprefixed_use_declarations inline_use_declarations property_list
 %type <list> case_list trait_adaptation_list unset_variables
 %type <list> use_declarations lexical_var_list isset_variables non_empty_array_pair_list
 %type <list> array_pair_list non_empty_argument_list top_statement_list
@@ -952,27 +952,21 @@ statement:
             }
     |   T_GLOBAL global_var_list ';'
             {
-                $$ = &ast.StmtGlobal{ast.Node{}, $2}
+                $2.(*ast.StmtGlobal).GlobalTkn = $1
+                $2.(*ast.StmtGlobal).SemiColonTkn = $3
+                $2.(*ast.StmtGlobal).SeparatorTkns = append($2.(*ast.StmtGlobal).SeparatorTkns, nil)
+                $2.(*ast.StmtGlobal).Node.Position = position.NewTokensPosition($1, $3)
 
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.VarList, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = $2
             }
     |   T_STATIC static_var_list ';'
             {
-                $$ = &ast.StmtStatic{ast.Node{}, $2}
+                $2.(*ast.StmtStatic).StaticTkn = $1
+                $2.(*ast.StmtStatic).SemiColonTkn = $3
+                $2.(*ast.StmtStatic).SeparatorTkns = append($2.(*ast.StmtStatic).SeparatorTkns, nil)
+                $2.(*ast.StmtStatic).Node.Position = position.NewTokensPosition($1, $3)
 
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.VarList, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = $2
             }
     |   T_ECHO echo_expr_list ';'
             {
@@ -2063,14 +2057,16 @@ argument:
 global_var_list:
         global_var_list ',' global_var
             {
-                $$ = append($1, $3)
+                $1.(*ast.StmtGlobal).Vars = append($1.(*ast.StmtGlobal).Vars, $3)
+                $1.(*ast.StmtGlobal).SeparatorTkns = append($1.(*ast.StmtGlobal).SeparatorTkns, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   global_var
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.StmtGlobal{
+                    Vars: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -2084,14 +2080,16 @@ global_var:
 static_var_list:
         static_var_list ',' static_var
             {
-                $$ = append($1, $3)
+                $1.(*ast.StmtStatic).Vars = append($1.(*ast.StmtStatic).Vars, $3)
+                $1.(*ast.StmtStatic).SeparatorTkns = append($1.(*ast.StmtStatic).SeparatorTkns, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   static_var
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.StmtStatic{
+                    Vars: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -2100,30 +2098,40 @@ static_var:
             {
                 identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.StmtStaticVar{ast.Node{}, variable, nil}
+
+                $$ = &ast.StmtStaticVar{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    Var: variable,
+                }
 
                 // save position
                 identifier.GetNode().Position = position.NewTokenPosition($1)
                 variable.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokenPosition($1)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(variable, token.Start, $1.SkippedTokens)
             }
     |   T_VARIABLE '=' expr
             {
                 identifier := &ast.Identifier{ast.Node{}, $1.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.StmtStaticVar{ast.Node{}, variable, $3}
+                $$ = &ast.StmtStaticVar{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $3),
+                    },
+                    Var:      variable,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
 
                 // save position
                 identifier.GetNode().Position = position.NewTokenPosition($1)
                 variable.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(variable, token.Start, $1.SkippedTokens)
             }
 ;
 

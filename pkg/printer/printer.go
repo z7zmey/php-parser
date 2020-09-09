@@ -65,6 +65,26 @@ func (p *Printer) joinPrintRefactored(glue string, nn []ast.Vertex) {
 	}
 }
 
+func (p *Printer) printSeparatedList(nodeList []ast.Vertex, separatorList []*token.Token, def string) {
+	var separators []*token.Token
+
+	if cap(separatorList) >= len(nodeList) {
+		separators = separatorList[:len(nodeList)]
+	} else {
+		separators = make([]*token.Token, len(nodeList))
+		copy(separators, separatorList)
+	}
+
+	for k, n := range nodeList {
+		p.Print(n)
+		if k < len(nodeList)-1 {
+			p.printToken(separators[k], def)
+		} else {
+			p.printToken(separators[k], "")
+		}
+	}
+}
+
 func (p *Printer) printNodes(nn []ast.Vertex) {
 	for _, n := range nn {
 		p.Print(n)
@@ -2476,20 +2496,11 @@ func (p *Printer) printStmtFunction(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtGlobal(n ast.Vertex) {
-	nn := n.(*ast.StmtGlobal)
-	p.printFreeFloating(nn, token.Start)
-
-	io.WriteString(p.w, "global")
-	p.joinPrint(",", nn.Vars)
-	p.printFreeFloating(nn, token.VarList)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtGlobal(n *ast.StmtGlobal) {
+	p.printToken(n.GlobalTkn, "global")
+	p.bufStart = " "
+	p.printSeparatedList(n.Vars, n.SeparatorTkns, ",")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtGoto(n ast.Vertex) {
@@ -2701,35 +2712,20 @@ func (p *Printer) printStmtReturn(n *ast.StmtReturn) {
 	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtStaticVar(n ast.Vertex) {
-	nn := n.(*ast.StmtStaticVar)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtStaticVar(n *ast.StmtStaticVar) {
+	p.Print(n.Var)
 
-	p.Print(nn.Var)
-
-	if nn.Expr != nil {
-		p.printFreeFloating(nn, token.Var)
-		io.WriteString(p.w, "=")
-		p.Print(nn.Expr)
+	if n.Expr != nil {
+		p.printToken(n.EqualTkn, "=")
+		p.Print(n.Expr)
 	}
-
-	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtStatic(n ast.Vertex) {
-	nn := n.(*ast.StmtStatic)
-	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "static")
-
-	p.joinPrint(",", nn.Vars)
-	p.printFreeFloating(nn, token.VarList)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtStatic(n *ast.StmtStatic) {
+	p.printToken(n.StaticTkn, "static")
+	p.bufStart = " "
+	p.printSeparatedList(n.Vars, n.SeparatorTkns, ",")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtStmtList(n *ast.StmtStmtList) {

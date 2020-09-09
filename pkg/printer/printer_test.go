@@ -3658,7 +3658,7 @@ func TestPrinterPrintStmtGlobal(t *testing.T) {
 		},
 	})
 
-	expected := `global$a,$b;`
+	expected := `global $a,$b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -4029,7 +4029,7 @@ func TestPrinterPrintStatic(t *testing.T) {
 		},
 	})
 
-	expected := `static$a,$b;`
+	expected := `static $a,$b;`
 	actual := o.String()
 
 	if expected != actual {

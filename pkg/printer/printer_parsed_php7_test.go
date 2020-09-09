@@ -1154,7 +1154,8 @@ func TestParseAndPrintFunction(t *testing.T) {
 }
 
 func TestParseAndPrintGlobal(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	global $a , $b ;`
 
 	actual := print(parse(src))
@@ -1341,7 +1342,8 @@ func TestParseAndPrintReturn(t *testing.T) {
 }
 
 func TestParseAndPrintStaticVar(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	static $a , $b = foo ( ) ;
 	`
 

@@ -476,7 +476,10 @@ func (n *StmtFunction) Accept(v NodeVisitor) {
 // StmtGlobal node
 type StmtGlobal struct {
 	Node
-	Vars []Vertex
+	GlobalTkn     *token.Token
+	Vars          []Vertex
+	SeparatorTkns []*token.Token
+	SemiColonTkn  *token.Token
 }
 
 func (n *StmtGlobal) Accept(v NodeVisitor) {
@@ -630,7 +633,10 @@ func (n *StmtReturn) Accept(v NodeVisitor) {
 // StmtStatic node
 type StmtStatic struct {
 	Node
-	Vars []Vertex
+	StaticTkn     *token.Token
+	Vars          []Vertex
+	SeparatorTkns []*token.Token
+	SemiColonTkn  *token.Token
 }
 
 func (n *StmtStatic) Accept(v NodeVisitor) {
@@ -640,8 +646,9 @@ func (n *StmtStatic) Accept(v NodeVisitor) {
 // StmtStaticVar node
 type StmtStaticVar struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *StmtStaticVar) Accept(v NodeVisitor) {

@@ -1036,7 +1036,8 @@ func TestParseAndPrintPhp5Function(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Global(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	global $a , $b ;`
 
 	actual := printPhp5(parsePhp5(src))
@@ -1208,7 +1209,8 @@ func TestParseAndPrintPhp5Return(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5StaticVar(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	static $a , $b = ' ' ;
 	`
 
@@ -1363,7 +1365,8 @@ func TestParseAndPrintPhp5While(t *testing.T) {
 // other
 
 func TestParseAndPrintPhp5Parentheses(t *testing.T) {
-	src := `<?php
+	// TODO: remove ; after <?php
+	src := `<?php ;
 	global $ { $b } ;
 	$b = (($a));
 	$b = ( ($a) );
