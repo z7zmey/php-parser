@@ -45,7 +45,6 @@ func TestParseAndPrintPhp5Root(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Identifier(t *testing.T) {
-	// TODO: remove ; after <?php
 	src := `<? ;
 	/* Foo */
 	Foo ( ) ;
@@ -73,8 +72,7 @@ func TestParseAndPrintPhp5Parameter(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Argument(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	foo ( $a , $b
 		, $c
 	) ; `
@@ -89,8 +87,7 @@ func TestParseAndPrintPhp5Argument(t *testing.T) {
 // test name
 
 func TestParseAndPrintPhp5Names(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	foo ( ) ;
 	\ foo ( ) ;
 	namespace \ foo ( ) ;
@@ -169,8 +166,7 @@ func TestParseAndPrintPhp5String(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Heredoc(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	foo(<<<EAP
 test
 EAP
@@ -291,8 +287,7 @@ func TestParseAndPrintPhp5Cast(t *testing.T) {
 // test expr
 
 func TestParseAndPrintPhp5ArrayDimFetch(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	FOO [ ] ;
 	FOO [ 1 ] ;
 	$a [ ] ;
@@ -418,8 +413,7 @@ func TestParseAndPrintPhp5Closure(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5ConstFetch(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	null ;
 	`
 
@@ -485,8 +479,7 @@ func TestParseAndPrintPhp5Exit(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5FunctionCall(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	foo ( ) ;
 	$var ( $a , ... $b , $c ) ;
 	`
@@ -556,8 +549,7 @@ func TestParseAndPrintPhp5MethodCall(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5New(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 
 	new Foo ;
 
@@ -670,8 +662,7 @@ func TestParseAndPrintPhp5ShortArray(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5StaticCall(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	Foo :: bar ( $a , $b ) ;`
 
 	actual := printPhp5(parsePhp5(src))
@@ -682,8 +673,7 @@ func TestParseAndPrintPhp5StaticCall(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5StaticPropertyFetch(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	Foo :: $bar ;`
 
 	actual := printPhp5(parsePhp5(src))
@@ -743,8 +733,7 @@ func TestParseAndPrintPhp5Yield(t *testing.T) {
 // test stmt
 
 func TestParseAndPrintPhp5AltIf(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	if ( 1 ) :
 		// do nothing
 	elseif ( 2 ) :
@@ -762,8 +751,7 @@ func TestParseAndPrintPhp5AltIf(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5AltFor(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	for ( $a ; $b ; $c ) :
 	endfor ;
 	
@@ -791,8 +779,7 @@ func TestParseAndPrintPhp5AltForeach(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5AltSwitch(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 
 	switch ( $a ) : 
 	case 1 : 
@@ -822,8 +809,7 @@ func TestParseAndPrintPhp5AltSwitch(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5AltWhile(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 
 	while ( $a ) :
 		// do nothing
@@ -837,8 +823,7 @@ func TestParseAndPrintPhp5AltWhile(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Break(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 
 	break ;
 	break 1 ;
@@ -901,8 +886,7 @@ func TestParseAndPrintPhp5ClassConstList(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5ConstList(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	const FOO = 1 , BAR = 2 ;
 	`
 
@@ -914,8 +898,7 @@ func TestParseAndPrintPhp5ConstList(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Continue(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 
 	continue ;
 	continue 1 ;
@@ -949,8 +932,7 @@ func TestParseAndPrintPhp5Declare(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5DoWhile(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	do {
 		;
 	} while ( $a ) ;
@@ -992,8 +974,7 @@ func TestParseAndPrintPhp5IfExpression(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5For(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	for ( $i = 0 ; $i < 3 ; $i ++ ) 
 		echo $i . PHP_EOL;
 	
@@ -1036,8 +1017,7 @@ func TestParseAndPrintPhp5Function(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Global(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	global $a , $b ;`
 
 	actual := printPhp5(parsePhp5(src))
@@ -1059,8 +1039,7 @@ func TestParseAndPrintPhp5Goto(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5HaltCompiler(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	__halt_compiler ( ) ;
 	this text is ignored by parser
 	`
@@ -1073,8 +1052,7 @@ func TestParseAndPrintPhp5HaltCompiler(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5IfElseIfElse(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	if ( 1 ) ;
 	elseif ( 2 ) {
 		;
@@ -1137,8 +1115,7 @@ func TestParseAndPrintPhp5GotoLabel(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Namespace(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	namespace Foo \ Bar ; 
 	namespace Baz {
 
@@ -1156,7 +1133,7 @@ func TestParseAndPrintPhp5Namespace(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Nop(t *testing.T) {
-	src := `<?php ; `
+	src := `<?php `
 
 	actual := printPhp5(parsePhp5(src))
 
@@ -1209,8 +1186,7 @@ func TestParseAndPrintPhp5Return(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5StaticVar(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	static $a , $b = ' ' ;
 	`
 
@@ -1222,8 +1198,7 @@ func TestParseAndPrintPhp5StaticVar(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5StmtList(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	{
 		;
 	}
@@ -1237,8 +1212,7 @@ func TestParseAndPrintPhp5StmtList(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5Switch(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 
 	switch ( $a ) {
 		case 1 : ;
@@ -1332,8 +1306,7 @@ func TestParseAndPrintPhp5Unset(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5UseList(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	use Foo ;
 	use \ Foo as Bar ;
 	use function \ Foo as Bar ;
@@ -1348,8 +1321,7 @@ func TestParseAndPrintPhp5UseList(t *testing.T) {
 }
 
 func TestParseAndPrintPhp5While(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	while ( $a ) echo '' ;
 	while ( $a ) { }
 	while ( $a ) ;
@@ -1365,8 +1337,7 @@ func TestParseAndPrintPhp5While(t *testing.T) {
 // other
 
 func TestParseAndPrintPhp5Parentheses(t *testing.T) {
-	// TODO: remove ; after <?php
-	src := `<?php ;
+	src := `<?php
 	global $ { $b } ;
 	$b = (($a));
 	$b = ( ($a) );

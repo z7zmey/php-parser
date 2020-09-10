@@ -249,7 +249,7 @@ import (
 %type <node> exit_expr scalar lexical_var function_call member_name property_name
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
-%type <node> encaps_var encaps_var_offset
+%type <node> encaps_var encaps_var_offset echo_expr_list
 %type <node> if_stmt
 %type <node> alt_if_stmt
 %type <node> if_stmt_without_else
@@ -275,7 +275,7 @@ import (
 
 
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
-%type <list> const_list echo_expr_list for_exprs non_empty_for_exprs
+%type <list> const_list for_exprs non_empty_for_exprs
 %type <list> unprefixed_use_declarations inline_use_declarations property_list
 %type <list> case_list trait_adaptation_list unset_variables
 %type <list> use_declarations lexical_var_list isset_variables non_empty_array_pair_list
@@ -954,7 +954,6 @@ statement:
             {
                 $2.(*ast.StmtGlobal).GlobalTkn = $1
                 $2.(*ast.StmtGlobal).SemiColonTkn = $3
-                $2.(*ast.StmtGlobal).SeparatorTkns = append($2.(*ast.StmtGlobal).SeparatorTkns, nil)
                 $2.(*ast.StmtGlobal).Node.Position = position.NewTokensPosition($1, $3)
 
                 $$ = $2
@@ -963,23 +962,17 @@ statement:
             {
                 $2.(*ast.StmtStatic).StaticTkn = $1
                 $2.(*ast.StmtStatic).SemiColonTkn = $3
-                $2.(*ast.StmtStatic).SeparatorTkns = append($2.(*ast.StmtStatic).SeparatorTkns, nil)
                 $2.(*ast.StmtStatic).Node.Position = position.NewTokensPosition($1, $3)
 
                 $$ = $2
             }
     |   T_ECHO echo_expr_list ';'
             {
-                $$ = &ast.StmtEcho{ast.Node{}, $2}
+                $2.(*ast.StmtEcho).EchoTkn = $1
+                $2.(*ast.StmtEcho).SemiColonTkn = $3
+                $2.(*ast.StmtEcho).Node.Position = position.NewTokensPosition($1, $3)
 
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Echo, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = $2
             }
     |   T_INLINE_HTML
             {
@@ -2629,14 +2622,16 @@ const_decl:
 echo_expr_list:
         echo_expr_list ',' echo_expr
             {
-                $$ = append($1, $3)
+                $1.(*ast.StmtEcho).Exprs = append($1.(*ast.StmtEcho).Exprs, $3)
+                $1.(*ast.StmtEcho).SeparatorTkns = append($1.(*ast.StmtEcho).SeparatorTkns, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   echo_expr
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.StmtEcho{
+                    Exprs: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -3061,7 +3056,6 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
                 yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '+' expr

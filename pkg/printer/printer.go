@@ -1,6 +1,7 @@
 package printer
 
 import (
+	"bytes"
 	"io"
 	"strings"
 
@@ -16,9 +17,10 @@ const (
 )
 
 type Printer struct {
-	w        io.Writer
-	s        printerState
-	bufStart string
+	w         io.Writer
+	s         printerState
+	bufStart  string
+	lastWrite []byte
 }
 
 // NewPrinter - Constructor for Printer
@@ -32,12 +34,17 @@ func (p *Printer) SetState(s printerState) {
 	p.s = s
 }
 
+func (p *Printer) write(b []byte) {
+	p.lastWrite = b
+	p.w.Write(b)
+}
+
 func (p *Printer) Print(n ast.Vertex) {
 	_, isRoot := n.(*ast.Root)
 	_, isInlineHtml := n.(*ast.StmtInlineHtml)
 	if p.s == HtmlState && !isInlineHtml && !isRoot {
 		if n.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, "<?php ")
+			p.bufStart = "<?php "
 		}
 		p.SetState(PhpState)
 	}
@@ -48,7 +55,7 @@ func (p *Printer) Print(n ast.Vertex) {
 func (p *Printer) joinPrint(glue string, nn []ast.Vertex) {
 	for k, n := range nn {
 		if k > 0 {
-			io.WriteString(p.w, glue)
+			p.write([]byte(glue))
 		}
 
 		p.Print(n)
@@ -97,28 +104,28 @@ func (p *Printer) printFreeFloatingOrDefault(n ast.Vertex, pos token.Position, d
 	}
 
 	if len(n.GetNode().Tokens[pos]) == 0 {
-		io.WriteString(p.w, def)
+		p.write([]byte(def))
 		return
 	}
 
 	for _, m := range n.GetNode().Tokens[pos] {
-		io.WriteString(p.w, string(m.Value))
+		p.write(m.Value)
 	}
 }
 
 func (p *Printer) printToken(t *token.Token, def string) {
 	if t != nil {
-		p.w.Write(t.Skipped)
-		p.w.Write(t.Value)
+		p.write(t.Skipped)
+		p.write(t.Value)
 		p.bufStart = ""
 		return
 	}
 
 	if def != "" {
-		p.w.Write([]byte(p.bufStart))
+		p.write([]byte(p.bufStart))
 		p.bufStart = ""
 
-		p.w.Write([]byte(def))
+		p.write([]byte(def))
 		return
 	}
 }
@@ -129,7 +136,7 @@ func (p *Printer) printFreeFloating(n ast.Vertex, pos token.Position) {
 	}
 
 	for _, m := range n.GetNode().Tokens[pos] {
-		io.WriteString(p.w, string(m.Value))
+		p.write(m.Value)
 	}
 }
 
@@ -503,7 +510,7 @@ func (p *Printer) printNodeIdentifier(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	io.WriteString(p.w, string(nn.Value))
+	p.write(nn.Value)
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -512,7 +519,7 @@ func (p *Printer) printNodeReference(n ast.Vertex) {
 	nn := n.(*ast.Reference)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "&")
+	p.write([]byte("&"))
 	p.Print(nn.Var)
 
 	p.printFreeFloating(nn, token.End)
@@ -522,7 +529,7 @@ func (p *Printer) printNodeVariadic(n ast.Vertex) {
 	nn := n.(*ast.Variadic)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "...")
+	p.write([]byte("..."))
 	p.Print(nn.Var)
 
 	p.printFreeFloating(nn, token.End)
@@ -539,7 +546,7 @@ func (p *Printer) printNodeParameter(n ast.Vertex) {
 	p.Print(nn.Var)
 
 	if nn.DefaultValue != nil {
-		io.WriteString(p.w, "=")
+		p.write([]byte("="))
 		p.Print(nn.DefaultValue)
 	}
 
@@ -550,7 +557,7 @@ func (p *Printer) printNodeNullable(n ast.Vertex) {
 	nn := n.(*ast.Nullable)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "?")
+	p.write([]byte("?"))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -561,12 +568,12 @@ func (p *Printer) printNodeArgument(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	if nn.IsReference {
-		io.WriteString(p.w, "&")
+		p.write([]byte("&"))
 	}
 	p.printFreeFloating(nn, token.Ampersand)
 
 	if nn.Variadic {
-		io.WriteString(p.w, "...")
+		p.write([]byte("..."))
 	}
 
 	p.Print(nn.Expr)
@@ -615,7 +622,7 @@ func (p *Printer) printScalarLNumber(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	io.WriteString(p.w, string(nn.Value))
+	p.write(nn.Value)
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -625,7 +632,7 @@ func (p *Printer) printScalarDNumber(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	io.WriteString(p.w, string(nn.Value))
+	p.write(nn.Value)
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -635,7 +642,7 @@ func (p *Printer) printScalarString(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	io.WriteString(p.w, string(nn.Value))
+	p.write(nn.Value)
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -645,7 +652,7 @@ func (p *Printer) printScalarEncapsedStringPart(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	io.WriteString(p.w, string(nn.Value))
+	p.write(nn.Value)
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -655,7 +662,7 @@ func (p *Printer) printScalarEncapsed(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	io.WriteString(p.w, "\"")
+	p.write([]byte("\""))
 	for _, part := range nn.Parts {
 		switch part.(type) {
 		case *ast.ExprArrayDimFetch:
@@ -676,7 +683,7 @@ func (p *Printer) printScalarEncapsed(n ast.Vertex) {
 			p.Print(part)
 		}
 	}
-	io.WriteString(p.w, "\"")
+	p.write([]byte("\""))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -686,7 +693,7 @@ func (p *Printer) printScalarHeredoc(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	io.WriteString(p.w, string(nn.Label))
+	p.write(nn.Label)
 
 	for _, part := range nn.Parts {
 		switch part.(type) {
@@ -709,7 +716,7 @@ func (p *Printer) printScalarHeredoc(n ast.Vertex) {
 		}
 	}
 
-	io.WriteString(p.w, strings.Trim(string(nn.Label), "<\"'\n"))
+	p.write([]byte(strings.Trim(string(nn.Label), "<\"'\n")))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -719,7 +726,7 @@ func (p *Printer) printScalarMagicConstant(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	io.WriteString(p.w, string(nn.Value))
+	p.write(nn.Value)
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -731,7 +738,7 @@ func (p *Printer) printAssign(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "=")
+	p.write([]byte("="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -742,9 +749,9 @@ func (p *Printer) printAssignReference(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "=")
+	p.write([]byte("="))
 	p.printFreeFloating(nn, token.Equal)
-	io.WriteString(p.w, "&")
+	p.write([]byte("&"))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -755,8 +762,8 @@ func (p *Printer) printAssignBitwiseAnd(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "&")
-	io.WriteString(p.w, "=")
+	p.write([]byte("&"))
+	p.write([]byte("="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -767,7 +774,7 @@ func (p *Printer) printAssignBitwiseOr(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "|=")
+	p.write([]byte("|="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -778,7 +785,7 @@ func (p *Printer) printAssignBitwiseXor(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "^=")
+	p.write([]byte("^="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -789,7 +796,7 @@ func (p *Printer) printAssignCoalesce(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "??=")
+	p.write([]byte("??="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -800,7 +807,7 @@ func (p *Printer) printAssignConcat(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, ".=")
+	p.write([]byte(".="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -811,7 +818,7 @@ func (p *Printer) printAssignDiv(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "/=")
+	p.write([]byte("/="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -822,7 +829,7 @@ func (p *Printer) printAssignMinus(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "-=")
+	p.write([]byte("-="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -833,7 +840,7 @@ func (p *Printer) printAssignMod(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "%=")
+	p.write([]byte("%="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -844,7 +851,7 @@ func (p *Printer) printAssignMul(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "*=")
+	p.write([]byte("*="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -855,7 +862,7 @@ func (p *Printer) printAssignPlus(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "+=")
+	p.write([]byte("+="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -866,7 +873,7 @@ func (p *Printer) printAssignPow(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "**=")
+	p.write([]byte("**="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -877,7 +884,7 @@ func (p *Printer) printAssignShiftLeft(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "<<=")
+	p.write([]byte("<<="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -888,7 +895,7 @@ func (p *Printer) printAssignShiftRight(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, ">>=")
+	p.write([]byte(">>="))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -902,7 +909,7 @@ func (p *Printer) printBinaryBitwiseAnd(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "&")
+	p.write([]byte("&"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -914,7 +921,7 @@ func (p *Printer) printBinaryBitwiseOr(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "|")
+	p.write([]byte("|"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -926,7 +933,7 @@ func (p *Printer) printBinaryBitwiseXor(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "^")
+	p.write([]byte("^"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -938,7 +945,7 @@ func (p *Printer) printBinaryBooleanAnd(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "&&")
+	p.write([]byte("&&"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -950,7 +957,7 @@ func (p *Printer) printBinaryBooleanOr(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "||")
+	p.write([]byte("||"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -962,7 +969,7 @@ func (p *Printer) printBinaryCoalesce(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "??")
+	p.write([]byte("??"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -974,7 +981,7 @@ func (p *Printer) printBinaryConcat(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ".")
+	p.write([]byte("."))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -986,7 +993,7 @@ func (p *Printer) printBinaryDiv(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "/")
+	p.write([]byte("/"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -998,7 +1005,7 @@ func (p *Printer) printBinaryEqual(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "==")
+	p.write([]byte("=="))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1010,7 +1017,7 @@ func (p *Printer) printBinaryGreaterOrEqual(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ">=")
+	p.write([]byte(">="))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1022,7 +1029,7 @@ func (p *Printer) printBinaryGreater(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ">")
+	p.write([]byte(">"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1034,7 +1041,7 @@ func (p *Printer) printBinaryIdentical(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "===")
+	p.write([]byte("==="))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1047,11 +1054,11 @@ func (p *Printer) printBinaryLogicalAnd(n ast.Vertex) {
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
-	io.WriteString(p.w, "and")
+	p.write([]byte("and"))
 	if nn.Right.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Right)
 
@@ -1065,11 +1072,11 @@ func (p *Printer) printBinaryLogicalOr(n ast.Vertex) {
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
-	io.WriteString(p.w, "or")
+	p.write([]byte("or"))
 	if nn.Right.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Right)
 
@@ -1083,11 +1090,11 @@ func (p *Printer) printBinaryLogicalXor(n ast.Vertex) {
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
-	io.WriteString(p.w, "xor")
+	p.write([]byte("xor"))
 	if nn.Right.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Right)
 
@@ -1100,7 +1107,7 @@ func (p *Printer) printBinaryMinus(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "-")
+	p.write([]byte("-"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1112,7 +1119,7 @@ func (p *Printer) printBinaryMod(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "%")
+	p.write([]byte("%"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1124,7 +1131,7 @@ func (p *Printer) printBinaryMul(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "*")
+	p.write([]byte("*"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1138,7 +1145,7 @@ func (p *Printer) printBinaryNotEqual(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Expr)
 	p.printFreeFloating(nn, token.Equal)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "!=")
+		p.write([]byte("!="))
 	}
 	p.Print(nn.Right)
 
@@ -1151,7 +1158,7 @@ func (p *Printer) printBinaryNotIdentical(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "!==")
+	p.write([]byte("!=="))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1163,7 +1170,7 @@ func (p *Printer) printBinaryPlus(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "+")
+	p.write([]byte("+"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1175,7 +1182,7 @@ func (p *Printer) printBinaryPow(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "**")
+	p.write([]byte("**"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1187,7 +1194,7 @@ func (p *Printer) printBinaryShiftLeft(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "<<")
+	p.write([]byte("<<"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1199,7 +1206,7 @@ func (p *Printer) printBinaryShiftRight(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, ">>")
+	p.write([]byte(">>"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1211,7 +1218,7 @@ func (p *Printer) printBinarySmallerOrEqual(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "<=")
+	p.write([]byte("<="))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1223,7 +1230,7 @@ func (p *Printer) printBinarySmaller(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "<")
+	p.write([]byte("<"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1235,7 +1242,7 @@ func (p *Printer) printBinarySpaceship(n ast.Vertex) {
 
 	p.Print(nn.Left)
 	p.printFreeFloating(nn, token.Expr)
-	io.WriteString(p.w, "<=>")
+	p.write([]byte("<=>"))
 	p.Print(nn.Right)
 
 	p.printFreeFloating(nn, token.End)
@@ -1249,7 +1256,7 @@ func (p *Printer) printArray(n ast.Vertex) {
 
 	p.printFreeFloating(nn, token.Cast)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "(array)")
+		p.write([]byte("(array)"))
 	}
 
 	p.Print(nn.Expr)
@@ -1262,7 +1269,7 @@ func (p *Printer) printBool(n ast.Vertex) {
 
 	p.printFreeFloating(nn, token.Cast)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "(boolean)")
+		p.write([]byte("(boolean)"))
 	}
 
 	p.Print(nn.Expr)
@@ -1275,7 +1282,7 @@ func (p *Printer) printDouble(n ast.Vertex) {
 
 	p.printFreeFloating(nn, token.Cast)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "(float)")
+		p.write([]byte("(float)"))
 	}
 
 	p.Print(nn.Expr)
@@ -1288,7 +1295,7 @@ func (p *Printer) printInt(n ast.Vertex) {
 
 	p.printFreeFloating(nn, token.Cast)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "(integer)")
+		p.write([]byte("(integer)"))
 	}
 
 	p.Print(nn.Expr)
@@ -1301,7 +1308,7 @@ func (p *Printer) printObject(n ast.Vertex) {
 
 	p.printFreeFloating(nn, token.Cast)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "(object)")
+		p.write([]byte("(object)"))
 	}
 
 	p.Print(nn.Expr)
@@ -1314,7 +1321,7 @@ func (p *Printer) printString(n ast.Vertex) {
 
 	p.printFreeFloating(nn, token.Cast)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "(string)")
+		p.write([]byte("(string)"))
 	}
 
 	p.Print(nn.Expr)
@@ -1327,7 +1334,7 @@ func (p *Printer) printUnset(n ast.Vertex) {
 
 	p.printFreeFloating(nn, token.Cast)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "(unset)")
+		p.write([]byte("(unset)"))
 	}
 
 	p.Print(nn.Expr)
@@ -1342,12 +1349,12 @@ func (p *Printer) printExprArrayDimFetch(n ast.Vertex) {
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "[")
+		p.write([]byte("["))
 	}
 	p.Print(nn.Dim)
 	p.printFreeFloating(nn, token.Expr)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "]")
+		p.write([]byte("]"))
 	}
 	p.printFreeFloating(nn, token.End)
 }
@@ -1358,12 +1365,12 @@ func (p *Printer) printExprArrayDimFetchWithoutLeadingDollar(n ast.Vertex) {
 	p.printExprVariableWithoutLeadingDollar(nn.Var)
 	p.printFreeFloating(nn, token.Var)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "[")
+		p.write([]byte("["))
 	}
 	p.Print(nn.Dim)
 	p.printFreeFloating(nn, token.Expr)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "]")
+		p.write([]byte("]"))
 	}
 	p.printFreeFloating(nn, token.End)
 }
@@ -1373,13 +1380,13 @@ func (p *Printer) printExprArrayItem(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	if nn.Unpack {
-		io.WriteString(p.w, "...")
+		p.write([]byte("..."))
 	}
 
 	if nn.Key != nil {
 		p.Print(nn.Key)
 		p.printFreeFloating(nn, token.Expr)
-		io.WriteString(p.w, "=>")
+		p.write([]byte("=>"))
 	}
 
 	p.Print(nn.Val)
@@ -1390,12 +1397,12 @@ func (p *Printer) printExprArrayItem(n ast.Vertex) {
 func (p *Printer) printExprArray(n ast.Vertex) {
 	nn := n.(*ast.ExprArray)
 	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "array")
+	p.write([]byte("array"))
 	p.printFreeFloating(nn, token.Array)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrint(",", nn.Items)
 	p.printFreeFloating(nn, token.ArrayPairList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1405,25 +1412,25 @@ func (p *Printer) printExprArrowFunction(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	if nn.Static {
-		io.WriteString(p.w, "static")
+		p.write([]byte("static"))
 	}
 	p.printFreeFloating(nn, token.Static)
 	if nn.Static && n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 
-	io.WriteString(p.w, "fn")
+	p.write([]byte("fn"))
 	p.printFreeFloating(nn, token.Function)
 
 	if nn.ReturnsRef {
-		io.WriteString(p.w, "&")
+		p.write([]byte("&"))
 	}
 	p.printFreeFloating(nn, token.Ampersand)
 
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrint(",", nn.Params)
 	p.printFreeFloating(nn, token.ParameterList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 	p.printFreeFloating(nn, token.Params)
 
 	if nn.ReturnType != nil {
@@ -1432,9 +1439,9 @@ func (p *Printer) printExprArrowFunction(n ast.Vertex) {
 	}
 	p.printFreeFloating(nn, token.ReturnType)
 
-	io.WriteString(p.w, "=>")
+	p.write([]byte("=>"))
 
-	p.printNode(nn.Expr)
+	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1442,7 +1449,7 @@ func (p *Printer) printExprArrowFunction(n ast.Vertex) {
 func (p *Printer) printExprBitwiseNot(n ast.Vertex) {
 	nn := n.(*ast.ExprBitwiseNot)
 	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "~")
+	p.write([]byte("~"))
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.End)
 }
@@ -1450,7 +1457,7 @@ func (p *Printer) printExprBitwiseNot(n ast.Vertex) {
 func (p *Printer) printExprBooleanNot(n ast.Vertex) {
 	nn := n.(*ast.ExprBooleanNot)
 	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "!")
+	p.write([]byte("!"))
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.End)
 }
@@ -1461,7 +1468,7 @@ func (p *Printer) printExprClassConstFetch(n ast.Vertex) {
 
 	p.Print(nn.Class)
 	p.printFreeFloating(nn, token.Name)
-	io.WriteString(p.w, "::")
+	p.write([]byte("::"))
 	p.Print(nn.ConstantName)
 
 	p.printFreeFloating(nn, token.End)
@@ -1470,9 +1477,9 @@ func (p *Printer) printExprClassConstFetch(n ast.Vertex) {
 func (p *Printer) printExprClone(n ast.Vertex) {
 	nn := n.(*ast.ExprClone)
 	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "clone")
+	p.write([]byte("clone"))
 	if nn.Expr.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.End)
@@ -1481,12 +1488,12 @@ func (p *Printer) printExprClone(n ast.Vertex) {
 func (p *Printer) printExprClosureUse(n ast.Vertex) {
 	nn := n.(*ast.ExprClosureUse)
 	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "use")
+	p.write([]byte("use"))
 	p.printFreeFloating(nn, token.Use)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrint(",", nn.Uses)
 	p.printFreeFloating(nn, token.LexicalVarList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1496,25 +1503,25 @@ func (p *Printer) printExprClosure(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	if nn.Static {
-		io.WriteString(p.w, "static")
+		p.write([]byte("static"))
 	}
 	p.printFreeFloating(nn, token.Static)
 	if nn.Static && n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 
-	io.WriteString(p.w, "function")
+	p.write([]byte("function"))
 	p.printFreeFloating(nn, token.Function)
 
 	if nn.ReturnsRef {
-		io.WriteString(p.w, "&")
+		p.write([]byte("&"))
 	}
 	p.printFreeFloating(nn, token.Ampersand)
 
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrint(",", nn.Params)
 	p.printFreeFloating(nn, token.ParameterList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 	p.printFreeFloating(nn, token.Params)
 
 	if nn.ClosureUse != nil {
@@ -1528,10 +1535,10 @@ func (p *Printer) printExprClosure(n ast.Vertex) {
 	}
 	p.printFreeFloating(nn, token.ReturnType)
 
-	io.WriteString(p.w, "{")
+	p.write([]byte("{"))
 	p.printNodes(nn.Stmts)
 	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
+	p.write([]byte("}"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1546,16 +1553,16 @@ func (p *Printer) printExprConstFetch(n ast.Vertex) {
 func (p *Printer) printExprEmpty(n ast.Vertex) {
 	nn := n.(*ast.ExprEmpty)
 	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "empty")
+	p.write([]byte("empty"))
 
 	if _, ok := nn.Expr.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
+		p.write([]byte("("))
 	}
 
 	p.Print(nn.Expr)
 
 	if _, ok := nn.Expr.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
+		p.write([]byte(")"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -1564,7 +1571,7 @@ func (p *Printer) printExprEmpty(n ast.Vertex) {
 func (p *Printer) printExprErrorSuppress(n ast.Vertex) {
 	nn := n.(*ast.ExprErrorSuppress)
 	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "@")
+	p.write([]byte("@"))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -1574,16 +1581,16 @@ func (p *Printer) printExprEval(n ast.Vertex) {
 	nn := n.(*ast.ExprEval)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "eval")
+	p.write([]byte("eval"))
 
 	if _, ok := nn.Expr.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, "(")
+		p.write([]byte("("))
 	}
 
 	p.Print(nn.Expr)
 
 	if _, ok := nn.Expr.(*ast.ParserBrackets); !ok {
-		io.WriteString(p.w, ")")
+		p.write([]byte(")"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -1594,13 +1601,13 @@ func (p *Printer) printExprExit(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Start)
 
 	if nn.Die {
-		io.WriteString(p.w, "die")
+		p.write([]byte("die"))
 	} else {
-		io.WriteString(p.w, "exit")
+		p.write([]byte("exit"))
 	}
 
 	if nn.Expr != nil && nn.Expr.GetNode().Tokens.IsEmpty() && nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.Expr)
@@ -1624,9 +1631,9 @@ func (p *Printer) printExprFunctionCall(n ast.Vertex) {
 func (p *Printer) printExprInclude(n ast.Vertex) {
 	nn := n.(*ast.ExprInclude)
 	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "include")
+	p.write([]byte("include"))
 	if nn.Expr.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.End)
@@ -1635,9 +1642,9 @@ func (p *Printer) printExprInclude(n ast.Vertex) {
 func (p *Printer) printExprIncludeOnce(n ast.Vertex) {
 	nn := n.(*ast.ExprIncludeOnce)
 	p.printFreeFloating(nn, token.Start)
-	io.WriteString(p.w, "include_once")
+	p.write([]byte("include_once"))
 	if nn.Expr.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.End)
@@ -1650,10 +1657,10 @@ func (p *Printer) printExprInstanceOf(n ast.Vertex) {
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.Expr)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 
-	io.WriteString(p.w, "instanceof")
+	p.write([]byte("instanceof"))
 
 	p.bufStart = " "
 	p.Print(nn.Class)
@@ -1665,12 +1672,12 @@ func (p *Printer) printExprIsset(n ast.Vertex) {
 	nn := n.(*ast.ExprIsset)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "isset")
+	p.write([]byte("isset"))
 	p.printFreeFloating(nn, token.Isset)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrint(",", nn.Vars)
 	p.printFreeFloating(nn, token.VarList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1679,12 +1686,12 @@ func (p *Printer) printExprList(n ast.Vertex) {
 	nn := n.(*ast.ExprList)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "list")
+	p.write([]byte("list"))
 	p.printFreeFloating(nn, token.List)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrint(",", nn.Items)
 	p.printFreeFloating(nn, token.ArrayPairList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1695,7 +1702,7 @@ func (p *Printer) printExprMethodCall(n ast.Vertex) {
 
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "->")
+	p.write([]byte("->"))
 	p.Print(nn.Method)
 
 	p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
@@ -1709,7 +1716,7 @@ func (p *Printer) printExprNew(n ast.Vertex) {
 	nn := n.(*ast.ExprNew)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "new")
+	p.write([]byte("new"))
 	p.bufStart = " "
 	p.Print(nn.Class)
 
@@ -1728,7 +1735,7 @@ func (p *Printer) printExprPostDec(n ast.Vertex) {
 
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "--")
+	p.write([]byte("--"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1739,7 +1746,7 @@ func (p *Printer) printExprPostInc(n ast.Vertex) {
 
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "++")
+	p.write([]byte("++"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1748,7 +1755,7 @@ func (p *Printer) printExprPreDec(n ast.Vertex) {
 	nn := n.(*ast.ExprPreDec)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "--")
+	p.write([]byte("--"))
 	p.Print(nn.Var)
 
 	p.printFreeFloating(nn, token.End)
@@ -1758,7 +1765,7 @@ func (p *Printer) printExprPreInc(n ast.Vertex) {
 	nn := n.(*ast.ExprPreInc)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "++")
+	p.write([]byte("++"))
 	p.Print(nn.Var)
 
 	p.printFreeFloating(nn, token.End)
@@ -1768,9 +1775,9 @@ func (p *Printer) printExprPrint(n ast.Vertex) {
 	nn := n.(*ast.ExprPrint)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "print")
+	p.write([]byte("print"))
 	if nn.Expr.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Expr)
 
@@ -1783,7 +1790,7 @@ func (p *Printer) printExprPropertyFetch(n ast.Vertex) {
 
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, "->")
+	p.write([]byte("->"))
 	p.Print(nn.Property)
 
 	p.printFreeFloating(nn, token.End)
@@ -1793,7 +1800,7 @@ func (p *Printer) printExprReference(n ast.Vertex) {
 	nn := n.(*ast.ExprReference)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "&")
+	p.write([]byte("&"))
 	p.Print(nn.Var)
 
 	p.printFreeFloating(nn, token.End)
@@ -1803,9 +1810,9 @@ func (p *Printer) printExprRequire(n ast.Vertex) {
 	nn := n.(*ast.ExprRequire)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "require")
+	p.write([]byte("require"))
 	if nn.Expr.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Expr)
 
@@ -1816,9 +1823,9 @@ func (p *Printer) printExprRequireOnce(n ast.Vertex) {
 	nn := n.(*ast.ExprRequireOnce)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "require_once")
+	p.write([]byte("require_once"))
 	if nn.Expr.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Expr)
 
@@ -1829,9 +1836,9 @@ func (p *Printer) printExprShellExec(n ast.Vertex) {
 	nn := n.(*ast.ExprShellExec)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "`")
+	p.write([]byte("`"))
 	p.joinPrint("", nn.Parts)
-	io.WriteString(p.w, "`")
+	p.write([]byte("`"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1840,10 +1847,10 @@ func (p *Printer) printExprShortArray(n ast.Vertex) {
 	nn := n.(*ast.ExprShortArray)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "[")
+	p.write([]byte("["))
 	p.joinPrint(",", nn.Items)
 	p.printFreeFloating(nn, token.ArrayPairList)
-	io.WriteString(p.w, "]")
+	p.write([]byte("]"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1852,10 +1859,10 @@ func (p *Printer) printExprShortList(n ast.Vertex) {
 	nn := n.(*ast.ExprShortList)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "[")
+	p.write([]byte("["))
 	p.joinPrint(",", nn.Items)
 	p.printFreeFloating(nn, token.ArrayPairList)
-	io.WriteString(p.w, "]")
+	p.write([]byte("]"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -1866,7 +1873,7 @@ func (p *Printer) printExprStaticCall(n ast.Vertex) {
 
 	p.Print(nn.Class)
 	p.printFreeFloating(nn, token.Name)
-	io.WriteString(p.w, "::")
+	p.write([]byte("::"))
 	p.Print(nn.Call)
 
 	p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
@@ -1882,7 +1889,7 @@ func (p *Printer) printExprStaticPropertyFetch(n ast.Vertex) {
 
 	p.Print(nn.Class)
 	p.printFreeFloating(nn, token.Name)
-	io.WriteString(p.w, "::")
+	p.write([]byte("::"))
 	p.Print(nn.Property)
 
 	p.printFreeFloating(nn, token.End)
@@ -1894,14 +1901,14 @@ func (p *Printer) printExprTernary(n ast.Vertex) {
 
 	p.Print(nn.Condition)
 	p.printFreeFloating(nn, token.Cond)
-	io.WriteString(p.w, "?")
+	p.write([]byte("?"))
 
 	if nn.IfTrue != nil {
 		p.Print(nn.IfTrue)
 	}
 	p.printFreeFloating(nn, token.True)
 
-	io.WriteString(p.w, ":")
+	p.write([]byte(":"))
 	p.Print(nn.IfFalse)
 
 	p.printFreeFloating(nn, token.End)
@@ -1911,7 +1918,7 @@ func (p *Printer) printExprUnaryMinus(n ast.Vertex) {
 	nn := n.(*ast.ExprUnaryMinus)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "-")
+	p.write([]byte("-"))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -1921,7 +1928,7 @@ func (p *Printer) printExprUnaryPlus(n ast.Vertex) {
 	nn := n.(*ast.ExprUnaryPlus)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "+")
+	p.write([]byte("+"))
 	p.Print(nn.Expr)
 
 	p.printFreeFloating(nn, token.End)
@@ -1933,7 +1940,7 @@ func (p *Printer) printExprVariable(n ast.Vertex) {
 	p.bufStart = ""
 
 	if _, ok := nn.VarName.(*ast.Identifier); !ok {
-		io.WriteString(p.w, "$")
+		p.write([]byte("$"))
 	}
 
 	p.Print(nn.VarName)
@@ -1954,9 +1961,9 @@ func (p *Printer) printExprYieldFrom(n ast.Vertex) {
 	nn := n.(*ast.ExprYieldFrom)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "yield from")
+	p.write([]byte("yield from"))
 	if nn.Expr.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Expr)
 
@@ -1967,18 +1974,18 @@ func (p *Printer) printExprYield(n ast.Vertex) {
 	nn := n.(*ast.ExprYield)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "yield")
+	p.write([]byte("yield"))
 
 	if nn.Key != nil {
 		if nn.Key.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 		p.Print(nn.Key)
 		p.printFreeFloating(nn, token.Expr)
-		io.WriteString(p.w, "=>")
+		p.write([]byte("=>"))
 	} else {
 		if nn.Value.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 	}
 
@@ -1993,45 +2000,45 @@ func (p *Printer) printStmtAltForeach(n ast.Vertex) {
 	nn := n.(*ast.StmtAltForeach)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "foreach")
+	p.write([]byte("foreach"))
 	p.printFreeFloating(nn, token.Foreach)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.Expr)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
-	io.WriteString(p.w, "as")
+	p.write([]byte("as"))
 
 	if nn.Key != nil {
 		if nn.Key.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 		p.Print(nn.Key)
 		p.printFreeFloating(nn, token.Key)
-		io.WriteString(p.w, "=>")
+		p.write([]byte("=>"))
 	} else {
 		if nn.Var.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 	}
 
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
 
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 	p.printFreeFloating(nn, token.Cond)
 
-	io.WriteString(p.w, ":")
+	p.write([]byte(":"))
 	s := nn.Stmt.(*ast.StmtStmtList)
 	p.printNodes(s.Stmts)
 	p.printFreeFloating(nn, token.Stmts)
 
-	io.WriteString(p.w, "endforeach")
+	p.write([]byte("endforeach"))
 	p.printFreeFloating(nn, token.AltEnd)
 	p.printFreeFloating(nn, token.SemiColon)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+		p.write([]byte(";"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -2060,20 +2067,20 @@ func (p *Printer) printStmtCatch(n ast.Vertex) {
 	nn := n.(*ast.StmtCatch)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "catch")
+	p.write([]byte("catch"))
 	p.printFreeFloating(nn, token.Catch)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 
 	p.joinPrintRefactored("|", nn.Types)
 
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 	p.printFreeFloating(nn, token.Cond)
-	io.WriteString(p.w, "{")
+	p.write([]byte("{"))
 	p.printNodes(nn.Stmts)
 	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
+	p.write([]byte("}"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2085,37 +2092,37 @@ func (p *Printer) printStmtClassMethod(n ast.Vertex) {
 	if nn.Modifiers != nil {
 		for k, m := range nn.Modifiers {
 			if k > 0 && m.GetNode().Tokens.IsEmpty() {
-				io.WriteString(p.w, " ")
+				p.write([]byte(" "))
 			}
 			p.Print(m)
 		}
 
 		if nn.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 	}
 	p.printFreeFloating(nn, token.ModifierList)
-	io.WriteString(p.w, "function")
+	p.write([]byte("function"))
 	p.printFreeFloating(nn, token.Function)
 
 	if nn.ReturnsRef {
 		if nn.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
-		io.WriteString(p.w, "&")
+		p.write([]byte("&"))
 		p.printFreeFloating(nn, token.Ampersand)
 	} else {
 		if nn.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 	}
 
 	p.Print(nn.MethodName)
 	p.printFreeFloating(nn, token.Name)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrint(",", nn.Params)
 	p.printFreeFloating(nn, token.ParameterList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 	p.printFreeFloating(nn, token.Params)
 
 	if nn.ReturnType != nil {
@@ -2136,17 +2143,17 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 	if nn.Modifiers != nil {
 		for k, m := range nn.Modifiers {
 			if k > 0 && m.GetNode().Tokens.IsEmpty() {
-				io.WriteString(p.w, " ")
+				p.write([]byte(" "))
 			}
 			p.Print(m)
 		}
 
 		if nn.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 	}
 	p.printFreeFloating(nn, token.ModifierList)
-	io.WriteString(p.w, "class")
+	p.write([]byte("class"))
 
 	if nn.ClassName != nil {
 		p.bufStart = " "
@@ -2162,9 +2169,9 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 	if nn.Extends != nil {
 		p.printFreeFloating(nn.Extends, token.Start)
 		if nn.Extends.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
-		io.WriteString(p.w, "extends")
+		p.write([]byte("extends"))
 		p.bufStart = " "
 		p.Print(nn.Extends.ClassName)
 	}
@@ -2172,19 +2179,19 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 	if nn.Implements != nil {
 		p.printFreeFloating(nn.Implements, token.Start)
 		if nn.Implements.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
-		io.WriteString(p.w, "implements")
+		p.write([]byte("implements"))
 		p.bufStart = " "
 		p.joinPrintRefactored(",", nn.Implements.InterfaceNames)
 
 	}
 
 	p.printFreeFloating(nn, token.Name)
-	io.WriteString(p.w, "{")
+	p.write([]byte("{"))
 	p.printNodes(nn.Stmts)
 	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
+	p.write([]byte("}"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2227,27 +2234,27 @@ func (p *Printer) printStmtDeclare(n ast.Vertex) {
 	nn := n.(*ast.StmtDeclare)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "declare")
+	p.write([]byte("declare"))
 	p.printFreeFloating(nn, token.Declare)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrintRefactored(",", nn.Consts)
 	p.printFreeFloating(nn, token.ConstList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 
 	if nn.Alt {
 		p.printFreeFloating(nn, token.Cond)
-		io.WriteString(p.w, ":")
+		p.write([]byte(":"))
 
 		s := nn.Stmt.(*ast.StmtStmtList)
 		p.printNodes(s.Stmts)
 		p.printFreeFloating(nn, token.Stmts)
 
-		io.WriteString(p.w, "enddeclare")
+		p.write([]byte("enddeclare"))
 		p.printFreeFloating(nn, token.AltEnd)
 
 		p.printFreeFloating(nn, token.SemiColon)
 		if nn.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, ";")
+			p.write([]byte(";"))
 		}
 	} else {
 		p.Print(nn.Stmt)
@@ -2275,28 +2282,11 @@ func (p *Printer) printStmtDo(n *ast.StmtDo) {
 	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtEcho(n ast.Vertex) {
-	nn := n.(*ast.StmtEcho)
-
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "echo")
-	}
-	if nn.Exprs[0].GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
-	}
-
-	p.printFreeFloating(nn, token.Start)
-	p.printFreeFloating(nn, token.Echo)
-
-	p.joinPrint(",", nn.Exprs)
-	p.printFreeFloating(nn, token.Expr)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtEcho(n *ast.StmtEcho) {
+	p.printToken(n.EchoTkn, "echo")
+	p.bufStart = " "
+	p.printSeparatedList(n.Exprs, n.SeparatorTkns, ",")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtElseif(n *ast.StmtElseIf) {
@@ -2358,7 +2348,7 @@ func (p *Printer) printStmtExpression(n ast.Vertex) {
 
 	p.printFreeFloating(nn, token.SemiColon)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+		p.write([]byte(";"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -2368,12 +2358,12 @@ func (p *Printer) printStmtFinally(n ast.Vertex) {
 	nn := n.(*ast.StmtFinally)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "finally")
+	p.write([]byte("finally"))
 	p.printFreeFloating(nn, token.Finally)
-	io.WriteString(p.w, "{")
+	p.write([]byte("{"))
 	p.printNodes(nn.Stmts)
 	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
+	p.write([]byte("}"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2410,7 +2400,7 @@ func (p *Printer) printStmtAltFor(n *ast.StmtFor) {
 	if stmtList, ok := n.Stmt.(*ast.StmtStmtList); ok {
 		p.printNodes(stmtList.Stmts)
 	} else {
-		p.printNode(n.Stmt)
+		p.Print(n.Stmt)
 	}
 
 	p.printToken(n.EndForTkn, "endfor")
@@ -2421,34 +2411,34 @@ func (p *Printer) printStmtForeach(n ast.Vertex) {
 	nn := n.(*ast.StmtForeach)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "foreach")
+	p.write([]byte("foreach"))
 	p.printFreeFloating(nn, token.Foreach)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.Expr)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 
-	io.WriteString(p.w, "as")
+	p.write([]byte("as"))
 
 	if nn.Key != nil {
 		if nn.Key.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 		p.Print(nn.Key)
 		p.printFreeFloating(nn, token.Key)
-		io.WriteString(p.w, "=>")
+		p.write([]byte("=>"))
 	} else {
 		if nn.Var.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 	}
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
 
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 
 	p.Print(nn.Stmt)
 
@@ -2459,27 +2449,27 @@ func (p *Printer) printStmtFunction(n ast.Vertex) {
 	nn := n.(*ast.StmtFunction)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "function")
+	p.write([]byte("function"))
 	p.printFreeFloating(nn, token.Function)
 
 	if nn.ReturnsRef {
 		if nn.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
-		io.WriteString(p.w, "&")
+		p.write([]byte("&"))
 	} else {
 		if nn.FunctionName.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 	}
 
 	p.Print(nn.FunctionName)
 	p.printFreeFloating(nn, token.Name)
 
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrint(",", nn.Params)
 	p.printFreeFloating(nn, token.ParamList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 	p.printFreeFloating(nn, token.Params)
 
 	if nn.ReturnType != nil {
@@ -2488,10 +2478,10 @@ func (p *Printer) printStmtFunction(n ast.Vertex) {
 	}
 	p.printFreeFloating(nn, token.ReturnType)
 
-	io.WriteString(p.w, "{")
+	p.write([]byte("{"))
 	p.printNodes(nn.Stmts)
 	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
+	p.write([]byte("}"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2507,16 +2497,16 @@ func (p *Printer) printStmtGoto(n ast.Vertex) {
 	nn := n.(*ast.StmtGoto)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "goto")
+	p.write([]byte("goto"))
 	if nn.Label.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Label)
 	p.printFreeFloating(nn, token.Label)
 
 	p.printFreeFloating(nn, token.SemiColon)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+		p.write([]byte(";"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -2569,12 +2559,12 @@ func (p *Printer) printStmtInlineHTML(n ast.Vertex) {
 	nn := n.(*ast.StmtInlineHtml)
 	p.printFreeFloating(nn, token.Start)
 
-	if p.s == PhpState && nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, "?>")
+	if p.s == PhpState && !bytes.Contains(p.lastWrite, []byte("?>")) {
+		p.write([]byte("?>"))
 	}
 	p.SetState(HtmlState)
 
-	io.WriteString(p.w, string(nn.Value))
+	p.write(nn.Value)
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2583,10 +2573,10 @@ func (p *Printer) printStmtInterface(n ast.Vertex) {
 	nn := n.(*ast.StmtInterface)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "interface")
+	p.write([]byte("interface"))
 
 	if nn.InterfaceName.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 
 	p.Print(nn.InterfaceName)
@@ -2594,18 +2584,18 @@ func (p *Printer) printStmtInterface(n ast.Vertex) {
 	if nn.Extends != nil {
 		p.printFreeFloating(nn.Extends, token.Start)
 		if nn.Extends.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
-		io.WriteString(p.w, "extends")
+		p.write([]byte("extends"))
 		p.bufStart = " "
 		p.joinPrintRefactored(",", nn.Extends.InterfaceNames)
 	}
 
 	p.printFreeFloating(nn, token.Name)
-	io.WriteString(p.w, "{")
+	p.write([]byte("{"))
 	p.printNodes(nn.Stmts)
 	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
+	p.write([]byte("}"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2617,7 +2607,7 @@ func (p *Printer) printStmtLabel(n ast.Vertex) {
 	p.Print(nn.LabelName)
 	p.printFreeFloating(nn, token.Label)
 
-	io.WriteString(p.w, ":")
+	p.write([]byte(":"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2650,7 +2640,7 @@ func (p *Printer) printStmtNop(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(n, token.Start, p.bufStart)
 	p.printFreeFloating(n, token.SemiColon)
 	if n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+		p.write([]byte(";"))
 	}
 	p.printFreeFloating(n, token.End)
 }
@@ -2661,7 +2651,7 @@ func (p *Printer) printStmtPropertyList(n ast.Vertex) {
 
 	for k, m := range nn.Modifiers {
 		if k > 0 && m.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 		p.Print(m)
 	}
@@ -2672,7 +2662,7 @@ func (p *Printer) printStmtPropertyList(n ast.Vertex) {
 	}
 
 	if nn.Properties[0].GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 
 	p.joinPrint(",", nn.Properties)
@@ -2680,7 +2670,7 @@ func (p *Printer) printStmtPropertyList(n ast.Vertex) {
 
 	p.printFreeFloating(n, token.SemiColon)
 	if n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+		p.write([]byte(";"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -2694,7 +2684,7 @@ func (p *Printer) printStmtProperty(n ast.Vertex) {
 
 	if nn.Expr != nil {
 		p.printFreeFloating(nn, token.Var)
-		io.WriteString(p.w, "=")
+		p.write([]byte("="))
 		p.Print(nn.Expr)
 	}
 
@@ -2766,16 +2756,16 @@ func (p *Printer) printStmtThrow(n ast.Vertex) {
 	nn := n.(*ast.StmtThrow)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "throw")
+	p.write([]byte("throw"))
 	if nn.Expr.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.Expr)
 	p.printFreeFloating(nn, token.Expr)
 
 	p.printFreeFloating(nn, token.SemiColon)
 	if n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+		p.write([]byte(";"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -2785,10 +2775,10 @@ func (p *Printer) printStmtTraitAdaptationList(n ast.Vertex) {
 	nn := n.(*ast.StmtTraitAdaptationList)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "{")
+	p.write([]byte("{"))
 	p.printNodes(nn.Adaptations)
 	p.printFreeFloating(nn, token.AdaptationList)
-	io.WriteString(p.w, "}")
+	p.write([]byte("}"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2800,7 +2790,7 @@ func (p *Printer) printStmtTraitMethodRef(n ast.Vertex) {
 	if nn.Trait != nil {
 		p.Print(nn.Trait)
 		p.printFreeFloating(nn, token.Name)
-		io.WriteString(p.w, "::")
+		p.write([]byte("::"))
 	}
 
 	p.Print(nn.Method)
@@ -2816,20 +2806,20 @@ func (p *Printer) printStmtTraitUseAlias(n ast.Vertex) {
 	p.printFreeFloating(nn, token.Ref)
 
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
-	io.WriteString(p.w, "as")
+	p.write([]byte("as"))
 
 	if nn.Modifier != nil {
 		if nn.Modifier.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 		p.Print(nn.Modifier)
 	}
 
 	if nn.Alias != nil {
 		if nn.Alias.GetNode().Tokens.IsEmpty() {
-			io.WriteString(p.w, " ")
+			p.write([]byte(" "))
 		}
 		p.Print(nn.Alias)
 	}
@@ -2837,7 +2827,7 @@ func (p *Printer) printStmtTraitUseAlias(n ast.Vertex) {
 
 	p.printFreeFloating(nn, token.SemiColon)
 	if n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+		p.write([]byte(";"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -2850,17 +2840,17 @@ func (p *Printer) printStmtTraitUsePrecedence(n ast.Vertex) {
 	p.Print(nn.Ref)
 	p.printFreeFloating(nn, token.Ref)
 	if nn.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 
-	io.WriteString(p.w, "insteadof")
+	p.write([]byte("insteadof"))
 	p.bufStart = " "
 	p.joinPrint(",", nn.Insteadof)
 	p.printFreeFloating(nn, token.NameList)
 
 	p.printFreeFloating(nn, token.SemiColon)
 	if n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+		p.write([]byte(";"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -2870,7 +2860,7 @@ func (p *Printer) printStmtTraitUse(n ast.Vertex) {
 	nn := n.(*ast.StmtTraitUse)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "use")
+	p.write([]byte("use"))
 	p.bufStart = " "
 	p.joinPrintRefactored(",", nn.Traits)
 
@@ -2883,17 +2873,17 @@ func (p *Printer) printStmtTrait(n ast.Vertex) {
 	nn := n.(*ast.StmtTrait)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "trait")
+	p.write([]byte("trait"))
 	if nn.TraitName.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, " ")
+		p.write([]byte(" "))
 	}
 	p.Print(nn.TraitName)
 
 	p.printFreeFloating(nn, token.Name)
-	io.WriteString(p.w, "{")
+	p.write([]byte("{"))
 	p.printNodes(nn.Stmts)
 	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
+	p.write([]byte("}"))
 
 	p.printFreeFloating(nn, token.End)
 }
@@ -2902,12 +2892,12 @@ func (p *Printer) printStmtTry(n ast.Vertex) {
 	nn := n.(*ast.StmtTry)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "try")
+	p.write([]byte("try"))
 	p.printFreeFloating(nn, token.Try)
-	io.WriteString(p.w, "{")
+	p.write([]byte("{"))
 	p.printNodes(nn.Stmts)
 	p.printFreeFloating(nn, token.Stmts)
-	io.WriteString(p.w, "}")
+	p.write([]byte("}"))
 
 	if nn.Catches != nil {
 		p.printNodes(nn.Catches)
@@ -2924,17 +2914,17 @@ func (p *Printer) printStmtUnset(n ast.Vertex) {
 	nn := n.(*ast.StmtUnset)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "unset")
+	p.write([]byte("unset"))
 	p.printFreeFloating(nn, token.Unset)
-	io.WriteString(p.w, "(")
+	p.write([]byte("("))
 	p.joinPrint(",", nn.Vars)
 	p.printFreeFloating(nn, token.VarList)
-	io.WriteString(p.w, ")")
+	p.write([]byte(")"))
 	p.printFreeFloating(nn, token.CloseParenthesisToken)
 
 	p.printFreeFloating(nn, token.SemiColon)
 	if n.GetNode().Tokens.IsEmpty() {
-		io.WriteString(p.w, ";")
+		p.write([]byte(";"))
 	}
 
 	p.printFreeFloating(nn, token.End)
@@ -3033,7 +3023,7 @@ func (p *Printer) printParserAs(n ast.Vertex) {
 	nn := n.(*ast.ParserAs)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "as")
+	p.write([]byte("as"))
 	p.Print(nn.Child)
 
 	p.printFreeFloating(nn, token.End)
@@ -3043,7 +3033,7 @@ func (p *Printer) printParserNsSeparator(n ast.Vertex) {
 	nn := n.(*ast.ParserNsSeparator)
 	p.printFreeFloating(nn, token.Start)
 
-	io.WriteString(p.w, "\\")
+	p.write([]byte("\\"))
 	p.Print(nn.Child)
 
 	p.printFreeFloating(nn, token.End)

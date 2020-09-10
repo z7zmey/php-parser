@@ -26,7 +26,7 @@ func (lex *Lexer) Lex() *token.Token {
 
     tkn := lex.tokenPool.Get()
 
-    lex.sts = 0
+    lex.sts = -1
     lex.ste = 0
 
     lblStart := 0
@@ -498,9 +498,13 @@ func (lex *Lexer) Lex() *token.Token {
         write exec;
     }%%
 
+    if lex.sts == -1 {
+        lex.sts = 0
+    }
+
     tkn.Value = lex.data[lex.ts:lex.te]
     tkn.ID = token.ID(tok)
-    tkn.SkippedString = lex.data[lex.sts:lex.ste]
+    tkn.Skipped = lex.data[lex.sts:lex.ste]
     lex.addSkippedToken(tkn, tok, lex.ts, lex.te);
 
     return tkn

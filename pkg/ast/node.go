@@ -368,7 +368,10 @@ func (n *StmtDo) Accept(v NodeVisitor) {
 // StmtEcho node
 type StmtEcho struct {
 	Node
-	Exprs []Vertex
+	EchoTkn       *token.Token
+	Exprs         []Vertex
+	SeparatorTkns []*token.Token
+	SemiColonTkn  *token.Token
 }
 
 func (n *StmtEcho) Accept(v NodeVisitor) {

@@ -194,3 +194,9 @@ func (v *FilterTokens) StmtStatic(n *ast.StmtStatic) {
 func (v *FilterTokens) StmtStaticVar(n *ast.StmtStaticVar) {
 	n.EqualTkn = nil
 }
+
+func (v *FilterTokens) StmtEcho(n *ast.StmtEcho) {
+	n.EchoTkn = nil
+	n.SeparatorTkns = nil
+	n.SemiColonTkn = nil
+}

@@ -58,7 +58,7 @@ func (lex *Lexer) setTokenPosition(token *token.Token) {
 }
 
 func (lex *Lexer) addSkippedToken(t *token.Token, id token.ID, ps, pe int) {
-	if lex.sts == 0 {
+	if lex.sts == -1 {
 		lex.sts = lex.ts
 	}
 

@@ -53,7 +53,7 @@ func (lex *Lexer) Lex() *token.Token {
 
 	tkn := lex.tokenPool.Get()
 
-	lex.sts = 0
+	lex.sts = -1
 	lex.ste = 0
 
 	lblStart := 0
@@ -24292,6 +24292,10 @@ func (lex *Lexer) Lex() *token.Token {
 	}
 
 	// line internal/scanner/scanner.rl:499
+
+	if lex.sts == -1 {
+		lex.sts = 0
+	}
 
 	tkn.Value = lex.data[lex.ts:lex.te]
 	tkn.ID = token.ID(tok)

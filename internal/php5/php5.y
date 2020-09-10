@@ -240,7 +240,7 @@ import (
 %type <node> trait_use_statement function_call_parameter trait_adaptation_statement trait_precedence trait_alias
 %type <node> trait_method_reference_fully_qualified trait_method_reference trait_modifiers member_modifier method
 %type <node> static_scalar_value static_operation static_var_list global_var_list
-%type <node> ctor_arguments function_call_parameter_list
+%type <node> ctor_arguments function_call_parameter_list echo_expr_list
 %type <node> trait_adaptations
 %type <node> switch_case_list
 %type <node> method_body
@@ -255,7 +255,7 @@ import (
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list encaps_list isset_variables non_empty_array_pair_list
 %type <list> array_pair_list assignment_list lexical_var_list elseif_list new_elseif_list non_empty_for_expr
-%type <list> for_expr case_list echo_expr_list unset_variables declare_list catch_statement additional_catches
+%type <list> for_expr case_list unset_variables declare_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
 %type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration
 %type <list> interface_list non_empty_function_call_parameter_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
@@ -1054,16 +1054,11 @@ unticked_statement:
             }
     |   T_ECHO echo_expr_list ';'
             {
-                $$ = &ast.StmtEcho{ast.Node{}, $2}
+                $2.(*ast.StmtEcho).EchoTkn = $1
+                $2.(*ast.StmtEcho).SemiColonTkn = $3
+                $2.(*ast.StmtEcho).Node.Position = position.NewTokensPosition($1, $3)
 
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Echo, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = $2
             }
     |   T_INLINE_HTML
             {
@@ -2874,14 +2869,16 @@ class_constant_declaration:
 echo_expr_list:
         echo_expr_list ',' expr
             {
-                $$ = append($1, $3)
+                $1.(*ast.StmtEcho).Exprs = append($1.(*ast.StmtEcho).Exprs, $3)
+                $1.(*ast.StmtEcho).SeparatorTkns = append($1.(*ast.StmtEcho).SeparatorTkns, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   expr
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.StmtEcho{
+                    Exprs: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -3335,7 +3332,6 @@ expr_without_variable:
                 $$.GetNode().Position = position.NewNodesPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
                 yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   expr '+' expr

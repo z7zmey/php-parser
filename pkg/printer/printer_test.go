@@ -5,8 +5,6 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/token"
-
 	"github.com/z7zmey/php-parser/pkg/printer"
 )
 
@@ -71,45 +69,25 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 	p.Print(&ast.Root{
 		Stmts: []ast.Vertex{
 			&ast.StmtInlineHtml{Value: []byte("<div>HTML</div>")},
-			&ast.StmtExpression{
-				Expr: &ast.ExprVariable{
-					Node: ast.Node{
-						Tokens: token.Collection{
-							token.Start: []*token.Token{
-								{
-									ID:    token.ID('$'),
-									Value: []byte("$"),
-								},
-							},
-						},
-					},
-					VarName: &ast.Identifier{
-						Value: []byte("a"),
+			&ast.StmtEcho{
+				Exprs: []ast.Vertex{
+					&ast.ScalarString{
+						Value: []byte(`"a"`),
 					},
 				},
 			},
 			&ast.StmtInlineHtml{Value: []byte("<div>HTML</div>")},
-			&ast.StmtExpression{
-				Expr: &ast.ExprVariable{
-					Node: ast.Node{
-						Tokens: token.Collection{
-							token.Start: []*token.Token{
-								{
-									ID:    token.ID('$'),
-									Value: []byte("$"),
-								},
-							},
-						},
-					},
-					VarName: &ast.Identifier{
-						Value: []byte("a"),
+			&ast.StmtEcho{
+				Exprs: []ast.Vertex{
+					&ast.ScalarString{
+						Value: []byte(`"b"`),
 					},
 				},
 			},
 		},
 	})
 
-	expected := `<div>HTML</div><?php $a;?><div>HTML</div><?php $a;`
+	expected := `<div>HTML</div><?php echo "a";?><div>HTML</div><?php echo "b";`
 	actual := o.String()
 
 	if expected != actual {
