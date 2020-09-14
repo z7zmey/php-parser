@@ -3190,13 +3190,13 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php5/php5.y:1064
 		{
-			yyVAL.node = &ast.StmtInlineHtml{ast.Node{}, yyDollar[1].token.Value}
-
-			// save position
-			yyVAL.node.GetNode().Position = position.NewTokenPosition(yyDollar[1].token)
-
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, token.Start, yyDollar[1].token.SkippedTokens)
+			yyVAL.node = &ast.StmtInlineHtml{
+				Node: ast.Node{
+					Position: position.NewTokenPosition(yyDollar[1].token),
+				},
+				InlineHtmlTkn: yyDollar[1].token,
+				Value:         yyDollar[1].token.Value,
+			}
 		}
 	case 66:
 		yyDollar = yyS[yypt-2 : yypt+1]

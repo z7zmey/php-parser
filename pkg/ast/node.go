@@ -535,7 +535,8 @@ func (n *StmtIf) Accept(v NodeVisitor) {
 // StmtInlineHtml node
 type StmtInlineHtml struct {
 	Node
-	Value []byte
+	InlineHtmlTkn *token.Token
+	Value         []byte
 }
 
 func (n *StmtInlineHtml) Accept(v NodeVisitor) {

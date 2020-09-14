@@ -1062,13 +1062,13 @@ unticked_statement:
             }
     |   T_INLINE_HTML
             {
-                $$ = &ast.StmtInlineHtml{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtInlineHtml{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    InlineHtmlTkn: $1,
+                    Value:         $1.Value,
+                }
             }
     |   expr ';'
             {

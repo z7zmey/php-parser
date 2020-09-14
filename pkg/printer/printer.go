@@ -2555,18 +2555,13 @@ func (p *Printer) printStmtAltIf(n *ast.StmtIf) {
 	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtInlineHTML(n ast.Vertex) {
-	nn := n.(*ast.StmtInlineHtml)
-	p.printFreeFloating(nn, token.Start)
-
+func (p *Printer) printStmtInlineHTML(n *ast.StmtInlineHtml) {
 	if p.s == PhpState && !bytes.Contains(p.lastWrite, []byte("?>")) {
 		p.write([]byte("?>"))
 	}
 	p.SetState(HtmlState)
 
-	p.write(nn.Value)
-
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.InlineHtmlTkn, string(n.Value))
 }
 
 func (p *Printer) printStmtInterface(n ast.Vertex) {

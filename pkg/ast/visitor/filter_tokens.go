@@ -200,3 +200,7 @@ func (v *FilterTokens) StmtEcho(n *ast.StmtEcho) {
 	n.SeparatorTkns = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtInlineHtml(n *ast.StmtInlineHtml) {
+	n.InlineHtmlTkn = nil
+}
