@@ -2009,26 +2009,15 @@ func (p *Printer) printStmtCase(n *ast.StmtCase) {
 	p.printNodes(n.Stmts)
 }
 
-func (p *Printer) printStmtCatch(n ast.Vertex) {
-	nn := n.(*ast.StmtCatch)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("catch"))
-	p.printFreeFloating(nn, token.Catch)
-	p.write([]byte("("))
-
-	p.joinPrintRefactored("|", nn.Types)
-
-	p.Print(nn.Var)
-	p.printFreeFloating(nn, token.Var)
-	p.write([]byte(")"))
-	p.printFreeFloating(nn, token.Cond)
-	p.write([]byte("{"))
-	p.printNodes(nn.Stmts)
-	p.printFreeFloating(nn, token.Stmts)
-	p.write([]byte("}"))
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtCatch(n *ast.StmtCatch) {
+	p.printToken(n.CatchTkn, "catch")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.printSeparatedList(n.Types, n.SeparatorTkns, "|")
+	p.Print(n.Var)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.OpenCurlyBracketTkn, "{")
+	p.printNodes(n.Stmts)
+	p.printToken(n.CloseCurlyBracketTkn, "}")
 }
 
 func (p *Printer) printStmtClassMethod(n ast.Vertex) {
@@ -2296,18 +2285,11 @@ func (p *Printer) printStmtExpression(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtFinally(n ast.Vertex) {
-	nn := n.(*ast.StmtFinally)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("finally"))
-	p.printFreeFloating(nn, token.Finally)
-	p.write([]byte("{"))
-	p.printNodes(nn.Stmts)
-	p.printFreeFloating(nn, token.Stmts)
-	p.write([]byte("}"))
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtFinally(n *ast.StmtFinally) {
+	p.printToken(n.FinallyTkn, "finally")
+	p.printToken(n.OpenCurlyBracketTkn, "{")
+	p.printNodes(n.Stmts)
+	p.printToken(n.CloseCurlyBracketTkn, "}")
 }
 
 func (p *Printer) printStmtFor(n *ast.StmtFor) {
@@ -2828,26 +2810,19 @@ func (p *Printer) printStmtTrait(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtTry(n ast.Vertex) {
-	nn := n.(*ast.StmtTry)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtTry(n *ast.StmtTry) {
+	p.printToken(n.TryTkn, "try")
+	p.printToken(n.OpenCurlyBracket, "{")
+	p.printNodes(n.Stmts)
+	p.printToken(n.CloseCurlyBracket, "}")
 
-	p.write([]byte("try"))
-	p.printFreeFloating(nn, token.Try)
-	p.write([]byte("{"))
-	p.printNodes(nn.Stmts)
-	p.printFreeFloating(nn, token.Stmts)
-	p.write([]byte("}"))
-
-	if nn.Catches != nil {
-		p.printNodes(nn.Catches)
+	if n.Catches != nil {
+		p.printNodes(n.Catches)
 	}
 
-	if nn.Finally != nil {
-		p.Print(nn.Finally)
+	if n.Finally != nil {
+		p.Print(n.Finally)
 	}
-
-	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printStmtUnset(n *ast.StmtUnset) {

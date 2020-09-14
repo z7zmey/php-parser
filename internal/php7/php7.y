@@ -249,7 +249,7 @@ import (
 %type <node> exit_expr scalar lexical_var function_call member_name property_name
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
-%type <node> encaps_var encaps_var_offset echo_expr_list
+%type <node> encaps_var encaps_var_offset echo_expr_list catch_name_list
 %type <node> if_stmt const_list
 %type <node> alt_if_stmt
 %type <node> if_stmt_without_else
@@ -275,7 +275,7 @@ import (
 %type <node> foreach_variable
 
 
-%type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
+%type <list> encaps_list backticks_expr namespace_name catch_list class_const_list
 %type <list> for_exprs non_empty_for_exprs
 %type <list> unprefixed_use_declarations inline_use_declarations property_list
 %type <list> case_list trait_adaptation_list
@@ -1060,18 +1060,20 @@ statement:
             }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
-                if $6 == nil {
-                    $$ = &ast.StmtTry{ast.Node{}, $3, $5, $6}
-                    $$.GetNode().Position = position.NewTokenNodeListPosition($1, $5)
-                } else {
-                    $$ = &ast.StmtTry{ast.Node{}, $3, $5, $6}
-                    $$.GetNode().Position = position.NewTokenNodePosition($1, $6)
+                $$ = &ast.StmtTry{
+                    TryTkn:            $1,
+                    OpenCurlyBracket:  $2,
+                    Stmts:             $3,
+                    CloseCurlyBracket: $4,
+                    Catches:           $5,
+                    Finally:           $6,
                 }
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Try, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.SkippedTokens)
+                if $6 == nil {
+                    $$.GetNode().Position = position.NewTokenNodeListPosition($1, $5)
+                } else {
+                    $$.GetNode().Position = position.NewTokenNodePosition($1, $6)
+                }
             }
     |   T_THROW expr ';'
             {
@@ -1123,36 +1125,40 @@ catch_list:
             {
                 identifier := &ast.Identifier{ast.Node{}, $5.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
-                catch := &ast.StmtCatch{ast.Node{}, $4, variable, $8}
+
+                catch := $4.(*ast.StmtCatch)
+                catch.CatchTkn = $2
+                catch.OpenParenthesisTkn = $3
+                catch.Var = variable
+                catch.CloseParenthesisTkn = $6
+                catch.OpenCurlyBracketTkn = $7
+                catch.Stmts = $8
+                catch.CloseCurlyBracketTkn = $9
+                catch.GetNode().Position = position.NewTokensPosition($2, $9)
+
                 $$ = append($1, catch)
 
                 // save position
                 identifier.GetNode().Position = position.NewTokenPosition($5)
                 variable.GetNode().Position = position.NewTokenPosition($5)
-                catch.GetNode().Position = position.NewTokensPosition($2, $9)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(catch, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(catch, token.Catch, $3.SkippedTokens)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(catch, token.Var, $6.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(catch, token.Cond, $7.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(catch, token.Stmts, $9.SkippedTokens)
             }
 ;
 catch_name_list:
         name
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.StmtCatch{
+                    Types: []ast.Vertex{$1},
+                }
             }
     |   catch_name_list '|' name
             {
-                switch n := lastNode($1).(type) {
-                    case *ast.NameName: n.ListSeparatorTkn = $2
-                    case *ast.NameFullyQualified: n.ListSeparatorTkn = $2
-                    case *ast.NameRelative: n.ListSeparatorTkn = $2
-                }
-                $$ = append($1, $3)
+                $1.(*ast.StmtCatch).SeparatorTkns = append($1.(*ast.StmtCatch).SeparatorTkns, $2)
+                $1.(*ast.StmtCatch).Types = append($1.(*ast.StmtCatch).Types, $3)
+
+                $$ = $1
             }
 ;
 
@@ -1163,15 +1169,15 @@ finally_statement:
             }
     |   T_FINALLY '{' inner_statement_list '}'
             {
-                $$ = &ast.StmtFinally{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Finally, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.SkippedTokens)
+                $$ = &ast.StmtFinally{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    FinallyTkn:           $1,
+                    OpenCurlyBracketTkn:  $2,
+                    Stmts:                $3,
+                    CloseCurlyBracketTkn: $4,
+                }
             }
 ;
 

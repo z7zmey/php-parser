@@ -239,3 +239,24 @@ func (v *FilterTokens) StmtDeclare(n *ast.StmtDeclare) {
 func (v *FilterTokens) StmtNop(n *ast.StmtNop) {
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtTry(n *ast.StmtTry) {
+	n.TryTkn = nil
+	n.OpenCurlyBracket = nil
+	n.CloseCurlyBracket = nil
+}
+
+func (v *FilterTokens) StmtCatch(n *ast.StmtCatch) {
+	n.CatchTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.SeparatorTkns = nil
+	n.CloseParenthesisTkn = nil
+	n.OpenCurlyBracketTkn = nil
+	n.CloseCurlyBracketTkn = nil
+}
+
+func (v *FilterTokens) StmtFinally(n *ast.StmtFinally) {
+	n.FinallyTkn = nil
+	n.OpenCurlyBracketTkn = nil
+	n.CloseCurlyBracketTkn = nil
+}

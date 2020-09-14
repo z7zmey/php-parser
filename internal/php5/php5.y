@@ -1150,19 +1150,20 @@ unticked_statement:
             }
     |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement
             {
-                $$ = &ast.StmtTry{ast.Node{}, $3, $5, $6}
+                $$ = &ast.StmtTry{
+                    TryTkn:            $1,
+                    OpenCurlyBracket:  $2,
+                    Stmts:             $3,
+                    CloseCurlyBracket: $4,
+                    Catches:           $5,
+                    Finally:           $6,
+                }
 
-                // save position
                 if $6 == nil {
                     $$.GetNode().Position = position.NewTokenNodeListPosition($1, $5)
                 } else {
                     $$.GetNode().Position = position.NewTokenNodePosition($1, $6)
                 }
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Try, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.SkippedTokens)
             }
     |   T_THROW expr ';'
             {
@@ -1202,21 +1203,27 @@ catch_statement:
             {
                 identifier := &ast.Identifier{ast.Node{}, $4.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
-                catchNode := &ast.StmtCatch{ast.Node{}, []ast.Vertex{$3}, variable, $7}
-                $$ = append([]ast.Vertex{catchNode}, $9...)
+                catch := &ast.StmtCatch{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $8),
+                    },
+                    CatchTkn:             $1,
+                    OpenParenthesisTkn:   $2,
+                    Types:                []ast.Vertex{$3},
+                    Var:                  variable,
+                    CloseParenthesisTkn:  $5,
+                    OpenCurlyBracketTkn:  $6,
+                    Stmts:                $7,
+                    CloseCurlyBracketTkn: $8,
+                }
+                $$ = append([]ast.Vertex{catch}, $9...)
 
                 // save position
                 identifier.GetNode().Position = position.NewTokenPosition($4)
                 variable.GetNode().Position = position.NewTokenPosition($4)
-                catchNode.GetNode().Position = position.NewTokensPosition($1, $8)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(catchNode, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(catchNode, token.Catch, $2.SkippedTokens)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $4.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(catchNode, token.Var, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(catchNode, token.Cond, $6.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(catchNode, token.Stmts, $8.SkippedTokens)
             }
 ;
 
@@ -1227,15 +1234,15 @@ finally_statement:
             }
     |   T_FINALLY '{' inner_statement_list '}'
             {
-                $$ = &ast.StmtFinally{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Finally, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $4.SkippedTokens)
+                $$ = &ast.StmtFinally{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    FinallyTkn:           $1,
+                    OpenCurlyBracketTkn:  $2,
+                    Stmts:                $3,
+                    CloseCurlyBracketTkn: $4,
+                }
             }
 ;
 
@@ -1266,20 +1273,26 @@ additional_catch:
             {
                 identifier := &ast.Identifier{ast.Node{}, $4.Value}
                 variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.StmtCatch{ast.Node{}, []ast.Vertex{$3}, variable, $7}
+                $$ = &ast.StmtCatch{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $8),
+                    },
+                    CatchTkn:             $1,
+                    OpenParenthesisTkn:   $2,
+                    Types:                []ast.Vertex{$3},
+                    Var:                  variable,
+                    CloseParenthesisTkn:  $5,
+                    OpenCurlyBracketTkn:  $6,
+                    Stmts:                $7,
+                    CloseCurlyBracketTkn: $8,
+                }
 
                 // save position
                 identifier.GetNode().Position = position.NewTokenPosition($4)
                 variable.GetNode().Position = position.NewTokenPosition($4)
-                $$.GetNode().Position = position.NewTokensPosition($1, $8)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Catch, $2.SkippedTokens)
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $4.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $6.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $8.SkippedTokens)
             }
 ;
 

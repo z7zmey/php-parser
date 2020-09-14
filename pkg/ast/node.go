@@ -203,9 +203,15 @@ func (n *StmtCase) Accept(v NodeVisitor) {
 // StmtCatch node
 type StmtCatch struct {
 	Node
-	Types []Vertex
-	Var   Vertex
-	Stmts []Vertex
+	CatchTkn             *token.Token
+	OpenParenthesisTkn   *token.Token
+	Types                []Vertex
+	SeparatorTkns        []*token.Token
+	Var                  Vertex
+	CloseParenthesisTkn  *token.Token
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *StmtCatch) Accept(v NodeVisitor) {
@@ -415,7 +421,10 @@ func (n *StmtExpression) Accept(v NodeVisitor) {
 // StmtFinally node
 type StmtFinally struct {
 	Node
-	Stmts []Vertex
+	FinallyTkn           *token.Token
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *StmtFinally) Accept(v NodeVisitor) {
@@ -776,9 +785,12 @@ func (n *StmtTraitUsePrecedence) Accept(v NodeVisitor) {
 // StmtTry node
 type StmtTry struct {
 	Node
-	Stmts   []Vertex
-	Catches []Vertex
-	Finally Vertex
+	TryTkn            *token.Token
+	OpenCurlyBracket  *token.Token
+	Stmts             []Vertex
+	CloseCurlyBracket *token.Token
+	Catches           []Vertex
+	Finally           Vertex
 }
 
 func (n *StmtTry) Accept(v NodeVisitor) {
