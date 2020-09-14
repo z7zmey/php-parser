@@ -278,9 +278,10 @@ func (n *StmtClassMethod) Accept(v NodeVisitor) {
 // StmtConstList node
 type StmtConstList struct {
 	Node
-	ConstTkn     *token.Token
-	Consts       []Vertex
-	SemiColonTkn *token.Token
+	ConstTkn      *token.Token
+	Consts        []Vertex
+	SeparatorTkns []*token.Token
+	SemiColonTkn  *token.Token
 }
 
 func (n *StmtConstList) Accept(v NodeVisitor) {
@@ -315,9 +316,16 @@ func (n *StmtContinue) Accept(v NodeVisitor) {
 // StmtDeclare node
 type StmtDeclare struct {
 	Node
-	Alt    bool
-	Consts []Vertex
-	Stmt   Vertex
+	Alt                 bool
+	DeclareTkn          *token.Token
+	OpenParenthesisTkn  *token.Token
+	Consts              []Vertex
+	SeparatorTkns       []*token.Token
+	CloseParenthesisTkn *token.Token
+	ColonTkn            *token.Token
+	Stmt                Vertex
+	EndDeclareTkn       *token.Token
+	SemiColonTkn        *token.Token
 }
 
 func (n *StmtDeclare) Accept(v NodeVisitor) {
@@ -1887,24 +1895,6 @@ func (n *NameNamePart) Accept(v NodeVisitor) {
 	v.NameNamePart(n)
 }
 
-type ParserAs struct {
-	Node
-	Child Vertex
-}
-
-func (n *ParserAs) Accept(v NodeVisitor) {
-	v.ParserAs(n)
-}
-
-type ParserNsSeparator struct {
-	Node
-	Child Vertex
-}
-
-func (n *ParserNsSeparator) Accept(v NodeVisitor) {
-	v.ParserNsSeparator(n)
-}
-
 type ParserBrackets struct {
 	Node
 	OpenBracketTkn  *token.Token
@@ -1914,4 +1904,14 @@ type ParserBrackets struct {
 
 func (n *ParserBrackets) Accept(v NodeVisitor) {
 	v.ParserBrackets(n)
+}
+
+type ParserSeparatedList struct {
+	Node
+	Items         []Vertex
+	SeparatorTkns []*token.Token
+}
+
+func (n *ParserSeparatedList) Accept(v NodeVisitor) {
+	v.ParserSeparatedList(n)
 }

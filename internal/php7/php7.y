@@ -250,7 +250,7 @@ import (
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset echo_expr_list
-%type <node> if_stmt
+%type <node> if_stmt const_list
 %type <node> alt_if_stmt
 %type <node> if_stmt_without_else
 %type <node> class_const_decl
@@ -276,7 +276,7 @@ import (
 
 
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
-%type <list> const_list for_exprs non_empty_for_exprs
+%type <list> for_exprs non_empty_for_exprs
 %type <list> unprefixed_use_declarations inline_use_declarations property_list
 %type <list> case_list trait_adaptation_list
 %type <list> use_declarations lexical_var_list isset_variables non_empty_array_pair_list
@@ -541,9 +541,10 @@ top_statement:
                     Node: ast.Node{
                         Position: position.NewTokensPosition($1, $3),
                     },
-                    ConstTkn:     $1,
-                    Consts:       $2,
-                    SemiColonTkn: $3,
+                    ConstTkn:      $1,
+                    Consts:        $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    SemiColonTkn:  $3,
                 }
             }
 ;
@@ -782,13 +783,16 @@ use_declaration:
 const_list:
         const_list ',' const_decl
             {
-                lastNode($1).(*ast.StmtConstant).CommaTkn = $2
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                $$ = append($1, $3)
+                $$ = $1
             }
     |   const_decl
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -1036,16 +1040,14 @@ statement:
             }
     |   T_DECLARE '(' const_list ')' declare_statement
             {
+                $5.(*ast.StmtDeclare).DeclareTkn = $1
+                $5.(*ast.StmtDeclare).OpenParenthesisTkn = $2
+                $5.(*ast.StmtDeclare).Consts = $3.(*ast.ParserSeparatedList).Items
+                $5.(*ast.StmtDeclare).SeparatorTkns = $3.(*ast.ParserSeparatedList).SeparatorTkns
+                $5.(*ast.StmtDeclare).CloseParenthesisTkn = $4
+                $5.(*ast.StmtDeclare).Node.Position = position.NewTokenNodePosition($1, $5)
+
                 $$ = $5
-                $$.(*ast.StmtDeclare).Consts = $3
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Declare, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ConstList, $4.SkippedTokens)
             }
     |   ';'
             {
@@ -1509,29 +1511,30 @@ foreach_statement:
 declare_statement:
         statement
             {
-                $$ = &ast.StmtDeclare{ast.Node{}, false, nil, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
+                $$ = &ast.StmtDeclare{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    Stmt: $1,
+                }
             }
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
-                stmtList := &ast.StmtStmtList{
+                $$ = &ast.StmtDeclare{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($2),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    Stmts: $2,
+                    Alt:      true,
+                    ColonTkn: $1,
+                    Stmt: &ast.StmtStmtList{
+                        Node: ast.Node{
+                            Position: position.NewNodeListPosition($2),
+                        },
+                        Stmts: $2,
+                    },
+                    EndDeclareTkn: $3,
+                    SemiColonTkn:  $4,
                 }
-                $$ = &ast.StmtDeclare{ast.Node{}, true, nil, stmtList}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
 ;
 

@@ -189,7 +189,6 @@ type NodeVisitor interface {
 	NameRelative(n *NameRelative)
 	NameNamePart(n *NameNamePart)
 
-	ParserAs(n *ParserAs)
-	ParserNsSeparator(n *ParserNsSeparator)
 	ParserBrackets(n *ParserBrackets)
+	ParserSeparatedList(n *ParserSeparatedList)
 }

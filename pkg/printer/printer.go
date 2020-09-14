@@ -484,10 +484,6 @@ func (p *Printer) printNode(n ast.Vertex) {
 		p.printStmtUseDeclaration(n)
 	case *ast.StmtWhile:
 		p.printStmtWhile(n)
-	case *ast.ParserAs:
-		p.printParserAs(n)
-	case *ast.ParserNsSeparator:
-		p.printParserNsSeparator(n)
 	case *ast.ParserBrackets:
 		p.printParserBrackets(n)
 	}
@@ -2158,7 +2154,7 @@ func (p *Printer) printStmtClassConstList(n *ast.StmtClassConstList) {
 func (p *Printer) printStmtConstList(n *ast.StmtConstList) {
 	p.printToken(n.ConstTkn, "const")
 	p.bufStart = " "
-	p.joinPrintRefactored(",", n.Consts)
+	p.printSeparatedList(n.Consts, n.SeparatorTkns, ",")
 	p.printToken(n.SemiColonTkn, ";")
 }
 
@@ -2180,37 +2176,33 @@ func (p *Printer) printStmtContinue(n *ast.StmtContinue) {
 	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtDeclare(n ast.Vertex) {
-	nn := n.(*ast.StmtDeclare)
-	p.printFreeFloating(nn, token.Start)
+func (p *Printer) printStmtDeclare(n *ast.StmtDeclare) {
+	if n.Alt {
+		p.printStmtAltDeclare(n)
+		return
+	}
+	p.printToken(n.DeclareTkn, "declare")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.printSeparatedList(n.Consts, n.SeparatorTkns, ",")
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.Print(n.Stmt)
+}
 
-	p.write([]byte("declare"))
-	p.printFreeFloating(nn, token.Declare)
-	p.write([]byte("("))
-	p.joinPrintRefactored(",", nn.Consts)
-	p.printFreeFloating(nn, token.ConstList)
-	p.write([]byte(")"))
+func (p *Printer) printStmtAltDeclare(n *ast.StmtDeclare) {
+	p.printToken(n.DeclareTkn, "declare")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.printSeparatedList(n.Consts, n.SeparatorTkns, ",")
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.ColonTkn, ":")
 
-	if nn.Alt {
-		p.printFreeFloating(nn, token.Cond)
-		p.write([]byte(":"))
-
-		s := nn.Stmt.(*ast.StmtStmtList)
-		p.printNodes(s.Stmts)
-		p.printFreeFloating(nn, token.Stmts)
-
-		p.write([]byte("enddeclare"))
-		p.printFreeFloating(nn, token.AltEnd)
-
-		p.printFreeFloating(nn, token.SemiColon)
-		if nn.GetNode().Tokens.IsEmpty() {
-			p.write([]byte(";"))
-		}
+	if stmtList, ok := n.Stmt.(*ast.StmtStmtList); ok {
+		p.printNodes(stmtList.Stmts)
 	} else {
-		p.Print(nn.Stmt)
+		p.Print(n.Stmt)
 	}
 
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.EndDeclareTkn, "enddeclare")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtDefault(n *ast.StmtDefault) {
@@ -2958,26 +2950,6 @@ func (p *Printer) printStmtAltWhile(n *ast.StmtWhile) {
 
 	p.printToken(n.EndWhileTkn, "endwhile")
 	p.printToken(n.SemiColonTkn, ";")
-}
-
-func (p *Printer) printParserAs(n ast.Vertex) {
-	nn := n.(*ast.ParserAs)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("as"))
-	p.Print(nn.Child)
-
-	p.printFreeFloating(nn, token.End)
-}
-
-func (p *Printer) printParserNsSeparator(n ast.Vertex) {
-	nn := n.(*ast.ParserNsSeparator)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("\\"))
-	p.Print(nn.Child)
-
-	p.printFreeFloating(nn, token.End)
 }
 
 func (p *Printer) printParserBrackets(n ast.Vertex) {

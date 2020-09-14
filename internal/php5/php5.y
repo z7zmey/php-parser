@@ -241,7 +241,7 @@ import (
 %type <node> trait_method_reference_fully_qualified trait_method_reference trait_modifiers member_modifier method
 %type <node> static_scalar_value static_operation static_var_list global_var_list
 %type <node> ctor_arguments function_call_parameter_list echo_expr_list
-%type <node> trait_adaptations unset_variables
+%type <node> trait_adaptations unset_variables declare_list
 %type <node> switch_case_list
 %type <node> method_body
 %type <node> foreach_statement for_statement while_statement
@@ -255,7 +255,7 @@ import (
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list encaps_list isset_variables non_empty_array_pair_list
 %type <list> array_pair_list assignment_list lexical_var_list elseif_list new_elseif_list non_empty_for_expr
-%type <list> for_expr case_list declare_list catch_statement additional_catches
+%type <list> for_expr case_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
 %type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration
 %type <list> interface_list non_empty_function_call_parameter_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
@@ -722,7 +722,7 @@ constant_declaration:
             {
                 constList := $1.(*ast.StmtConstList)
                 constList.Node.Position = position.NewNodesPosition($1, $5)
-                lastNode(constList.Consts).(*ast.StmtConstant).CommaTkn = $2
+                constList.SeparatorTkns = append(constList.SeparatorTkns, $2)
                 constList.Consts = append(constList.Consts, &ast.StmtConstant{
                     Node: ast.Node{
                         Position: position.NewTokenNodePosition($3, $5),
@@ -1130,16 +1130,14 @@ unticked_statement:
             }
     |   T_DECLARE '(' declare_list ')' declare_statement
             {
+                $5.(*ast.StmtDeclare).DeclareTkn = $1
+                $5.(*ast.StmtDeclare).OpenParenthesisTkn = $2
+                $5.(*ast.StmtDeclare).Consts = $3.(*ast.ParserSeparatedList).Items
+                $5.(*ast.StmtDeclare).SeparatorTkns = $3.(*ast.ParserSeparatedList).SeparatorTkns
+                $5.(*ast.StmtDeclare).CloseParenthesisTkn = $4
+                $5.(*ast.StmtDeclare).Node.Position = position.NewTokenNodePosition($1, $5)
+
                 $$ = $5
-                $$.(*ast.StmtDeclare).Consts = $3
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Declare, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ConstList, $4.SkippedTokens)
             }
     |   ';'
             {
@@ -1646,29 +1644,30 @@ foreach_statement:
 declare_statement:
         statement
             {
-                $$ = &ast.StmtDeclare{ast.Node{}, false, nil, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
+                $$ = &ast.StmtDeclare{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    Stmt: $1,
+                }
             }
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
-                stmtList := &ast.StmtStmtList{
+                $$ = &ast.StmtDeclare{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($2),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    Stmts: $2,
+                    Alt:      true,
+                    ColonTkn: $1,
+                    Stmt: &ast.StmtStmtList{
+                        Node: ast.Node{
+                            Position: position.NewNodeListPosition($2),
+                        },
+                        Stmts: $2,
+                    },
+                    EndDeclareTkn: $3,
+                    SemiColonTkn:  $4,
                 }
-                $$ = &ast.StmtDeclare{ast.Node{}, true, nil, stmtList}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
 ;
 
@@ -1676,42 +1675,49 @@ declare_statement:
 declare_list:
         T_STRING '=' static_scalar
             {
-                $$ = []ast.Vertex{
-                    &ast.StmtConstant{
-                        Node: ast.Node{
-                            Position: position.NewTokenNodePosition($1, $3),
-                        },
-                        Name: &ast.Identifier{
-                            Node:  ast.Node{
-                                Position: position.NewTokenPosition($1),
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{
+                        &ast.StmtConstant{
+                            Node: ast.Node{
+                                Position: position.NewTokenNodePosition($1, $3),
                             },
-                            Value: $1.Value,
+                            Name: &ast.Identifier{
+                                Node:  ast.Node{
+                                    Position: position.NewTokenPosition($1),
+                                },
+                                Value: $1.Value,
+                            },
+                            EqualTkn: $2,
+                            Expr:     $3,
                         },
-                        EqualTkn: $2,
-                        Expr:     $3,
                     },
                 }
 
-                yylex.(*Parser).setFreeFloating(lastNode($$).(*ast.StmtConstant).Name, token.Start, $1.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.ParserSeparatedList).Items).(*ast.StmtConstant).Name, token.Start, $1.SkippedTokens)
             }
     |   declare_list ',' T_STRING '=' static_scalar
             {
-                lastNode($1).(*ast.StmtConstant).CommaTkn = $2
-                $$ = append($1, &ast.StmtConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($3, $5),
-                    },
-                    Name: &ast.Identifier{
-                        Node:  ast.Node{
-                            Position: position.NewTokenPosition($3),
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append(
+                    $1.(*ast.ParserSeparatedList).Items,
+                    &ast.StmtConstant{
+                        Node: ast.Node{
+                            Position: position.NewTokenNodePosition($3, $5),
                         },
-                        Value: $3.Value,
+                        Name: &ast.Identifier{
+                            Node:  ast.Node{
+                                Position: position.NewTokenPosition($3),
+                            },
+                            Value: $3.Value,
+                        },
+                        EqualTkn: $4,
+                        Expr:     $5,
                     },
-                    EqualTkn: $4,
-                    Expr:     $5,
-                })
+                )
 
-                yylex.(*Parser).setFreeFloating(lastNode($$).(*ast.StmtConstant).Name, token.Start, $3.SkippedTokens)
+                $$ = $1
+
+                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.ParserSeparatedList).Items).(*ast.StmtConstant).Name, token.Start, $3.SkippedTokens)
             }
 ;
 

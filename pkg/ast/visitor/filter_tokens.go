@@ -70,6 +70,7 @@ func (v *FilterTokens) StmtHaltCompiler(n *ast.StmtHaltCompiler) {
 
 func (v *FilterTokens) StmtConstList(n *ast.StmtConstList) {
 	n.ConstTkn = nil
+	n.SeparatorTkns = nil
 	n.SemiColonTkn = nil
 }
 
@@ -222,5 +223,15 @@ func (v *FilterTokens) StmtForeach(n *ast.StmtForeach) {
 	n.CloseParenthesisTkn = nil
 	n.ColonTkn = nil
 	n.EndForeachTkn = nil
+	n.SemiColonTkn = nil
+}
+
+func (v *FilterTokens) StmtDeclare(n *ast.StmtDeclare) {
+	n.DeclareTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.SeparatorTkns = nil
+	n.CloseParenthesisTkn = nil
+	n.ColonTkn = nil
+	n.EndDeclareTkn = nil
 	n.SemiColonTkn = nil
 }

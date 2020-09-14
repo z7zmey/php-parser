@@ -2607,30 +2607,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
-	case *ast.ParserAs:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Child != nil {
-			t.visitor.Enter("Child", true)
-			t.Traverse(nn.Child)
-			t.visitor.Leave("Child", true)
-		}
-	case *ast.ParserNsSeparator:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Child != nil {
-			t.visitor.Enter("Child", true)
-			t.Traverse(nn.Child)
-			t.visitor.Leave("Child", true)
-		}
 	case *ast.ParserBrackets:
 		if nn == nil {
 			return

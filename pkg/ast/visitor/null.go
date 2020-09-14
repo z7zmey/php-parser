@@ -674,14 +674,10 @@ func (v *Null) NameNamePart(_ *ast.NameNamePart) {
 	// do nothing
 }
 
-func (v *Null) ParserAs(_ *ast.ParserAs) {
-	// do nothing
-}
-
-func (v *Null) ParserNsSeparator(_ *ast.ParserNsSeparator) {
-	// do nothing
-}
-
 func (v *Null) ParserBrackets(_ *ast.ParserBrackets) {
+	// do nothing
+}
+
+func (v *Null) ParserSeparatedList(_ *ast.ParserSeparatedList) {
 	// do nothing
 }
