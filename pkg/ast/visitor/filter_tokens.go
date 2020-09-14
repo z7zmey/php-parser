@@ -204,3 +204,12 @@ func (v *FilterTokens) StmtEcho(n *ast.StmtEcho) {
 func (v *FilterTokens) StmtInlineHtml(n *ast.StmtInlineHtml) {
 	n.InlineHtmlTkn = nil
 }
+
+func (v *FilterTokens) StmtUnset(n *ast.StmtUnset) {
+	n.UnsetTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.SeparatorTkns = nil
+	n.CloseParenthesisTkn = nil
+	n.SemiColonTkn = nil
+	n.SemiColonTkn = nil
+}

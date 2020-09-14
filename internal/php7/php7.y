@@ -264,6 +264,7 @@ import (
 %type <node> method_body
 %type <node> foreach_statement for_statement while_statement
 %type <node> inline_function
+%type <node> unset_variables
 %type <ClassExtends> extends_from
 %type <ClassImplements> implements_list
 %type <InterfaceExtends> interface_extends_list
@@ -277,7 +278,7 @@ import (
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list for_exprs non_empty_for_exprs
 %type <list> unprefixed_use_declarations inline_use_declarations property_list
-%type <list> case_list trait_adaptation_list unset_variables
+%type <list> case_list trait_adaptation_list
 %type <list> use_declarations lexical_var_list isset_variables non_empty_array_pair_list
 %type <list> array_pair_list non_empty_argument_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
@@ -998,21 +999,14 @@ statement:
             }
     |   T_UNSET '(' unset_variables possible_comma ')' ';'
             {
-                $$ = &ast.StmtUnset{ast.Node{}, $3}
+                $3.(*ast.StmtUnset).UnsetTkn = $1
+                $3.(*ast.StmtUnset).OpenParenthesisTkn = $2
+                $3.(*ast.StmtUnset).SeparatorTkns = append($3.(*ast.StmtUnset).SeparatorTkns, $4)
+                $3.(*ast.StmtUnset).CloseParenthesisTkn = $5
+                $3.(*ast.StmtUnset).SemiColonTkn = $6
+                $3.(*ast.StmtUnset).Node.Position = position.NewTokensPosition($1, $6)
 
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $6)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Unset, $2.SkippedTokens)
-                if $4 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.VarList, append($4.SkippedTokens, $5.SkippedTokens...))
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.VarList, $5.SkippedTokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.CloseParenthesisToken, $6.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $6.SkippedTokens)
+                $$ = $3
             }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
             {
@@ -1205,14 +1199,16 @@ finally_statement:
 unset_variables:
         unset_variable
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.StmtUnset{
+                    Vars: []ast.Vertex{$1},
+                }
             }
     |   unset_variables ',' unset_variable
             {
-                $$ = append($1, $3)
+                $1.(*ast.StmtUnset).Vars = append($1.(*ast.StmtUnset).Vars, $3)
+                $1.(*ast.StmtUnset).SeparatorTkns = append($1.(*ast.StmtUnset).SeparatorTkns, $2)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
 ;
 

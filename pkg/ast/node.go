@@ -783,7 +783,12 @@ func (n *StmtTry) Accept(v NodeVisitor) {
 // StmtUnset node
 type StmtUnset struct {
 	Node
-	Vars []Vertex
+	UnsetTkn            *token.Token
+	OpenParenthesisTkn  *token.Token
+	Vars                []Vertex
+	SeparatorTkns       []*token.Token
+	CloseParenthesisTkn *token.Token
+	SemiColonTkn        *token.Token
 }
 
 func (n *StmtUnset) Accept(v NodeVisitor) {

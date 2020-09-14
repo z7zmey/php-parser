@@ -2905,24 +2905,12 @@ func (p *Printer) printStmtTry(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtUnset(n ast.Vertex) {
-	nn := n.(*ast.StmtUnset)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("unset"))
-	p.printFreeFloating(nn, token.Unset)
-	p.write([]byte("("))
-	p.joinPrint(",", nn.Vars)
-	p.printFreeFloating(nn, token.VarList)
-	p.write([]byte(")"))
-	p.printFreeFloating(nn, token.CloseParenthesisToken)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if n.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(";"))
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtUnset(n *ast.StmtUnset) {
+	p.printToken(n.UnsetTkn, "unset")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.printSeparatedList(n.Vars, n.SeparatorTkns, ",")
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtUse(n *ast.StmtUse) {
