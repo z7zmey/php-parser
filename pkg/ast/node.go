@@ -597,6 +597,7 @@ func (n *StmtNamespace) Accept(v NodeVisitor) {
 // StmtNop node
 type StmtNop struct {
 	Node
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtNop) Accept(v NodeVisitor) {

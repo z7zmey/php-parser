@@ -2581,13 +2581,8 @@ func (p *Printer) printStmtNamespace(n *ast.StmtNamespace) {
 	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtNop(n ast.Vertex) {
-	p.printFreeFloatingOrDefault(n, token.Start, p.bufStart)
-	p.printFreeFloating(n, token.SemiColon)
-	if n.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(";"))
-	}
-	p.printFreeFloating(n, token.End)
+func (p *Printer) printStmtNop(n *ast.StmtNop) {
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtPropertyList(n ast.Vertex) {

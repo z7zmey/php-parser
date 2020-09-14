@@ -1141,14 +1141,12 @@ unticked_statement:
             }
     |   ';'
             {
-                $$ = &ast.StmtNop{ast.Node{}, }
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $1.SkippedTokens)
+                $$ = &ast.StmtNop{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    SemiColonTkn: $1,
+                }
             }
     |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement
             {
@@ -2420,13 +2418,12 @@ trait_list:
 trait_adaptations:
         ';'
             {
-                $$ = &ast.StmtNop{ast.Node{}, }
-
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $1.SkippedTokens)
+                $$ = &ast.StmtNop{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    SemiColonTkn: $1,
+                }
             }
     |   '{' trait_adaptation_list '}'
             {
@@ -2587,14 +2584,12 @@ trait_modifiers:
 method_body:
         ';' /* abstract method */
             {
-                $$ = &ast.StmtNop{ast.Node{}, }
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $1.SkippedTokens)
+                $$ = &ast.StmtNop{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    SemiColonTkn: $1,
+                }
             }
     |   '{' inner_statement_list '}'
             {

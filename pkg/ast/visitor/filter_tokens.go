@@ -235,3 +235,7 @@ func (v *FilterTokens) StmtDeclare(n *ast.StmtDeclare) {
 	n.EndDeclareTkn = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtNop(n *ast.StmtNop) {
+	n.SemiColonTkn = nil
+}

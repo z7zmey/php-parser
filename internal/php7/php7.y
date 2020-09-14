@@ -1051,14 +1051,12 @@ statement:
             }
     |   ';'
             {
-                $$ = &ast.StmtNop{ast.Node{}, }
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $1.SkippedTokens)
+                $$ = &ast.StmtNop{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    SemiColonTkn: $1,
+                }
             }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
@@ -2203,13 +2201,12 @@ name_list:
 trait_adaptations:
         ';'
             {
-                $$ = &ast.StmtNop{ast.Node{}, }
-
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $1.SkippedTokens)
+                $$ = &ast.StmtNop{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    SemiColonTkn: $1,
+                }
             }
     |   '{' '}'
             {
@@ -2372,14 +2369,12 @@ absolute_trait_method_reference:
 method_body:
         ';' /* abstract method */
             {
-                $$ = &ast.StmtNop{ast.Node{}, }
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $1.SkippedTokens)
+                $$ = &ast.StmtNop{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    SemiColonTkn: $1,
+                }
             }
     |   '{' inner_statement_list '}'
             {
