@@ -7028,7 +7028,7 @@ func TestStmtForeach_Alt(t *testing.T) {
 			},
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtAltForeach{
+			&ast.StmtForeach{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 1,
@@ -7037,6 +7037,7 @@ func TestStmtForeach_Alt(t *testing.T) {
 						EndPos:    35,
 					},
 				},
+				Alt: true,
 				Expr: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{

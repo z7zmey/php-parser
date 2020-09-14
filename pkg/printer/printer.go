@@ -386,8 +386,6 @@ func (p *Printer) printNode(n ast.Vertex) {
 
 	// stmt
 
-	case *ast.StmtAltForeach:
-		p.printStmtAltForeach(n)
 	case *ast.StmtBreak:
 		p.printStmtBreak(n)
 	case *ast.StmtCase:
@@ -1996,54 +1994,6 @@ func (p *Printer) printExprYield(n ast.Vertex) {
 
 // smtm
 
-func (p *Printer) printStmtAltForeach(n ast.Vertex) {
-	nn := n.(*ast.StmtAltForeach)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("foreach"))
-	p.printFreeFloating(nn, token.Foreach)
-	p.write([]byte("("))
-	p.Print(nn.Expr)
-	p.printFreeFloating(nn, token.Expr)
-	if nn.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(" "))
-	}
-	p.write([]byte("as"))
-
-	if nn.Key != nil {
-		if nn.Key.GetNode().Tokens.IsEmpty() {
-			p.write([]byte(" "))
-		}
-		p.Print(nn.Key)
-		p.printFreeFloating(nn, token.Key)
-		p.write([]byte("=>"))
-	} else {
-		if nn.Var.GetNode().Tokens.IsEmpty() {
-			p.write([]byte(" "))
-		}
-	}
-
-	p.Print(nn.Var)
-	p.printFreeFloating(nn, token.Var)
-
-	p.write([]byte(")"))
-	p.printFreeFloating(nn, token.Cond)
-
-	p.write([]byte(":"))
-	s := nn.Stmt.(*ast.StmtStmtList)
-	p.printNodes(s.Stmts)
-	p.printFreeFloating(nn, token.Stmts)
-
-	p.write([]byte("endforeach"))
-	p.printFreeFloating(nn, token.AltEnd)
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(";"))
-	}
-
-	p.printFreeFloating(nn, token.End)
-}
-
 func (p *Printer) printStmtBreak(n *ast.StmtBreak) {
 	p.printToken(n.BreakTkn, "break")
 
@@ -2407,42 +2357,50 @@ func (p *Printer) printStmtAltFor(n *ast.StmtFor) {
 	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtForeach(n ast.Vertex) {
-	nn := n.(*ast.StmtForeach)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("foreach"))
-	p.printFreeFloating(nn, token.Foreach)
-	p.write([]byte("("))
-
-	p.Print(nn.Expr)
-	p.printFreeFloating(nn, token.Expr)
-	if nn.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(" "))
+func (p *Printer) printStmtForeach(n *ast.StmtForeach) {
+	if n.Alt {
+		p.printStmtAltForeach(n)
+		return
 	}
 
-	p.write([]byte("as"))
+	p.printToken(n.ForeachTkn, "foreach")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Expr)
+	p.bufStart = " "
+	p.printToken(n.AsTkn, "as")
+	p.bufStart = " "
+	if n.Key != nil {
+		p.Print(n.Key)
+		p.printToken(n.DoubleArrowTkn, "=>")
+	}
+	p.Print(n.Var)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.Print(n.Stmt)
+}
 
-	if nn.Key != nil {
-		if nn.Key.GetNode().Tokens.IsEmpty() {
-			p.write([]byte(" "))
-		}
-		p.Print(nn.Key)
-		p.printFreeFloating(nn, token.Key)
-		p.write([]byte("=>"))
+func (p *Printer) printStmtAltForeach(n *ast.StmtForeach) {
+	p.printToken(n.ForeachTkn, "foreach")
+	p.printToken(n.OpenParenthesisTkn, "(")
+	p.Print(n.Expr)
+	p.bufStart = " "
+	p.printToken(n.AsTkn, "as")
+	p.bufStart = " "
+	if n.Key != nil {
+		p.Print(n.Key)
+		p.printToken(n.DoubleArrowTkn, "=>")
+	}
+	p.Print(n.Var)
+	p.printToken(n.CloseParenthesisTkn, ")")
+	p.printToken(n.ColonTkn, ":")
+
+	if stmtList, ok := n.Stmt.(*ast.StmtStmtList); ok {
+		p.printNodes(stmtList.Stmts)
 	} else {
-		if nn.Var.GetNode().Tokens.IsEmpty() {
-			p.write([]byte(" "))
-		}
+		p.Print(n.Stmt)
 	}
-	p.Print(nn.Var)
-	p.printFreeFloating(nn, token.Var)
 
-	p.write([]byte(")"))
-
-	p.Print(nn.Stmt)
-
-	p.printFreeFloating(nn, token.End)
+	p.printToken(n.EndForeachTkn, "endforeach")
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtFunction(n ast.Vertex) {

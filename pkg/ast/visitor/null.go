@@ -54,10 +54,6 @@ func (v *Null) Argument(_ *ast.Argument) {
 	// do nothing
 }
 
-func (v *Null) StmtAltForeach(_ *ast.StmtAltForeach) {
-	// do nothing
-}
-
 func (v *Null) StmtBreak(_ *ast.StmtBreak) {
 	// do nothing
 }

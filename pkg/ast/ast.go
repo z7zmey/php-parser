@@ -27,7 +27,6 @@ type NodeVisitor interface {
 	ArgumentList(n *ArgumentList)
 	Argument(n *Argument)
 
-	StmtAltForeach(n *StmtAltForeach)
 	StmtBreak(n *StmtBreak)
 	StmtCase(n *StmtCase)
 	StmtCatch(n *StmtCatch)

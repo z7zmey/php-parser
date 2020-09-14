@@ -213,3 +213,14 @@ func (v *FilterTokens) StmtUnset(n *ast.StmtUnset) {
 	n.SemiColonTkn = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtForeach(n *ast.StmtForeach) {
+	n.ForeachTkn = nil
+	n.OpenParenthesisTkn = nil
+	n.AsTkn = nil
+	n.DoubleArrowTkn = nil
+	n.CloseParenthesisTkn = nil
+	n.ColonTkn = nil
+	n.EndForeachTkn = nil
+	n.SemiColonTkn = nil
+}

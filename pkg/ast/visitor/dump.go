@@ -252,12 +252,6 @@ func (v *Dump) Argument(n *ast.Argument) {
 	}
 }
 
-func (v *Dump) StmtAltForeach(n *ast.StmtAltForeach) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtAltForeach{\n")
-	v.printNode(n.GetNode())
-}
-
 func (v *Dump) StmtBreak(n *ast.StmtBreak) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtBreak{\n")

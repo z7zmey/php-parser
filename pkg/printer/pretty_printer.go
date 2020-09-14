@@ -297,8 +297,6 @@ func (p *PrettyPrinter) printNode(n ast.Vertex) {
 
 		// stmt
 
-	case *ast.StmtAltForeach:
-		p.printStmtAltForeach(n)
 	case *ast.StmtBreak:
 		p.printStmtBreak(n)
 	case *ast.StmtCase:
@@ -1359,30 +1357,6 @@ func (p *PrettyPrinter) printStmtAltElse(n ast.Vertex) {
 	}
 }
 
-func (p *PrettyPrinter) printStmtAltForeach(n ast.Vertex) {
-	nn := n.(*ast.StmtAltForeach)
-
-	io.WriteString(p.w, "foreach (")
-	p.Print(nn.Expr)
-	io.WriteString(p.w, " as ")
-
-	if nn.Key != nil {
-		p.Print(nn.Key)
-		io.WriteString(p.w, " => ")
-	}
-
-	p.Print(nn.Var)
-
-	io.WriteString(p.w, ") :\n")
-
-	s := nn.Stmt.(*ast.StmtStmtList)
-	p.printNodes(s.Stmts)
-
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "endforeach;")
-}
-
 func (p *PrettyPrinter) printStmtAltIf(n ast.Vertex) {
 	nn := n.(*ast.StmtIf)
 
@@ -1749,6 +1723,11 @@ func (p *PrettyPrinter) printStmtAltFor(n ast.Vertex) {
 func (p *PrettyPrinter) printStmtForeach(n ast.Vertex) {
 	nn := n.(*ast.StmtForeach)
 
+	if nn.Alt {
+		p.printStmtAltForeach(n)
+		return
+	}
+
 	io.WriteString(p.w, "foreach (")
 	p.Print(nn.Expr)
 	io.WriteString(p.w, " as ")
@@ -1775,6 +1754,30 @@ func (p *PrettyPrinter) printStmtForeach(n ast.Vertex) {
 		p.Print(s)
 		p.indentDepth--
 	}
+}
+
+func (p *PrettyPrinter) printStmtAltForeach(n ast.Vertex) {
+	nn := n.(*ast.StmtForeach)
+
+	io.WriteString(p.w, "foreach (")
+	p.Print(nn.Expr)
+	io.WriteString(p.w, " as ")
+
+	if nn.Key != nil {
+		p.Print(nn.Key)
+		io.WriteString(p.w, " => ")
+	}
+
+	p.Print(nn.Var)
+
+	io.WriteString(p.w, ") :\n")
+
+	s := nn.Stmt.(*ast.StmtStmtList)
+	p.printNodes(s.Stmts)
+
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "endforeach;")
 }
 
 func (p *PrettyPrinter) printStmtFunction(n ast.Vertex) {

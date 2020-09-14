@@ -2667,7 +2667,8 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
-	p.Print(&ast.StmtAltForeach{
+	p.Print(&ast.StmtForeach{
+		Alt: true,
 		Expr: &ast.ExprVariable{
 			VarName: &ast.Identifier{Value: []byte("$var")},
 		},

@@ -111,26 +111,6 @@ func (v *FilterParserNodes) StmtReturn(n *ast.StmtReturn) {
 	}
 }
 
-func (v *FilterParserNodes) StmtForeach(n *ast.StmtForeach) {
-	for {
-		if nn, ok := n.Expr.(*ast.ParserBrackets); ok {
-			n.Expr = nn.Child
-		} else {
-			break
-		}
-	}
-}
-
-func (v *FilterParserNodes) StmtAltForeach(n *ast.StmtAltForeach) {
-	for {
-		if nn, ok := n.Expr.(*ast.ParserBrackets); ok {
-			n.Expr = nn.Child
-		} else {
-			break
-		}
-	}
-}
-
 func (v *FilterParserNodes) ExprYield(n *ast.ExprYield) {
 	for {
 		if nn, ok := n.Key.(*ast.ParserBrackets); ok {

@@ -2210,7 +2210,8 @@ func TestPrintAltForeach(t *testing.T) {
 	p := printer.NewPrettyPrinter(o, "    ")
 	p.Print(&ast.StmtNamespace{
 		Stmts: []ast.Vertex{
-			&ast.StmtAltForeach{
+			&ast.StmtForeach{
+				Alt:  true,
 				Expr: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("var")}},
 				Key:  &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("key")}},
 				Var:  &ast.ExprReference{Var: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("val")}}},

@@ -119,33 +119,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Expr)
 			t.visitor.Leave("Expr", true)
 		}
-	case *ast.StmtAltForeach:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Expr != nil {
-			t.visitor.Enter("Expr", true)
-			t.Traverse(nn.Expr)
-			t.visitor.Leave("Expr", true)
-		}
-		if nn.Key != nil {
-			t.visitor.Enter("Key", true)
-			t.Traverse(nn.Key)
-			t.visitor.Leave("Key", true)
-		}
-		if nn.Var != nil {
-			t.visitor.Enter("Var", true)
-			t.Traverse(nn.Var)
-			t.visitor.Leave("Var", true)
-		}
-		if nn.Stmt != nil {
-			t.visitor.Enter("Stmt", true)
-			t.Traverse(nn.Stmt)
-			t.visitor.Leave("Stmt", true)
-		}
 	case *ast.StmtBreak:
 		if nn == nil {
 			return

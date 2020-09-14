@@ -5590,7 +5590,7 @@ func TestPhp7(t *testing.T) {
 					Stmts: []ast.Vertex{},
 				},
 			},
-			&ast.StmtAltForeach{
+			&ast.StmtForeach{
 				Node: ast.Node{
 					Position: &position.Position{
 						StartLine: 94,
@@ -5599,6 +5599,7 @@ func TestPhp7(t *testing.T) {
 						EndPos:    2014,
 					},
 				},
+				Alt: true,
 				Expr: &ast.ExprVariable{
 					Node: ast.Node{
 						Position: &position.Position{

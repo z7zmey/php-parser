@@ -1094,79 +1094,39 @@ unticked_statement:
             }
     |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
+                $8.(*ast.StmtForeach).ForeachTkn = $1
+                $8.(*ast.StmtForeach).OpenParenthesisTkn = $2
+                $8.(*ast.StmtForeach).Expr = $3
+                $8.(*ast.StmtForeach).AsTkn = $4
                 if $6 == nil {
-                    switch n := $8.(type) {
-                    case *ast.StmtForeach :
-                        n.Expr = $3
-                        n.Var = $5
-                    case *ast.StmtAltForeach :
-                        n.Expr = $3
-                        n.Var = $5
-                    }
+                    $8.(*ast.StmtForeach).Var = $5
                 } else {
-                    switch n := $8.(type) {
-                    case *ast.StmtForeach :
-                        n.Expr = $3
-                        n.Key = $5
-                        n.Var = $6
-                    case *ast.StmtAltForeach :
-                        n.Expr = $3
-                        n.Key = $5
-                        n.Var = $6
-                    }
+                    $8.(*ast.StmtForeach).Key = $5
+                    $8.(*ast.StmtForeach).DoubleArrowTkn = $6.(*ast.StmtForeach).DoubleArrowTkn
+                    $8.(*ast.StmtForeach).Var = $6.(*ast.StmtForeach).Var
                 }
+                $8.(*ast.StmtForeach).CloseParenthesisTkn = $7
+                $8.(*ast.StmtForeach).Node.Position = position.NewTokenNodePosition($1, $8)
 
                 $$ = $8
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $8)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Foreach, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.SkippedTokens)
-                if $6 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Key, $6.GetNode().Tokens[token.Key]); delete($6.GetNode().Tokens, token.Key)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.Var, $7.SkippedTokens)
             }
     |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
+                $8.(*ast.StmtForeach).ForeachTkn = $1
+                $8.(*ast.StmtForeach).OpenParenthesisTkn = $2
+                $8.(*ast.StmtForeach).Expr = $3
+                $8.(*ast.StmtForeach).AsTkn = $4
                 if $6 == nil {
-                    switch n := $8.(type) {
-                    case *ast.StmtForeach :
-                        n.Expr = $3
-                        n.Var = $5
-                    case *ast.StmtAltForeach :
-                        n.Expr = $3
-                        n.Var = $5
-                    }
+                    $8.(*ast.StmtForeach).Var = $5
                 } else {
-                    switch n := $8.(type) {
-                    case *ast.StmtForeach :
-                        n.Expr = $3
-                        n.Key = $5
-                        n.Var = $6
-                    case *ast.StmtAltForeach :
-                        n.Expr = $3
-                        n.Key = $5
-                        n.Var = $6
-                    }
+                    $8.(*ast.StmtForeach).Key = $5
+                    $8.(*ast.StmtForeach).DoubleArrowTkn = $6.(*ast.StmtForeach).DoubleArrowTkn
+                    $8.(*ast.StmtForeach).Var = $6.(*ast.StmtForeach).Var
                 }
+                $8.(*ast.StmtForeach).CloseParenthesisTkn = $7
+                $8.(*ast.StmtForeach).Node.Position = position.NewTokenNodePosition($1, $8)
 
-                // save position
                 $$ = $8
-
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $8)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Foreach, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $4.SkippedTokens)
-                if $6 != nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Key, $6.GetNode().Tokens[token.Key]); delete($6.GetNode().Tokens, token.Key)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.Var, $7.SkippedTokens)
             }
     |   T_DECLARE '(' declare_list ')' declare_statement
             {
@@ -1586,10 +1546,10 @@ foreach_optional_arg:
             }
     |   T_DOUBLE_ARROW foreach_variable
             {
-                $$ = $2
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Key, $1.SkippedTokens)
+                $$ = &ast.StmtForeach{
+                    DoubleArrowTkn: $1,
+                    Var:            $2,
+                }
             }
 ;
 
@@ -1655,29 +1615,30 @@ for_statement:
 foreach_statement:
         statement
             {
-                $$ = &ast.StmtForeach{ast.Node{}, nil, nil, nil, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
+                $$ = &ast.StmtForeach{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    Stmt: $1,
+                }
             }
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
-                stmtList := &ast.StmtStmtList{
+                $$ = &ast.StmtForeach{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($2),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    Stmts: $2,
+                    Alt:      true,
+                    ColonTkn: $1,
+                    Stmt: &ast.StmtStmtList{
+                        Node: ast.Node{
+                            Position: position.NewNodeListPosition($2),
+                        },
+                        Stmts: $2,
+                    },
+                    EndForeachTkn: $3,
+                    SemiColonTkn:  $4,
                 }
-                $$ = &ast.StmtAltForeach{ast.Node{}, nil, nil, nil, stmtList}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AltEnd, $4.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
             }
 ;
 
