@@ -2425,23 +2425,11 @@ func (p *Printer) printStmtGlobal(n *ast.StmtGlobal) {
 	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtGoto(n ast.Vertex) {
-	nn := n.(*ast.StmtGoto)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("goto"))
-	if nn.Label.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(" "))
-	}
-	p.Print(nn.Label)
-	p.printFreeFloating(nn, token.Label)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(";"))
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtGoto(n *ast.StmtGoto) {
+	p.printToken(n.GotoTkn, "goto")
+	p.bufStart = " "
+	p.Print(n.Label)
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtHaltCompiler(n *ast.StmtHaltCompiler) {
@@ -2527,16 +2515,9 @@ func (p *Printer) printStmtInterface(n ast.Vertex) {
 	p.printFreeFloating(nn, token.End)
 }
 
-func (p *Printer) printStmtLabel(n ast.Vertex) {
-	nn := n.(*ast.StmtLabel)
-	p.printFreeFloating(nn, token.Start)
-
-	p.Print(nn.LabelName)
-	p.printFreeFloating(nn, token.Label)
-
-	p.write([]byte(":"))
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtLabel(n *ast.StmtLabel) {
+	p.Print(n.LabelName)
+	p.printToken(n.ColonTkn, ":")
 }
 
 func (p *Printer) printStmtNamespace(n *ast.StmtNamespace) {

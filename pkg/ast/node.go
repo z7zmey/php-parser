@@ -505,7 +505,9 @@ func (n *StmtGlobal) Accept(v NodeVisitor) {
 // StmtGoto node
 type StmtGoto struct {
 	Node
-	Label Vertex
+	GotoTkn      *token.Token
+	Label        Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtGoto) Accept(v NodeVisitor) {
@@ -582,6 +584,7 @@ func (n *StmtInterfaceExtends) Accept(v NodeVisitor) {
 type StmtLabel struct {
 	Node
 	LabelName Vertex
+	ColonTkn  *token.Token
 }
 
 func (n *StmtLabel) Accept(v NodeVisitor) {

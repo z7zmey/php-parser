@@ -1089,30 +1089,38 @@ statement:
     |   T_GOTO T_STRING ';'
             {
                 label := &ast.Identifier{ast.Node{}, $2.Value}
-                $$ = &ast.StmtGoto{ast.Node{}, label}
+
+                $$ = &ast.StmtGoto{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    GotoTkn:      $1,
+                    Label:        label,
+                    SemiColonTkn: $3,
+                }
 
                 // save position
                 label.GetNode().Position = position.NewTokenPosition($2)
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
                 yylex.(*Parser).setFreeFloating(label, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Label, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
             }
     |   T_STRING ':'
             {
                 label := &ast.Identifier{ast.Node{}, $1.Value}
-                $$ = &ast.StmtLabel{ast.Node{}, label}
+                $$ = &ast.StmtLabel{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $2),
+                    },
+                    LabelName: label,
+                    ColonTkn:  $2,
+                }
 
                 // save position
                 label.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Label, $2.SkippedTokens)
+                yylex.(*Parser).setFreeFloating(label, token.Start, $1.SkippedTokens)
             }
 
 catch_list:

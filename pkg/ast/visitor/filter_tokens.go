@@ -265,3 +265,12 @@ func (v *FilterTokens) StmtThrow(n *ast.StmtThrow) {
 	n.ThrowTkn = nil
 	n.SemiColonTkn = nil
 }
+
+func (v *FilterTokens) StmtGoto(n *ast.StmtGoto) {
+	n.GotoTkn = nil
+	n.SemiColonTkn = nil
+}
+
+func (v *FilterTokens) StmtLabel(n *ast.StmtLabel) {
+	n.ColonTkn = nil
+}
