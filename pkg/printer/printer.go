@@ -2674,23 +2674,11 @@ func (p *Printer) printStmtAltSwitch(n *ast.StmtSwitch) {
 	p.printToken(n.SemiColonTkn, ";")
 }
 
-func (p *Printer) printStmtThrow(n ast.Vertex) {
-	nn := n.(*ast.StmtThrow)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("throw"))
-	if nn.Expr.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(" "))
-	}
-	p.Print(nn.Expr)
-	p.printFreeFloating(nn, token.Expr)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if n.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(";"))
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtThrow(n *ast.StmtThrow) {
+	p.printToken(n.ThrowTkn, "throw")
+	p.bufStart = " "
+	p.Print(n.Expr)
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtTraitAdaptationList(n ast.Vertex) {

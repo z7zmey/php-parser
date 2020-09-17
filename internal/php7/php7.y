@@ -1077,15 +1077,14 @@ statement:
             }
     |   T_THROW expr ';'
             {
-                $$ = &ast.StmtThrow{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = &ast.StmtThrow{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    ThrowTkn:     $1,
+                    Expr:         $2,
+                    SemiColonTkn: $3,
+                }
             }
     |   T_GOTO T_STRING ';'
             {

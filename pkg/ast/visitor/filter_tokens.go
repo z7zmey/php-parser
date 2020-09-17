@@ -260,3 +260,8 @@ func (v *FilterTokens) StmtFinally(n *ast.StmtFinally) {
 	n.OpenCurlyBracketTkn = nil
 	n.CloseCurlyBracketTkn = nil
 }
+
+func (v *FilterTokens) StmtThrow(n *ast.StmtThrow) {
+	n.ThrowTkn = nil
+	n.SemiColonTkn = nil
+}

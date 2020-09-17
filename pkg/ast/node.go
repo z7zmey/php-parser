@@ -709,7 +709,9 @@ func (n *StmtSwitch) Accept(v NodeVisitor) {
 // StmtThrow node
 type StmtThrow struct {
 	Node
-	Expr Vertex
+	ThrowTkn     *token.Token
+	Expr         Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtThrow) Accept(v NodeVisitor) {
