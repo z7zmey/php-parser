@@ -411,7 +411,8 @@ func (n *StmtElseIf) Accept(v NodeVisitor) {
 // StmtExpression node
 type StmtExpression struct {
 	Node
-	Expr Vertex
+	Expr         Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtExpression) Accept(v NodeVisitor) {

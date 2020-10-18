@@ -274,3 +274,7 @@ func (v *FilterTokens) StmtGoto(n *ast.StmtGoto) {
 func (v *FilterTokens) StmtLabel(n *ast.StmtLabel) {
 	n.ColonTkn = nil
 }
+
+func (v *FilterTokens) StmtExpression(n *ast.StmtExpression) {
+	n.SemiColonTkn = nil
+}

@@ -841,7 +841,7 @@ func (p *Printer) printAssignMod(n ast.Vertex) {
 }
 
 func (p *Printer) printAssignMul(n ast.Vertex) {
-	nn := n.(*ast.ExprAssignMul)
+	nn, ok := n.(*ast.ExprAssignMul)
 	p.printFreeFloating(nn, token.Start)
 	p.Print(nn.Var)
 	p.printFreeFloating(nn, token.Var)
@@ -2270,19 +2270,10 @@ func (p *Printer) printStmtAltElse(n *ast.StmtElse) {
 	}
 }
 
-func (p *Printer) printStmtExpression(n ast.Vertex) {
-	nn := n.(*ast.StmtExpression)
-	p.printFreeFloating(nn, token.Start)
-
-	p.Print(nn.Expr)
-	p.printFreeFloating(nn, token.Expr)
-
-	p.printFreeFloating(nn, token.SemiColon)
-	if nn.GetNode().Tokens.IsEmpty() {
-		p.write([]byte(";"))
-	}
-
-	p.printFreeFloating(nn, token.End)
+func (p *Printer) printStmtExpression(n *ast.StmtExpression) {
+	p.printFreeFloating(n, token.Start)
+	p.Print(n.Expr)
+	p.printToken(n.SemiColonTkn, ";")
 }
 
 func (p *Printer) printStmtFinally(n *ast.StmtFinally) {

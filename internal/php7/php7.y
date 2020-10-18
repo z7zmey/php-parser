@@ -991,15 +991,16 @@ statement:
             }
     |   expr ';'
             {
-                $$ = &ast.StmtExpression{ast.Node{}, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
+                $$ = &ast.StmtExpression{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $2),
+                    },
+                    Expr:         $1,
+                    SemiColonTkn: $2,
+                }
 
                 // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
+                // yylex.(*Parser).MoveFreeFloating($1, $$)
             }
     |   T_UNSET '(' unset_variables possible_comma ')' ';'
             {
