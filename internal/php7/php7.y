@@ -1884,16 +1884,21 @@ parameter:
                     }
                 }
 
-                $$ = &ast.Parameter{ast.Node{}, $1, variable, nil}
-
+                pos := position.NewTokenPosition($4)
                 if $1 != nil {
-                    $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
+                    pos = position.NewNodeTokenPosition($1, $4)
                 } else if $2 != nil {
-                    $$.GetNode().Position = position.NewTokensPosition($2, $4)
+                    pos = position.NewTokensPosition($2, $4)
                 } else if $3 != nil {
-                    $$.GetNode().Position = position.NewTokensPosition($3, $4)
-                } else {
-                    $$.GetNode().Position = position.NewTokenPosition($4)
+                    pos = position.NewTokensPosition($3, $4)
+                }
+
+                $$ = &ast.Parameter{
+                    Node: ast.Node{
+                        Position: pos,
+                    },
+                    Type: $1,
+                    Var:  variable,
                 }
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
@@ -1932,16 +1937,23 @@ parameter:
                     }
                 }
 
-                $$ = &ast.Parameter{ast.Node{}, $1, variable, $6}
-
+                pos := position.NewTokenNodePosition($4, $6)
                 if $1 != nil {
-                    $$.GetNode().Position = position.NewNodesPosition($1, $6)
+                    pos = position.NewNodesPosition($1, $6)
                 } else if $2 != nil {
-                    $$.GetNode().Position = position.NewTokenNodePosition($2, $6)
+                    pos = position.NewTokenNodePosition($2, $6)
                 } else if $3 != nil {
-                    $$.GetNode().Position = position.NewTokenNodePosition($3, $6)
-                } else {
-                    $$.GetNode().Position = position.NewTokenNodePosition($4, $6)
+                    pos = position.NewTokenNodePosition($3, $6)
+                }
+
+                $$ = &ast.Parameter{
+                    Node: ast.Node{
+                        Position: pos,
+                    },
+                    Type:         $1,
+                    Var:          variable,
+                    EqualTkn:     $5,
+                    DefaultValue: $6,
                 }
             }
 ;

@@ -68,6 +68,7 @@ type Parameter struct {
 	Node
 	Type         Vertex
 	Var          Vertex
+	EqualTkn     *token.Token
 	DefaultValue Vertex
 }
 
