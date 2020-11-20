@@ -115,7 +115,8 @@ func (n *Argument) Accept(v NodeVisitor) {
 // ScalarDnumber node
 type ScalarDnumber struct {
 	Node
-	Value []byte
+	NumberTkn *token.Token
+	Value     []byte
 }
 
 func (n *ScalarDnumber) Accept(v NodeVisitor) {
@@ -156,7 +157,8 @@ func (n *ScalarHeredoc) Accept(v NodeVisitor) {
 // ScalarLnumber node
 type ScalarLnumber struct {
 	Node
-	Value []byte
+	NumberTkn *token.Token
+	Value     []byte
 }
 
 func (n *ScalarLnumber) Accept(v NodeVisitor) {

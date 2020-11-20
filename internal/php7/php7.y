@@ -3940,23 +3940,23 @@ dereferencable_scalar:
 scalar:
         T_LNUMBER
             {
-                $$ = &ast.ScalarLnumber{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarLnumber{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    NumberTkn: $1,
+                    Value:     $1.Value,
+                }
             }
     |   T_DNUMBER
             {
-                $$ = &ast.ScalarDnumber{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarDnumber{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    NumberTkn: $1,
+                    Value:     $1.Value,
+                }
             }
     |   T_LINE
             {
@@ -4785,7 +4785,13 @@ encaps_var_offset:
             {
                 // TODO: add option to handle 64 bit integer
                 if _, err := strconv.Atoi(string($1.Value)); err == nil {
-                    $$ = &ast.ScalarLnumber{ast.Node{}, $1.Value}
+                    $$ = &ast.ScalarLnumber{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        NumberTkn: $1,
+                        Value:     $1.Value,
+                    }
                 } else {
                     $$ = &ast.ScalarString{ast.Node{}, $1.Value}
                 }
@@ -4798,13 +4804,17 @@ encaps_var_offset:
             }
     |   '-' T_NUM_STRING
             {
-                var lnumber *ast.ScalarLnumber
-                // TODO: add option to handle 64 bit integer
                 _, err := strconv.Atoi(string($2.Value));
                 isInt := err == nil
 
                 if isInt {
-                    lnumber = &ast.ScalarLnumber{ast.Node{}, $2.Value}
+                    lnumber := &ast.ScalarLnumber{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($2),
+                        },
+                        NumberTkn: $2,
+                        Value:     $2.Value,
+                    }
                     $$ = &ast.ExprUnaryMinus{ast.Node{}, lnumber}
                 } else {
                     $2.Value = append([]byte("-"), $2.Value...)
@@ -4812,9 +4822,6 @@ encaps_var_offset:
                 }
 
                 // save position
-                if isInt {
-                    lnumber.GetNode().Position = position.NewTokensPosition($1, $2)
-                }
                 $$.GetNode().Position = position.NewTokensPosition($1, $2)
 
                 // save comments

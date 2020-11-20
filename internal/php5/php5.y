@@ -4493,23 +4493,23 @@ ctor_arguments:
 common_scalar:
         T_LNUMBER
             {
-                $$ = &ast.ScalarLnumber{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarLnumber{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    NumberTkn: $1,
+                    Value:     $1.Value,
+                }
             }
     |   T_DNUMBER
             {
-                $$ = &ast.ScalarDnumber{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarDnumber{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    NumberTkn: $1,
+                    Value:     $1.Value,
+                }
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
@@ -6146,7 +6146,13 @@ encaps_var_offset:
             {
                 // TODO: add option to handle 64 bit integer
                 if _, err := strconv.Atoi(string($1.Value)); err == nil {
-                    $$ = &ast.ScalarLnumber{ast.Node{}, $1.Value}
+                    $$ = &ast.ScalarLnumber{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        NumberTkn: $1,
+                        Value:     $1.Value,
+                    }
                 } else {
                     $$ = &ast.ScalarString{ast.Node{}, $1.Value}
                 }
