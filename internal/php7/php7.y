@@ -1865,15 +1865,23 @@ parameter:
                 yylex.(*Parser).setFreeFloating(variable, token.Start, $4.SkippedTokens)
 
                 if $3 != nil {
-                    variable = &ast.Variadic{ast.Node{}, variable}
-                    variable.GetNode().Position = position.NewTokensPosition($3, $4)
-                    yylex.(*Parser).setFreeFloating(variable, token.Start, $3.SkippedTokens)
+                    variable = &ast.Variadic{
+                        Node: ast.Node{
+                            Position: position.NewTokensPosition($3, $4),
+                        },
+                        VariadicTkn: $3,
+                        Var:         variable,
+                    }
                 }
 
                 if $2 != nil {
-                    variable = &ast.Reference{ast.Node{}, variable}
-                    variable.GetNode().Position = position.NewTokensPosition($2, $4)
-                    yylex.(*Parser).setFreeFloating(variable, token.Start, $2.SkippedTokens)
+                    variable = &ast.Reference{
+                        Node: ast.Node{
+                            Position: position.NewTokensPosition($2, $4),
+                        },
+                        AmpersandTkn: $2,
+                        Var:          variable,
+                    }
                 }
 
                 $$ = &ast.Parameter{ast.Node{}, $1, variable, nil}
@@ -1905,15 +1913,23 @@ parameter:
                 yylex.(*Parser).setFreeFloating(variable, token.End, $5.SkippedTokens)
 
                 if $3 != nil {
-                    variable = &ast.Variadic{ast.Node{}, variable}
-                    variable.GetNode().Position = position.NewTokensPosition($3, $4)
-                    yylex.(*Parser).setFreeFloating(variable, token.Start, $3.SkippedTokens)
+                    variable = &ast.Variadic{
+                        Node: ast.Node{
+                            Position: position.NewTokensPosition($3, $4),
+                        },
+                        VariadicTkn: $3,
+                        Var:         variable,
+                    }
                 }
 
                 if $2 != nil {
-                    variable = &ast.Reference{ast.Node{}, variable}
-                    variable.GetNode().Position = position.NewTokensPosition($2, $4)
-                    yylex.(*Parser).setFreeFloating(variable, token.Start, $2.SkippedTokens)
+                    variable = &ast.Reference{
+                        Node: ast.Node{
+                            Position: position.NewTokensPosition($2, $4),
+                        },
+                        AmpersandTkn: $2,
+                        Var:          variable,
+                    }
                 }
 
                 $$ = &ast.Parameter{ast.Node{}, $1, variable, $6}

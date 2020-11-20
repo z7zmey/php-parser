@@ -44,7 +44,8 @@ func (n *Nullable) Accept(v NodeVisitor) {
 // Reference node
 type Reference struct {
 	Node
-	Var Vertex
+	AmpersandTkn *token.Token
+	Var          Vertex
 }
 
 func (n *Reference) Accept(v NodeVisitor) {
@@ -54,7 +55,8 @@ func (n *Reference) Accept(v NodeVisitor) {
 // Variadic node
 type Variadic struct {
 	Node
-	Var Vertex
+	VariadicTkn *token.Token
+	Var         Vertex
 }
 
 func (n *Variadic) Accept(v NodeVisitor) {
