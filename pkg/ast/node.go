@@ -33,7 +33,8 @@ func (n *Root) Accept(v NodeVisitor) {
 // Nullable node
 type Nullable struct {
 	Node
-	Expr Vertex
+	QuestionTkn *token.Token
+	Expr        Vertex
 }
 
 func (n *Nullable) Accept(v NodeVisitor) {

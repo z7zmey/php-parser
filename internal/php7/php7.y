@@ -1948,13 +1948,13 @@ type_expr:
             }
     |   '?' type
             {
-                $$ = &ast.Nullable{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.Nullable{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    QuestionTkn: $1,
+                    Expr:        $2,
+                }
             }
 ;
 
