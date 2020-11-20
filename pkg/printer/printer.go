@@ -561,12 +561,12 @@ func (p *Printer) printNodeArgument(n ast.Vertex) {
 	nn := n.(*ast.Argument)
 	p.printFreeFloating(nn, token.Start)
 
-	if nn.IsReference {
+	if nn.AmpersandTkn != nil {
 		p.write([]byte("&"))
 	}
 	p.printFreeFloating(nn, token.Ampersand)
 
-	if nn.Variadic {
+	if nn.VariadicTkn != nil {
 		p.write([]byte("..."))
 	}
 

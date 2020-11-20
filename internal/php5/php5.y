@@ -242,7 +242,7 @@ import (
 %type <node> static_scalar_value static_operation static_var_list global_var_list
 %type <node> ctor_arguments function_call_parameter_list echo_expr_list
 %type <node> trait_adaptations unset_variables declare_list
-%type <node> switch_case_list
+%type <node> switch_case_list non_empty_function_call_parameter_list
 %type <node> method_body
 %type <node> foreach_statement for_statement while_statement
 %type <node> foreach_variable foreach_optional_arg
@@ -258,7 +258,7 @@ import (
 %type <list> for_expr case_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
 %type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration
-%type <list> interface_list non_empty_function_call_parameter_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
+%type <list> interface_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
 %type <list> trait_reference_list non_empty_member_modifiers backticks_expr static_array_pair_list non_empty_static_array_pair_list
 
 %type <list> chaining_dereference chaining_instance_call chaining_method_or_property instance_call variable_property
@@ -2170,38 +2170,40 @@ optional_class_type:
 function_call_parameter_list:
         '(' ')'
             {
-                $$ = &ast.ArgumentList{ast.Node{}, nil}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $2.SkippedTokens)
+                $$ = &ast.ArgumentList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $2),
+                    },
+                    OpenParenthesisTkn: $1,
+                    CloseParenthesisTkn: $2,
+                }
             }
     |   '(' non_empty_function_call_parameter_list ')'
             {
-                $$ = &ast.ArgumentList{ast.Node{}, $2}
+                argumentList := $2.(*ast.ArgumentList)
+                argumentList.Position = position.NewTokensPosition($1, $3)
+                argumentList.OpenParenthesisTkn = $1
+                argumentList.CloseParenthesisTkn = $3
 
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
+                $$ = argumentList
             }
     |   '(' yield_expr ')'
             {
-                arg := &ast.Argument{ast.Node{}, false, false, $2}
-                $$ = &ast.ArgumentList{ast.Node{}, []ast.Vertex{arg}}
-
-                // save position
-                arg.GetNode().Position = position.NewNodePosition($2)
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
+                $$ = &ast.ArgumentList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenParenthesisTkn: $1,
+                    Arguments: []ast.Vertex{
+                        &ast.Argument{
+                            Node: ast.Node{
+                                Position: position.NewNodePosition($2),
+                            },
+                            Expr: $2,
+                        },
+                    },
+                    CloseParenthesisTkn: $3,
+                }
             }
 ;
 
@@ -2209,57 +2211,57 @@ function_call_parameter_list:
 non_empty_function_call_parameter_list:
         function_call_parameter
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ArgumentList{
+                    Arguments: []ast.Vertex{$1},
+                }
             }
     |   non_empty_function_call_parameter_list ',' function_call_parameter
             {
-                $$ = append($1, $3)
+                $1.(*ast.ArgumentList).SeparatorTkns = append($1.(*ast.ArgumentList).SeparatorTkns, $2)
+                $1.(*ast.ArgumentList).Arguments = append($1.(*ast.ArgumentList).Arguments, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
 ;
 
 function_call_parameter:
         expr_without_variable
             {
-                $$ = &ast.Argument{ast.Node{}, false, false, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                $$ = &ast.Argument{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    Expr: $1,
+                }
             }
     |   variable
             {
-                $$ = &ast.Argument{ast.Node{}, false, false, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                $$ = &ast.Argument{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    Expr: $1,
+                }
             }
     |   '&' w_variable
             {
-                $$ = &ast.Argument{ast.Node{}, false, true, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.Argument{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    AmpersandTkn: $1,
+                    Expr:         $2,
+                }
             }
     |   T_ELLIPSIS expr
             {
-                $$ = &ast.Argument{ast.Node{}, true, false, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.Argument{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    VariadicTkn: $1,
+                    Expr:        $2,
+                }
             }
 ;
 

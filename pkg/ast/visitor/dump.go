@@ -240,16 +240,6 @@ func (v *Dump) Argument(n *ast.Argument) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.Argument{\n")
 	v.printNode(n.GetNode())
-
-	if n.Variadic {
-		v.printIndent(v.indent)
-		v.print("Variadic: true,\n")
-	}
-
-	if n.IsReference {
-		v.printIndent(v.indent)
-		v.print("IsReference: true,\n")
-	}
 }
 
 func (v *Dump) StmtBreak(n *ast.StmtBreak) {

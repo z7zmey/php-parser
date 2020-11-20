@@ -465,11 +465,11 @@ func (p *PrettyPrinter) printNodeNullable(n ast.Vertex) {
 func (p *PrettyPrinter) printNodeArgument(n ast.Vertex) {
 	nn := n.(*ast.Argument)
 
-	if nn.IsReference {
+	if nn.AmpersandTkn != nil {
 		io.WriteString(p.w, "&")
 	}
 
-	if nn.Variadic {
+	if nn.VariadicTkn != nil {
 		io.WriteString(p.w, "...")
 	}
 

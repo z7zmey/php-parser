@@ -90,7 +90,10 @@ func (n *Identifier) Accept(v NodeVisitor) {
 // ArgumentList node
 type ArgumentList struct {
 	Node
-	Arguments []Vertex
+	OpenParenthesisTkn  *token.Token
+	Arguments           []Vertex
+	SeparatorTkns       []*token.Token
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ArgumentList) Accept(v NodeVisitor) {
@@ -100,9 +103,9 @@ func (n *ArgumentList) Accept(v NodeVisitor) {
 // Argument node
 type Argument struct {
 	Node
-	Variadic    bool
-	IsReference bool
-	Expr        Vertex
+	VariadicTkn  *token.Token
+	AmpersandTkn *token.Token
+	Expr         Vertex
 }
 
 func (n *Argument) Accept(v NodeVisitor) {
