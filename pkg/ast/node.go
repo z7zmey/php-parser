@@ -75,7 +75,8 @@ func (n *Parameter) Accept(v NodeVisitor) {
 // Identifier node
 type Identifier struct {
 	Node
-	Value []byte
+	IdentifierTkn *token.Token
+	Value         []byte
 }
 
 func (n *Identifier) Accept(v NodeVisitor) {
