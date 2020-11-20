@@ -558,7 +558,7 @@ func (p *PrettyPrinter) printScalarEncapsed(n ast.Vertex) {
 func (p *PrettyPrinter) printScalarHeredoc(n ast.Vertex) {
 	nn := n.(*ast.ScalarHeredoc)
 
-	io.WriteString(p.w, string(nn.Label))
+	io.WriteString(p.w, string(nn.OpenHeredocTkn.Value))
 
 	for _, part := range nn.Parts {
 		switch part.(type) {
@@ -571,7 +571,7 @@ func (p *PrettyPrinter) printScalarHeredoc(n ast.Vertex) {
 		}
 	}
 
-	io.WriteString(p.w, strings.Trim(string(nn.Label), "<\"'\n"))
+	io.WriteString(p.w, strings.Trim(string(nn.OpenHeredocTkn.Value), "<\"'\n"))
 }
 
 func (p *PrettyPrinter) printScalarMagicConstant(n ast.Vertex) {

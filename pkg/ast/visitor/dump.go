@@ -1224,9 +1224,6 @@ func (v *Dump) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ScalarHeredoc{\n")
 	v.printNode(n.GetNode())
-
-	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Label: %q,\n", n.Label))
 }
 
 func (v *Dump) ScalarLnumber(n *ast.ScalarLnumber) {

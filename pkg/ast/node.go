@@ -126,7 +126,9 @@ func (n *ScalarDnumber) Accept(v NodeVisitor) {
 // ScalarEncapsed node
 type ScalarEncapsed struct {
 	Node
-	Parts []Vertex
+	OpenQoteTkn  *token.Token
+	Parts        []Vertex
+	CloseQoteTkn *token.Token
 }
 
 func (n *ScalarEncapsed) Accept(v NodeVisitor) {
@@ -136,7 +138,8 @@ func (n *ScalarEncapsed) Accept(v NodeVisitor) {
 // ScalarEncapsedStringPart node
 type ScalarEncapsedStringPart struct {
 	Node
-	Value []byte
+	EncapsedStrTkn *token.Token
+	Value          []byte
 }
 
 func (n *ScalarEncapsedStringPart) Accept(v NodeVisitor) {
@@ -146,8 +149,9 @@ func (n *ScalarEncapsedStringPart) Accept(v NodeVisitor) {
 // ScalarHeredoc node
 type ScalarHeredoc struct {
 	Node
-	Label []byte
-	Parts []Vertex
+	OpenHeredocTkn  *token.Token
+	Parts           []Vertex
+	CloseHeredocTkn *token.Token
 }
 
 func (n *ScalarHeredoc) Accept(v NodeVisitor) {

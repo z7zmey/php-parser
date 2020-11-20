@@ -4467,11 +4467,15 @@ backticks_expr:
             }
     |   T_ENCAPSED_AND_WHITESPACE
             {
-                part := &ast.ScalarEncapsedStringPart{ast.Node{}, $1.Value}
-                $$ = []ast.Vertex{part}
-
-                // save position
-                part.GetNode().Position = position.NewTokenPosition($1)
+                $$ = []ast.Vertex{
+                    &ast.ScalarEncapsedStringPart{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        EncapsedStrTkn: $1,
+                        Value:          $1.Value,
+                    },
+                }
             }
     |   encaps_list
             {
@@ -4593,25 +4597,32 @@ common_scalar:
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
-                encapsed := &ast.ScalarEncapsedStringPart{ast.Node{}, $2.Value}
-                $$ = &ast.ScalarHeredoc{ast.Node{}, $1.Value, []ast.Vertex{encapsed}}
-
-                // save position
-                encapsed.GetNode().Position = position.NewTokenPosition($2)
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarHeredoc{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenHeredocTkn: $1,
+                    Parts: []ast.Vertex{
+                        &ast.ScalarEncapsedStringPart{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($2),
+                            },
+                            EncapsedStrTkn: $2,
+                            Value:          $2.Value,
+                        },
+                    },
+                    CloseHeredocTkn: $3,
+                }
             }
     |   T_START_HEREDOC T_END_HEREDOC
             {
-                $$ = &ast.ScalarHeredoc{ast.Node{}, $1.Value, nil}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarHeredoc{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $2),
+                    },
+                    OpenHeredocTkn:  $1,
+                    CloseHeredocTkn: $2,
+                }
             }
 ;
 
@@ -5180,23 +5191,25 @@ scalar:
             }
     |   '"' encaps_list '"'
             {
-                $$ = &ast.ScalarEncapsed{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarEncapsed{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenQoteTkn:  $1,
+                    Parts:        $2,
+                    CloseQoteTkn: $1,
+                }
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
-                 $$ = &ast.ScalarHeredoc{ast.Node{}, $1.Value, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarHeredoc{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenHeredocTkn:  $1,
+                    Parts:           $2,
+                    CloseHeredocTkn: $3,
+                }
             }
     |   T_CLASS_C
             {
@@ -5976,14 +5989,16 @@ encaps_list:
             }
     |   encaps_list T_ENCAPSED_AND_WHITESPACE
             {
-                encapsed := &ast.ScalarEncapsedStringPart{ast.Node{}, $2.Value}
-                $$ = append($1, encapsed)
-
-                // save position
-                encapsed.GetNode().Position = position.NewTokenPosition($2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(encapsed, token.Start, $2.SkippedTokens)
+                $$ = append(
+                    $1,
+                    &ast.ScalarEncapsedStringPart{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($2),
+                        },
+                        EncapsedStrTkn: $2,
+                        Value:          $2.Value,
+                    },
+                )
             }
     |   encaps_var
             {
@@ -5991,14 +6006,16 @@ encaps_list:
             }
     |   T_ENCAPSED_AND_WHITESPACE encaps_var
             {
-                encapsed := &ast.ScalarEncapsedStringPart{ast.Node{}, $1.Value}
-                $$ = []ast.Vertex{encapsed, $2}
-
-                // save position
-                encapsed.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(encapsed, token.Start, $1.SkippedTokens)
+                $$ = []ast.Vertex{
+                    &ast.ScalarEncapsedStringPart{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        EncapsedStrTkn: $1,
+                        Value:          $1.Value,
+                    },
+                    $2,
+                }
             }
 ;
 

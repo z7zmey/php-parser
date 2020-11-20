@@ -687,7 +687,7 @@ func (p *Printer) printScalarHeredoc(n ast.Vertex) {
 	p.printFreeFloatingOrDefault(nn, token.Start, p.bufStart)
 	p.bufStart = ""
 
-	p.write(nn.Label)
+	p.write(nn.OpenHeredocTkn.Value)
 
 	for _, part := range nn.Parts {
 		switch part.(type) {
@@ -710,7 +710,7 @@ func (p *Printer) printScalarHeredoc(n ast.Vertex) {
 		}
 	}
 
-	p.write([]byte(strings.Trim(string(nn.Label), "<\"'\n")))
+	p.write([]byte(strings.Trim(string(nn.OpenHeredocTkn.Value), "<\"'\n")))
 
 	p.printFreeFloating(nn, token.End)
 }
