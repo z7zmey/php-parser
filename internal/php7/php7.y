@@ -3931,13 +3931,13 @@ dereferencable_scalar:
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
-                $$ = &ast.ScalarString{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarString{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    StringTkn: $1,
+                    Value:     $1.Value,
+                }
             }
 ;
 
@@ -3964,83 +3964,83 @@ scalar:
             }
     |   T_LINE
             {
-                $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarMagicConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    MagicConstTkn: $1,
+                    Value:         $1.Value,
+                }
             }
     |   T_FILE
             {
-                $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarMagicConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    MagicConstTkn: $1,
+                    Value:         $1.Value,
+                }
             }
     |   T_DIR
             {
-                $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarMagicConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    MagicConstTkn: $1,
+                    Value:         $1.Value,
+                }
             }
     |   T_TRAIT_C
             {
-                $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarMagicConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    MagicConstTkn: $1,
+                    Value:         $1.Value,
+                }
             }
     |   T_METHOD_C
             {
-                $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarMagicConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    MagicConstTkn: $1,
+                    Value:         $1.Value,
+                }
             }
     |   T_FUNC_C
             {
-                $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarMagicConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    MagicConstTkn: $1,
+                    Value:         $1.Value,
+                }
             }
     |   T_NS_C
             {
-                $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarMagicConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    MagicConstTkn: $1,
+                    Value:         $1.Value,
+                }
             }
     |   T_CLASS_C
             {
-                $$ = &ast.ScalarMagicConstant{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarMagicConstant{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    MagicConstTkn: $1,
+                    Value:         $1.Value,
+                }
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
@@ -4790,13 +4790,13 @@ encaps_var:
 encaps_var_offset:
         T_STRING
             {
-                $$ = &ast.ScalarString{ast.Node{}, $1.Value}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ScalarString{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    StringTkn: $1,
+                    Value:     $1.Value,
+                }
             }
     |   T_NUM_STRING
             {
@@ -4810,14 +4810,14 @@ encaps_var_offset:
                         Value:     $1.Value,
                     }
                 } else {
-                    $$ = &ast.ScalarString{ast.Node{}, $1.Value}
+                    $$ = &ast.ScalarString{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        StringTkn: $1,
+                        Value:     $1.Value,
+                    }
                 }
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   '-' T_NUM_STRING
             {
@@ -4833,16 +4833,17 @@ encaps_var_offset:
                         Value:     $2.Value,
                     }
                     $$ = &ast.ExprUnaryMinus{ast.Node{}, lnumber}
+                    $$.GetNode().Position = position.NewTokensPosition($1, $2)
                 } else {
-                    $2.Value = append([]byte("-"), $2.Value...)
-                    $$ = &ast.ScalarString{ast.Node{}, $2.Value}
+                    $$ = &ast.ScalarString{
+                        Node: ast.Node{
+                            Position: position.NewTokensPosition($1, $2),
+                        },
+                        MinusTkn:  $1,
+                        StringTkn: $2,
+                        Value:     append([]byte("-"), $2.Value...),
+                    }
                 }
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_VARIABLE
             {

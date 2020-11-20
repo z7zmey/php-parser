@@ -172,7 +172,8 @@ func (n *ScalarLnumber) Accept(v NodeVisitor) {
 // ScalarMagicConstant node
 type ScalarMagicConstant struct {
 	Node
-	Value []byte
+	MagicConstTkn *token.Token
+	Value         []byte
 }
 
 func (n *ScalarMagicConstant) Accept(v NodeVisitor) {
@@ -182,7 +183,9 @@ func (n *ScalarMagicConstant) Accept(v NodeVisitor) {
 // ScalarString node
 type ScalarString struct {
 	Node
-	Value []byte
+	MinusTkn  *token.Token
+	StringTkn *token.Token
+	Value     []byte
 }
 
 func (n *ScalarString) Accept(v NodeVisitor) {
