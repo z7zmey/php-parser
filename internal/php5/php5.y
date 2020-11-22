@@ -18,9 +18,6 @@ import (
     list                    []ast.Vertex
     simpleIndirectReference simpleIndirectReference
 
-    ClassExtends            *ast.StmtClassExtends
-    ClassImplements         *ast.StmtClassImplements
-    InterfaceExtends        *ast.StmtInterfaceExtends
     ClosureUse              *ast.ExprClosureUse
 }
 
@@ -243,13 +240,12 @@ import (
 %type <node> ctor_arguments function_call_parameter_list echo_expr_list
 %type <node> trait_adaptations unset_variables declare_list
 %type <node> switch_case_list non_empty_function_call_parameter_list
-%type <node> method_body
+%type <node> method_body trait_reference_list
 %type <node> foreach_statement for_statement while_statement
 %type <node> foreach_variable foreach_optional_arg
-
-%type <ClassExtends> extends_from
-%type <ClassImplements> implements_list
-%type <InterfaceExtends> interface_extends_list
+%type <node> extends_from interface_list trait_list
+%type <node> implements_list
+%type <node> interface_extends_list
 %type <ClosureUse> lexical_vars
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
@@ -258,8 +254,8 @@ import (
 %type <list> for_expr case_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
 %type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration
-%type <list> interface_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
-%type <list> trait_reference_list non_empty_member_modifiers backticks_expr static_array_pair_list non_empty_static_array_pair_list
+%type <list> trait_adaptation_list non_empty_trait_adaptation_list
+%type <list> non_empty_member_modifiers backticks_expr static_array_pair_list non_empty_static_array_pair_list
 
 %type <list> chaining_dereference chaining_instance_call chaining_method_or_property instance_call variable_property
 %type <list> method_or_not array_method_dereference object_property object_dim_list dynamic_class_name_variable_property
@@ -1527,13 +1523,13 @@ extends_from:
             }
     |   T_EXTENDS fully_qualified_class_name
             {
-                $$ = &ast.StmtClassExtends{ast.Node{}, $2};
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtClassExtends{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    ExtendTkn: $1,
+                    ClassName: $2,
+                }
             }
 ;
 
@@ -1551,13 +1547,14 @@ interface_extends_list:
             }
     |   T_EXTENDS interface_list
             {
-                $$ = &ast.StmtInterfaceExtends{ast.Node{}, $2};
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtInterfaceExtends{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    },
+                    ExtendsTkn:     $1,
+                    InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                };
             }
 ;
 
@@ -1568,29 +1565,30 @@ implements_list:
             }
     |   T_IMPLEMENTS interface_list
             {
-                $$ = &ast.StmtClassImplements{ast.Node{}, $2};
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtClassImplements{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    },
+                    ImplementsTkn:  $1,
+                    InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                };
             }
 ;
 
 interface_list:
         fully_qualified_class_name
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
     |   interface_list ',' fully_qualified_class_name
             {
-                switch n := lastNode($1).(type) {
-                    case *ast.NameName: n.ListSeparatorTkn = $2
-                    case *ast.NameFullyQualified: n.ListSeparatorTkn = $2
-                    case *ast.NameRelative: n.ListSeparatorTkn = $2
-                }
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+
+                $$ = $1
             }
 ;
 
@@ -2520,29 +2518,31 @@ class_statement:
 trait_use_statement:
         T_USE trait_list trait_adaptations
             {
-                $$ = &ast.StmtTraitUse{ast.Node{}, $2, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtTraitUse{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $3),
+                    },
+                    UseTkn:        $1,
+                    Traits:        $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Adaptations:   $3,
+                }
             }
 ;
 
 trait_list:
         fully_qualified_class_name
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
     |   trait_list ',' fully_qualified_class_name
             {
-                switch n := lastNode($1).(type) {
-                    case *ast.NameName: n.ListSeparatorTkn = $2
-                    case *ast.NameFullyQualified: n.ListSeparatorTkn = $2
-                    case *ast.NameRelative: n.ListSeparatorTkn = $2
-                }
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+
+                $$ = $1
             }
 ;
 
@@ -2612,28 +2612,31 @@ trait_adaptation_statement:
 trait_precedence:
         trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list
             {
-                $$ = &ast.StmtTraitUsePrecedence{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeNodeListPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
+                $$ = &ast.StmtTraitUsePrecedence{
+                    Node: ast.Node{
+                        Position: position.NewNodeNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                    },
+                    Ref:           $1,
+                    InsteadofTkn:  $2,
+                    Insteadof:     $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns: $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                }
             }
 ;
 
 trait_reference_list:
         fully_qualified_class_name
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
     |   trait_reference_list ',' fully_qualified_class_name
             {
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
 ;
 

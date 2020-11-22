@@ -1482,12 +1482,12 @@ func (p *PrettyPrinter) printStmtClass(n ast.Vertex) {
 
 	if nn.Extends != nil {
 		io.WriteString(p.w, " extends ")
-		p.Print(nn.Extends.ClassName)
+		p.Print(nn.Extends.(*ast.StmtClassExtends).ClassName)
 	}
 
 	if nn.Implements != nil {
 		io.WriteString(p.w, " implements ")
-		p.joinPrint(", ", nn.Implements.InterfaceNames)
+		p.joinPrint(", ", nn.Implements.(*ast.StmtClassImplements).InterfaceNames)
 	}
 
 	io.WriteString(p.w, "\n")
@@ -1888,7 +1888,7 @@ func (p *PrettyPrinter) printStmtInterface(n ast.Vertex) {
 
 	if nn.Extends != nil {
 		io.WriteString(p.w, " extends ")
-		p.joinPrint(", ", nn.Extends.InterfaceNames)
+		p.joinPrint(", ", nn.Extends.(*ast.StmtInterfaceExtends).InterfaceNames)
 	}
 
 	io.WriteString(p.w, "\n")
@@ -2073,7 +2073,7 @@ func (p *PrettyPrinter) printStmtTraitUse(n ast.Vertex) {
 	io.WriteString(p.w, "use ")
 	p.joinPrint(", ", nn.Traits)
 
-	if adaptationList, ok := nn.TraitAdaptationList.(*ast.StmtTraitAdaptationList); ok {
+	if adaptationList, ok := nn.Adaptations.(*ast.StmtTraitAdaptationList); ok {
 		adaptations := adaptationList.Adaptations
 		io.WriteString(p.w, " {\n")
 		p.printNodes(adaptations)

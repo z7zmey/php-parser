@@ -2108,7 +2108,7 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 		}
 		p.write([]byte("extends"))
 		p.bufStart = " "
-		p.Print(nn.Extends.ClassName)
+		p.Print(nn.Extends.(*ast.StmtClassExtends).ClassName)
 	}
 
 	if nn.Implements != nil {
@@ -2118,7 +2118,7 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 		}
 		p.write([]byte("implements"))
 		p.bufStart = " "
-		p.joinPrintRefactored(",", nn.Implements.InterfaceNames)
+		p.joinPrintRefactored(",", nn.Implements.(*ast.StmtClassImplements).InterfaceNames)
 
 	}
 
@@ -2503,7 +2503,7 @@ func (p *Printer) printStmtInterface(n ast.Vertex) {
 		}
 		p.write([]byte("extends"))
 		p.bufStart = " "
-		p.joinPrintRefactored(",", nn.Extends.InterfaceNames)
+		p.joinPrintRefactored(",", nn.Extends.(*ast.StmtInterfaceExtends).InterfaceNames)
 	}
 
 	p.printFreeFloating(nn, token.Name)
@@ -2755,7 +2755,7 @@ func (p *Printer) printStmtTraitUse(n ast.Vertex) {
 	p.bufStart = " "
 	p.joinPrintRefactored(",", nn.Traits)
 
-	p.Print(nn.TraitAdaptationList)
+	p.Print(nn.Adaptations)
 
 	p.printFreeFloating(nn, token.End)
 }

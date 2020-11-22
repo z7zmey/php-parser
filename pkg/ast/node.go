@@ -242,8 +242,8 @@ type StmtClass struct {
 	ClassTkn          *token.Token
 	ClassName         Vertex
 	ArgumentList      Vertex
-	Extends           *StmtClassExtends
-	Implements        *StmtClassImplements
+	Extends           Vertex
+	Implements        Vertex
 	OpenCurlyBracket  *token.Token
 	Stmts             []Vertex
 	CloseCurlyBracket *token.Token
@@ -269,6 +269,7 @@ func (n *StmtClassConstList) Accept(v NodeVisitor) {
 // StmtClassExtends node
 type StmtClassExtends struct {
 	Node
+	ExtendTkn *token.Token
 	ClassName Vertex
 }
 
@@ -279,7 +280,9 @@ func (n *StmtClassExtends) Accept(v NodeVisitor) {
 // StmtClassImplements node
 type StmtClassImplements struct {
 	Node
+	ImplementsTkn  *token.Token
 	InterfaceNames []Vertex
+	SeparatorTkns  []*token.Token
 }
 
 func (n *StmtClassImplements) Accept(v NodeVisitor) {
@@ -582,7 +585,7 @@ func (n *StmtInlineHtml) Accept(v NodeVisitor) {
 type StmtInterface struct {
 	Node
 	InterfaceName Vertex
-	Extends       *StmtInterfaceExtends
+	Extends       Vertex
 	Stmts         []Vertex
 }
 
@@ -593,7 +596,9 @@ func (n *StmtInterface) Accept(v NodeVisitor) {
 // StmtInterfaceExtends node
 type StmtInterfaceExtends struct {
 	Node
+	ExtendsTkn     *token.Token
 	InterfaceNames []Vertex
+	SeparatorTkns  []*token.Token
 }
 
 func (n *StmtInterfaceExtends) Accept(v NodeVisitor) {
@@ -746,8 +751,8 @@ type StmtTrait struct {
 	Node
 	TraitTkn          *token.Token
 	TraitName         Vertex
-	Extends           *StmtClassExtends
-	Implements        *StmtClassImplements
+	Extends           Vertex
+	Implements        Vertex
 	OpenCurlyBracket  *token.Token
 	Stmts             []Vertex
 	CloseCurlyBracket *token.Token
@@ -781,8 +786,10 @@ func (n *StmtTraitMethodRef) Accept(v NodeVisitor) {
 // StmtTraitUse node
 type StmtTraitUse struct {
 	Node
-	Traits              []Vertex
-	TraitAdaptationList Vertex
+	UseTkn        *token.Token
+	Traits        []Vertex
+	SeparatorTkns []*token.Token
+	Adaptations   Vertex
 }
 
 func (n *StmtTraitUse) Accept(v NodeVisitor) {
@@ -804,8 +811,10 @@ func (n *StmtTraitUseAlias) Accept(v NodeVisitor) {
 // StmtTraitUsePrecedence node
 type StmtTraitUsePrecedence struct {
 	Node
-	Ref       Vertex
-	Insteadof []Vertex
+	Ref           Vertex
+	InsteadofTkn  *token.Token
+	Insteadof     []Vertex
+	SeparatorTkns []*token.Token
 }
 
 func (n *StmtTraitUsePrecedence) Accept(v NodeVisitor) {

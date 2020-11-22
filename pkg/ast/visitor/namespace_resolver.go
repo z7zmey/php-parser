@@ -73,11 +73,11 @@ func (nsr *NamespaceResolver) StmtGroupUse(n *ast.StmtGroupUse) {
 
 func (nsr *NamespaceResolver) StmtClass(n *ast.StmtClass) {
 	if n.Extends != nil {
-		nsr.ResolveName(n.Extends.ClassName, "")
+		nsr.ResolveName(n.Extends.(*ast.StmtClassExtends).ClassName, "")
 	}
 
 	if n.Implements != nil {
-		for _, interfaceName := range n.Implements.InterfaceNames {
+		for _, interfaceName := range n.Implements.(*ast.StmtClassImplements).InterfaceNames {
 			nsr.ResolveName(interfaceName, "")
 		}
 	}
@@ -89,7 +89,7 @@ func (nsr *NamespaceResolver) StmtClass(n *ast.StmtClass) {
 
 func (nsr *NamespaceResolver) StmtInterface(n *ast.StmtInterface) {
 	if n.Extends != nil {
-		for _, interfaceName := range n.Extends.InterfaceNames {
+		for _, interfaceName := range n.Extends.(*ast.StmtInterfaceExtends).InterfaceNames {
 			nsr.ResolveName(interfaceName, "")
 		}
 	}
@@ -184,7 +184,7 @@ func (nsr *NamespaceResolver) StmtTraitUse(n *ast.StmtTraitUse) {
 		nsr.ResolveName(t, "")
 	}
 
-	if adaptationList, ok := n.TraitAdaptationList.(*ast.StmtTraitAdaptationList); ok {
+	if adaptationList, ok := n.Adaptations.(*ast.StmtTraitAdaptationList); ok {
 		for _, a := range adaptationList.Adaptations {
 			switch aa := a.(type) {
 			case *ast.StmtTraitUsePrecedence:

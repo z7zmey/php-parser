@@ -893,10 +893,10 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			}
 			t.visitor.Leave("Traits", false)
 		}
-		if nn.TraitAdaptationList != nil {
-			t.visitor.Enter("TraitAdaptationList", true)
-			t.Traverse(nn.TraitAdaptationList)
-			t.visitor.Leave("TraitAdaptationList", true)
+		if nn.Adaptations != nil {
+			t.visitor.Enter("Adaptations", true)
+			t.Traverse(nn.Adaptations)
+			t.visitor.Leave("Adaptations", true)
 		}
 	case *ast.StmtTraitUseAlias:
 		if nn == nil {

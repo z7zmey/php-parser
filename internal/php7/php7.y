@@ -18,9 +18,6 @@ import (
     tkn              *token.Token
     list             []ast.Vertex
 
-    ClassExtends     *ast.StmtClassExtends
-    ClassImplements  *ast.StmtClassImplements
-    InterfaceExtends *ast.StmtInterfaceExtends
     ClosureUse       *ast.ExprClosureUse
 }
 
@@ -249,7 +246,7 @@ import (
 %type <node> exit_expr scalar lexical_var function_call member_name property_name
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
-%type <node> encaps_var encaps_var_offset echo_expr_list catch_name_list
+%type <node> encaps_var encaps_var_offset echo_expr_list catch_name_list name_list
 %type <node> if_stmt const_list non_empty_argument_list
 %type <node> alt_if_stmt
 %type <node> if_stmt_without_else
@@ -265,9 +262,9 @@ import (
 %type <node> foreach_statement for_statement while_statement
 %type <node> inline_function
 %type <node> unset_variables
-%type <ClassExtends> extends_from
-%type <ClassImplements> implements_list
-%type <InterfaceExtends> interface_extends_list
+%type <node> extends_from
+%type <node> implements_list
+%type <node> interface_extends_list
 %type <ClosureUse> lexical_vars
 
 %type <node> member_modifier
@@ -283,7 +280,7 @@ import (
 %type <list> array_pair_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
 %type <list> method_modifiers variable_modifiers
-%type <list> non_empty_member_modifiers name_list class_modifiers
+%type <list> non_empty_member_modifiers class_modifiers
 
 %%
 
@@ -1399,13 +1396,13 @@ extends_from:
             }
     |   T_EXTENDS name
             {
-                $$ = &ast.StmtClassExtends{ast.Node{}, $2};
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtClassExtends{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    ExtendTkn: $1,
+                    ClassName: $2,
+                }
             }
 ;
 
@@ -1416,13 +1413,14 @@ interface_extends_list:
             }
     |   T_EXTENDS name_list
             {
-                $$ = &ast.StmtInterfaceExtends{ast.Node{}, $2};
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtInterfaceExtends{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    },
+                    ExtendsTkn:     $1,
+                    InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                };
             }
 ;
 
@@ -1433,13 +1431,14 @@ implements_list:
             }
     |   T_IMPLEMENTS name_list
             {
-                $$ = &ast.StmtClassImplements{ast.Node{}, $2};
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtClassImplements{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    },
+                    ImplementsTkn:  $1,
+                    InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                };
             }
 ;
 
@@ -2223,13 +2222,15 @@ class_statement:
             }
     |   T_USE name_list trait_adaptations
             {
-                $$ = &ast.StmtTraitUse{ast.Node{}, $2, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtTraitUse{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $3),
+                    },
+                    UseTkn:        $1,
+                    Traits:        $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Adaptations:   $3,
+                }
             }
     |   method_modifiers T_FUNCTION returns_ref identifier backup_doc_comment '(' parameter_list ')' return_type method_body
             {
@@ -2269,16 +2270,16 @@ class_statement:
 name_list:
         name
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
     |   name_list ',' name
             {
-                switch n := lastNode($1).(type) {
-                    case *ast.NameName: n.ListSeparatorTkn = $2
-                    case *ast.NameFullyQualified: n.ListSeparatorTkn = $2
-                    case *ast.NameRelative: n.ListSeparatorTkn = $2
-                }
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+
+                $$ = $1
             }
 ;
 
@@ -2347,14 +2348,15 @@ trait_adaptation:
 trait_precedence:
         absolute_trait_method_reference T_INSTEADOF name_list
             {
-                $$ = &ast.StmtTraitUsePrecedence{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeNodeListPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
+                $$ = &ast.StmtTraitUsePrecedence{
+                    Node: ast.Node{
+                        Position: position.NewNodeNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                    },
+                    Ref:           $1,
+                    InsteadofTkn:  $2,
+                    Insteadof:     $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns: $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                }
             }
 ;
 
