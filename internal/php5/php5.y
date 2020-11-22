@@ -1408,33 +1408,38 @@ unticked_function_declaration_statement:
 unticked_class_declaration_statement:
         class_entry_type T_STRING extends_from implements_list '{' class_statement_list '}'
             {
-                name := &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($2),
-                    },
-                    IdentifierTkn: $2,
-                    Value:         $2.Value,
-                }
                 switch n := $1.(type) {
                     case *ast.StmtClass :
-                        n.ClassName = name
-                        n.Stmts = $6
+                        n.Position = position.NewNodeTokenPosition($1, $7)
+                        n.ClassName = &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($2),
+                            },
+                            IdentifierTkn: $2,
+                            Value:         $2.Value,
+                        }
                         n.Extends = $3
                         n.Implements = $4
-
-                    case *ast.StmtTrait :
-                        // TODO: is it possible that trait extend or implement
-                        n.TraitName = name
+                        n.OpenCurlyBracket = $5
                         n.Stmts = $6
+                        n.CloseCurlyBracket = $7
+                    case *ast.StmtTrait :
+                        n.Position = position.NewNodeTokenPosition($1, $7)
+                        n.TraitName = &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($2),
+                            },
+                            IdentifierTkn: $2,
+                            Value:         $2.Value,
+                        }
+                        n.Extends = $3
+                        n.Implements = $4
+                        n.OpenCurlyBracket = $5
+                        n.Stmts = $6
+                        n.CloseCurlyBracket = $7
                 }
+
                 $$ = $1
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $7)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Name, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $7.SkippedTokens)
             }
     |   interface_entry T_STRING interface_extends_list '{' class_statement_list '}'
             {
@@ -1461,59 +1466,57 @@ unticked_class_declaration_statement:
 class_entry_type:
         T_CLASS
             {
-                $$ = &ast.StmtClass{ast.Node{}, nil, nil, nil, nil, nil, nil}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.StmtClass{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    ClassTkn: $1,
+                }
             }
     |   T_ABSTRACT T_CLASS
             {
-                classModifier := &ast.Identifier{
+                $$ = &ast.StmtClass{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
+                        Position: position.NewTokensPosition($1, $2),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
+                    Modifiers: []ast.Vertex{
+                        &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            IdentifierTkn: $1,
+                            Value:         $1.Value,
+                        },
+                    },
+                    ClassTkn: $2,
                 }
-                $$ = &ast.StmtClass{ast.Node{}, nil, []ast.Vertex{classModifier}, nil, nil, nil, nil}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.SkippedTokens)
             }
     |   T_TRAIT
             {
-                $$ = &ast.Identifier{
+                $$ = &ast.StmtTrait{
                     Node: ast.Node{
                         Position: position.NewTokenPosition($1),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
+                    TraitTkn: $1,
                 }
             }
     |   T_FINAL T_CLASS
             {
-                classModifier := &ast.Identifier{
+                $$ = &ast.StmtClass{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
+                        Position: position.NewTokensPosition($1, $2),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
+                    Modifiers: []ast.Vertex{
+                        &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            IdentifierTkn: $1,
+                            Value:         $1.Value,
+                        },
+                    },
+                    ClassTkn: $2,
                 }
-                $$ = &ast.StmtClass{ast.Node{}, nil, []ast.Vertex{classModifier}, nil, nil, nil, nil}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.SkippedTokens)
             }
 ;
 

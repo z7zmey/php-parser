@@ -1271,40 +1271,46 @@ is_variadic:
 class_declaration_statement:
     class_modifiers T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                name := &ast.Identifier{
+                $$ = &ast.StmtClass{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewOptionalListTokensPosition($1, $2, $9),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Modifiers: $1,
+                    ClassTkn:  $2,
+                    ClassName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
+                    Extends:           $4,
+                    Implements:        $5,
+                    OpenCurlyBracket:  $7,
+                    Stmts:             $8,
+                    CloseCurlyBracket: $9,
                 }
-                $$ = &ast.StmtClass{ast.Node{}, name, $1, nil, $4, $5, $8}
-
-                // save position
-                $$.GetNode().Position = position.NewOptionalListTokensPosition($1, $2, $9)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $9.SkippedTokens)
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                name := &ast.Identifier{
+                $$ = &ast.StmtClass{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($2),
+                        Position: position.NewTokensPosition($1, $8),
                     },
-                    IdentifierTkn: $2,
-                    Value:         $2.Value,
+                    ClassTkn: $1,
+                    ClassName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($2),
+                        },
+                        IdentifierTkn: $2,
+                        Value:         $2.Value,
+                    },
+                    Extends:           $3,
+                    Implements:        $4,
+                    OpenCurlyBracket:  $6,
+                    Stmts:             $7,
+                    CloseCurlyBracket: $8,
                 }
-                $$ = &ast.StmtClass{ast.Node{}, name, nil, nil, $3, $4, $7}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $8)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $8.SkippedTokens)
             }
 ;
 
@@ -1345,22 +1351,22 @@ class_modifier:
 trait_declaration_statement:
         T_TRAIT T_STRING backup_doc_comment '{' class_statement_list '}'
             {
-                name := &ast.Identifier{
+                $$ = &ast.StmtTrait{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($2),
+                        Position: position.NewTokensPosition($1, $6),
                     },
-                    IdentifierTkn: $2,
-                    Value:         $2.Value,
+                    TraitTkn: $1,
+                    TraitName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($2),
+                        },
+                        IdentifierTkn: $2,
+                        Value:         $2.Value,
+                    },
+                    OpenCurlyBracket:  $4,
+                    Stmts:             $5,
+                    CloseCurlyBracket: $6,
                 }
-                $$ = &ast.StmtTrait{ast.Node{}, name, $5}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $6)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $4.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $6.SkippedTokens)
             }
 ;
 
@@ -2756,19 +2762,18 @@ non_empty_for_exprs:
 anonymous_class:
         T_CLASS ctor_arguments extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                if $2 != nil {
-                    $$ = &ast.StmtClass{ast.Node{}, nil, nil, $2.(*ast.ArgumentList), $3, $4, $7}
-                } else {
-                    $$ = &ast.StmtClass{ast.Node{}, nil, nil, nil, $3, $4, $7}
+                $$ = &ast.StmtClass{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $8),
+                    },
+                    ClassTkn:          $1,
+                    ArgumentList:      $2,
+                    Extends:           $3,
+                    Implements:        $4,
+                    OpenCurlyBracket:  $6,
+                    Stmts:             $7,
+                    CloseCurlyBracket: $8,
                 }
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $8)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $6.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $8.SkippedTokens)
             }
 ;
 

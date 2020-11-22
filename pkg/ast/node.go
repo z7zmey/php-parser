@@ -238,12 +238,15 @@ func (n *StmtCatch) Accept(v NodeVisitor) {
 // StmtClass node
 type StmtClass struct {
 	Node
-	ClassName    Vertex
-	Modifiers    []Vertex
-	ArgumentList *ArgumentList
-	Extends      *StmtClassExtends
-	Implements   *StmtClassImplements
-	Stmts        []Vertex
+	Modifiers         []Vertex
+	ClassTkn          *token.Token
+	ClassName         Vertex
+	ArgumentList      Vertex
+	Extends           *StmtClassExtends
+	Implements        *StmtClassImplements
+	OpenCurlyBracket  *token.Token
+	Stmts             []Vertex
+	CloseCurlyBracket *token.Token
 }
 
 func (n *StmtClass) Accept(v NodeVisitor) {
@@ -741,8 +744,13 @@ func (n *StmtThrow) Accept(v NodeVisitor) {
 // StmtTrait node
 type StmtTrait struct {
 	Node
-	TraitName Vertex
-	Stmts     []Vertex
+	TraitTkn          *token.Token
+	TraitName         Vertex
+	Extends           *StmtClassExtends
+	Implements        *StmtClassImplements
+	OpenCurlyBracket  *token.Token
+	Stmts             []Vertex
+	CloseCurlyBracket *token.Token
 }
 
 func (n *StmtTrait) Accept(v NodeVisitor) {

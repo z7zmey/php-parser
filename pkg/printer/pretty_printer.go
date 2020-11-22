@@ -1476,7 +1476,7 @@ func (p *PrettyPrinter) printStmtClass(n ast.Vertex) {
 
 	if nn.ArgumentList != nil {
 		io.WriteString(p.w, "(")
-		p.joinPrint(", ", nn.ArgumentList.Arguments)
+		p.joinPrint(", ", nn.ArgumentList.(*ast.ArgumentList).Arguments)
 		io.WriteString(p.w, ")")
 	}
 

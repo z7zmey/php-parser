@@ -2097,7 +2097,7 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 
 	if nn.ArgumentList != nil {
 		p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
-		p.joinPrint(",", nn.ArgumentList.Arguments)
+		p.joinPrint(",", nn.ArgumentList.(*ast.ArgumentList).Arguments)
 		p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
 	}
 
