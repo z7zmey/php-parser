@@ -1033,15 +1033,13 @@ unticked_statement:
             }
     |   yield_expr ';'
             {
-                $$ = &ast.StmtExpression{ast.Node{}, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
+                $$ = &ast.StmtExpression{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $2),
+                    },
+                    Expr:         $1,
+                    SemiColonTkn: $2,
+                }
             }
     |   T_GLOBAL global_var_list ';'
             {
@@ -1081,15 +1079,13 @@ unticked_statement:
             }
     |   expr ';'
             {
-                $$ = &ast.StmtExpression{ast.Node{}, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
+                $$ = &ast.StmtExpression{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $2),
+                    },
+                    Expr:         $1,
+                    SemiColonTkn: $2,
+                }
             }
     |   T_UNSET '(' unset_variables ')' ';'
             {
@@ -1439,22 +1435,23 @@ unticked_class_declaration_statement:
             }
     |   interface_entry T_STRING interface_extends_list '{' class_statement_list '}'
             {
-                name := &ast.Identifier{
+                $$ = &ast.StmtInterface{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($2),
+                        Position: position.NewTokensPosition($1, $6),
                     },
-                    IdentifierTkn: $2,
-                    Value:         $2.Value,
+                    InterfaceTkn: $1,
+                    InterfaceName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($2),
+                        },
+                        IdentifierTkn: $2,
+                        Value:         $2.Value,
+                    },
+                    Extends:              $3,
+                    OpenCurlyBracketTkn:  $4,
+                    Stmts:                $5,
+                    CloseCurlyBracketTkn: $6,
                 }
-                $$ = &ast.StmtInterface{ast.Node{}, name, $3, $5}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $6)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $4.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $6.SkippedTokens)
             }
 ;
 
@@ -2851,87 +2848,92 @@ member_modifier:
 class_variable_declaration:
         class_variable_declaration ',' T_VARIABLE
             {
-                identifier := &ast.Identifier{
+                $$ = append($1, &ast.StmtProperty{
                     Node: ast.Node{
                         Position: position.NewTokenPosition($3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
-                }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                property := &ast.StmtProperty{ast.Node{}, variable, nil}
-                $$ = append($1, property)
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($3)
-                property.GetNode().Position = position.NewTokenPosition($3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(property, token.Start, $3.SkippedTokens)
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($3),
+                            },
+                            IdentifierTkn: $3,
+                            Value:         $3.Value,
+                        },
+                    },
+                })
             }
     |   class_variable_declaration ',' T_VARIABLE '=' static_scalar
             {
-                identifier := &ast.Identifier{
+                $$ = append($1, &ast.StmtProperty{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewTokenNodePosition($3, $5),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
-                }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                property := &ast.StmtProperty{ast.Node{}, variable, $5}
-                $$ = append($1, property)
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($3)
-                property.GetNode().Position = position.NewTokenNodePosition($3, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(property, token.Start, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(property, token.Var, $4.SkippedTokens)
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($3),
+                            },
+                            IdentifierTkn: $3,
+                            Value:         $3.Value,
+                        },
+                    },
+                    EqualTkn: $4,
+                    Expr:     $5,
+                })
             }
     |   T_VARIABLE
             {
-                identifier := &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
+                $$ = []ast.Vertex{
+                    &ast.StmtProperty{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        Var: &ast.ExprVariable{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            VarName: &ast.Identifier{
+                                Node: ast.Node{
+                                    Position: position.NewTokenPosition($1),
+                                },
+                                IdentifierTkn: $1,
+                                Value:         $1.Value,
+                            },
+                        },
+                        Expr: nil,
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                property := &ast.StmtProperty{ast.Node{}, variable, nil}
-                $$ = []ast.Vertex{property}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($1)
-                property.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(property, token.Start, $1.SkippedTokens)
             }
     |   T_VARIABLE '=' static_scalar
             {
-                identifier := &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
+                $$ = []ast.Vertex{
+                    &ast.StmtProperty{
+                        Node: ast.Node{
+                            Position: position.NewTokenNodePosition($1, $3),
+                        },
+                        Var: &ast.ExprVariable{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            VarName: &ast.Identifier{
+                                Node: ast.Node{
+                                    Position: position.NewTokenPosition($1),
+                                },
+                                IdentifierTkn: $1,
+                                Value:         $1.Value,
+                            },
+                        },
+                        EqualTkn: $2,
+                        Expr:     $3,
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                property := &ast.StmtProperty{ast.Node{}, variable, $3}
-                $$ = []ast.Vertex{property}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($1)
-                property.GetNode().Position = position.NewTokenNodePosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(property, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(property, token.Var, $2.SkippedTokens)
             }
 ;
 

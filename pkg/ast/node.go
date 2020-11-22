@@ -438,7 +438,8 @@ func (n *StmtElseIf) Accept(v NodeVisitor) {
 // StmtExpression node
 type StmtExpression struct {
 	Node
-	Expr Vertex
+	Expr         Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtExpression) Accept(v NodeVisitor) {
@@ -594,9 +595,12 @@ func (n *StmtInlineHtml) Accept(v NodeVisitor) {
 // StmtInterface node
 type StmtInterface struct {
 	Node
-	InterfaceName Vertex
-	Extends       Vertex
-	Stmts         []Vertex
+	InterfaceTkn         *token.Token
+	InterfaceName        Vertex
+	Extends              Vertex
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *StmtInterface) Accept(v NodeVisitor) {
@@ -654,8 +658,9 @@ func (n *StmtNop) Accept(v NodeVisitor) {
 // StmtProperty node
 type StmtProperty struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *StmtProperty) Accept(v NodeVisitor) {

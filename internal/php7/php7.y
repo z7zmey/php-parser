@@ -989,15 +989,13 @@ statement:
             }
     |   expr ';'
             {
-                $$ = &ast.StmtExpression{ast.Node{}, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
+                $$ = &ast.StmtExpression{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $2),
+                    },
+                    Expr:         $1,
+                    SemiColonTkn: $2,
+                }
             }
     |   T_UNSET '(' unset_variables possible_comma ')' ';'
             {
@@ -1366,22 +1364,23 @@ trait_declaration_statement:
 interface_declaration_statement:
         T_INTERFACE T_STRING interface_extends_list backup_doc_comment '{' class_statement_list '}'
             {
-                name := &ast.Identifier{
+                $$ = &ast.StmtInterface{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($2),
+                        Position: position.NewTokensPosition($1, $7),
                     },
-                    IdentifierTkn: $2,
-                    Value:         $2.Value,
+                    InterfaceTkn: $1,
+                    InterfaceName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($2),
+                        },
+                        IdentifierTkn: $2,
+                        Value:         $2.Value,
+                    },
+                    Extends:              $3,
+                    OpenCurlyBracketTkn:  $5,
+                    Stmts:                $6,
+                    CloseCurlyBracketTkn: $7,
                 }
-                $$ = &ast.StmtInterface{ast.Node{}, name, $3, $6}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $7)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $7.SkippedTokens)
             }
 ;
 
@@ -2609,42 +2608,46 @@ property_list:
 property:
         T_VARIABLE backup_doc_comment
             {
-                identifier := &ast.Identifier{
+                $$ = &ast.StmtProperty{
                     Node: ast.Node{
                         Position: position.NewTokenPosition($1),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            IdentifierTkn: $1,
+                            Value:         $1.Value,
+                        },
+                    },
+                    Expr: nil,
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.StmtProperty{ast.Node{}, variable, nil}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_VARIABLE '=' expr backup_doc_comment
             {
-                identifier := &ast.Identifier{
+                $$ = &ast.StmtProperty{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
+                        Position: position.NewTokenNodePosition($1, $3),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            IdentifierTkn: $1,
+                            Value:         $1.Value,
+                        },
+                    },
+                    EqualTkn: $2,
+                    Expr:     $3,
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.StmtProperty{ast.Node{}, variable, $3}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
 ;
 
