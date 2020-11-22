@@ -288,11 +288,6 @@ func (v *Dump) StmtClassMethod(n *ast.StmtClassMethod) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtClassMethod{\n")
 	v.printNode(n.GetNode())
-
-	if n.ReturnsRef {
-		v.printIndent(v.indent)
-		v.print("ReturnsRef: true,\n")
-	}
 }
 
 func (v *Dump) StmtConstList(n *ast.StmtConstList) {
@@ -397,11 +392,6 @@ func (v *Dump) StmtFunction(n *ast.StmtFunction) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.StmtFunction{\n")
 	v.printNode(n.GetNode())
-
-	if n.ReturnsRef {
-		v.printIndent(v.indent)
-		v.print("ReturnsRef: true,\n")
-	}
 }
 
 func (v *Dump) StmtGlobal(n *ast.StmtGlobal) {
@@ -641,16 +631,6 @@ func (v *Dump) ExprArrowFunction(n *ast.ExprArrowFunction) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ExprArrowFunction{\n")
 	v.printNode(n.GetNode())
-
-	if n.ReturnsRef {
-		v.printIndent(v.indent)
-		v.print("ReturnsRef: true,\n")
-	}
-
-	if n.Static {
-		v.printIndent(v.indent)
-		v.print("Static: true,\n")
-	}
 }
 
 func (v *Dump) ExprBitwiseNot(n *ast.ExprBitwiseNot) {
@@ -681,16 +661,6 @@ func (v *Dump) ExprClosure(n *ast.ExprClosure) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ExprClosure{\n")
 	v.printNode(n.GetNode())
-
-	if n.ReturnsRef {
-		v.printIndent(v.indent)
-		v.print("ReturnsRef: true,\n")
-	}
-
-	if n.Static {
-		v.printIndent(v.indent)
-		v.print("Static: true,\n")
-	}
 }
 
 func (v *Dump) ExprClosureUse(n *ast.ExprClosureUse) {

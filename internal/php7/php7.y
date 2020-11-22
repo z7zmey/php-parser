@@ -1214,31 +1214,27 @@ unset_variable:
 function_declaration_statement:
         T_FUNCTION returns_ref T_STRING backup_doc_comment '(' parameter_list ')' return_type '{' inner_statement_list '}'
             {
-                name := &ast.Identifier{
+                $$ = &ast.StmtFunction{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewTokensPosition($1, $11),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
-                }
-                $$ = &ast.StmtFunction{ast.Node{}, $2 != nil, name, $6, $8, $10}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $11)
-
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                if $2 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.SkippedTokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.ParamList, $7.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ReturnType, $9.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $11.SkippedTokens)
-
-                // normalize
-                if $8 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $$.GetNode().Tokens[token.ReturnType]); delete($$.GetNode().Tokens, token.ReturnType)
+                    FunctionTkn:  $1,
+                    AmpersandTkn: $2,
+                    FunctionName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
+                    OpenParenthesisTkn:   $5,
+                    Params:               $6,
+                    CloseParenthesisTkn:  $7,
+                    ColonTkn:             $8.(*ast.ReturnType).ColonTkn,
+                    ReturnType:           $8.(*ast.ReturnType).Type,
+                    OpenCurlyBracketTkn:  $9,
+                    Stmts:                $10,
+                    CloseCurlyBracketTkn: $11,
                 }
             }
 ;
@@ -2025,10 +2021,10 @@ return_type:
             }
     |   ':' type_expr
             {
-                $$ = $2;
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.SkippedTokens, $$.GetNode().Tokens[token.Start]...))
+                $$ = &ast.ReturnType{
+                    ColonTkn: $1,
+                    Type:     $2,
+                }
             }
 ;
 
@@ -2234,36 +2230,32 @@ class_statement:
             }
     |   method_modifiers T_FUNCTION returns_ref identifier backup_doc_comment '(' parameter_list ')' return_type method_body
             {
-                name := &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($4),
-                    },
-                    IdentifierTkn: $4,
-                    Value:         $4.Value,
-                }
-                $$ = &ast.StmtClassMethod{ast.Node{}, $3 != nil, name, $1, $7, $9, $10}
-
-                // save position
-                if $1 == nil {
-                    $$.GetNode().Position = position.NewTokenNodePosition($2, $10)
-                } else {
+                pos := position.NewTokenNodePosition($2, $10)
+                if $1 != nil {
                     $$.GetNode().Position = position.NewNodeListNodePosition($1, $10)
                 }
 
-                // save comments
-                if len($1) > 0 {
-                    yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                    yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.SkippedTokens)
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Start, $2.SkippedTokens)
+                $$ = &ast.StmtClassMethod{
+                    Node: ast.Node{
+                        Position: pos,
+                    },
+                    Modifiers:    $1,
+                    FunctionTkn:  $2,
+                    AmpersandTkn: $3,
+                    MethodName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($4),
+                        },
+                        IdentifierTkn: $4,
+                        Value:         $4.Value,
+                    },
+                    OpenParenthesisTkn:  $6,
+                    Params:              $7,
+                    CloseParenthesisTkn: $8,
+                    ColonTkn:            $9.(*ast.ReturnType).ColonTkn,
+                    ReturnType:          $9.(*ast.ReturnType).Type,
+                    Stmt:                $10,
                 }
-                if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $4.SkippedTokens)
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $3.SkippedTokens)
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $4.SkippedTokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $8.SkippedTokens)
             }
 ;
 
@@ -3624,74 +3616,55 @@ expr_without_variable:
             }
     |   T_STATIC inline_function
             {
-                $$ = $2;
-
-                switch n := $$.(type) {
+                switch n := $2.(type) {
                 case *ast.ExprClosure :
-                    n.Static = true;
+                    n.Position = position.NewTokenNodePosition($1, $2)
+                    n.StaticTkn = $1;
                 case *ast.ExprArrowFunction :
-                    n.Static = true;
+                    n.Position = position.NewTokenNodePosition($1, $2)
+                    n.StaticTkn = $1;
                 };
 
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Static, $$.GetNode().Tokens[token.Start]); delete($$.GetNode().Tokens, token.Start)
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens);
+                $$ = $2
             }
 ;
 
 inline_function:
         T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = &ast.ExprClosure{ast.Node{}, $2 != nil, false, $5, $7, $8, $10}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $11)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                if $2 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $4.SkippedTokens)
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.SkippedTokens)
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $4.SkippedTokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $6.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ReturnType, $9.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $11.SkippedTokens)
-
-                // normalize
-                if $8 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.LexicalVars, $$.GetNode().Tokens[token.ReturnType]); delete($$.GetNode().Tokens, token.ReturnType)
-                }
-                if $7 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $$.GetNode().Tokens[token.LexicalVarList]); delete($$.GetNode().Tokens, token.LexicalVarList)
+                $$ = &ast.ExprClosure{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $11),
+                    },
+                    FunctionTkn:          $1,
+                    AmpersandTkn:         $2,
+                    OpenParenthesisTkn:   $4,
+                    Params:               $5,
+                    CloseParenthesisTkn:  $6,
+                    ClosureUse:           $7,
+                    ColonTkn:             $8.(*ast.ReturnType).ColonTkn,
+                    ReturnType:           $8.(*ast.ReturnType).Type,
+                    OpenCurlyBracketTkn:  $9,
+                    Stmts:                $10,
+                    CloseCurlyBracketTkn: $11,
                 }
             }
     |   T_FN returns_ref '(' parameter_list ')' return_type backup_doc_comment T_DOUBLE_ARROW expr
             {
-                $$ = &ast.ExprArrowFunction{ast.Node{}, $2 != nil, false, $4, $6, $9}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $9)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                if $2 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $3.SkippedTokens)
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.SkippedTokens)
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $3.SkippedTokens)
-                };
-                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ReturnType, $8.SkippedTokens)
-
-                // normalize
-                if $6 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $$.GetNode().Tokens[token.ReturnType]); delete($$.GetNode().Tokens, token.ReturnType)
-                };
+                $$ = &ast.ExprArrowFunction{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $9),
+                    },
+                    FnTkn:               $1,
+                    AmpersandTkn:        $2,
+                    OpenParenthesisTkn:  $3,
+                    Params:              $4,
+                    CloseParenthesisTkn: $5,
+                    ColonTkn:            $6.(*ast.ReturnType).ColonTkn,
+                    ReturnType:          $6.(*ast.ReturnType).Type,
+                    DoubleArrowTkn:      $8,
+                    Expr:                $9,
+                }
             }
 ;
 

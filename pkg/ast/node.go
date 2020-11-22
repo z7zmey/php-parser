@@ -292,12 +292,16 @@ func (n *StmtClassImplements) Accept(v NodeVisitor) {
 // StmtClassMethod node
 type StmtClassMethod struct {
 	Node
-	ReturnsRef bool
-	MethodName Vertex
-	Modifiers  []Vertex
-	Params     []Vertex
-	ReturnType Vertex
-	Stmt       Vertex
+	Modifiers           []Vertex
+	FunctionTkn         *token.Token
+	AmpersandTkn        *token.Token
+	MethodName          Vertex
+	OpenParenthesisTkn  *token.Token
+	Params              []Vertex
+	CloseParenthesisTkn *token.Token
+	ColonTkn            *token.Token
+	ReturnType          Vertex
+	Stmt                Vertex
 }
 
 func (n *StmtClassMethod) Accept(v NodeVisitor) {
@@ -501,11 +505,17 @@ func (n *StmtForeach) Accept(v NodeVisitor) {
 // StmtFunction node
 type StmtFunction struct {
 	Node
-	ReturnsRef   bool
-	FunctionName Vertex
-	Params       []Vertex
-	ReturnType   Vertex
-	Stmts        []Vertex
+	FunctionTkn          *token.Token
+	AmpersandTkn         *token.Token
+	FunctionName         Vertex
+	OpenParenthesisTkn   *token.Token
+	Params               []Vertex
+	CloseParenthesisTkn  *token.Token
+	ColonTkn             *token.Token
+	ReturnType           Vertex
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *StmtFunction) Accept(v NodeVisitor) {
@@ -951,11 +961,16 @@ func (n *ExprArrayItem) Accept(v NodeVisitor) {
 // ExprArrowFunction node
 type ExprArrowFunction struct {
 	Node
-	ReturnsRef bool
-	Static     bool
-	Params     []Vertex
-	ReturnType Vertex
-	Expr       Vertex
+	StaticTkn           *token.Token
+	FnTkn               *token.Token
+	AmpersandTkn        *token.Token
+	OpenParenthesisTkn  *token.Token
+	Params              []Vertex
+	CloseParenthesisTkn *token.Token
+	ColonTkn            *token.Token
+	ReturnType          Vertex
+	DoubleArrowTkn      *token.Token
+	Expr                Vertex
 }
 
 func (n *ExprArrowFunction) Accept(v NodeVisitor) {
@@ -1006,12 +1021,18 @@ func (n *ExprClone) Accept(v NodeVisitor) {
 // ExprClosure node
 type ExprClosure struct {
 	Node
-	ReturnsRef bool
-	Static     bool
-	Params     []Vertex
-	ClosureUse *ExprClosureUse
-	ReturnType Vertex
-	Stmts      []Vertex
+	StaticTkn            *token.Token
+	FunctionTkn          *token.Token
+	AmpersandTkn         *token.Token
+	OpenParenthesisTkn   *token.Token
+	Params               []Vertex
+	CloseParenthesisTkn  *token.Token
+	ClosureUse           *ExprClosureUse
+	ColonTkn             *token.Token
+	ReturnType           Vertex
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *ExprClosure) Accept(v NodeVisitor) {
@@ -1947,6 +1968,8 @@ func (n *NameNamePart) Accept(v NodeVisitor) {
 	v.NameNamePart(n)
 }
 
+// TODO: move to private section
+
 type ParserBrackets struct {
 	Node
 	OpenBracketTkn  *token.Token
@@ -1966,4 +1989,14 @@ type ParserSeparatedList struct {
 
 func (n *ParserSeparatedList) Accept(v NodeVisitor) {
 	v.ParserSeparatedList(n)
+}
+
+type ReturnType struct {
+	Node
+	ColonTkn *token.Token
+	Type     Vertex
+}
+
+func (n *ReturnType) Accept(v NodeVisitor) {
+	// do nothing
 }

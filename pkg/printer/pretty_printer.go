@@ -1015,13 +1015,13 @@ func (p *PrettyPrinter) printExprClosureUse(n ast.Vertex) {
 func (p *PrettyPrinter) printExprClosure(n ast.Vertex) {
 	nn := n.(*ast.ExprClosure)
 
-	if nn.Static {
+	if nn.StaticTkn != nil {
 		io.WriteString(p.w, "static ")
 	}
 
 	io.WriteString(p.w, "function ")
 
-	if nn.ReturnsRef {
+	if nn.AmpersandTkn != nil {
 		io.WriteString(p.w, "&")
 	}
 
@@ -1432,7 +1432,7 @@ func (p *PrettyPrinter) printStmtClassMethod(n ast.Vertex) {
 	}
 	io.WriteString(p.w, "function ")
 
-	if nn.ReturnsRef {
+	if nn.AmpersandTkn != nil {
 		io.WriteString(p.w, "&")
 	}
 
@@ -1785,7 +1785,7 @@ func (p *PrettyPrinter) printStmtFunction(n ast.Vertex) {
 
 	io.WriteString(p.w, "function ")
 
-	if nn.ReturnsRef {
+	if nn.AmpersandTkn != nil {
 		io.WriteString(p.w, "&")
 	}
 

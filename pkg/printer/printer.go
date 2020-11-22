@@ -1405,18 +1405,18 @@ func (p *Printer) printExprArrowFunction(n ast.Vertex) {
 	nn := n.(*ast.ExprArrowFunction)
 	p.printFreeFloating(nn, token.Start)
 
-	if nn.Static {
+	if nn.StaticTkn != nil {
 		p.write([]byte("static"))
 	}
 	p.printFreeFloating(nn, token.Static)
-	if nn.Static && n.GetNode().Tokens.IsEmpty() {
+	if nn.StaticTkn != nil && n.GetNode().Tokens.IsEmpty() {
 		p.write([]byte(" "))
 	}
 
 	p.write([]byte("fn"))
 	p.printFreeFloating(nn, token.Function)
 
-	if nn.ReturnsRef {
+	if nn.AmpersandTkn != nil {
 		p.write([]byte("&"))
 	}
 	p.printFreeFloating(nn, token.Ampersand)
@@ -1496,18 +1496,18 @@ func (p *Printer) printExprClosure(n ast.Vertex) {
 	nn := n.(*ast.ExprClosure)
 	p.printFreeFloating(nn, token.Start)
 
-	if nn.Static {
+	if nn.StaticTkn != nil {
 		p.write([]byte("static"))
 	}
 	p.printFreeFloating(nn, token.Static)
-	if nn.Static && n.GetNode().Tokens.IsEmpty() {
+	if nn.StaticTkn != nil && n.GetNode().Tokens.IsEmpty() {
 		p.write([]byte(" "))
 	}
 
 	p.write([]byte("function"))
 	p.printFreeFloating(nn, token.Function)
 
-	if nn.ReturnsRef {
+	if nn.AmpersandTkn != nil {
 		p.write([]byte("&"))
 	}
 	p.printFreeFloating(nn, token.Ampersand)
@@ -2040,7 +2040,7 @@ func (p *Printer) printStmtClassMethod(n ast.Vertex) {
 	p.write([]byte("function"))
 	p.printFreeFloating(nn, token.Function)
 
-	if nn.ReturnsRef {
+	if nn.AmpersandTkn != nil {
 		if nn.GetNode().Tokens.IsEmpty() {
 			p.write([]byte(" "))
 		}
@@ -2384,7 +2384,7 @@ func (p *Printer) printStmtFunction(n ast.Vertex) {
 	p.write([]byte("function"))
 	p.printFreeFloating(nn, token.Function)
 
-	if nn.ReturnsRef {
+	if nn.AmpersandTkn != nil {
 		if nn.GetNode().Tokens.IsEmpty() {
 			p.write([]byte(" "))
 		}

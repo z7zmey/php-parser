@@ -1378,26 +1378,26 @@ is_variadic:
 unticked_function_declaration_statement:
         function is_reference T_STRING '(' parameter_list ')' '{' inner_statement_list '}'
             {
-                name := &ast.Identifier{
+                $$ = &ast.StmtFunction{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewTokensPosition($1, $9),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    FunctionTkn:  $1,
+                    AmpersandTkn: $2,
+                    FunctionName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
+                    OpenParenthesisTkn:   $4,
+                    Params:               $5,
+                    CloseParenthesisTkn:  $6,
+                    OpenCurlyBracketTkn:  $7,
+                    Stmts:                $8,
+                    CloseCurlyBracketTkn: $9,
                 }
-                $$ = &ast.StmtFunction{ast.Node{}, $2 != nil, name, $5, nil, $8}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $9)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                if $2 != nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.SkippedTokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.ParamList, $6.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Params, $7.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $9.SkippedTokens)
             }
 ;
 
@@ -2481,37 +2481,30 @@ class_statement:
             }
     |   method_modifiers function is_reference T_STRING '(' parameter_list ')' method_body
             {
-                name := &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($4),
-                    },
-                    IdentifierTkn: $4,
-                    Value:         $4.Value,
-                }
-                $$ = &ast.StmtClassMethod{ast.Node{}, $3 != nil, name, $1, $6, nil, $8}
-
-                // save position
-                if $1 == nil {
-                    $$.GetNode().Position = position.NewTokenNodePosition($2, $8)
-                } else {
+                pos := position.NewTokenNodePosition($2, $8)
+                if $1 != nil {
                     $$.GetNode().Position = position.NewNodeListNodePosition($1, $8)
                 }
 
-                // save comments
-                if len($1) > 0 {
-                    yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                    yylex.(*Parser).setFreeFloating($$, token.ModifierList, $2.SkippedTokens)
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Start, $2.SkippedTokens)
+                $$ = &ast.StmtClassMethod{
+                    Node: ast.Node{
+                        Position: pos,
+                    },
+                    Modifiers:    $1,
+                    FunctionTkn:  $2,
+                    AmpersandTkn: $3,
+                    MethodName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($4),
+                        },
+                        IdentifierTkn: $4,
+                        Value:         $4.Value,
+                    },
+                    OpenParenthesisTkn:  $5,
+                    Params:              $6,
+                    CloseParenthesisTkn: $7,
+                    Stmt:                $8,
                 }
-                if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $4.SkippedTokens)
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $3.SkippedTokens)
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $4.SkippedTokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.Name, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $7.SkippedTokens)
             }
 ;
 
@@ -3907,51 +3900,37 @@ expr_without_variable:
             }
     |   function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = &ast.ExprClosure{ast.Node{}, $2 != nil, false, $4, $6, nil, $8}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $9)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                if $2 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $3.SkippedTokens)
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $2.SkippedTokens)
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $3.SkippedTokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.LexicalVars, $7.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $9.SkippedTokens)
-
-                // normalize
-                if $6 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $$.GetNode().Tokens[token.LexicalVars]); delete($$.GetNode().Tokens, token.LexicalVars)
+                $$ = &ast.ExprClosure{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $9),
+                    },
+                    FunctionTkn:          $1,
+                    AmpersandTkn:         $2,
+                    OpenParenthesisTkn:   $3,
+                    Params:               $4,
+                    CloseParenthesisTkn:  $5,
+                    ClosureUse:           $6,
+                    OpenCurlyBracketTkn:  $7,
+                    Stmts:                $8,
+                    CloseCurlyBracketTkn: $9,
                 }
             }
     |   T_STATIC function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = &ast.ExprClosure{ast.Node{}, $3 != nil, true, $5, $7, nil, $9}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $10)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Static, $2.SkippedTokens)
-                if $3 == nil {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $4.SkippedTokens)
-                } else {
-                    yylex.(*Parser).setFreeFloating($$, token.Function, $3.SkippedTokens)
-                    yylex.(*Parser).setFreeFloating($$, token.Ampersand, $4.SkippedTokens)
-                }
-                yylex.(*Parser).setFreeFloating($$, token.ParameterList, $6.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.LexicalVars, $8.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Stmts, $10.SkippedTokens)
-
-                // normalize
-                if $7 == nil {
-                    yylex.(*Parser).setFreeFloatingTokens($$, token.Params, $$.GetNode().Tokens[token.LexicalVars]); delete($$.GetNode().Tokens, token.LexicalVars)
+                $$ = &ast.ExprClosure{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $10),
+                    },
+                    StaticTkn:            $1,
+                    FunctionTkn:          $2,
+                    AmpersandTkn:         $3,
+                    OpenParenthesisTkn:   $4,
+                    Params:               $5,
+                    CloseParenthesisTkn:  $6,
+                    ClosureUse:           $7,
+                    OpenCurlyBracketTkn:  $8,
+                    Stmts:                $9,
+                    CloseCurlyBracketTkn: $10,
                 }
             }
 ;
