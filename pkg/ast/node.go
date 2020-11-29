@@ -670,9 +670,11 @@ func (n *StmtProperty) Accept(v NodeVisitor) {
 // StmtPropertyList node
 type StmtPropertyList struct {
 	Node
-	Modifiers  []Vertex
-	Type       Vertex
-	Properties []Vertex
+	Modifiers     []Vertex
+	Type          Vertex
+	Properties    []Vertex
+	SeparatorTkns []*token.Token
+	SemiColonTkn  *token.Token
 }
 
 func (n *StmtPropertyList) Accept(v NodeVisitor) {
@@ -780,7 +782,9 @@ func (n *StmtTrait) Accept(v NodeVisitor) {
 // StmtTraitAdaptationList node
 type StmtTraitAdaptationList struct {
 	Node
-	Adaptations []Vertex
+	OpenParenthesisTkn  *token.Token
+	Adaptations         []Vertex
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *StmtTraitAdaptationList) Accept(v NodeVisitor) {
@@ -790,8 +794,9 @@ func (n *StmtTraitAdaptationList) Accept(v NodeVisitor) {
 // StmtTraitMethodRef node
 type StmtTraitMethodRef struct {
 	Node
-	Trait  Vertex
-	Method Vertex
+	Trait          Vertex
+	DoubleColonTkn *token.Token
+	Method         Vertex
 }
 
 func (n *StmtTraitMethodRef) Accept(v NodeVisitor) {
@@ -815,6 +820,7 @@ func (n *StmtTraitUse) Accept(v NodeVisitor) {
 type StmtTraitUseAlias struct {
 	Node
 	Ref      Vertex
+	AsTkn    *token.Token
 	Modifier Vertex
 	Alias    Vertex
 }

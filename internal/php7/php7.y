@@ -247,7 +247,7 @@ import (
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset echo_expr_list catch_name_list name_list
-%type <node> if_stmt const_list non_empty_argument_list
+%type <node> if_stmt const_list non_empty_argument_list property_list
 %type <node> alt_if_stmt
 %type <node> if_stmt_without_else
 %type <node> class_const_decl
@@ -274,7 +274,7 @@ import (
 
 %type <list> encaps_list backticks_expr namespace_name catch_list class_const_list
 %type <list> for_exprs non_empty_for_exprs
-%type <list> unprefixed_use_declarations inline_use_declarations property_list
+%type <list> unprefixed_use_declarations inline_use_declarations
 %type <list> case_list trait_adaptation_list
 %type <list> use_declarations lexical_var_list isset_variables non_empty_array_pair_list
 %type <list> array_pair_list top_statement_list
@@ -2193,15 +2193,16 @@ class_statement_list:
 class_statement:
         variable_modifiers optional_type property_list ';'
             {
-                $$ = &ast.StmtPropertyList{ast.Node{}, $1, $2, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeListTokenPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating($$, token.PropertyList, $4.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $4.SkippedTokens)
+                $$ = &ast.StmtPropertyList{
+                    Node: ast.Node{
+                        Position: position.NewNodeListTokenPosition($1, $4),
+                    },
+                    Modifiers:     $1,
+                    Type:          $2,
+                    Properties:    $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns: $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    SemiColonTkn:  $4,
+                }
             }
     |   method_modifiers T_CONST class_const_list ';'
             {
@@ -2286,23 +2287,24 @@ trait_adaptations:
             }
     |   '{' '}'
             {
-                $$ = &ast.StmtTraitAdaptationList{ast.Node{}, nil}
-
-                $$.GetNode().Position = position.NewTokensPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AdaptationList, $2.SkippedTokens)
+                $$ = &ast.StmtTraitAdaptationList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $2),
+                    },
+                    OpenParenthesisTkn:  $1,
+                    CloseParenthesisTkn: $2,
+                }
             }
     |   '{' trait_adaptation_list '}'
             {
-                $$ = &ast.StmtTraitAdaptationList{ast.Node{}, $2}
-
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AdaptationList, $3.SkippedTokens)
+                $$ = &ast.StmtTraitAdaptationList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenParenthesisTkn:  $1,
+                    Adaptations:         $2,
+                    CloseParenthesisTkn: $3,
+                }
             }
 ;
 
@@ -2354,88 +2356,84 @@ trait_precedence:
 trait_alias:
         trait_method_reference T_AS T_STRING
             {
-                alias := &ast.Identifier{
+                $$ = &ast.StmtTraitUseAlias{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewNodeTokenPosition($1, $3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Ref:   $1,
+                    AsTkn: $2,
+                    Alias: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.StmtTraitUseAlias{ast.Node{}, $1, nil, alias}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
             }
     |   trait_method_reference T_AS reserved_non_modifiers
             {
-                alias := &ast.Identifier{
+                $$ = &ast.StmtTraitUseAlias{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewNodeTokenPosition($1, $3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Ref:   $1,
+                    AsTkn: $2,
+                    Alias: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.StmtTraitUseAlias{ast.Node{}, $1, nil, alias}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
             }
     |   trait_method_reference T_AS member_modifier identifier
             {
-                alias := &ast.Identifier{
+                $$ = &ast.StmtTraitUseAlias{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($4),
+                        Position: position.NewNodeTokenPosition($1, $4),
                     },
-                    IdentifierTkn: $4,
-                    Value:         $4.Value,
+                    Ref:      $1,
+                    AsTkn:    $2,
+                    Modifier: $3,
+                    Alias: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($4),
+                        },
+                        IdentifierTkn: $4,
+                        Value:         $4.Value,
+                    },
                 }
-                $$ = &ast.StmtTraitUseAlias{ast.Node{}, $1, $3, alias}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
             }
     |   trait_method_reference T_AS member_modifier
             {
-                $$ = &ast.StmtTraitUseAlias{ast.Node{}, $1, $3, nil}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
+                $$ = &ast.StmtTraitUseAlias{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Ref:      $1,
+                    AsTkn:    $2,
+                    Modifier: $3,
+                }
             }
 ;
 
 trait_method_reference:
         identifier
             {
-                name := &ast.Identifier{
+                $$ = &ast.StmtTraitMethodRef{
                     Node: ast.Node{
                         Position: position.NewTokenPosition($1),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
+                    Method: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        IdentifierTkn: $1,
+                        Value:         $1.Value,
+                    },
                 }
-                $$ = &ast.StmtTraitMethodRef{ast.Node{}, nil, name}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   absolute_trait_method_reference
             {
@@ -2446,21 +2444,20 @@ trait_method_reference:
 absolute_trait_method_reference:
         name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                target := &ast.Identifier{
+                $$ = &ast.StmtTraitMethodRef{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewNodeTokenPosition($1, $3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Trait:          $1,
+                    DoubleColonTkn: $2,
+                    Method: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.StmtTraitMethodRef{ast.Node{}, $1, target}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
 ;
 
@@ -2594,14 +2591,16 @@ member_modifier:
 property_list:
         property_list ',' property
             {
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   property
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
 ;
 

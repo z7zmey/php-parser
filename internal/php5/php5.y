@@ -237,7 +237,7 @@ import (
 %type <node> trait_use_statement function_call_parameter trait_adaptation_statement trait_precedence trait_alias
 %type <node> trait_method_reference_fully_qualified trait_method_reference trait_modifiers member_modifier method
 %type <node> static_scalar_value static_operation static_var_list global_var_list
-%type <node> ctor_arguments function_call_parameter_list echo_expr_list
+%type <node> ctor_arguments function_call_parameter_list echo_expr_list class_variable_declaration
 %type <node> trait_adaptations unset_variables declare_list
 %type <node> switch_case_list non_empty_function_call_parameter_list
 %type <node> method_body trait_reference_list
@@ -253,7 +253,7 @@ import (
 %type <list> array_pair_list assignment_list lexical_var_list elseif_list new_elseif_list non_empty_for_expr
 %type <list> for_expr case_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
-%type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration
+%type <list> class_statement_list variable_modifiers method_modifiers
 %type <list> trait_adaptation_list non_empty_trait_adaptation_list
 %type <list> non_empty_member_modifiers backticks_expr static_array_pair_list non_empty_static_array_pair_list
 
@@ -2456,15 +2456,15 @@ class_statement_list:
 class_statement:
         variable_modifiers class_variable_declaration ';'
             {
-                $$ = &ast.StmtPropertyList{ast.Node{}, $1, nil, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeListTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1[0], $$)
-                yylex.(*Parser).setFreeFloating($$, token.PropertyList, $3.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $3.SkippedTokens)
+                $$ = &ast.StmtPropertyList{
+                    Node: ast.Node{
+                        Position: position.NewNodeListTokenPosition($1, $3),
+                    },
+                    Modifiers:     $1,
+                    Properties:    $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    SemiColonTkn:  $3,
+                }
             }
     |   class_constant_declaration ';'
             {
@@ -2548,13 +2548,14 @@ trait_adaptations:
             }
     |   '{' trait_adaptation_list '}'
             {
-                $$ = &ast.StmtTraitAdaptationList{ast.Node{}, $2}
-
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.AdaptationList, $3.SkippedTokens)
+                $$ = &ast.StmtTraitAdaptationList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenParenthesisTkn:  $1,
+                    Adaptations:         $2,
+                    CloseParenthesisTkn: $3,
+                }
             }
 ;
 
@@ -2633,20 +2634,18 @@ trait_reference_list:
 trait_method_reference:
         T_STRING
             {
-                name := &ast.Identifier{
+                $$ = &ast.StmtTraitMethodRef{
                     Node: ast.Node{
                         Position: position.NewTokenPosition($1),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
+                    Method: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        IdentifierTkn: $1,
+                        Value:         $1.Value,
+                    },
                 }
-                $$ = &ast.StmtTraitMethodRef{ast.Node{}, nil, name}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   trait_method_reference_fully_qualified
             {
@@ -2657,53 +2656,52 @@ trait_method_reference:
 trait_method_reference_fully_qualified:
         fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
-                target := &ast.Identifier{
+                $$ = &ast.StmtTraitMethodRef{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewNodeTokenPosition($1, $3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Trait:          $1,
+                    DoubleColonTkn: $2,
+                    Method: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.StmtTraitMethodRef{ast.Node{}, $1, target}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
 ;
 
 trait_alias:
         trait_method_reference T_AS trait_modifiers T_STRING
             {
-                alias := &ast.Identifier{
+                $$ = &ast.StmtTraitUseAlias{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($4),
+                        Position: position.NewNodeTokenPosition($1, $4),
                     },
-                    IdentifierTkn: $4,
-                    Value:         $4.Value,
+                    Ref:      $1,
+                    AsTkn:    $2,
+                    Modifier: $3,
+                    Alias: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($4),
+                        },
+                        IdentifierTkn: $4,
+                        Value:         $4.Value,
+                    },
                 }
-                $$ = &ast.StmtTraitUseAlias{ast.Node{}, $1, $3, alias}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
             }
     |   trait_method_reference T_AS member_modifier
             {
-                $$ = &ast.StmtTraitUseAlias{ast.Node{}, $1, $3, nil}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Ref, $2.SkippedTokens)
+                $$ = &ast.StmtTraitUseAlias{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Ref:      $1,
+                    AsTkn:    $2,
+                    Modifier: $3,
+                }
             }
 ;
 
@@ -2848,7 +2846,7 @@ member_modifier:
 class_variable_declaration:
         class_variable_declaration ',' T_VARIABLE
             {
-                $$ = append($1, &ast.StmtProperty{
+                item := &ast.StmtProperty{
                     Node: ast.Node{
                         Position: position.NewTokenPosition($3),
                     },
@@ -2864,11 +2862,16 @@ class_variable_declaration:
                             Value:         $3.Value,
                         },
                     },
-                })
+                }
+
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, item)
+
+                $$ = $1
             }
     |   class_variable_declaration ',' T_VARIABLE '=' static_scalar
             {
-                $$ = append($1, &ast.StmtProperty{
+                item := &ast.StmtProperty{
                     Node: ast.Node{
                         Position: position.NewTokenNodePosition($3, $5),
                     },
@@ -2886,52 +2889,61 @@ class_variable_declaration:
                     },
                     EqualTkn: $4,
                     Expr:     $5,
-                })
+                }
+
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, item)
+
+                $$ = $1
             }
     |   T_VARIABLE
             {
-                $$ = []ast.Vertex{
-                    &ast.StmtProperty{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
-                        Var: &ast.ExprVariable{
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{
+                        &ast.StmtProperty{
                             Node: ast.Node{
                                 Position: position.NewTokenPosition($1),
                             },
-                            VarName: &ast.Identifier{
+                            Var: &ast.ExprVariable{
                                 Node: ast.Node{
                                     Position: position.NewTokenPosition($1),
                                 },
-                                IdentifierTkn: $1,
-                                Value:         $1.Value,
+                                VarName: &ast.Identifier{
+                                    Node: ast.Node{
+                                        Position: position.NewTokenPosition($1),
+                                    },
+                                    IdentifierTkn: $1,
+                                    Value:         $1.Value,
+                                },
                             },
+                            Expr: nil,
                         },
-                        Expr: nil,
                     },
                 }
             }
     |   T_VARIABLE '=' static_scalar
             {
-                $$ = []ast.Vertex{
-                    &ast.StmtProperty{
-                        Node: ast.Node{
-                            Position: position.NewTokenNodePosition($1, $3),
-                        },
-                        Var: &ast.ExprVariable{
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{
+                        &ast.StmtProperty{
                             Node: ast.Node{
-                                Position: position.NewTokenPosition($1),
+                                Position: position.NewTokenNodePosition($1, $3),
                             },
-                            VarName: &ast.Identifier{
+                            Var: &ast.ExprVariable{
                                 Node: ast.Node{
                                     Position: position.NewTokenPosition($1),
                                 },
-                                IdentifierTkn: $1,
-                                Value:         $1.Value,
+                                VarName: &ast.Identifier{
+                                    Node: ast.Node{
+                                        Position: position.NewTokenPosition($1),
+                                    },
+                                    IdentifierTkn: $1,
+                                    Value:         $1.Value,
+                                },
                             },
+                            EqualTkn: $2,
+                            Expr:     $3,
                         },
-                        EqualTkn: $2,
-                        Expr:     $3,
                     },
                 }
             }
