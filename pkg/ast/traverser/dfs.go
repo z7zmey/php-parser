@@ -1543,34 +1543,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			}
 			t.visitor.Leave("Parts", false)
 		}
-	case *ast.ExprShortArray:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Items != nil {
-			t.visitor.Enter("Items", false)
-			for _, c := range nn.Items {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("Items", false)
-		}
-	case *ast.ExprShortList:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Items != nil {
-			t.visitor.Enter("Items", false)
-			for _, c := range nn.Items {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("Items", false)
-		}
 	case *ast.ExprStaticCall:
 		if nn == nil {
 			return

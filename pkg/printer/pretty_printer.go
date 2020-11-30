@@ -274,10 +274,6 @@ func (p *PrettyPrinter) printNode(n ast.Vertex) {
 		p.printExprRequireOnce(n)
 	case *ast.ExprShellExec:
 		p.printExprShellExec(n)
-	case *ast.ExprShortArray:
-		p.printExprShortArray(n)
-	case *ast.ExprShortList:
-		p.printExprShortList(n)
 	case *ast.ExprStaticCall:
 		p.printExprStaticCall(n)
 	case *ast.ExprStaticPropertyFetch:
@@ -1238,22 +1234,6 @@ func (p *PrettyPrinter) printExprShellExec(n ast.Vertex) {
 		}
 	}
 	io.WriteString(p.w, "`")
-}
-
-func (p *PrettyPrinter) printExprShortArray(n ast.Vertex) {
-	nn := n.(*ast.ExprShortArray)
-
-	io.WriteString(p.w, "[")
-	p.joinPrint(", ", nn.Items)
-	io.WriteString(p.w, "]")
-}
-
-func (p *PrettyPrinter) printExprShortList(n ast.Vertex) {
-	nn := n.(*ast.ExprShortList)
-
-	io.WriteString(p.w, "[")
-	p.joinPrint(", ", nn.Items)
-	io.WriteString(p.w, "]")
 }
 
 func (p *PrettyPrinter) printExprStaticCall(n ast.Vertex) {

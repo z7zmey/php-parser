@@ -939,7 +939,11 @@ func (n *StmtWhile) Accept(v NodeVisitor) {
 // ExprArray node
 type ExprArray struct {
 	Node
-	Items []Vertex
+	ArrayTkn        *token.Token
+	OpenBracketTkn  *token.Token
+	Items           []Vertex
+	SeparatorTkns   []*token.Token
+	CloseBracketTkn *token.Token
 }
 
 func (n *ExprArray) Accept(v NodeVisitor) {
@@ -1166,7 +1170,11 @@ func (n *ExprIsset) Accept(v NodeVisitor) {
 // ExprList node
 type ExprList struct {
 	Node
-	Items []Vertex
+	ListTkn         *token.Token
+	OpenBracketTkn  *token.Token
+	Items           []Vertex
+	SeparatorTkns   []*token.Token
+	CloseBracketTkn *token.Token
 }
 
 func (n *ExprList) Accept(v NodeVisitor) {
@@ -1295,26 +1303,6 @@ type ExprShellExec struct {
 
 func (n *ExprShellExec) Accept(v NodeVisitor) {
 	v.ExprShellExec(n)
-}
-
-// ExprShortArray node
-type ExprShortArray struct {
-	Node
-	Items []Vertex
-}
-
-func (n *ExprShortArray) Accept(v NodeVisitor) {
-	v.ExprShortArray(n)
-}
-
-// ExprShortList node
-type ExprShortList struct {
-	Node
-	Items []Vertex
-}
-
-func (n *ExprShortList) Accept(v NodeVisitor) {
-	v.ExprShortList(n)
 }
 
 // ExprStaticCall node

@@ -238,9 +238,9 @@ import (
 %type <node> trait_method_reference_fully_qualified trait_method_reference trait_modifiers member_modifier method
 %type <node> static_scalar_value static_operation static_var_list global_var_list
 %type <node> ctor_arguments function_call_parameter_list echo_expr_list class_variable_declaration
-%type <node> trait_adaptations unset_variables declare_list
-%type <node> switch_case_list non_empty_function_call_parameter_list
-%type <node> method_body trait_reference_list
+%type <node> trait_adaptations unset_variables declare_list non_empty_array_pair_list array_pair_list
+%type <node> switch_case_list non_empty_function_call_parameter_list assignment_list
+%type <node> method_body trait_reference_list static_array_pair_list non_empty_static_array_pair_list
 %type <node> foreach_statement for_statement while_statement
 %type <node> foreach_variable foreach_optional_arg
 %type <node> extends_from interface_list trait_list
@@ -249,13 +249,13 @@ import (
 %type <ClosureUse> lexical_vars
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
-%type <list> inner_statement_list encaps_list isset_variables non_empty_array_pair_list
-%type <list> array_pair_list assignment_list lexical_var_list elseif_list new_elseif_list non_empty_for_expr
+%type <list> inner_statement_list encaps_list isset_variables
+%type <list>  lexical_var_list elseif_list new_elseif_list non_empty_for_expr
 %type <list> for_expr case_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
 %type <list> class_statement_list variable_modifiers method_modifiers
 %type <list> trait_adaptation_list non_empty_trait_adaptation_list
-%type <list> non_empty_member_modifiers backticks_expr static_array_pair_list non_empty_static_array_pair_list
+%type <list> non_empty_member_modifiers backticks_expr
 
 %type <list> chaining_dereference chaining_instance_call chaining_method_or_property instance_call variable_property
 %type <list> method_or_not array_method_dereference object_property object_dim_list dynamic_class_name_variable_property
@@ -1620,15 +1620,23 @@ foreach_variable:
             }
     |   T_LIST '(' assignment_list ')'
             {
-                $$ = &ast.ExprList{ast.Node{}, $3}
+                pairList := $3.(*ast.ParserSeparatedList)
+                fistPair := pairList.Items[0].(*ast.ExprArrayItem)
 
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
+                if fistPair.Key == nil && fistPair.Val == nil && len(pairList.Items) == 1 {
+                    pairList.Items = nil
+                }
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.List, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $4.SkippedTokens)
+                $$ = &ast.ExprList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    ListTkn:         $1,
+                    OpenBracketTkn:  $2,
+                    Items:           $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $4,
+                }
             }
 ;
 
@@ -3129,7 +3137,23 @@ new_expr:
 expr_without_variable:
         T_LIST '(' assignment_list ')' '=' expr
             {
-                listNode := &ast.ExprList{ast.Node{}, $3}
+                pairList := $3.(*ast.ParserSeparatedList)
+                fistPair := pairList.Items[0].(*ast.ExprArrayItem)
+
+                if fistPair.Key == nil && fistPair.Val == nil && len(pairList.Items) == 1 {
+                    pairList.Items = nil
+                }
+
+                listNode := &ast.ExprList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    ListTkn:         $1,
+                    OpenBracketTkn:  $2,
+                    Items:           $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $4,
+                }
                 $$ = &ast.ExprAssign{ast.Node{}, listNode, $6}
 
                 // save position
@@ -4051,26 +4075,28 @@ combined_scalar_offset:
 combined_scalar:
         T_ARRAY '(' array_pair_list ')'
             {
-                $$ = &ast.ExprArray{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Array, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $4.SkippedTokens)
+                $$ = &ast.ExprArray{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    ArrayTkn:        $1,
+                    OpenBracketTkn:  $2,
+                    Items:           $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $4,
+                }
             }
     |   '[' array_pair_list ']'
             {
-                $$ = &ast.ExprShortArray{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $3.SkippedTokens)
+                $$ = &ast.ExprArray{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Items:           $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $3,
+                }
             }
 ;
 
@@ -4710,26 +4736,28 @@ static_scalar_value:
             }
     |   T_ARRAY '(' static_array_pair_list ')'
             {
-                $$ = &ast.ExprArray{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Array, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $4.SkippedTokens)
+                $$ = &ast.ExprArray{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    ArrayTkn:        $1,
+                    OpenBracketTkn:  $2,
+                    Items:           $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $4,
+                }
             }
     |   '[' static_array_pair_list ']'
             {
-                $$ = &ast.ExprShortArray{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $3.SkippedTokens)
+                $$ = &ast.ExprArray{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Items:           $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $3,
+                }
             }
     |   static_class_constant
             {
@@ -5229,16 +5257,16 @@ scalar:
 static_array_pair_list:
         /* empty */
             {
-                $$ = nil
+                $$ = &ast.ParserSeparatedList{}
             }
     |   non_empty_static_array_pair_list possible_comma
             {
-                $$ = $1
-
-                // save comments
                 if $2 != nil {
-                    yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                    $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                    $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, &ast.ExprArrayItem{})
                 }
+
+                $$ = $1
             }
 ;
 
@@ -5257,32 +5285,41 @@ non_empty_static_array_pair_list:
         non_empty_static_array_pair_list ',' static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, $3, $5}
-                $$ = append($1, arrayItem)
+
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+
+                $$ = $1
 
                 // save position
                 arrayItem.GetNode().Position = position.NewNodesPosition($3, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
                 yylex.(*Parser).MoveFreeFloating($3, arrayItem)
                 yylex.(*Parser).setFreeFloating(arrayItem, token.Expr, $4.SkippedTokens)
             }
     |   non_empty_static_array_pair_list ',' static_scalar_value
             {
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, nil, $3}
-                $$ = append($1, arrayItem)
+
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+
+                $$ = $1
 
                 // save position
                 arrayItem.GetNode().Position = position.NewNodePosition($3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
                 yylex.(*Parser).MoveFreeFloating($3, arrayItem)
             }
     |   static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, $1, $3}
-                $$ = []ast.Vertex{arrayItem}
+
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{arrayItem},
+                }
 
                 // save position
                 arrayItem.GetNode().Position = position.NewNodesPosition($1, $3)
@@ -5294,7 +5331,10 @@ non_empty_static_array_pair_list:
     |   static_scalar_value
             {
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, nil, $1}
-                $$ = []ast.Vertex{arrayItem}
+
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{arrayItem},
+                }
 
                 // save position
                 arrayItem.GetNode().Position = position.NewNodePosition($1)
@@ -5804,21 +5844,15 @@ simple_indirect_reference:
 assignment_list:
         assignment_list ',' assignment_list_element
             {
-                if len($1) == 0 {
-                    $1 = []ast.Vertex{&ast.ExprArrayItem{ast.Node{}, false, nil, nil}}
-                }
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                $$ = append($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   assignment_list_element
             {
-                if $1.(*ast.ExprArrayItem).Key == nil && $1.(*ast.ExprArrayItem).Val == nil {
-                    $$ = []ast.Vertex{}
-                } else {
-                    $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
                 }
             }
 ;
@@ -5837,7 +5871,23 @@ assignment_list_element:
             }
     |   T_LIST '(' assignment_list ')'
             {
-                listNode := &ast.ExprList{ast.Node{}, $3}
+                pairList := $3.(*ast.ParserSeparatedList)
+                fistPair := pairList.Items[0].(*ast.ExprArrayItem)
+
+                if fistPair.Key == nil && fistPair.Val == nil && len(pairList.Items) == 1 {
+                    pairList.Items = nil
+                }
+
+                listNode := &ast.ExprList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    ListTkn:         $1,
+                    OpenBracketTkn:  $2,
+                    Items:           $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $4,
+                }
                 $$ = &ast.ExprArrayItem{ast.Node{}, false, nil, listNode}
 
                 // save position
@@ -5859,20 +5909,16 @@ assignment_list_element:
 array_pair_list:
         /* empty */
             {
-                $$ = []ast.Vertex{}
+                $$ = &ast.ParserSeparatedList{}
             }
     |   non_empty_array_pair_list possible_comma
             {
+                if $2 != nil {
+                    $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                    $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, &ast.ExprArrayItem{})
+                }
+
                 $$ = $1
-
-                if $2 != nil {
-                    $$ = append($1, &ast.ExprArrayItem{ast.Node{}, false, nil, nil})
-                }
-
-                // save comments
-                if $2 != nil {
-                    yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
-                }
             }
 ;
 
@@ -5880,32 +5926,41 @@ non_empty_array_pair_list:
         non_empty_array_pair_list ',' expr T_DOUBLE_ARROW expr
             {
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, $3, $5}
-                $$ = append($1, arrayItem)
+
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+
+                $$ = $1
 
                 // save position
                 arrayItem.GetNode().Position = position.NewNodesPosition($3, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
                 yylex.(*Parser).MoveFreeFloating($3, arrayItem)
                 yylex.(*Parser).setFreeFloating(arrayItem, token.Expr, $4.SkippedTokens)
             }
     |   non_empty_array_pair_list ',' expr
             {
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, nil, $3}
-                $$ = append($1, arrayItem)
+
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+
+                $$ = $1
 
                 // save position
                 arrayItem.GetNode().Position = position.NewNodePosition($3)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
                 yylex.(*Parser).MoveFreeFloating($3, arrayItem)
             }
     |   expr T_DOUBLE_ARROW expr
             {
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, $1, $3}
-                $$ = []ast.Vertex{arrayItem}
+
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{arrayItem},
+                }
 
                 // save position
                 arrayItem.GetNode().Position = position.NewNodesPosition($1, $3)
@@ -5917,7 +5972,10 @@ non_empty_array_pair_list:
     |   expr
             {
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, nil, $1}
-                $$ = []ast.Vertex{arrayItem}
+
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{arrayItem},
+                }
 
                 // save position
                 arrayItem.GetNode().Position = position.NewNodePosition($1)
@@ -5929,14 +5987,17 @@ non_empty_array_pair_list:
             {
                 reference := &ast.ExprReference{ast.Node{}, $6}
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, $3, reference}
-                $$ = append($1, arrayItem)
+
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+
+                $$ = $1
 
                 // save position
                 reference.GetNode().Position = position.NewTokenNodePosition($5, $6)
                 arrayItem.GetNode().Position = position.NewNodesPosition($3, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
                 yylex.(*Parser).MoveFreeFloating($3, arrayItem)
                 yylex.(*Parser).setFreeFloating(arrayItem, token.Expr, $4.SkippedTokens)
                 yylex.(*Parser).setFreeFloating(reference, token.Start, $5.SkippedTokens)
@@ -5945,21 +6006,27 @@ non_empty_array_pair_list:
             {
                 reference := &ast.ExprReference{ast.Node{}, $4}
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, nil, reference}
-                $$ = append($1, arrayItem)
+
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+
+                $$ = $1
 
                 // save position
                 reference.GetNode().Position = position.NewTokenNodePosition($3, $4)
                 arrayItem.GetNode().Position = position.NewTokenNodePosition($3, $4)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
                 yylex.(*Parser).setFreeFloating(arrayItem, token.Start, $3.SkippedTokens)
             }
     |   expr T_DOUBLE_ARROW '&' w_variable
             {
                 reference := &ast.ExprReference{ast.Node{}, $4}
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, $1, reference}
-                $$ = []ast.Vertex{arrayItem}
+
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{arrayItem},
+                }
 
                 // save position
                 reference.GetNode().Position = position.NewTokenNodePosition($3, $4)
@@ -5974,7 +6041,10 @@ non_empty_array_pair_list:
             {
                 reference := &ast.ExprReference{ast.Node{}, $2}
                 arrayItem := &ast.ExprArrayItem{ast.Node{}, false, nil, reference}
-                $$ = []ast.Vertex{arrayItem}
+
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{arrayItem},
+                }
 
                 // save position
                 reference.GetNode().Position = position.NewTokenNodePosition($1, $2)

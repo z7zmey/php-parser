@@ -394,14 +394,6 @@ func (v *Null) ExprShellExec(_ *ast.ExprShellExec) {
 	// do nothing
 }
 
-func (v *Null) ExprShortArray(_ *ast.ExprShortArray) {
-	// do nothing
-}
-
-func (v *Null) ExprShortList(_ *ast.ExprShortList) {
-	// do nothing
-}
-
 func (v *Null) ExprStaticCall(_ *ast.ExprStaticCall) {
 	// do nothing
 }

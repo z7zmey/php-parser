@@ -812,18 +812,6 @@ func (v *Dump) ExprShellExec(n *ast.ExprShellExec) {
 	v.printNode(n.GetNode())
 }
 
-func (v *Dump) ExprShortArray(n *ast.ExprShortArray) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprShortArray{\n")
-	v.printNode(n.GetNode())
-}
-
-func (v *Dump) ExprShortList(n *ast.ExprShortList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprShortList{\n")
-	v.printNode(n.GetNode())
-}
-
 func (v *Dump) ExprStaticCall(n *ast.ExprStaticCall) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ExprStaticCall{\n")

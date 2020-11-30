@@ -363,10 +363,6 @@ func (p *Printer) printNode(n ast.Vertex) {
 		p.printExprRequireOnce(n)
 	case *ast.ExprShellExec:
 		p.printExprShellExec(n)
-	case *ast.ExprShortArray:
-		p.printExprShortArray(n)
-	case *ast.ExprShortList:
-		p.printExprShortList(n)
 	case *ast.ExprStaticCall:
 		p.printExprStaticCall(n)
 	case *ast.ExprStaticPropertyFetch:
@@ -1833,30 +1829,6 @@ func (p *Printer) printExprShellExec(n ast.Vertex) {
 	p.write([]byte("`"))
 	p.joinPrint("", nn.Parts)
 	p.write([]byte("`"))
-
-	p.printFreeFloating(nn, token.End)
-}
-
-func (p *Printer) printExprShortArray(n ast.Vertex) {
-	nn := n.(*ast.ExprShortArray)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("["))
-	p.joinPrint(",", nn.Items)
-	p.printFreeFloating(nn, token.ArrayPairList)
-	p.write([]byte("]"))
-
-	p.printFreeFloating(nn, token.End)
-}
-
-func (p *Printer) printExprShortList(n ast.Vertex) {
-	nn := n.(*ast.ExprShortList)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("["))
-	p.joinPrint(",", nn.Items)
-	p.printFreeFloating(nn, token.ArrayPairList)
-	p.write([]byte("]"))
 
 	p.printFreeFloating(nn, token.End)
 }

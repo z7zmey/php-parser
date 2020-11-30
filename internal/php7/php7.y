@@ -242,7 +242,7 @@ import (
 %type <node> static_var_list static_var class_statement trait_adaptation trait_precedence trait_alias
 %type <node> absolute_trait_method_reference trait_method_reference property echo_expr
 %type <node> new_expr anonymous_class class_name class_name_reference simple_variable
-%type <node> internal_functions_in_yacc
+%type <node> internal_functions_in_yacc non_empty_array_pair_list array_pair_list
 %type <node> exit_expr scalar lexical_var function_call member_name property_name
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
@@ -276,8 +276,8 @@ import (
 %type <list> for_exprs non_empty_for_exprs
 %type <list> unprefixed_use_declarations inline_use_declarations
 %type <list> case_list trait_adaptation_list
-%type <list> use_declarations lexical_var_list isset_variables non_empty_array_pair_list
-%type <list> array_pair_list top_statement_list
+%type <list> use_declarations lexical_var_list isset_variables
+%type <list> top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
 %type <list> method_modifiers variable_modifiers
 %type <list> non_empty_member_modifiers class_modifiers
@@ -1454,26 +1454,28 @@ foreach_variable:
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                $$ = &ast.ExprList{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.List, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $4.SkippedTokens)
+                $$ = &ast.ExprList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    ListTkn:         $1,
+                    OpenBracketTkn:  $2,
+                    Items:           $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $4,
+                }
             }
     |   '[' array_pair_list ']'
             {
-                $$ = &ast.ExprShortList{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save commentsc
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $3.SkippedTokens)
+                $$ = &ast.ExprList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Items:           $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $3,
+                }
             }
 ;
 
@@ -2802,31 +2804,41 @@ new_expr:
 expr_without_variable:
         T_LIST '(' array_pair_list ')' '=' expr
             {
-                listNode := &ast.ExprList{ast.Node{}, $3}
+                listNode := &ast.ExprList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    ListTkn:         $1,
+                    OpenBracketTkn:  $2,
+                    Items:           $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $4,
+                }
                 $$ = &ast.ExprAssign{ast.Node{}, listNode, $6}
 
                 // save position
-                listNode.GetNode().Position = position.NewTokensPosition($1, $4)
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $6)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.List, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, $4.SkippedTokens)
                 yylex.(*Parser).setFreeFloating($$, token.Var, $5.SkippedTokens)
             }
     |   '[' array_pair_list ']' '=' expr
             {
-                shortList := &ast.ExprShortList{ast.Node{}, $2}
-                $$ = &ast.ExprAssign{ast.Node{}, shortList, $5}
+                listNode := &ast.ExprList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Items:           $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $3,
+                }
+                $$ = &ast.ExprAssign{ast.Node{}, listNode, $5}
 
                 // save position
-                shortList.GetNode().Position = position.NewTokensPosition($1, $3)
                 $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
 
                 // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(shortList, token.ArrayPairList, $3.SkippedTokens)
                 yylex.(*Parser).setFreeFloating($$, token.Var, $4.SkippedTokens)
             }
     |   variable '=' expr
@@ -3890,26 +3902,28 @@ ctor_arguments:
 dereferencable_scalar:
     T_ARRAY '(' array_pair_list ')'
             {
-                $$ = &ast.ExprArray{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Array, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $4.SkippedTokens)
+                $$ = &ast.ExprArray{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    ArrayTkn:        $1,
+                    OpenBracketTkn:  $2,
+                    Items:           $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $4,
+                }
             }
     |   '[' array_pair_list ']'
             {
-                $$ = &ast.ExprShortArray{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.ArrayPairList, $3.SkippedTokens)
+                $$ = &ast.ExprArray{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Items:           $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $3,
+                }
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
@@ -4474,6 +4488,13 @@ property_name:
 array_pair_list:
         non_empty_array_pair_list
             {
+                pairList := $1.(*ast.ParserSeparatedList)
+                fistPair := pairList.Items[0].(*ast.ExprArrayItem)
+
+                if fistPair.Key == nil && fistPair.Val == nil && len(pairList.Items) == 1 {
+                    pairList.Items = nil
+                }
+
                 $$ = $1
             }
 ;
@@ -4481,7 +4502,7 @@ array_pair_list:
 possible_array_pair:
         /* empty */
             {
-                $$ = &ast.ExprArrayItem{ast.Node{}, false, nil, nil}
+                $$ = &ast.ExprArrayItem{}
             }
     |   array_pair
             {
@@ -4492,21 +4513,15 @@ possible_array_pair:
 non_empty_array_pair_list:
         non_empty_array_pair_list ',' possible_array_pair
             {
-                if len($1) == 0 {
-                    $1 = []ast.Vertex{&ast.ExprArrayItem{ast.Node{}, false, nil, nil}}
-                }
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                $$ = append($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   possible_array_pair
             {
-                if $1.(*ast.ExprArrayItem).Key == nil && $1.(*ast.ExprArrayItem).Val == nil {
-                    $$ = []ast.Vertex{}
-                } else {
-                    $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
                 }
             }
 ;
@@ -4571,35 +4586,41 @@ array_pair:
             }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
-                // TODO: Cannot use list() as standalone expression
-                listNode := &ast.ExprList{ast.Node{}, $5}
+                listNode := &ast.ExprList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($3, $6),
+                    },
+                    ListTkn:         $3,
+                    OpenBracketTkn:  $4,
+                    Items:           $5.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $5.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $6,
+                }
                 $$ = &ast.ExprArrayItem{ast.Node{}, false, $1, listNode}
 
                 // save position
-                listNode.GetNode().Position = position.NewTokensPosition($3, $6)
                 $$.GetNode().Position = position.NewNodeTokenPosition($1, $6)
 
                 // save comments
                 yylex.(*Parser).MoveFreeFloating($1, $$)
                 yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.Start, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.List, $4.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, $6.SkippedTokens)
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                // TODO: Cannot use list() as standalone expression
-                listNode := &ast.ExprList{ast.Node{}, $3}
+                listNode := &ast.ExprList{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    ListTkn:         $1,
+                    OpenBracketTkn:  $2,
+                    Items:           $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseBracketTkn: $4,
+                }
                 $$ = &ast.ExprArrayItem{ast.Node{}, false, nil, listNode}
 
                 // save position
-                listNode.GetNode().Position = position.NewTokensPosition($1, $4)
                 $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.List, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(listNode, token.ArrayPairList, $4.SkippedTokens)
             }
 ;
 
