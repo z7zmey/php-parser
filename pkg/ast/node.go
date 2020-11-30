@@ -953,8 +953,12 @@ func (n *ExprArray) Accept(v NodeVisitor) {
 // ExprArrayDimFetch node
 type ExprArrayDimFetch struct {
 	Node
-	Var Vertex
-	Dim Vertex
+	Var                  Vertex
+	OpenCurlyBracketTkn  *token.Token
+	OpenBracketTkn       *token.Token
+	Dim                  Vertex
+	CloseBracketTkn      *token.Token
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *ExprArrayDimFetch) Accept(v NodeVisitor) {
@@ -964,9 +968,10 @@ func (n *ExprArrayDimFetch) Accept(v NodeVisitor) {
 // ExprArrayItem node
 type ExprArrayItem struct {
 	Node
-	Unpack bool
-	Key    Vertex
-	Val    Vertex
+	EllipsisTkn    *token.Token
+	Key            Vertex
+	DoubleArrowTkn *token.Token
+	Val            Vertex
 }
 
 func (n *ExprArrayItem) Accept(v NodeVisitor) {

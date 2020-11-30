@@ -620,11 +620,6 @@ func (v *Dump) ExprArrayItem(n *ast.ExprArrayItem) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ExprArrayItem{\n")
 	v.printNode(n.GetNode())
-
-	if n.Unpack {
-		v.printIndent(v.indent)
-		v.print("Unpack: true,\n")
-	}
 }
 
 func (v *Dump) ExprArrowFunction(n *ast.ExprArrowFunction) {

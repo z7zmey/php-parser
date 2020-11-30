@@ -1369,7 +1369,7 @@ func (p *Printer) printExprArrayItem(n ast.Vertex) {
 	nn := n.(*ast.ExprArrayItem)
 	p.printFreeFloating(nn, token.Start)
 
-	if nn.Unpack {
+	if nn.EllipsisTkn != nil {
 		p.write([]byte("..."))
 	}
 

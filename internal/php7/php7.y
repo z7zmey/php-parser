@@ -4236,36 +4236,39 @@ callable_variable:
             }
     |   dereferencable '[' optional_expr ']'
             {
-                $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
+                $$ = &ast.ExprArrayDimFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $4),
+                    },
+                    Var:             $1,
+                    OpenBracketTkn:  $2,
+                    Dim:             $3,
+                    CloseBracketTkn: $4,
+                }
             }
     |   constant '[' optional_expr ']'
             {
-                $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
+                $$ = &ast.ExprArrayDimFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $4),
+                    },
+                    Var:             $1,
+                    OpenBracketTkn:  $2,
+                    Dim:             $3,
+                    CloseBracketTkn: $4,
+                }
             }
     |   dereferencable '{' expr '}'
             {
-                $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
+                $$ = &ast.ExprArrayDimFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $4),
+                    },
+                    Var:             $1,
+                    OpenBracketTkn:  $2,
+                    Dim:             $3,
+                    CloseBracketTkn: $4,
+                }
             }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
             {
@@ -4380,25 +4383,27 @@ new_variable:
             }
     |   new_variable '[' optional_expr ']'
             {
-                $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
+                $$ = &ast.ExprArrayDimFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $4),
+                    },
+                    Var:             $1,
+                    OpenBracketTkn:  $2,
+                    Dim:             $3,
+                    CloseBracketTkn: $4,
+                }
             }
     |   new_variable '{' expr '}'
             {
-                $$ = &ast.ExprArrayDimFetch{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
+                $$ = &ast.ExprArrayDimFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $4),
+                    },
+                    Var:             $1,
+                    OpenBracketTkn:  $2,
+                    Dim:             $3,
+                    CloseBracketTkn: $4,
+                }
             }
     |   new_variable T_OBJECT_OPERATOR property_name
             {
@@ -4529,98 +4534,101 @@ non_empty_array_pair_list:
 array_pair:
         expr T_DOUBLE_ARROW expr
             {
-                $$ = &ast.ExprArrayItem{ast.Node{}, false, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprArrayItem{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Key:            $1,
+                    DoubleArrowTkn: $2,
+                    Val:            $3,
+                }
             }
     |   expr
             {
-                $$ = &ast.ExprArrayItem{ast.Node{}, false, nil, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                $$ = &ast.ExprArrayItem{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    Val: $1,
+                }
             }
     |   expr T_DOUBLE_ARROW '&' variable
             {
-                reference := &ast.ExprReference{ast.Node{}, $4}
-                $$ = &ast.ExprArrayItem{ast.Node{}, false, $1, reference}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $4)
-                reference.GetNode().Position = position.NewTokenNodePosition($3, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(reference, token.Start, $3.SkippedTokens)
+                $$ = &ast.ExprArrayItem{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $4),
+                    },
+                    Key:            $1,
+                    DoubleArrowTkn: $2,
+                    Val: &ast.ExprReference{
+                        Node: ast.Node{
+                            Position: position.NewTokenNodePosition($3, $4),
+                        },
+                        Var: $4,
+                    },
+                }
             }
     |   '&' variable
             {
-                reference := &ast.ExprReference{ast.Node{}, $2}
-                $$ = &ast.ExprArrayItem{ast.Node{}, false, nil, reference}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-                reference.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprArrayItem{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    Val: &ast.ExprReference{
+                        Node: ast.Node{
+                            Position: position.NewTokenNodePosition($1, $2),
+                        },
+                        Var: $2,
+                    },
+                }
             }
     |   T_ELLIPSIS expr
             {
-                $$ = &ast.ExprArrayItem{ast.Node{}, true, nil, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprArrayItem{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    EllipsisTkn: $1,
+                    Val:         $2,
+                }
             }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
-                listNode := &ast.ExprList{
+                $$ = &ast.ExprArrayItem{
                     Node: ast.Node{
-                        Position: position.NewTokensPosition($3, $6),
+                        Position: position.NewNodeTokenPosition($1, $6),
                     },
-                    ListTkn:         $3,
-                    OpenBracketTkn:  $4,
-                    Items:           $5.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $5.(*ast.ParserSeparatedList).SeparatorTkns,
-                    CloseBracketTkn: $6,
+                    Key:            $1,
+                    DoubleArrowTkn: $2,
+                    Val: &ast.ExprList{
+                        Node: ast.Node{
+                            Position: position.NewTokensPosition($3, $6),
+                        },
+                        ListTkn:         $3,
+                        OpenBracketTkn:  $4,
+                        Items:           $5.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:   $5.(*ast.ParserSeparatedList).SeparatorTkns,
+                        CloseBracketTkn: $6,
+                    },
                 }
-                $$ = &ast.ExprArrayItem{ast.Node{}, false, $1, listNode}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $6)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                listNode := &ast.ExprList{
+                $$ = &ast.ExprArrayItem{
                     Node: ast.Node{
                         Position: position.NewTokensPosition($1, $4),
                     },
-                    ListTkn:         $1,
-                    OpenBracketTkn:  $2,
-                    Items:           $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
-                    CloseBracketTkn: $4,
+                    Val: &ast.ExprList{
+                        Node: ast.Node{
+                            Position: position.NewTokensPosition($1, $4),
+                        },
+                        ListTkn:         $1,
+                        OpenBracketTkn:  $2,
+                        Items:           $3.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                        CloseBracketTkn: $4,
+                    },
                 }
-                $$ = &ast.ExprArrayItem{ast.Node{}, false, nil, listNode}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
             }
 ;
 
@@ -4681,23 +4689,26 @@ encaps_var:
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
-                identifier := &ast.Identifier{
+                $$ = &ast.ExprArrayDimFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            IdentifierTkn: $1,
+                            Value:         $1.Value,
+                        },
+                    },
+                    OpenBracketTkn:  $2,
+                    Dim:             $3,
+                    CloseBracketTkn: $4,
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.ExprArrayDimFetch{ast.Node{}, variable, $3}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $4.SkippedTokens)
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
@@ -4760,25 +4771,28 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
-                identifier := &ast.Identifier{
+                $$ = &ast.ExprArrayDimFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($2),
+                        Position: position.NewTokensPosition($1, $6),
                     },
-                    IdentifierTkn: $2,
-                    Value:         $2.Value,
+                    OpenCurlyBracketTkn: $1,
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($2),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($2),
+                            },
+                            IdentifierTkn: $2,
+                            Value:         $2.Value,
+                        },
+                    },
+                    OpenBracketTkn:       $3,
+                    Dim:                  $4,
+                    CloseBracketTkn:      $5,
+                    CloseCurlyBracketTkn: $6,
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.ExprArrayDimFetch{ast.Node{}, variable, $4}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($2)
-                $$.GetNode().Position = position.NewTokensPosition($1, $6)
-
-                // save comments
-                yylex.(*Parser).setToken(variable, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Var, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Expr, $5.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $6.SkippedTokens)
             }
     |   T_CURLY_OPEN variable '}'
             {
