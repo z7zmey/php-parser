@@ -3220,13 +3220,13 @@ expr_without_variable:
             }
     |   T_CLONE expr
             {
-                $$ = &ast.ExprClone{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprClone{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    CloneTkn: $1,
+                    Expr:     $2,
+                }
             }
     |   variable T_PLUS_EQUAL expr
             {
@@ -3609,23 +3609,23 @@ expr_without_variable:
             }
     |   '!' expr
             {
-                $$ = &ast.ExprBooleanNot{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprBooleanNot{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    ExclamationTkn: $1,
+                    Expr:           $2,
+                }
             }
     |   '~' expr
             {
-                $$ = &ast.ExprBitwiseNot{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprBitwiseNot{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    TildaTkn: $1,
+                    Expr:     $2,
+                }
             }
     |   expr T_IS_IDENTICAL expr
             {
@@ -4665,21 +4665,20 @@ common_scalar:
 static_class_constant:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
-                target := &ast.Identifier{
+                $$ = &ast.ExprClassConstFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewNodeTokenPosition($1, $3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Class:          $1,
+                    DoubleColonTkn: $2,
+                    ConstantName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
 ;
 
@@ -4867,23 +4866,23 @@ static_operation:
             }
     |   '!' static_scalar_value
             {
-                $$ = &ast.ExprBooleanNot{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprBooleanNot{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    ExclamationTkn: $1,
+                    Expr:           $2,
+                }
             }
     |   '~' static_scalar_value
             {
-                $$ = &ast.ExprBitwiseNot{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprBitwiseNot{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    TildaTkn: $1,
+                    Expr:     $2,
+                }
             }
     |   static_scalar_value '|' static_scalar_value
             {
@@ -6445,81 +6444,77 @@ isset_variable:
 class_constant:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
-                target := &ast.Identifier{
+                $$ = &ast.ExprClassConstFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewNodeTokenPosition($1, $3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Class:          $1,
+                    DoubleColonTkn: $2,
+                    ConstantName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
-                target := &ast.Identifier{
+                $$ = &ast.ExprClassConstFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewNodeTokenPosition($1, $3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Class:          $1,
+                    DoubleColonTkn: $2,
+                    ConstantName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
 ;
 
 static_class_name_scalar:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
             {
-                target := &ast.Identifier{
+                $$ = &ast.ExprClassConstFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewNodeTokenPosition($1, $3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Class:          $1,
+                    DoubleColonTkn: $2,
+                    ConstantName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
 ;
 
 class_name_scalar:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
             {
-                target := &ast.Identifier{
+                $$ = &ast.ExprClassConstFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                        Position: position.NewNodeTokenPosition($1, $3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    Class:          $1,
+                    DoubleColonTkn: $2,
+                    ConstantName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.ExprClassConstFetch{ast.Node{}, $1, target}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
             }
 ;
 

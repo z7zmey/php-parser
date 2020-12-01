@@ -1000,7 +1000,8 @@ func (n *ExprArrowFunction) Accept(v NodeVisitor) {
 // ExprBitwiseNot node
 type ExprBitwiseNot struct {
 	Node
-	Expr Vertex
+	TildaTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprBitwiseNot) Accept(v NodeVisitor) {
@@ -1010,7 +1011,8 @@ func (n *ExprBitwiseNot) Accept(v NodeVisitor) {
 // ExprBooleanNot node
 type ExprBooleanNot struct {
 	Node
-	Expr Vertex
+	ExclamationTkn *token.Token
+	Expr           Vertex
 }
 
 func (n *ExprBooleanNot) Accept(v NodeVisitor) {
@@ -1020,8 +1022,9 @@ func (n *ExprBooleanNot) Accept(v NodeVisitor) {
 // ExprClassConstFetch node
 type ExprClassConstFetch struct {
 	Node
-	Class        Vertex
-	ConstantName Vertex
+	Class          Vertex
+	DoubleColonTkn *token.Token
+	ConstantName   Vertex
 }
 
 func (n *ExprClassConstFetch) Accept(v NodeVisitor) {
@@ -1031,7 +1034,8 @@ func (n *ExprClassConstFetch) Accept(v NodeVisitor) {
 // ExprClone node
 type ExprClone struct {
 	Node
-	Expr Vertex
+	CloneTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprClone) Accept(v NodeVisitor) {
