@@ -1175,8 +1175,9 @@ func (n *ExprIncludeOnce) Accept(v NodeVisitor) {
 // ExprInstanceOf node
 type ExprInstanceOf struct {
 	Node
-	Expr  Vertex
-	Class Vertex
+	Expr          Vertex
+	InstanceOfTkn *token.Token
+	Class         Vertex
 }
 
 func (n *ExprInstanceOf) Accept(v NodeVisitor) {
@@ -1186,7 +1187,11 @@ func (n *ExprInstanceOf) Accept(v NodeVisitor) {
 // ExprIsset node
 type ExprIsset struct {
 	Node
-	Vars []Vertex
+	IssetTkn            *token.Token
+	OpenParenthesisTkn  *token.Token
+	Vars                []Vertex
+	SeparatorTkns       []*token.Token
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ExprIsset) Accept(v NodeVisitor) {

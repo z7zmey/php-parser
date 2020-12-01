@@ -240,7 +240,7 @@ import (
 %type <node> trait_adaptations unset_variables declare_list non_empty_array_pair_list array_pair_list
 %type <node> switch_case_list non_empty_function_call_parameter_list assignment_list lexical_var_list
 %type <node> method_body trait_reference_list static_array_pair_list non_empty_static_array_pair_list
-%type <node> foreach_statement for_statement while_statement
+%type <node> foreach_statement for_statement while_statement isset_variables
 %type <node> foreach_variable foreach_optional_arg
 %type <node> extends_from interface_list trait_list
 %type <node> implements_list
@@ -248,7 +248,7 @@ import (
 %type <ClosureUse> lexical_vars
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
-%type <list> inner_statement_list encaps_list isset_variables
+%type <list> inner_statement_list encaps_list
 %type <list> elseif_list new_elseif_list non_empty_for_expr
 %type <list> for_expr case_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
@@ -3717,14 +3717,14 @@ expr_without_variable:
             }
     |   expr T_INSTANCEOF class_name_reference
             {
-                $$ = &ast.ExprInstanceOf{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprInstanceOf{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Expr:          $1,
+                    InstanceOfTkn: $2,
+                    Class:         $3,
+                }
             }
     |   parenthesis_expr
             {
@@ -6331,15 +6331,16 @@ encaps_var_offset:
 internal_functions_in_yacc:
         T_ISSET '(' isset_variables ')'
             {
-                $$ = &ast.ExprIsset{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Isset, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.VarList, $4.SkippedTokens)
+                $$ = &ast.ExprIsset{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    IssetTkn:            $1,
+                    OpenParenthesisTkn:  $2,
+                    Vars:                $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:       $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseParenthesisTkn: $4,
+                }
             }
     |   T_EMPTY '(' variable ')'
             {
@@ -6422,14 +6423,16 @@ internal_functions_in_yacc:
 isset_variables:
         isset_variable
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
     |   isset_variables ',' isset_variable
             {
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
 ;
 
