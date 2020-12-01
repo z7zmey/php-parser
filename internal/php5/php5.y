@@ -239,7 +239,7 @@ import (
 %type <node> static_scalar_value static_operation static_var_list global_var_list
 %type <node> ctor_arguments function_call_parameter_list echo_expr_list class_variable_declaration
 %type <node> trait_adaptations unset_variables declare_list non_empty_array_pair_list array_pair_list
-%type <node> switch_case_list non_empty_function_call_parameter_list assignment_list
+%type <node> switch_case_list non_empty_function_call_parameter_list assignment_list lexical_var_list
 %type <node> method_body trait_reference_list static_array_pair_list non_empty_static_array_pair_list
 %type <node> foreach_statement for_statement while_statement
 %type <node> foreach_variable foreach_optional_arg
@@ -250,7 +250,7 @@ import (
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list encaps_list isset_variables
-%type <list>  lexical_var_list elseif_list new_elseif_list non_empty_for_expr
+%type <list> elseif_list new_elseif_list non_empty_for_expr
 %type <list> for_expr case_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
 %type <list> class_statement_list variable_modifiers method_modifiers
@@ -3890,13 +3890,13 @@ expr_without_variable:
             }
     |   '@' expr
             {
-                $$ = &ast.ExprErrorSuppress{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprErrorSuppress{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    AtTkn: $1,
+                    Expr:  $2,
+                }
             }
     |   scalar
             {
@@ -4121,98 +4121,107 @@ lexical_vars:
             }
     |   T_USE '(' lexical_var_list ')'
             {
-                $$ = &ast.ExprClosureUse{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Use, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.LexicalVarList, $4.SkippedTokens)
+                $$ = &ast.ExprClosureUse{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    UseTkn:              $1,
+                    OpenParenthesisTkn:  $2,
+                    Uses:                $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:       $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseParenthesisTkn: $4,
+                }
             }
 ;
 
 lexical_var_list:
         lexical_var_list ',' T_VARIABLE
             {
-                identifier := &ast.Identifier{
+                variable := &ast.ExprVariable{
                     Node: ast.Node{
                         Position: position.NewTokenPosition($3),
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    VarName: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = append($1, variable)
 
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, variable)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(variable, token.Start, $3.SkippedTokens)
+                $$ = $1
             }
     |   lexical_var_list ',' '&' T_VARIABLE
             {
-                identifier := &ast.Identifier{
+                reference := &ast.ExprReference{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($4),
+                        Position: position.NewTokensPosition($3, $4),
                     },
-                    IdentifierTkn: $4,
-                    Value:         $4.Value,
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($4),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($4),
+                            },
+                            IdentifierTkn: $4,
+                            Value:         $4.Value,
+                        },
+                    },
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                reference := &ast.ExprReference{ast.Node{}, variable}
-                $$ = append($1, reference)
 
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($4)
-                reference.GetNode().Position = position.NewTokensPosition($3, $4)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, reference)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(reference, token.Start, $3.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(variable, token.Start, $4.SkippedTokens)
+                $$ = $1
             }
     |   T_VARIABLE
             {
-                identifier := &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{
+                        &ast.ExprVariable{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            VarName: &ast.Identifier{
+                                Node: ast.Node{
+                                    Position: position.NewTokenPosition($1),
+                                },
+                                IdentifierTkn: $1,
+                                Value:         $1.Value,
+                            },
+                        },
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = []ast.Vertex{variable}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(variable, token.Start, $1.SkippedTokens)
             }
     |   '&' T_VARIABLE
             {
-                identifier := &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($2),
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{
+                        &ast.ExprReference{
+                            Node: ast.Node{
+                                Position: position.NewTokensPosition($1, $2),
+                            },
+                            Var: &ast.ExprVariable{
+                                Node: ast.Node{
+                                    Position: position.NewTokenPosition($2),
+                                },
+                                VarName: &ast.Identifier{
+                                    Node: ast.Node{
+                                        Position: position.NewTokenPosition($2),
+                                    },
+                                    IdentifierTkn: $2,
+                                    Value:         $2.Value,
+                                },
+                            },
+                        },
                     },
-                    IdentifierTkn: $2,
-                    Value:         $2.Value,
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                reference := &ast.ExprReference{ast.Node{}, variable}
-                $$ = []ast.Vertex{reference}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($2)
-                reference.GetNode().Position = position.NewTokensPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating(reference, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(variable, token.Start, $2.SkippedTokens)
             }
 ;
 
@@ -4700,45 +4709,48 @@ static_scalar_value:
             }
     |   namespace_name
             {
-                name := &ast.NameName{
-                    Node:  ast.Node{
+                $$ = &ast.ExprConstFetch{
+                    Node: ast.Node{
                         Position: position.NewNodeListPosition($1),
                     },
-                    Parts: $1,
+                    Const: &ast.NameName{
+                        Node:  ast.Node{
+                            Position: position.NewNodeListPosition($1),
+                        },
+                        Parts: $1,
+                    },
                 }
-                $$ = &ast.ExprConstFetch{ast.Node{}, name}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition(name)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                name := &ast.NameRelative{
-                    Node:  ast.Node{
+                $$ = &ast.ExprConstFetch{
+                    Node: ast.Node{
                         Position: position.NewTokenNodeListPosition($1, $3),
                     },
-                    NsTkn:          $1,
-                    NsSeparatorTkn: $2,
-                    Parts:          $3,
+                    Const: &ast.NameRelative{
+                        Node:  ast.Node{
+                            Position: position.NewTokenNodeListPosition($1, $3),
+                        },
+                        NsTkn:          $1,
+                        NsSeparatorTkn: $2,
+                        Parts:          $3,
+                    },
                 }
-                $$ = &ast.ExprConstFetch{ast.Node{}, name}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $3)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                name := &ast.NameFullyQualified{
-                    Node:  ast.Node{
+                $$ = &ast.ExprConstFetch{
+                    Node: ast.Node{
                         Position: position.NewTokenNodeListPosition($1, $2),
                     },
-                    NsSeparatorTkn: $1,
-                    Parts:          $2,
+                    Const: &ast.NameFullyQualified{
+                        Node:  ast.Node{
+                            Position: position.NewTokenNodeListPosition($1, $2),
+                        },
+                        NsSeparatorTkn: $1,
+                        Parts:          $2,
+                    },
                 }
-                $$ = &ast.ExprConstFetch{ast.Node{}, name}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodeListPosition($1, $2)
             }
     |   T_ARRAY '(' static_array_pair_list ')'
             {
@@ -5155,45 +5167,48 @@ general_constant:
             }
     |   namespace_name
             {
-                name := &ast.NameName{
-                    Node:  ast.Node{
+                $$ = &ast.ExprConstFetch{
+                    Node: ast.Node{
                         Position: position.NewNodeListPosition($1),
                     },
-                    Parts: $1,
+                    Const: &ast.NameName{
+                        Node:  ast.Node{
+                            Position: position.NewNodeListPosition($1),
+                        },
+                        Parts: $1,
+                    },
                 }
-                $$ = &ast.ExprConstFetch{ast.Node{}, name}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition(name)
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                name := &ast.NameRelative{
-                    Node:  ast.Node{
+                $$ = &ast.ExprConstFetch{
+                    Node: ast.Node{
                         Position: position.NewTokenNodeListPosition($1, $3),
                     },
-                    NsTkn:          $1,
-                    NsSeparatorTkn: $2,
-                    Parts:          $3,
+                    Const: &ast.NameRelative{
+                        Node:  ast.Node{
+                            Position: position.NewTokenNodeListPosition($1, $3),
+                        },
+                        NsTkn:          $1,
+                        NsSeparatorTkn: $2,
+                        Parts:          $3,
+                    },
                 }
-                $$ = &ast.ExprConstFetch{ast.Node{}, name}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition(name)
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                name := &ast.NameFullyQualified{
-                    Node:  ast.Node{
+                $$ = &ast.ExprConstFetch{
+                    Node: ast.Node{
                         Position: position.NewTokenNodeListPosition($1, $2),
                     },
-                    NsSeparatorTkn: $1,
-                    Parts:          $2,
+                    Const: &ast.NameFullyQualified{
+                        Node:  ast.Node{
+                            Position: position.NewTokenNodeListPosition($1, $2),
+                        },
+                        NsSeparatorTkn: $1,
+                        Parts:          $2,
+                    },
                 }
-                $$ = &ast.ExprConstFetch{ast.Node{}, name}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition(name)
             }
 ;
 
@@ -6316,43 +6331,27 @@ internal_functions_in_yacc:
             }
     |   T_EMPTY '(' variable ')'
             {
-                exprBrackets := &ast.ParserBrackets{
+                $$ = &ast.ExprEmpty{
                     Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    OpenBracketTkn:  $2,
-                    Child:           $3,
-                    CloseBracketTkn: $4,
+                    EmptyTkn:            $1,
+                    OpenParenthesisTkn:  $2,
+                    Expr:                $3,
+                    CloseParenthesisTkn: $4,
                 }
-                $$ = &ast.ExprEmpty{ast.Node{}, exprBrackets}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   T_EMPTY '(' expr ')'
             {
-                exprBrackets := &ast.ParserBrackets{
+                $$ = &ast.ExprEmpty{
                     Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    OpenBracketTkn:  $2,
-                    Child:           $3,
-                    CloseBracketTkn: $4,
+                    EmptyTkn:            $1,
+                    OpenParenthesisTkn:  $2,
+                    Expr:                $3,
+                    CloseParenthesisTkn: $4,
                 }
-                $$ = &ast.ExprEmpty{ast.Node{}, exprBrackets}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   T_INCLUDE expr
             {

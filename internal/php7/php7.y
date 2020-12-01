@@ -248,7 +248,7 @@ import (
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset echo_expr_list catch_name_list name_list
 %type <node> if_stmt const_list non_empty_argument_list property_list
-%type <node> alt_if_stmt
+%type <node> alt_if_stmt lexical_var_list
 %type <node> if_stmt_without_else
 %type <node> class_const_decl
 %type <node> alt_if_stmt_without_else
@@ -276,7 +276,7 @@ import (
 %type <list> for_exprs non_empty_for_exprs
 %type <list> unprefixed_use_declarations inline_use_declarations
 %type <list> case_list trait_adaptation_list
-%type <list> use_declarations lexical_var_list isset_variables
+%type <list> use_declarations isset_variables
 %type <list> top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
 %type <list> method_modifiers variable_modifiers
@@ -3551,13 +3551,13 @@ expr_without_variable:
             }
     |   '@' expr
             {
-                $$ = &ast.ExprErrorSuppress{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprErrorSuppress{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    AtTkn: $1,
+                    Expr:  $2,
+                }
             }
     |   scalar
             {
@@ -3704,29 +3704,32 @@ lexical_vars:
             }
     |   T_USE '(' lexical_var_list ')'
             {
-                $$ = &ast.ExprClosureUse{ast.Node{}, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Use, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.LexicalVarList, $4.SkippedTokens)
+                $$ = &ast.ExprClosureUse{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $4),
+                    },
+                    UseTkn:              $1,
+                    OpenParenthesisTkn:  $2,
+                    Uses:                $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:       $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    CloseParenthesisTkn: $4,
+                }
             }
 ;
 
 lexical_var_list:
         lexical_var_list ',' lexical_var
             {
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   lexical_var
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -4102,13 +4105,12 @@ scalar:
 constant:
         name
             {
-                $$ = &ast.ExprConstFetch{ast.Node{}, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                $$ = &ast.ExprConstFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    Const: $1,
+                }
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
@@ -4898,23 +4900,15 @@ internal_functions_in_yacc:
             }
     |   T_EMPTY '(' expr ')'
             {
-                exprBrackets := &ast.ParserBrackets{
+                $$ = &ast.ExprEmpty{
                     Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    OpenBracketTkn:  $2,
-                    Child:           $3,
-                    CloseBracketTkn: $4,
+                    EmptyTkn:            $1,
+                    OpenParenthesisTkn:  $2,
+                    Expr:                $3,
+                    CloseParenthesisTkn: $4,
                 }
-                $$ = &ast.ExprEmpty{ast.Node{}, exprBrackets}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   T_INCLUDE expr
             {

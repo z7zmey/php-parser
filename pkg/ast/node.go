@@ -1066,7 +1066,11 @@ func (n *ExprClosure) Accept(v NodeVisitor) {
 // ExprClosureUse node
 type ExprClosureUse struct {
 	Node
-	Uses []Vertex
+	UseTkn              *token.Token
+	OpenParenthesisTkn  *token.Token
+	Uses                []Vertex
+	SeparatorTkns       []*token.Token
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ExprClosureUse) Accept(v NodeVisitor) {
@@ -1086,7 +1090,10 @@ func (n *ExprConstFetch) Accept(v NodeVisitor) {
 // ExprEmpty node
 type ExprEmpty struct {
 	Node
-	Expr Vertex
+	EmptyTkn            *token.Token
+	OpenParenthesisTkn  *token.Token
+	Expr                Vertex
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ExprEmpty) Accept(v NodeVisitor) {
@@ -1096,7 +1103,8 @@ func (n *ExprEmpty) Accept(v NodeVisitor) {
 // ExprErrorSuppress node
 type ExprErrorSuppress struct {
 	Node
-	Expr Vertex
+	AtTkn *token.Token
+	Expr  Vertex
 }
 
 func (n *ExprErrorSuppress) Accept(v NodeVisitor) {
