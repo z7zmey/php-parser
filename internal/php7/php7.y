@@ -2,7 +2,6 @@
 package php7
 
 import (
-    "bytes"
     "strconv"
 
     "github.com/z7zmey/php-parser/internal/position"
@@ -3533,21 +3532,20 @@ expr_without_variable:
             }
     |   T_EXIT exit_expr
             {
-                $$ = &ast.ExprExit{ast.Node{}, false, $2}
-
-                if (bytes.EqualFold($1.Value, []byte("die"))) {
-                    $$.(*ast.ExprExit).Die = true
+                exit := &ast.ExprExit{
+                    DieTkn: $1,
                 }
 
-                // save position
                 if $2 == nil {
-                    $$.GetNode().Position = position.NewTokenPosition($1)
+                    exit.Node.Position = position.NewTokenPosition($1)
                 } else {
-                    $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
+                    exit.Node.Position       = position.NewTokenNodePosition($1, $2)
+                    exit.OpenParenthesisTkn  = $2.(*ast.ParserBrackets).OpenBracketTkn
+                    exit.Expr                = $2.(*ast.ParserBrackets).Child
+                    exit.CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
                 }
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = exit
             }
     |   '@' expr
             {
@@ -3776,13 +3774,15 @@ lexical_var:
 function_call:
         name argument_list
             {
-                $$ = &ast.ExprFunctionCall{ast.Node{}, $1, $2.(*ast.ArgumentList)}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                $$ = &ast.ExprFunctionCall{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $2),
+                    },
+                    Function:            $1,
+                    OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $2.(*ast.ArgumentList).Arguments,
+                    CloseParenthesisTkn: $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                }
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
@@ -3808,13 +3808,15 @@ function_call:
             }
     |   callable_expr argument_list
             {
-                $$ = &ast.ExprFunctionCall{ast.Node{}, $1, $2.(*ast.ArgumentList)}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
+                $$ = &ast.ExprFunctionCall{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $2),
+                    },
+                    Function:            $1,
+                    OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $2.(*ast.ArgumentList).Arguments,
+                    CloseParenthesisTkn: $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                }
             }
 ;
 
@@ -4912,43 +4914,35 @@ internal_functions_in_yacc:
             }
     |   T_INCLUDE expr
             {
-                $$ = &ast.ExprInclude{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprInclude{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    IncludeTkn: $1,
+                    Expr:       $2,
+                }
             }
     |   T_INCLUDE_ONCE expr
             {
-                $$ = &ast.ExprIncludeOnce{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprIncludeOnce{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    IncludeTkn: $1,
+                    Expr:       $2,
+                }
             }
     |   T_EVAL '(' expr ')'
             {
-                exprBrackets := &ast.ParserBrackets{
+                $$ = &ast.ExprEval{
                     Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
+                        Position: position.NewTokensPosition($1, $4),
                     },
-                    OpenBracketTkn:  $2,
-                    Child:           $3,
-                    CloseBracketTkn: $4,
+                    EvalTkn:             $1,
+                    OpenParenthesisTkn:  $2,
+                    Expr:                $3,
+                    CloseParenthesisTkn: $4,
                 }
-                $$ = &ast.ExprEval{ast.Node{}, exprBrackets}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.Start, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens(exprBrackets, token.End, $4.SkippedTokens)
             }
     |   T_REQUIRE expr
             {

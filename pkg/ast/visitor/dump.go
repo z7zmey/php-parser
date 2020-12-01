@@ -692,11 +692,6 @@ func (v *Dump) ExprExit(n *ast.ExprExit) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.ExprExit{\n")
 	v.printNode(n.GetNode())
-
-	if n.Die {
-		v.printIndent(v.indent)
-		v.print("Die: true,\n")
-	}
 }
 
 func (v *Dump) ExprFunctionCall(n *ast.ExprFunctionCall) {

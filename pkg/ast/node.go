@@ -1114,7 +1114,10 @@ func (n *ExprErrorSuppress) Accept(v NodeVisitor) {
 // ExprEval node
 type ExprEval struct {
 	Node
-	Expr Vertex
+	EvalTkn             *token.Token
+	OpenParenthesisTkn  *token.Token
+	Expr                Vertex
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ExprEval) Accept(v NodeVisitor) {
@@ -1124,8 +1127,10 @@ func (n *ExprEval) Accept(v NodeVisitor) {
 // ExprExit node
 type ExprExit struct {
 	Node
-	Die  bool
-	Expr Vertex
+	DieTkn              *token.Token
+	OpenParenthesisTkn  *token.Token
+	Expr                Vertex
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ExprExit) Accept(v NodeVisitor) {
@@ -1135,8 +1140,10 @@ func (n *ExprExit) Accept(v NodeVisitor) {
 // ExprFunctionCall node
 type ExprFunctionCall struct {
 	Node
-	Function     Vertex
-	ArgumentList *ArgumentList
+	Function            Vertex
+	OpenParenthesisTkn  *token.Token
+	Arguments           []Vertex
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ExprFunctionCall) Accept(v NodeVisitor) {
@@ -1146,7 +1153,8 @@ func (n *ExprFunctionCall) Accept(v NodeVisitor) {
 // ExprInclude node
 type ExprInclude struct {
 	Node
-	Expr Vertex
+	IncludeTkn *token.Token
+	Expr       Vertex
 }
 
 func (n *ExprInclude) Accept(v NodeVisitor) {
@@ -1156,7 +1164,8 @@ func (n *ExprInclude) Accept(v NodeVisitor) {
 // ExprIncludeOnce node
 type ExprIncludeOnce struct {
 	Node
-	Expr Vertex
+	IncludeTkn *token.Token
+	Expr       Vertex
 }
 
 func (n *ExprIncludeOnce) Accept(v NodeVisitor) {

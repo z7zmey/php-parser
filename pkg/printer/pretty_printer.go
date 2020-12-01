@@ -1074,11 +1074,7 @@ func (p *PrettyPrinter) printExprEval(n ast.Vertex) {
 func (p *PrettyPrinter) printExprExit(n ast.Vertex) {
 	nn := n.(*ast.ExprExit)
 
-	if nn.Die {
-		io.WriteString(p.w, "die(")
-	} else {
-		io.WriteString(p.w, "exit(")
-	}
+	io.WriteString(p.w, "exit(")
 	p.Print(nn.Expr)
 	io.WriteString(p.w, ")")
 }
@@ -1088,7 +1084,7 @@ func (p *PrettyPrinter) printExprFunctionCall(n ast.Vertex) {
 
 	p.Print(nn.Function)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.ArgumentList.Arguments)
+	p.joinPrint(", ", nn.Arguments)
 	io.WriteString(p.w, ")")
 }
 

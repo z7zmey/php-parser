@@ -1303,10 +1303,12 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Function)
 			t.visitor.Leave("Function", true)
 		}
-		if nn.ArgumentList != nil {
-			t.visitor.Enter("ArgumentList", true)
-			t.Traverse(nn.ArgumentList)
-			t.visitor.Leave("ArgumentList", true)
+		if nn.Arguments != nil {
+			t.visitor.Enter("Arguments", false)
+			for _, c := range nn.Arguments {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Arguments", false)
 		}
 	case *ast.ExprInclude:
 		if nn == nil {

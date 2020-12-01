@@ -1590,8 +1590,8 @@ func (p *Printer) printExprExit(n ast.Vertex) {
 	nn := n.(*ast.ExprExit)
 	p.printFreeFloating(nn, token.Start)
 
-	if nn.Die {
-		p.write([]byte("die"))
+	if nn.DieTkn != nil {
+		p.write(nn.DieTkn.Value)
 	} else {
 		p.write([]byte("exit"))
 	}
@@ -1611,9 +1611,9 @@ func (p *Printer) printExprFunctionCall(n ast.Vertex) {
 
 	p.Print(nn.Function)
 
-	p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
-	p.joinPrint(",", nn.ArgumentList.Arguments)
-	p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
+	p.printToken(nn.OpenParenthesisTkn, "(")
+	p.joinPrint(",", nn.Arguments)
+	p.printToken(nn.CloseParenthesisTkn, ")")
 
 	p.printFreeFloating(nn, token.End)
 }
