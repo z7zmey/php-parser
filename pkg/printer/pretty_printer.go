@@ -1239,7 +1239,7 @@ func (p *PrettyPrinter) printExprStaticCall(n ast.Vertex) {
 	io.WriteString(p.w, "::")
 	p.Print(nn.Call)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.ArgumentList.Arguments)
+	p.joinPrint(", ", nn.Arguments)
 	io.WriteString(p.w, ")")
 }
 

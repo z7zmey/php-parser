@@ -1344,7 +1344,9 @@ func (n *ExprRequireOnce) Accept(v NodeVisitor) {
 // ExprShellExec node
 type ExprShellExec struct {
 	Node
-	Parts []Vertex
+	OpenBacktickTkn  *token.Token
+	Parts            []Vertex
+	CloseBacktickTkn *token.Token
 }
 
 func (n *ExprShellExec) Accept(v NodeVisitor) {
@@ -1354,9 +1356,12 @@ func (n *ExprShellExec) Accept(v NodeVisitor) {
 // ExprStaticCall node
 type ExprStaticCall struct {
 	Node
-	Class        Vertex
-	Call         Vertex
-	ArgumentList *ArgumentList
+	Class               Vertex
+	DoubleColonTkn      *token.Token
+	Call                Vertex
+	OpenParenthesisTkn  *token.Token
+	Arguments           []Vertex
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ExprStaticCall) Accept(v NodeVisitor) {
@@ -1366,8 +1371,9 @@ func (n *ExprStaticCall) Accept(v NodeVisitor) {
 // ExprStaticPropertyFetch node
 type ExprStaticPropertyFetch struct {
 	Node
-	Class    Vertex
-	Property Vertex
+	Class          Vertex
+	DoubleColonTkn *token.Token
+	Property       Vertex
 }
 
 func (n *ExprStaticPropertyFetch) Accept(v NodeVisitor) {
@@ -1377,9 +1383,11 @@ func (n *ExprStaticPropertyFetch) Accept(v NodeVisitor) {
 // ExprTernary node
 type ExprTernary struct {
 	Node
-	Condition Vertex
-	IfTrue    Vertex
-	IfFalse   Vertex
+	Condition   Vertex
+	QuestionTkn *token.Token
+	IfTrue      Vertex
+	ColonTkn    *token.Token
+	IfFalse     Vertex
 }
 
 func (n *ExprTernary) Accept(v NodeVisitor) {

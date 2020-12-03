@@ -3789,27 +3789,28 @@ expr_without_variable:
             }
     |   expr '?' expr ':' expr
             {
-                $$ = &ast.ExprTernary{ast.Node{}, $1, $3, $5}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.True, $4.SkippedTokens)
+                $$ = &ast.ExprTernary{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $5),
+                    },
+                    Condition:   $1,
+                    QuestionTkn: $2,
+                    IfTrue:      $3,
+                    ColonTkn:    $4,
+                    IfFalse:     $5,
+                }
             }
     |   expr '?' ':' expr
             {
-                $$ = &ast.ExprTernary{ast.Node{}, $1, nil, $4}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.True, $3.SkippedTokens)
+                $$ = &ast.ExprTernary{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $4),
+                    },
+                    Condition:   $1,
+                    QuestionTkn: $2,
+                    ColonTkn:    $3,
+                    IfFalse:     $4,
+                }
             }
     |   internal_functions_in_yacc
             {
@@ -3933,13 +3934,14 @@ expr_without_variable:
             }
     |   '`' backticks_expr '`'
             {
-                $$ = &ast.ExprShellExec{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprShellExec{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBacktickTkn:  $1,
+                    Parts:            $2,
+                    CloseBacktickTkn: $3,
+                }
             }
     |   T_PRINT expr
             {
@@ -4305,47 +4307,59 @@ function_call:
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
-                $$ = &ast.ExprStaticCall{ast.Node{}, $1, $3, $4.(*ast.ArgumentList)}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                $$ = &ast.ExprStaticCall{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $4),
+                    },
+                    Class:               $1,
+                    DoubleColonTkn:      $2,
+                    Call:                $3,
+                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ast.ArgumentList).Arguments,
+                    CloseParenthesisTkn: $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                }
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
-                $$ = &ast.ExprStaticCall{ast.Node{}, $1, $3, $4.(*ast.ArgumentList)}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                $$ = &ast.ExprStaticCall{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $4),
+                    },
+                    Class:               $1,
+                    DoubleColonTkn:      $2,
+                    Call:                $3,
+                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ast.ArgumentList).Arguments,
+                    CloseParenthesisTkn: $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                }
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
-                $$ = &ast.ExprStaticCall{ast.Node{}, $1, $3, $4.(*ast.ArgumentList)}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                $$ = &ast.ExprStaticCall{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $4),
+                    },
+                    Class:               $1,
+                    DoubleColonTkn:      $2,
+                    Call:                $3,
+                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ast.ArgumentList).Arguments,
+                    CloseParenthesisTkn: $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                }
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
-                $$ = &ast.ExprStaticCall{ast.Node{}, $1, $3, $4.(*ast.ArgumentList)}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                $$ = &ast.ExprStaticCall{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $4),
+                    },
+                    Class:               $1,
+                    DoubleColonTkn:      $2,
+                    Call:                $3,
+                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ast.ArgumentList).Arguments,
+                    CloseParenthesisTkn: $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                }
             }
     |   variable_without_objects function_call_parameter_list
             {
@@ -5145,27 +5159,28 @@ static_operation:
             }
     |   static_scalar_value '?' ':' static_scalar_value
             {
-                $$ = &ast.ExprTernary{ast.Node{}, $1, nil, $4}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.True, $3.SkippedTokens)
+                $$ = &ast.ExprTernary{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $4),
+                    },
+                    Condition:   $1,
+                    QuestionTkn: $2,
+                    ColonTkn:    $3,
+                    IfFalse:     $4,
+                }
             }
     |   static_scalar_value '?' static_scalar_value ':' static_scalar_value
             {
-                $$ = &ast.ExprTernary{ast.Node{}, $1, $3, $5}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Cond, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.True, $4.SkippedTokens)
+                $$ = &ast.ExprTernary{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $5),
+                    },
+                    Condition:   $1,
+                    QuestionTkn: $2,
+                    IfTrue:      $3,
+                    ColonTkn:    $4,
+                    IfFalse:     $5,
+                }
             }
     |   '+' static_scalar_value
             {
@@ -5674,25 +5689,25 @@ variable_without_objects:
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
-                $$ = &ast.ExprStaticPropertyFetch{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                $$ = &ast.ExprStaticPropertyFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Class:          $1,
+                    DoubleColonTkn: $2,
+                    Property:       $3,
+                }
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
-                $$ = &ast.ExprStaticPropertyFetch{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Name, $2.SkippedTokens)
+                $$ = &ast.ExprStaticPropertyFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Class:          $1,
+                    DoubleColonTkn: $2,
+                    Property:       $3,
+                }
             }
 ;
 
