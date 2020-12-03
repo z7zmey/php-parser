@@ -1710,10 +1710,10 @@ func (p *Printer) printExprNew(n ast.Vertex) {
 	p.bufStart = " "
 	p.Print(nn.Class)
 
-	if nn.ArgumentList != nil {
-		p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
-		p.joinPrint(",", nn.ArgumentList.Arguments)
-		p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
+	if nn.Arguments != nil {
+		p.printToken(nn.OpenParenthesisTkn, "(")
+		p.joinPrint(",", nn.Arguments)
+		p.printToken(nn.CloseParenthesisTkn, ")")
 	}
 
 	p.printFreeFloating(nn, token.End)

@@ -1230,8 +1230,11 @@ func (n *ExprMethodCall) Accept(v NodeVisitor) {
 // ExprNew node
 type ExprNew struct {
 	Node
-	Class        Vertex
-	ArgumentList *ArgumentList
+	NewTkn              *token.Token
+	Class               Vertex
+	OpenParenthesisTkn  *token.Token
+	Arguments           []Vertex
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ExprNew) Accept(v NodeVisitor) {
@@ -1241,7 +1244,8 @@ func (n *ExprNew) Accept(v NodeVisitor) {
 // ExprPostDec node
 type ExprPostDec struct {
 	Node
-	Var Vertex
+	Var    Vertex
+	DecTkn *token.Token
 }
 
 func (n *ExprPostDec) Accept(v NodeVisitor) {
@@ -1251,7 +1255,8 @@ func (n *ExprPostDec) Accept(v NodeVisitor) {
 // ExprPostInc node
 type ExprPostInc struct {
 	Node
-	Var Vertex
+	Var    Vertex
+	IncTkn *token.Token
 }
 
 func (n *ExprPostInc) Accept(v NodeVisitor) {
@@ -1261,7 +1266,8 @@ func (n *ExprPostInc) Accept(v NodeVisitor) {
 // ExprPreDec node
 type ExprPreDec struct {
 	Node
-	Var Vertex
+	DecTkn *token.Token
+	Var    Vertex
 }
 
 func (n *ExprPreDec) Accept(v NodeVisitor) {
@@ -1271,7 +1277,8 @@ func (n *ExprPreDec) Accept(v NodeVisitor) {
 // ExprPreInc node
 type ExprPreInc struct {
 	Node
-	Var Vertex
+	IncTkn *token.Token
+	Var    Vertex
 }
 
 func (n *ExprPreInc) Accept(v NodeVisitor) {

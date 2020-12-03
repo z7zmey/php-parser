@@ -2778,25 +2778,35 @@ new_expr:
         T_NEW class_name_reference ctor_arguments
             {
                 if $3 != nil {
-                    $$ = &ast.ExprNew{ast.Node{}, $2, $3.(*ast.ArgumentList)}
-                    $$.GetNode().Position = position.NewTokenNodePosition($1, $3)
+                    $$ = &ast.ExprNew{
+                        Node: ast.Node{
+                            Position: position.NewTokenNodePosition($1, $3),
+                        },
+                        NewTkn:              $1,
+                        Class:               $2,
+                        OpenParenthesisTkn:  $3.(*ast.ArgumentList).OpenParenthesisTkn,
+                        Arguments:           $3.(*ast.ArgumentList).Arguments,
+                        CloseParenthesisTkn: $3.(*ast.ArgumentList).OpenParenthesisTkn,
+                    }
                 } else {
-                    $$ = &ast.ExprNew{ast.Node{}, $2, nil}
-                    $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
+                    $$ = &ast.ExprNew{
+                        Node: ast.Node{
+                            Position: position.NewTokenNodePosition($1, $2),
+                        },
+                        NewTkn: $1,
+                        Class:  $2,
+                    }
                 }
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_NEW anonymous_class
             {
-                $$ = &ast.ExprNew{ast.Node{}, $2, nil}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprNew{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    NewTkn: $1,
+                    Class:  $2,
+                }
             }
 ;
 
@@ -3018,45 +3028,43 @@ expr_without_variable:
             }
     |   variable T_INC
             {
-                $$ = &ast.ExprPostInc{ast.Node{}, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprPostInc{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $2),
+                    },
+                    Var:    $1,
+                    IncTkn: $2,
+                }
             }
     |   T_INC variable
             {
-                $$ = &ast.ExprPreInc{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprPreInc{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    IncTkn: $1,
+                    Var:    $2,
+                }
             }
     |   variable T_DEC
             {
-                $$ = &ast.ExprPostDec{ast.Node{}, $1}
-
-                // save position
-                $$.GetNode().Position = position.NewNodeTokenPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprPostDec{
+                    Node: ast.Node{
+                        Position: position.NewNodeTokenPosition($1, $2),
+                    },
+                    Var:    $1,
+                    DecTkn: $2,
+                }
             }
     |   T_DEC variable
             {
-                $$ = &ast.ExprPreDec{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprPreDec{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    DecTkn: $1,
+                    Var:    $2,
+                }
             }
     |   expr T_BOOLEAN_OR expr
             {

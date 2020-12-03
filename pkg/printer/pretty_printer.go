@@ -1143,9 +1143,9 @@ func (p *PrettyPrinter) printExprNew(n ast.Vertex) {
 	io.WriteString(p.w, "new ")
 	p.Print(nn.Class)
 
-	if nn.ArgumentList != nil {
+	if nn.Arguments != nil {
 		io.WriteString(p.w, "(")
-		p.joinPrint(", ", nn.ArgumentList.Arguments)
+		p.joinPrint(", ", nn.Arguments)
 		io.WriteString(p.w, ")")
 	}
 }
