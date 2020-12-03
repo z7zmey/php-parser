@@ -953,12 +953,10 @@ func (n *ExprArray) Accept(v NodeVisitor) {
 // ExprArrayDimFetch node
 type ExprArrayDimFetch struct {
 	Node
-	Var                  Vertex
-	OpenCurlyBracketTkn  *token.Token
-	OpenBracketTkn       *token.Token
-	Dim                  Vertex
-	CloseBracketTkn      *token.Token
-	CloseCurlyBracketTkn *token.Token
+	Var             Vertex
+	OpenBracketTkn  *token.Token
+	Dim             Vertex
+	CloseBracketTkn *token.Token
 }
 
 func (n *ExprArrayDimFetch) Accept(v NodeVisitor) {
@@ -1397,7 +1395,8 @@ func (n *ExprTernary) Accept(v NodeVisitor) {
 // ExprUnaryMinus node
 type ExprUnaryMinus struct {
 	Node
-	Expr Vertex
+	MinusTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprUnaryMinus) Accept(v NodeVisitor) {
@@ -1407,7 +1406,8 @@ func (n *ExprUnaryMinus) Accept(v NodeVisitor) {
 // ExprUnaryPlus node
 type ExprUnaryPlus struct {
 	Node
-	Expr Vertex
+	PlusTkn *token.Token
+	Expr    Vertex
 }
 
 func (n *ExprUnaryPlus) Accept(v NodeVisitor) {
@@ -1417,7 +1417,8 @@ func (n *ExprUnaryPlus) Accept(v NodeVisitor) {
 // ExprVariable node
 type ExprVariable struct {
 	Node
-	VarName Vertex
+	DollarTkn *token.Token
+	VarName   Vertex
 }
 
 func (n *ExprVariable) Accept(v NodeVisitor) {
