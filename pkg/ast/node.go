@@ -1288,7 +1288,8 @@ func (n *ExprPreInc) Accept(v NodeVisitor) {
 // ExprPrint node
 type ExprPrint struct {
 	Node
-	Expr Vertex
+	PrintTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprPrint) Accept(v NodeVisitor) {
@@ -1310,7 +1311,8 @@ func (n *ExprPropertyFetch) Accept(v NodeVisitor) {
 // ExprReference node
 type ExprReference struct {
 	Node
-	Var Vertex
+	AmpersandTkn *token.Token
+	Var          Vertex
 }
 
 func (n *ExprReference) Accept(v NodeVisitor) {
@@ -1320,7 +1322,8 @@ func (n *ExprReference) Accept(v NodeVisitor) {
 // ExprRequire node
 type ExprRequire struct {
 	Node
-	Expr Vertex
+	RequireTkn *token.Token
+	Expr       Vertex
 }
 
 func (n *ExprRequire) Accept(v NodeVisitor) {
@@ -1330,7 +1333,8 @@ func (n *ExprRequire) Accept(v NodeVisitor) {
 // ExprRequireOnce node
 type ExprRequireOnce struct {
 	Node
-	Expr Vertex
+	RequireOnceTkn *token.Token
+	Expr           Vertex
 }
 
 func (n *ExprRequireOnce) Accept(v NodeVisitor) {

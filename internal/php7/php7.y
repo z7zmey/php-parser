@@ -1443,13 +1443,13 @@ foreach_variable:
             }
     |   '&' variable
             {
-                $$ = &ast.ExprReference{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprReference{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    AmpersandTkn: $1,
+                    Var:          $2,
+                }
             }
     |   T_LIST '(' array_pair_list ')'
             {
@@ -3581,13 +3581,13 @@ expr_without_variable:
             }
     |   T_PRINT expr
             {
-                $$ = &ast.ExprPrint{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprPrint{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    PrintTkn: $1,
+                    Expr:     $2,
+                }
             }
     |   T_YIELD
             {
@@ -3759,23 +3759,24 @@ lexical_var:
             }
     |   '&' T_VARIABLE
             {
-                identifier := &ast.Identifier{
+                $$ = &ast.ExprReference{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($2),
+                        Position: position.NewTokensPosition($1, $2),
                     },
-                    IdentifierTkn: $2,
-                    Value:         $2.Value,
+                    AmpersandTkn: $1,
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($2),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($2),
+                            },
+                            IdentifierTkn: $2,
+                            Value:         $2.Value,
+                        },
+                    },
                 }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                $$ = &ast.ExprReference{ast.Node{}, variable}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($2)
-                $$.GetNode().Position = position.NewTokensPosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating(variable, token.Start, $2.SkippedTokens)
             }
 ;
 
@@ -4577,7 +4578,8 @@ array_pair:
                         Node: ast.Node{
                             Position: position.NewTokenNodePosition($3, $4),
                         },
-                        Var: $4,
+                        AmpersandTkn: $3,
+                        Var:          $4,
                     },
                 }
             }
@@ -4591,7 +4593,8 @@ array_pair:
                         Node: ast.Node{
                             Position: position.NewTokenNodePosition($1, $2),
                         },
-                        Var: $2,
+                        AmpersandTkn: $1,
+                        Var:          $2,
                     },
                 }
             }
@@ -4960,23 +4963,23 @@ internal_functions_in_yacc:
             }
     |   T_REQUIRE expr
             {
-                $$ = &ast.ExprRequire{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprRequire{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    RequireTkn: $1,
+                    Expr:       $2,
+                }
             }
     |   T_REQUIRE_ONCE expr
             {
-                $$ = &ast.ExprRequireOnce{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprRequireOnce{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    RequireOnceTkn: $1,
+                    Expr:           $2,
+                }
             }
 ;
 
