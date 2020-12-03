@@ -1695,9 +1695,9 @@ func (p *Printer) printExprMethodCall(n ast.Vertex) {
 	p.write([]byte("->"))
 	p.Print(nn.Method)
 
-	p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
-	p.joinPrint(",", nn.ArgumentList.Arguments)
-	p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
+	p.printToken(nn.OpenParenthesisTkn, "(")
+	p.joinPrint(",", nn.Arguments)
+	p.printToken(nn.CloseParenthesisTkn, ")")
 
 	p.printFreeFloating(nn, token.End)
 }

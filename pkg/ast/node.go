@@ -1215,9 +1215,12 @@ func (n *ExprList) Accept(v NodeVisitor) {
 // ExprMethodCall node
 type ExprMethodCall struct {
 	Node
-	Var          Vertex
-	Method       Vertex
-	ArgumentList *ArgumentList
+	Var                 Vertex
+	ObjectOperatorTkn   *token.Token
+	Method              Vertex
+	OpenParenthesisTkn  *token.Token
+	Arguments           []Vertex
+	CloseParenthesisTkn *token.Token
 }
 
 func (n *ExprMethodCall) Accept(v NodeVisitor) {
@@ -1288,8 +1291,9 @@ func (n *ExprPrint) Accept(v NodeVisitor) {
 // ExprPropertyFetch node
 type ExprPropertyFetch struct {
 	Node
-	Var      Vertex
-	Property Vertex
+	Var               Vertex
+	ObjectOperatorTkn *token.Token
+	Property          Vertex
 }
 
 func (n *ExprPropertyFetch) Accept(v NodeVisitor) {

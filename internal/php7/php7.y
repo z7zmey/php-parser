@@ -4274,14 +4274,17 @@ callable_variable:
             }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
             {
-                $$ = &ast.ExprMethodCall{ast.Node{}, $1, $3, $4.(*ast.ArgumentList)}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprMethodCall{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $4),
+                    },
+                    Var:                 $1,
+                    ObjectOperatorTkn:   $2,
+                    Method:              $3,
+                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ast.ArgumentList).Arguments,
+                    CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
+                }
             }
     |   function_call
             {
@@ -4300,14 +4303,14 @@ variable:
             }
     |   dereferencable T_OBJECT_OPERATOR property_name
             {
-                $$ = &ast.ExprPropertyFetch{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprPropertyFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:               $1,
+                    ObjectOperatorTkn: $2,
+                    Property:          $3,
+                }
             }
 ;
 
@@ -4409,14 +4412,14 @@ new_variable:
             }
     |   new_variable T_OBJECT_OPERATOR property_name
             {
-                $$ = &ast.ExprPropertyFetch{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprPropertyFetch{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:               $1,
+                    ObjectOperatorTkn: $2,
+                    Property:          $3,
+                }
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
@@ -4714,29 +4717,31 @@ encaps_var:
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
-                identifier := &ast.Identifier{
+                $$ = &ast.ExprPropertyFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
+                        Position: position.NewTokensPosition($1, $3),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
-                }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                fetch := &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            IdentifierTkn: $1,
+                            Value:         $1.Value,
+                        },
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    ObjectOperatorTkn: $2,
+                    Property: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.ExprPropertyFetch{ast.Node{}, variable, fetch}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {

@@ -17236,6 +17236,8 @@ func TestExprPrint(t *testing.T) {
 	assert.DeepEqual(t, expected, actual)
 }
 
+// TODO add test for `echo $a->b["c"]()->d["e"]();`
+
 func TestExprPropertyFetch(t *testing.T) {
 	src := `<? $a->foo;`
 

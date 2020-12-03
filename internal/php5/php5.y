@@ -3744,24 +3744,26 @@ expr_without_variable:
 
                 for _, n := range($4) {
                     switch nn := n.(type) {
+                        case *ast.ExprFunctionCall:
+                            nn.Function = $$
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            $$ = nn
+
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprMethodCall:
                             nn.Var = $$
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
                     }
-
-                    // save position
-                    $$.GetNode().Position = position.NewNodesPosition($$, n)
                 }
             }
     |   expr '?' expr ':' expr
@@ -5448,55 +5450,75 @@ variable:
             {
                 $$ = $1
 
-                if $4 != nil {
-                    $4[0].(*ast.ExprMethodCall).Method = $3[len($3)-1].(*ast.ExprPropertyFetch).Property
-                    $3 = append($3[:len($3)-1], $4...)
-                }
+                $3[0].(*ast.ExprPropertyFetch).ObjectOperatorTkn = $2
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($3[0], token.Var, $2.SkippedTokens)
+                if $4 != nil {
+                    last := $3[len($3)-1]
+                    switch l := last.(type) {
+                        case *ast.ExprArrayDimFetch:
+                            mc := $4[0].(*ast.ExprMethodCall)
+                            $3 = append($3, &ast.ExprFunctionCall{
+                                    Node: ast.Node{
+                                        Position: position.NewNodePosition(mc),
+                                    },
+                                    OpenParenthesisTkn:  mc.OpenParenthesisTkn,
+                                    Arguments:           mc.Arguments,
+                                    CloseParenthesisTkn: mc.OpenParenthesisTkn,
+                                },
+                            )
+                            $3 = append($3, $4[1:len($4)]...)
+                        case *ast.ExprPropertyFetch:
+                            $4[0].(*ast.ExprMethodCall).Method = l.Property
+                            $4[0].(*ast.ExprMethodCall).ObjectOperatorTkn = l.ObjectOperatorTkn
+                            $3 = append($3[:len($3)-1], $4...)
+                    }
+                }
 
                 for _, n := range($3) {
                     switch nn := n.(type) {
+                        case *ast.ExprFunctionCall:
+                            nn.Function = $$
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            $$ = nn
+
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprMethodCall:
                             nn.Var = $$
-                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
                     }
                 }
 
                 for _, n := range($5) {
                     switch nn := n.(type) {
+                        case *ast.ExprFunctionCall:
+                            nn.Function = $$
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            $$ = nn
+
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprMethodCall:
                             nn.Var = $$
-                            nn.GetNode().Position = position.NewNodesPosition($$, nn)
+                            nn.Node.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
                     }
                 }
             }
@@ -5520,16 +5542,32 @@ variable_properties:
 
 variable_property:
         T_OBJECT_OPERATOR object_property method_or_not
-            {
+            {println("FOOFOOFOOFOOFOOFOOFOOFOOFOO")
+                $2[0].(*ast.ExprPropertyFetch).ObjectOperatorTkn = $1
+
                 if $3 != nil {
-                    $3[0].(*ast.ExprMethodCall).Method = $2[len($2)-1].(*ast.ExprPropertyFetch).Property
-                    $2 = append($2[:len($2)-1], $3...)
+                    last := $2[len($2)-1]
+                    switch l := last.(type) {
+                        case *ast.ExprArrayDimFetch:
+                            mc := $3[0].(*ast.ExprMethodCall)
+                            $2 = append($2, &ast.ExprFunctionCall{
+                                    Node: ast.Node{
+                                        Position: position.NewNodePosition(mc),
+                                    },
+                                    OpenParenthesisTkn:  mc.OpenParenthesisTkn,
+                                    Arguments:           mc.Arguments,
+                                    CloseParenthesisTkn: mc.OpenParenthesisTkn,
+                                },
+                            )
+                            $2 = append($2, $3[1:len($3)]...)
+                        case *ast.ExprPropertyFetch:
+                            $3[0].(*ast.ExprMethodCall).Method = l.Property
+                            $3[0].(*ast.ExprMethodCall).ObjectOperatorTkn = l.ObjectOperatorTkn
+                            $2 = append($2[:len($2)-1], $3...)
+                    }
                 }
 
                 $$ = $2
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($2[0], token.Var, $1.SkippedTokens)
             }
 ;
 
@@ -5567,10 +5605,14 @@ array_method_dereference:
 method:
         function_call_parameter_list
             {
-                $$ = &ast.ExprMethodCall{ast.Node{}, nil, nil, $1.(*ast.ArgumentList)}
-
-                // save position
-                $$.GetNode().Position = position.NewNodePosition($1)
+                $$ = &ast.ExprMethodCall{
+                    Node: ast.Node{
+                        Position: position.NewNodePosition($1),
+                    },
+                    OpenParenthesisTkn:  $1.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $1.(*ast.ArgumentList).Arguments,
+                    CloseParenthesisTkn: $1.(*ast.ArgumentList).CloseParenthesisTkn,
+                }
             }
 ;
 
@@ -5785,11 +5827,14 @@ object_property:
             }
     |   variable_without_objects
             {
-                fetch := &ast.ExprPropertyFetch{ast.Node{}, nil, $1}
-                $$ = []ast.Vertex{fetch}
-
-                // save position
-                fetch.GetNode().Position = position.NewNodePosition($1)
+                $$ = []ast.Vertex{
+                    &ast.ExprPropertyFetch{
+                        Node: ast.Node{
+                            Position: position.NewNodePosition($1),
+                        },
+                        Property: $1,
+                    },
+                }
             }
 ;
 
@@ -5824,11 +5869,14 @@ object_dim_list:
             }
     |   variable_name
             {
-                fetch := &ast.ExprPropertyFetch{ast.Node{}, nil, $1}
-                $$ = []ast.Vertex{fetch}
-
-                // save position
-                fetch.GetNode().Position = position.NewNodePosition($1)
+                $$ = []ast.Vertex{
+                    &ast.ExprPropertyFetch{
+                        Node: ast.Node{
+                            Position: position.NewNodePosition($1),
+                        },
+                        Property: $1,
+                    },
+                }
             }
 ;
 
@@ -6179,29 +6227,31 @@ encaps_var:
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
-                identifier := &ast.Identifier{
+                $$ = &ast.ExprPropertyFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
+                        Position: position.NewTokensPosition($1, $3),
                     },
-                    IdentifierTkn: $1,
-                    Value:         $1.Value,
-                }
-                variable := &ast.ExprVariable{ast.Node{}, identifier}
-                fetch := &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($1),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            IdentifierTkn: $1,
+                            Value:         $1.Value,
+                        },
                     },
-                    IdentifierTkn: $3,
-                    Value:         $3.Value,
+                    ObjectOperatorTkn: $2,
+                    Property: &ast.Identifier{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($3),
+                        },
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
                 }
-                $$ = &ast.ExprPropertyFetch{ast.Node{}, variable, fetch}
-
-                // save position
-                variable.GetNode().Position = position.NewTokenPosition($1)
-                $$.GetNode().Position = position.NewTokensPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
