@@ -1529,8 +1529,9 @@ func (n *ExprCastUnset) Accept(v NodeVisitor) {
 // ExprAssign node
 type ExprAssign struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssign) Accept(v NodeVisitor) {
@@ -1540,8 +1541,10 @@ func (n *ExprAssign) Accept(v NodeVisitor) {
 // ExprAssignReference node
 type ExprAssignReference struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var          Vertex
+	EqualTkn     *token.Token
+	AmpersandTkn *token.Token
+	Expr         Vertex
 }
 
 func (n *ExprAssignReference) Accept(v NodeVisitor) {
@@ -1551,8 +1554,9 @@ func (n *ExprAssignReference) Accept(v NodeVisitor) {
 // ExprAssignBitwiseAnd node
 type ExprAssignBitwiseAnd struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignBitwiseAnd) Accept(v NodeVisitor) {
@@ -1562,8 +1566,9 @@ func (n *ExprAssignBitwiseAnd) Accept(v NodeVisitor) {
 // ExprAssignBitwiseOr node
 type ExprAssignBitwiseOr struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignBitwiseOr) Accept(v NodeVisitor) {
@@ -1573,8 +1578,9 @@ func (n *ExprAssignBitwiseOr) Accept(v NodeVisitor) {
 // ExprAssignBitwiseXor node
 type ExprAssignBitwiseXor struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignBitwiseXor) Accept(v NodeVisitor) {
@@ -1584,8 +1590,9 @@ func (n *ExprAssignBitwiseXor) Accept(v NodeVisitor) {
 // ExprAssignCoalesce node
 type ExprAssignCoalesce struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignCoalesce) Accept(v NodeVisitor) {
@@ -1595,8 +1602,9 @@ func (n *ExprAssignCoalesce) Accept(v NodeVisitor) {
 // ExprAssignConcat node
 type ExprAssignConcat struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignConcat) Accept(v NodeVisitor) {
@@ -1606,8 +1614,9 @@ func (n *ExprAssignConcat) Accept(v NodeVisitor) {
 // ExprAssignDiv node
 type ExprAssignDiv struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignDiv) Accept(v NodeVisitor) {
@@ -1617,8 +1626,9 @@ func (n *ExprAssignDiv) Accept(v NodeVisitor) {
 // ExprAssignMinus node
 type ExprAssignMinus struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignMinus) Accept(v NodeVisitor) {
@@ -1628,8 +1638,9 @@ func (n *ExprAssignMinus) Accept(v NodeVisitor) {
 // ExprAssignMod node
 type ExprAssignMod struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignMod) Accept(v NodeVisitor) {
@@ -1639,8 +1650,9 @@ func (n *ExprAssignMod) Accept(v NodeVisitor) {
 // ExprAssignMul node
 type ExprAssignMul struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignMul) Accept(v NodeVisitor) {
@@ -1650,8 +1662,9 @@ func (n *ExprAssignMul) Accept(v NodeVisitor) {
 // ExprAssignPlus node
 type ExprAssignPlus struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignPlus) Accept(v NodeVisitor) {
@@ -1661,8 +1674,9 @@ func (n *ExprAssignPlus) Accept(v NodeVisitor) {
 // ExprAssignPow node
 type ExprAssignPow struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignPow) Accept(v NodeVisitor) {
@@ -1672,8 +1686,9 @@ func (n *ExprAssignPow) Accept(v NodeVisitor) {
 // ExprAssignShiftLeft node
 type ExprAssignShiftLeft struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignShiftLeft) Accept(v NodeVisitor) {
@@ -1683,8 +1698,9 @@ func (n *ExprAssignShiftLeft) Accept(v NodeVisitor) {
 // ExprAssignShiftRight node
 type ExprAssignShiftRight struct {
 	Node
-	Var  Vertex
-	Expr Vertex
+	Var      Vertex
+	EqualTkn *token.Token
+	Expr     Vertex
 }
 
 func (n *ExprAssignShiftRight) Accept(v NodeVisitor) {
@@ -1695,6 +1711,7 @@ func (n *ExprAssignShiftRight) Accept(v NodeVisitor) {
 type ExprBinaryBitwiseAnd struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1706,6 +1723,7 @@ func (n *ExprBinaryBitwiseAnd) Accept(v NodeVisitor) {
 type ExprBinaryBitwiseOr struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1717,6 +1735,7 @@ func (n *ExprBinaryBitwiseOr) Accept(v NodeVisitor) {
 type ExprBinaryBitwiseXor struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1728,6 +1747,7 @@ func (n *ExprBinaryBitwiseXor) Accept(v NodeVisitor) {
 type ExprBinaryBooleanAnd struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1739,6 +1759,7 @@ func (n *ExprBinaryBooleanAnd) Accept(v NodeVisitor) {
 type ExprBinaryBooleanOr struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1750,6 +1771,7 @@ func (n *ExprBinaryBooleanOr) Accept(v NodeVisitor) {
 type ExprBinaryCoalesce struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1761,6 +1783,7 @@ func (n *ExprBinaryCoalesce) Accept(v NodeVisitor) {
 type ExprBinaryConcat struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1772,6 +1795,7 @@ func (n *ExprBinaryConcat) Accept(v NodeVisitor) {
 type ExprBinaryDiv struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1783,6 +1807,7 @@ func (n *ExprBinaryDiv) Accept(v NodeVisitor) {
 type ExprBinaryEqual struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1794,6 +1819,7 @@ func (n *ExprBinaryEqual) Accept(v NodeVisitor) {
 type ExprBinaryGreater struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1805,6 +1831,7 @@ func (n *ExprBinaryGreater) Accept(v NodeVisitor) {
 type ExprBinaryGreaterOrEqual struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1816,6 +1843,7 @@ func (n *ExprBinaryGreaterOrEqual) Accept(v NodeVisitor) {
 type ExprBinaryIdentical struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1827,6 +1855,7 @@ func (n *ExprBinaryIdentical) Accept(v NodeVisitor) {
 type ExprBinaryLogicalAnd struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1838,6 +1867,7 @@ func (n *ExprBinaryLogicalAnd) Accept(v NodeVisitor) {
 type ExprBinaryLogicalOr struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1849,6 +1879,7 @@ func (n *ExprBinaryLogicalOr) Accept(v NodeVisitor) {
 type ExprBinaryLogicalXor struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1860,6 +1891,7 @@ func (n *ExprBinaryLogicalXor) Accept(v NodeVisitor) {
 type ExprBinaryMinus struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1871,6 +1903,7 @@ func (n *ExprBinaryMinus) Accept(v NodeVisitor) {
 type ExprBinaryMod struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1882,6 +1915,7 @@ func (n *ExprBinaryMod) Accept(v NodeVisitor) {
 type ExprBinaryMul struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1893,6 +1927,7 @@ func (n *ExprBinaryMul) Accept(v NodeVisitor) {
 type ExprBinaryNotEqual struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1904,6 +1939,7 @@ func (n *ExprBinaryNotEqual) Accept(v NodeVisitor) {
 type ExprBinaryNotIdentical struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1915,6 +1951,7 @@ func (n *ExprBinaryNotIdentical) Accept(v NodeVisitor) {
 type ExprBinaryPlus struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1926,6 +1963,7 @@ func (n *ExprBinaryPlus) Accept(v NodeVisitor) {
 type ExprBinaryPow struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1937,6 +1975,7 @@ func (n *ExprBinaryPow) Accept(v NodeVisitor) {
 type ExprBinaryShiftLeft struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1948,6 +1987,7 @@ func (n *ExprBinaryShiftLeft) Accept(v NodeVisitor) {
 type ExprBinaryShiftRight struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1959,6 +1999,7 @@ func (n *ExprBinaryShiftRight) Accept(v NodeVisitor) {
 type ExprBinarySmaller struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1970,6 +2011,7 @@ func (n *ExprBinarySmaller) Accept(v NodeVisitor) {
 type ExprBinarySmallerOrEqual struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 
@@ -1981,6 +2023,7 @@ func (n *ExprBinarySmallerOrEqual) Accept(v NodeVisitor) {
 type ExprBinarySpaceship struct {
 	Node
 	Left  Vertex
+	OpTkn *token.Token
 	Right Vertex
 }
 

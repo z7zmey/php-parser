@@ -2804,65 +2804,65 @@ new_expr:
 expr_without_variable:
         T_LIST '(' array_pair_list ')' '=' expr
             {
-                listNode := &ast.ExprList{
+                $$ = &ast.ExprAssign{
                     Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
+                        Position: position.NewTokenNodePosition($1, $6),
                     },
-                    ListTkn:         $1,
-                    OpenBracketTkn:  $2,
-                    Items:           $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
-                    CloseBracketTkn: $4,
+                    Var: &ast.ExprList{
+                        Node: ast.Node{
+                            Position: position.NewTokensPosition($1, $4),
+                        },
+                        ListTkn:         $1,
+                        OpenBracketTkn:  $2,
+                        Items:           $3.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                        CloseBracketTkn: $4,
+                    },
+                    EqualTkn: $5,
+                    Expr:     $6,
                 }
-                $$ = &ast.ExprAssign{ast.Node{}, listNode, $6}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $6)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Var, $5.SkippedTokens)
             }
     |   '[' array_pair_list ']' '=' expr
             {
-                listNode := &ast.ExprList{
+                $$ = &ast.ExprAssign{
                     Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
+                        Position: position.NewTokenNodePosition($1, $5),
                     },
-                    OpenBracketTkn:  $1,
-                    Items:           $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
-                    CloseBracketTkn: $3,
+                    Var: &ast.ExprList{
+                        Node: ast.Node{
+                            Position: position.NewTokensPosition($1, $3),
+                        },
+                        OpenBracketTkn:  $1,
+                        Items:           $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        CloseBracketTkn: $3,
+                    },
+                    EqualTkn: $4,
+                    Expr:     $5,
                 }
-                $$ = &ast.ExprAssign{ast.Node{}, listNode, $5}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $5)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Var, $4.SkippedTokens)
             }
     |   variable '=' expr
             {
-                $$ = &ast.ExprAssign{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssign{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable '=' '&' expr
             {
-                $$ = &ast.ExprAssignReference{ast.Node{}, $1, $4}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Equal, $3.SkippedTokens)
+                $$ = &ast.ExprAssignReference{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $4),
+                    },
+                    Var:          $1,
+                    EqualTkn:     $2,
+                    AmpersandTkn: $3,
+                    Expr:         $4,
+                }
             }
     |   T_CLONE expr
             {
@@ -2876,146 +2876,146 @@ expr_without_variable:
             }
     |   variable T_PLUS_EQUAL expr
             {
-                $$ = &ast.ExprAssignPlus{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignPlus{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_MINUS_EQUAL expr
             {
-                $$ = &ast.ExprAssignMinus{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignMinus{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_MUL_EQUAL expr
             {
-                $$ = &ast.ExprAssignMul{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignMul{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_POW_EQUAL expr
             {
-                $$ = &ast.ExprAssignPow{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignPow{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_DIV_EQUAL expr
             {
-                $$ = &ast.ExprAssignDiv{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignDiv{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_CONCAT_EQUAL expr
             {
-                $$ = &ast.ExprAssignConcat{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignConcat{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_MOD_EQUAL expr
             {
-                $$ = &ast.ExprAssignMod{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignMod{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_AND_EQUAL expr
             {
-                $$ = &ast.ExprAssignBitwiseAnd{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignBitwiseAnd{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_OR_EQUAL expr
             {
-                $$ = &ast.ExprAssignBitwiseOr{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignBitwiseOr{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_XOR_EQUAL expr
             {
-                $$ = &ast.ExprAssignBitwiseXor{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignBitwiseXor{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_SL_EQUAL expr
             {
-                $$ = &ast.ExprAssignShiftLeft{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignShiftLeft{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_SR_EQUAL expr
             {
-                $$ = &ast.ExprAssignShiftRight{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignShiftRight{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_COALESCE_EQUAL expr
             {
-                $$ = &ast.ExprAssignCoalesce{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Var, $2.SkippedTokens)
+                $$ = &ast.ExprAssignCoalesce{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Var:      $1,
+                    EqualTkn: $2,
+                    Expr:     $3,
+                }
             }
     |   variable T_INC
             {
@@ -3059,189 +3059,190 @@ expr_without_variable:
             }
     |   expr T_BOOLEAN_OR expr
             {
-                $$ = &ast.ExprBinaryBooleanOr{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryBooleanOr{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_BOOLEAN_AND expr
             {
-                $$ = &ast.ExprBinaryBooleanAnd{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryBooleanAnd{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_LOGICAL_OR expr
             {
-                $$ = &ast.ExprBinaryLogicalOr{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryLogicalOr{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_LOGICAL_AND expr
             {
-                $$ = &ast.ExprBinaryLogicalAnd{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryLogicalAnd{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_LOGICAL_XOR expr
             {
-                $$ = &ast.ExprBinaryLogicalXor{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryLogicalXor{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '|' expr
             {
-                $$ = &ast.ExprBinaryBitwiseOr{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryBitwiseOr{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '&' expr
             {
-                $$ = &ast.ExprBinaryBitwiseAnd{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryBitwiseAnd{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '^' expr
             {
-                $$ = &ast.ExprBinaryBitwiseXor{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryBitwiseXor{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '.' expr
             {
-                $$ = &ast.ExprBinaryConcat{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryConcat{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '+' expr
             {
-                $$ = &ast.ExprBinaryPlus{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryPlus{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '-' expr
             {
-                $$ = &ast.ExprBinaryMinus{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryMinus{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '*' expr
             {
-                $$ = &ast.ExprBinaryMul{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryMul{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_POW expr
             {
-                $$ = &ast.ExprBinaryPow{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryPow{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '/' expr
             {
-                $$ = &ast.ExprBinaryDiv{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryDiv{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '%' expr
             {
-                $$ = &ast.ExprBinaryMod{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryMod{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_SL expr
             {
-                $$ = &ast.ExprBinaryShiftLeft{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryShiftLeft{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_SR expr
             {
-                $$ = &ast.ExprBinaryShiftRight{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryShiftRight{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   '+' expr %prec T_INC
             {
@@ -3285,103 +3286,102 @@ expr_without_variable:
             }
     |   expr T_IS_IDENTICAL expr
             {
-                $$ = &ast.ExprBinaryIdentical{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryIdentical{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
-                $$ = &ast.ExprBinaryNotIdentical{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryNotIdentical{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_IS_EQUAL expr
             {
-                $$ = &ast.ExprBinaryEqual{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryEqual{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_IS_NOT_EQUAL expr
             {
-                $$ = &ast.ExprBinaryNotEqual{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Equal, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryNotEqual{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '<' expr
             {
-                $$ = &ast.ExprBinarySmaller{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinarySmaller{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
-                $$ = &ast.ExprBinarySmallerOrEqual{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinarySmallerOrEqual{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr '>' expr
             {
-                $$ = &ast.ExprBinaryGreater{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryGreater{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
-                $$ = &ast.ExprBinaryGreaterOrEqual{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryGreaterOrEqual{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_SPACESHIP expr
             {
-                $$ = &ast.ExprBinarySpaceship{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinarySpaceship{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   expr T_INSTANCEOF class_name_reference
             {
@@ -3440,14 +3440,14 @@ expr_without_variable:
             }
     |   expr T_COALESCE expr
             {
-                $$ = &ast.ExprBinaryCoalesce{ast.Node{}, $1, $3}
-
-                // save position
-                $$.GetNode().Position = position.NewNodesPosition($1, $3)
-
-                // save comments
-                yylex.(*Parser).MoveFreeFloating($1, $$)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $2.SkippedTokens)
+                $$ = &ast.ExprBinaryCoalesce{
+                    Node: ast.Node{
+                        Position: position.NewNodesPosition($1, $3),
+                    },
+                    Left:  $1,
+                    OpTkn: $2,
+                    Right: $3,
+                }
             }
     |   internal_functions_in_yacc
             {
