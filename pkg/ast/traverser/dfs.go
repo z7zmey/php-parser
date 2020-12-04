@@ -40,30 +40,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Expr)
 			t.visitor.Leave("Expr", true)
 		}
-	case *ast.Reference:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Var != nil {
-			t.visitor.Enter("Var", true)
-			t.Traverse(nn.Var)
-			t.visitor.Leave("Var", true)
-		}
-	case *ast.Variadic:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Var != nil {
-			t.visitor.Enter("Var", true)
-			t.Traverse(nn.Var)
-			t.visitor.Leave("Var", true)
-		}
 	case *ast.Parameter:
 		if nn == nil {
 			return

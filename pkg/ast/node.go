@@ -42,32 +42,12 @@ func (n *Nullable) Accept(v NodeVisitor) {
 	v.Nullable(n)
 }
 
-// Reference node
-type Reference struct {
-	Node
-	AmpersandTkn *token.Token
-	Var          Vertex
-}
-
-func (n *Reference) Accept(v NodeVisitor) {
-	v.Reference(n)
-}
-
-// Variadic node
-type Variadic struct {
-	Node
-	VariadicTkn *token.Token
-	Var         Vertex
-}
-
-func (n *Variadic) Accept(v NodeVisitor) {
-	v.Variadic(n)
-}
-
 // Parameter node
 type Parameter struct {
 	Node
 	Type         Vertex
+	AmpersandTkn *token.Token
+	VariadicTkn  *token.Token
 	Var          Vertex
 	EqualTkn     *token.Token
 	DefaultValue Vertex
@@ -231,6 +211,7 @@ type StmtClass struct {
 	ClassName           Vertex
 	OpenParenthesisTkn  *token.Token
 	Arguments           []Vertex
+	SeparatorTkns       []*token.Token
 	CloseParenthesisTkn *token.Token
 	Extends             Vertex
 	Implements          Vertex
@@ -1131,6 +1112,7 @@ type ExprFunctionCall struct {
 	Function            Vertex
 	OpenParenthesisTkn  *token.Token
 	Arguments           []Vertex
+	SeparatorTkns       []*token.Token
 	CloseParenthesisTkn *token.Token
 }
 
@@ -1208,6 +1190,7 @@ type ExprMethodCall struct {
 	Method              Vertex
 	OpenParenthesisTkn  *token.Token
 	Arguments           []Vertex
+	SeparatorTkns       []*token.Token
 	CloseParenthesisTkn *token.Token
 }
 
@@ -1222,6 +1205,7 @@ type ExprNew struct {
 	Class               Vertex
 	OpenParenthesisTkn  *token.Token
 	Arguments           []Vertex
+	SeparatorTkns       []*token.Token
 	CloseParenthesisTkn *token.Token
 }
 
@@ -1349,6 +1333,7 @@ type ExprStaticCall struct {
 	Call                Vertex
 	OpenParenthesisTkn  *token.Token
 	Arguments           []Vertex
+	SeparatorTkns       []*token.Token
 	CloseParenthesisTkn *token.Token
 }
 

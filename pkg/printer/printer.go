@@ -149,10 +149,6 @@ func (p *Printer) printNode(n ast.Vertex) {
 		p.printNodeRoot(n)
 	case *ast.Identifier:
 		p.printNodeIdentifier(n)
-	case *ast.Reference:
-		p.printNodeReference(n)
-	case *ast.Variadic:
-		p.printNodeVariadic(n)
 	case *ast.Parameter:
 		p.printNodeParameter(n)
 	case *ast.Nullable:
@@ -501,26 +497,6 @@ func (p *Printer) printNodeIdentifier(n ast.Vertex) {
 	p.bufStart = ""
 
 	p.write(nn.Value)
-
-	p.printFreeFloating(nn, token.End)
-}
-
-func (p *Printer) printNodeReference(n ast.Vertex) {
-	nn := n.(*ast.Reference)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("&"))
-	p.Print(nn.Var)
-
-	p.printFreeFloating(nn, token.End)
-}
-
-func (p *Printer) printNodeVariadic(n ast.Vertex) {
-	nn := n.(*ast.Variadic)
-	p.printFreeFloating(nn, token.Start)
-
-	p.write([]byte("..."))
-	p.Print(nn.Var)
 
 	p.printFreeFloating(nn, token.End)
 }

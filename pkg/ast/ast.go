@@ -20,8 +20,6 @@ type Visitor interface {
 type NodeVisitor interface {
 	Root(n *Root)
 	Nullable(n *Nullable)
-	Reference(n *Reference)
-	Variadic(n *Variadic)
 	Parameter(n *Parameter)
 	Identifier(n *Identifier)
 	Argument(n *Argument)

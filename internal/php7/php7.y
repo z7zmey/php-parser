@@ -1849,40 +1849,6 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                var variable ast.Vertex
-                variable = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($4),
-                    },
-                    VarName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
-                        IdentifierTkn: $4,
-                        Value:         $4.Value,
-                    },
-                }
-
-                if $3 != nil {
-                    variable = &ast.Variadic{
-                        Node: ast.Node{
-                            Position: position.NewTokensPosition($3, $4),
-                        },
-                        VariadicTkn: $3,
-                        Var:         variable,
-                    }
-                }
-
-                if $2 != nil {
-                    variable = &ast.Reference{
-                        Node: ast.Node{
-                            Position: position.NewTokensPosition($2, $4),
-                        },
-                        AmpersandTkn: $2,
-                        Var:          variable,
-                    }
-                }
-
                 pos := position.NewTokenPosition($4)
                 if $1 != nil {
                     pos = position.NewNodeTokenPosition($1, $4)
@@ -1896,46 +1862,25 @@ parameter:
                     Node: ast.Node{
                         Position: pos,
                     },
-                    Type: $1,
-                    Var:  variable,
+                    Type:         $1,
+                    AmpersandTkn: $2,
+                    VariadicTkn:  $3,
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($4),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($4),
+                            },
+                            IdentifierTkn: $4,
+                            Value:         $4.Value,
+                        },
+                    },
                 }
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                var variable ast.Vertex
-                variable = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($4),
-                    },
-                    VarName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
-                        IdentifierTkn: $4,
-                        Value:         $4.Value,
-                    },
-                }
-
-                if $3 != nil {
-                    variable = &ast.Variadic{
-                        Node: ast.Node{
-                            Position: position.NewTokensPosition($3, $4),
-                        },
-                        VariadicTkn: $3,
-                        Var:         variable,
-                    }
-                }
-
-                if $2 != nil {
-                    variable = &ast.Reference{
-                        Node: ast.Node{
-                            Position: position.NewTokensPosition($2, $4),
-                        },
-                        AmpersandTkn: $2,
-                        Var:          variable,
-                    }
-                }
-
                 pos := position.NewTokenNodePosition($4, $6)
                 if $1 != nil {
                     pos = position.NewNodesPosition($1, $6)
@@ -1950,7 +1895,20 @@ parameter:
                         Position: pos,
                     },
                     Type:         $1,
-                    Var:          variable,
+                    AmpersandTkn: $2,
+                    VariadicTkn:  $3,
+                    Var: &ast.ExprVariable{
+                        Node: ast.Node{
+                            Position: position.NewTokenPosition($4),
+                        },
+                        VarName: &ast.Identifier{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($4),
+                            },
+                            IdentifierTkn: $4,
+                            Value:         $4.Value,
+                        },
+                    },
                     EqualTkn:     $5,
                     DefaultValue: $6,
                 }
@@ -2758,6 +2716,7 @@ anonymous_class:
                     ClassTkn:            $1,
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
+                    SeparatorTkns:       $2.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn: $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Extends:             $3,
                     Implements:          $4,
@@ -2780,6 +2739,7 @@ new_expr:
                         Class:               $2,
                         OpenParenthesisTkn:  $3.(*ast.ArgumentList).OpenParenthesisTkn,
                         Arguments:           $3.(*ast.ArgumentList).Arguments,
+                        SeparatorTkns:       $3.(*ast.ArgumentList).SeparatorTkns,
                         CloseParenthesisTkn: $3.(*ast.ArgumentList).OpenParenthesisTkn,
                     }
                 } else {
@@ -3777,6 +3737,7 @@ function_call:
                     Function:            $1,
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
+                    SeparatorTkns:       $2.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn: $2.(*ast.ArgumentList).OpenParenthesisTkn,
                 }
             }
@@ -3791,6 +3752,7 @@ function_call:
                     Call:                $3,
                     OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $4.(*ast.ArgumentList).Arguments,
+                    SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn: $4.(*ast.ArgumentList).OpenParenthesisTkn,
                 }
             }
@@ -3805,6 +3767,7 @@ function_call:
                     Call:                $3,
                     OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $4.(*ast.ArgumentList).Arguments,
+                    SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn: $4.(*ast.ArgumentList).OpenParenthesisTkn,
                 }
             }
@@ -3817,6 +3780,7 @@ function_call:
                     Function:            $1,
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
+                    SeparatorTkns:       $2.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn: $2.(*ast.ArgumentList).OpenParenthesisTkn,
                 }
             }
@@ -4285,6 +4249,7 @@ callable_variable:
                     Method:              $3,
                     OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $4.(*ast.ArgumentList).Arguments,
+                    SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
                 }
             }

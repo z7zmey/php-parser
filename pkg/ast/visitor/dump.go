@@ -203,18 +203,6 @@ func (v *Dump) Nullable(n *ast.Nullable) {
 	v.printNode(n.GetNode())
 }
 
-func (v *Dump) Reference(n *ast.Reference) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.Reference{\n")
-	v.printNode(n.GetNode())
-}
-
-func (v *Dump) Variadic(n *ast.Variadic) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.Variadic{\n")
-	v.printNode(n.GetNode())
-}
-
 func (v *Dump) Parameter(n *ast.Parameter) {
 	v.printIndent(v.indent - 1)
 	v.print("&ast.Parameter{\n")

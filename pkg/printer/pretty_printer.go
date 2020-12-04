@@ -64,10 +64,6 @@ func (p *PrettyPrinter) printNode(n ast.Vertex) {
 		p.printNodeRoot(n)
 	case *ast.Identifier:
 		p.printNodeIdentifier(n)
-	case *ast.Reference:
-		p.printNodeReference(n)
-	case *ast.Variadic:
-		p.printNodeVariadic(n)
 	case *ast.Parameter:
 		p.printNodeParameter(n)
 	case *ast.Nullable:
@@ -419,20 +415,6 @@ func (p *PrettyPrinter) printNodeRoot(n ast.Vertex) {
 func (p *PrettyPrinter) printNodeIdentifier(n ast.Vertex) {
 	v := string(n.(*ast.Identifier).Value)
 	io.WriteString(p.w, v)
-}
-
-func (p *PrettyPrinter) printNodeReference(n ast.Vertex) {
-	nn := n.(*ast.Reference)
-
-	io.WriteString(p.w, "&")
-	p.Print(nn.Var)
-}
-
-func (p *PrettyPrinter) printNodeVariadic(n ast.Vertex) {
-	nn := n.(*ast.Variadic)
-
-	io.WriteString(p.w, "...")
-	p.Print(nn.Var)
 }
 
 func (p *PrettyPrinter) printNodeParameter(n ast.Vertex) {
