@@ -269,6 +269,7 @@ type StmtClassMethod struct {
 	MethodName          Vertex
 	OpenParenthesisTkn  *token.Token
 	Params              []Vertex
+	SeparatorTkns       []*token.Token
 	CloseParenthesisTkn *token.Token
 	ColonTkn            *token.Token
 	ReturnType          Vertex
@@ -482,6 +483,7 @@ type StmtFunction struct {
 	FunctionName         Vertex
 	OpenParenthesisTkn   *token.Token
 	Params               []Vertex
+	SeparatorTkns        []*token.Token
 	CloseParenthesisTkn  *token.Token
 	ColonTkn             *token.Token
 	ReturnType           Vertex
@@ -955,6 +957,7 @@ type ExprArrowFunction struct {
 	AmpersandTkn        *token.Token
 	OpenParenthesisTkn  *token.Token
 	Params              []Vertex
+	SeparatorTkns       []*token.Token
 	CloseParenthesisTkn *token.Token
 	ColonTkn            *token.Token
 	ReturnType          Vertex
@@ -1019,6 +1022,7 @@ type ExprClosure struct {
 	AmpersandTkn         *token.Token
 	OpenParenthesisTkn   *token.Token
 	Params               []Vertex
+	SeparatorTkns        []*token.Token
 	CloseParenthesisTkn  *token.Token
 	ClosureUse           *ExprClosureUse
 	ColonTkn             *token.Token

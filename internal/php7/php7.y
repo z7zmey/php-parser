@@ -235,7 +235,7 @@ import (
 %type <node> group_use_declaration inline_use_declaration
 %type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
 %type <node> const_decl inner_statement
-%type <node> expr optional_expr
+%type <node> expr optional_expr parameter_list non_empty_parameter_list
 %type <node> declare_statement finally_statement unset_variable variable
 %type <node> parameter optional_type argument expr_without_variable global_var_list global_var
 %type <node> static_var_list static_var class_statement trait_adaptation trait_precedence trait_alias
@@ -277,7 +277,7 @@ import (
 %type <list> case_list trait_adaptation_list
 %type <list> use_declarations
 %type <list> top_statement_list
-%type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
+%type <list> inner_statement_list class_statement_list
 %type <list> method_modifiers variable_modifiers
 %type <list> non_empty_member_modifiers class_modifiers
 
@@ -1222,7 +1222,8 @@ function_declaration_statement:
                         Value:         $3.Value,
                     },
                     OpenParenthesisTkn:   $5,
-                    Params:               $6,
+                    Params:               $6.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:        $6.(*ast.ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn:  $7,
                     ColonTkn:             $8.(*ast.ReturnType).ColonTkn,
                     ReturnType:           $8.(*ast.ReturnType).Type,
@@ -1828,21 +1829,23 @@ parameter_list:
             }
     |   /* empty */
             {
-                $$ = nil
+                $$ = &ast.ParserSeparatedList{}
             }
 ;
 
 non_empty_parameter_list:
         parameter
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
     |   non_empty_parameter_list ',' parameter
             {
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
 ;
 
@@ -2201,7 +2204,8 @@ class_statement:
                         Value:         $4.Value,
                     },
                     OpenParenthesisTkn:  $6,
-                    Params:              $7,
+                    Params:              $7.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:       $7.(*ast.ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn: $8,
                     ColonTkn:            $9.(*ast.ReturnType).ColonTkn,
                     ReturnType:          $9.(*ast.ReturnType).Type,
@@ -3608,7 +3612,8 @@ inline_function:
                     FunctionTkn:          $1,
                     AmpersandTkn:         $2,
                     OpenParenthesisTkn:   $4,
-                    Params:               $5,
+                    Params:               $5.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:        $5.(*ast.ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn:  $6,
                     ClosureUse:           $7,
                     ColonTkn:             $8.(*ast.ReturnType).ColonTkn,
@@ -3627,7 +3632,8 @@ inline_function:
                     FnTkn:               $1,
                     AmpersandTkn:        $2,
                     OpenParenthesisTkn:  $3,
-                    Params:              $4,
+                    Params:              $4.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:       $4.(*ast.ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn: $5,
                     ColonTkn:            $6.(*ast.ReturnType).ColonTkn,
                     ReturnType:          $6.(*ast.ReturnType).Type,

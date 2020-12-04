@@ -229,7 +229,7 @@ import (
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
 %type <node> exit_expr yield_expr function_declaration_statement class_declaration_statement constant_declaration
-%type <node> else_single new_else_single unset_variable declare_statement
+%type <node> else_single new_else_single unset_variable declare_statement parameter_list non_empty_parameter_list
 %type <node> finally_statement additional_catch unticked_function_declaration_statement unticked_class_declaration_statement
 %type <node> optional_class_type parameter class_entry_type class_statement class_constant_declaration
 %type <node> trait_use_statement function_call_parameter trait_adaptation_statement trait_precedence trait_alias
@@ -250,7 +250,7 @@ import (
 %type <list> inner_statement_list encaps_list
 %type <list> elseif_list new_elseif_list non_empty_for_expr
 %type <list> for_expr case_list catch_statement additional_catches
-%type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list
+%type <list> non_empty_additional_catches class_statement_list
 %type <list> class_statement_list variable_modifiers method_modifiers
 %type <list> trait_adaptation_list non_empty_trait_adaptation_list
 %type <list> non_empty_member_modifiers backticks_expr
@@ -1383,7 +1383,8 @@ unticked_function_declaration_statement:
                         Value:         $3.Value,
                     },
                     OpenParenthesisTkn:   $4,
-                    Params:               $5,
+                    Params:               $5.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:        $5.(*ast.ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn:  $6,
                     OpenCurlyBracketTkn:  $7,
                     Stmts:                $8,
@@ -2003,25 +2004,27 @@ new_else_single:
 parameter_list:
         non_empty_parameter_list
             {
-                $$ = $1;
+                $$ = $1
             }
     |   /* empty */
             {
-                $$ = nil
+                $$ = &ast.ParserSeparatedList{}
             }
 ;
 
 non_empty_parameter_list:
         parameter
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
     |   non_empty_parameter_list ',' parameter
             {
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
 ;
 
@@ -2447,7 +2450,8 @@ class_statement:
                         Value:         $4.Value,
                     },
                     OpenParenthesisTkn:  $5,
-                    Params:              $6,
+                    Params:              $6.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:       $6.(*ast.ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn: $7,
                     Stmt:                $8,
                 }
@@ -3893,7 +3897,8 @@ expr_without_variable:
                     FunctionTkn:          $1,
                     AmpersandTkn:         $2,
                     OpenParenthesisTkn:   $3,
-                    Params:               $4,
+                    Params:               $4.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:        $4.(*ast.ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn:  $5,
                     ClosureUse:           $6,
                     OpenCurlyBracketTkn:  $7,
@@ -3911,7 +3916,8 @@ expr_without_variable:
                     FunctionTkn:          $2,
                     AmpersandTkn:         $3,
                     OpenParenthesisTkn:   $4,
-                    Params:               $5,
+                    Params:               $5.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:        $5.(*ast.ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn:  $6,
                     ClosureUse:           $7,
                     OpenCurlyBracketTkn:  $8,
