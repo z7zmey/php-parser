@@ -3371,10 +3371,6 @@ expr_without_variable:
                     Child:           $2,
                     CloseBracketTkn: $3,
                 }
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   new_expr
             {
@@ -3835,10 +3831,6 @@ exit_expr:
                     Child:           $2,
                     CloseBracketTkn: $3,
                 }
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
 ;
 
@@ -4166,10 +4158,6 @@ dereferencable:
                     Child:           $2,
                     CloseBracketTkn: $3,
                 }
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   dereferencable_scalar
             {
@@ -4192,10 +4180,6 @@ callable_expr:
                     Child:           $2,
                     CloseBracketTkn: $3,
                 }
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, $3.SkippedTokens)
             }
     |   dereferencable_scalar
             {
@@ -4434,11 +4418,14 @@ member_name:
             }
     |   '{' expr '}'
             {
-                $$ = $2;
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.SkippedTokens, $$.GetNode().Tokens[token.Start]...))
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($$.GetNode().Tokens[token.End], $3.SkippedTokens...))
+                $$ = &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Child:           $2,
+                    CloseBracketTkn: $3,
+                }
             }
     |   simple_variable
             {
@@ -4459,11 +4446,14 @@ property_name:
             }
     |   '{' expr '}'
             {
-                $$ = $2;
-
-                // save comments
-                yylex.(*Parser).setFreeFloatingTokens($$, token.Start, append($1.SkippedTokens, $$.GetNode().Tokens[token.Start]...))
-                yylex.(*Parser).setFreeFloatingTokens($$, token.End, append($$.GetNode().Tokens[token.End], $3.SkippedTokens...))
+                $$ = &ast.ParserBrackets{
+                    Node: ast.Node{
+                        Position: position.NewTokensPosition($1, $3),
+                    },
+                    OpenBracketTkn:  $1,
+                    Child:           $2,
+                    CloseBracketTkn: $3,
+                }
             }
     |   simple_variable
             {
