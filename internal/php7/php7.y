@@ -3875,7 +3875,7 @@ backticks_expr:
 ctor_arguments:
         /* empty */
             {
-                $$ = nil
+                $$ = &ast.ArgumentList{}
             }
     |   argument_list
             {
