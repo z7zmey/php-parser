@@ -550,7 +550,6 @@ func (p *Printer) printNodeArgument(n ast.Vertex) {
 // name
 
 func (p *Printer) printNameNamePart(n *ast.NameNamePart) {
-	p.printToken(n.NsSeparatorTkn, "")
 	p.printToken(n.StringTkn, string(n.Value))
 }
 
@@ -558,8 +557,6 @@ func (p *Printer) printNameName(n *ast.NameName) {
 	p.printFreeFloating(n, token.Start)
 
 	p.joinPrintRefactored("\\", n.Parts)
-
-	p.printToken(n.ListSeparatorTkn, "")
 }
 
 func (p *Printer) printNameFullyQualified(n *ast.NameFullyQualified) {
@@ -567,8 +564,6 @@ func (p *Printer) printNameFullyQualified(n *ast.NameFullyQualified) {
 	p.printToken(n.NsSeparatorTkn, "\\")
 
 	p.joinPrintRefactored("\\", n.Parts)
-
-	p.printToken(n.ListSeparatorTkn, "")
 }
 
 func (p *Printer) printNameRelative(n *ast.NameRelative) {
@@ -577,8 +572,6 @@ func (p *Printer) printNameRelative(n *ast.NameRelative) {
 	p.printToken(n.NsSeparatorTkn, "\\")
 
 	p.joinPrintRefactored("\\", n.Parts)
-
-	p.printToken(n.ListSeparatorTkn, "")
 }
 
 // scalar
@@ -2099,7 +2092,6 @@ func (p *Printer) printStmtConstant(n *ast.StmtConstant) {
 	p.Print(n.Name)
 	p.printToken(n.EqualTkn, "=")
 	p.Print(n.Expr)
-	p.printToken(n.CommaTkn, "")
 }
 
 func (p *Printer) printStmtContinue(n *ast.StmtContinue) {
@@ -2795,7 +2787,6 @@ func (p *Printer) printStmtUseDeclaration(n *ast.StmtUseDeclaration) {
 	p.Print(n.Use)
 
 	if n.Alias == nil {
-		p.printToken(n.CommaTkn, "")
 		return
 	}
 
@@ -2804,8 +2795,6 @@ func (p *Printer) printStmtUseDeclaration(n *ast.StmtUseDeclaration) {
 
 	p.bufStart = " "
 	p.Print(n.Alias)
-
-	p.printToken(n.CommaTkn, "")
 }
 
 func (p *Printer) printStmtWhile(n *ast.StmtWhile) {

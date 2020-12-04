@@ -227,10 +227,11 @@ func (n *StmtClass) Accept(v NodeVisitor) {
 // StmtClassConstList node
 type StmtClassConstList struct {
 	Node
-	Modifiers    []Vertex
-	ConstTkn     *token.Token
-	Consts       []Vertex
-	SemiColonTkn *token.Token
+	Modifiers     []Vertex
+	ConstTkn      *token.Token
+	Consts        []Vertex
+	SeparatorTkns []*token.Token
+	SemiColonTkn  *token.Token
 }
 
 func (n *StmtClassConstList) Accept(v NodeVisitor) {
@@ -299,7 +300,6 @@ type StmtConstant struct {
 	Name     Vertex
 	EqualTkn *token.Token
 	Expr     Vertex
-	CommaTkn *token.Token
 }
 
 func (n *StmtConstant) Accept(v NodeVisitor) {
@@ -856,6 +856,7 @@ type StmtUse struct {
 	UseTkn          *token.Token
 	Type            Vertex
 	UseDeclarations []Vertex
+	SeparatorTkns   []*token.Token
 	SemiColonTkn    *token.Token
 }
 
@@ -873,6 +874,7 @@ type StmtGroupUse struct {
 	NsSeparatorTkn        *token.Token
 	OpenCurlyBracketTkn   *token.Token
 	UseDeclarations       []Vertex
+	SeparatorTkns         []*token.Token
 	CloseCurlyBracketTkn  *token.Token
 	SemiColonTkn          *token.Token
 }
@@ -889,7 +891,6 @@ type StmtUseDeclaration struct {
 	Use            Vertex
 	AsTkn          *token.Token
 	Alias          Vertex
-	CommaTkn       *token.Token
 }
 
 func (n *StmtUseDeclaration) Accept(v NodeVisitor) {
@@ -1029,7 +1030,7 @@ type ExprClosure struct {
 	Params               []Vertex
 	SeparatorTkns        []*token.Token
 	CloseParenthesisTkn  *token.Token
-	ClosureUse           *ExprClosureUse
+	ClosureUse           Vertex
 	ColonTkn             *token.Token
 	ReturnType           Vertex
 	OpenCurlyBracketTkn  *token.Token
@@ -2017,8 +2018,8 @@ func (n *ExprBinarySpaceship) Accept(v NodeVisitor) {
 
 type NameName struct {
 	Node
-	Parts            []Vertex
-	ListSeparatorTkn *token.Token
+	Parts         []Vertex
+	SeparatorTkns []*token.Token
 }
 
 func (n *NameName) Accept(v NodeVisitor) {
@@ -2027,9 +2028,9 @@ func (n *NameName) Accept(v NodeVisitor) {
 
 type NameFullyQualified struct {
 	Node
-	NsSeparatorTkn   *token.Token
-	Parts            []Vertex
-	ListSeparatorTkn *token.Token
+	NsSeparatorTkn *token.Token
+	Parts          []Vertex
+	SeparatorTkns  []*token.Token
 }
 
 func (n *NameFullyQualified) Accept(v NodeVisitor) {
@@ -2038,10 +2039,10 @@ func (n *NameFullyQualified) Accept(v NodeVisitor) {
 
 type NameRelative struct {
 	Node
-	NsTkn            *token.Token
-	NsSeparatorTkn   *token.Token
-	Parts            []Vertex
-	ListSeparatorTkn *token.Token
+	NsTkn          *token.Token
+	NsSeparatorTkn *token.Token
+	Parts          []Vertex
+	SeparatorTkns  []*token.Token
 }
 
 func (n *NameRelative) Accept(v NodeVisitor) {
@@ -2050,9 +2051,8 @@ func (n *NameRelative) Accept(v NodeVisitor) {
 
 type NameNamePart struct {
 	Node
-	NsSeparatorTkn *token.Token
-	StringTkn      *token.Token
-	Value          []byte
+	StringTkn *token.Token
+	Value     []byte
 }
 
 func (n *NameNamePart) Accept(v NodeVisitor) {

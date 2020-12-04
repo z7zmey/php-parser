@@ -572,7 +572,6 @@ func (v *Dump) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
 	v.printNode(n.GetNode())
 	v.printToken("NsSeparatorTkn", n.NsSeparatorTkn)
 	v.printToken("AsTkn", n.AsTkn)
-	v.printToken("CommaTkn", n.CommaTkn)
 }
 
 func (v *Dump) StmtWhile(n *ast.StmtWhile) {

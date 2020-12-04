@@ -15,8 +15,6 @@ import (
     node                    ast.Vertex
     token                   *token.Token
     list                    []ast.Vertex
-
-    ClosureUse              *ast.ExprClosureUse
 }
 
 %token <token> T_INCLUDE
@@ -219,6 +217,7 @@ import (
 %type <token> function interface_entry
 %type <token> possible_comma
 %type <token> case_separator
+%type <token> is_reference is_variadic
 
 %type <node> top_statement use_declaration use_function_declaration use_const_declaration common_scalar
 %type <node> static_class_constant compound_variable reference_variable class_name variable_class_name
@@ -241,12 +240,12 @@ import (
 %type <node> method_body trait_reference_list static_array_pair_list non_empty_static_array_pair_list
 %type <node> foreach_statement for_statement while_statement isset_variables
 %type <node> foreach_variable foreach_optional_arg for_expr non_empty_for_expr
-%type <node> extends_from interface_list trait_list
-%type <node> implements_list
+%type <node> extends_from interface_list trait_list namespace_name
+%type <node> implements_list use_declarations use_function_declarations use_const_declarations
 %type <node> interface_extends_list
-%type <ClosureUse> lexical_vars
+%type <node> lexical_vars
 
-%type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
+%type <list> top_statement_list
 %type <list> inner_statement_list encaps_list
 %type <list> elseif_list new_elseif_list
 %type <list> case_list catch_statement additional_catches
@@ -260,7 +259,6 @@ import (
 %type <list> dynamic_class_name_variable_properties variable_properties
 
 %type <list> simple_indirect_reference
-%type <token> is_reference is_variadic
 
 %%
 
@@ -293,26 +291,32 @@ top_statement_list:
 namespace_name:
         T_STRING
             {
-                $$ = []ast.Vertex{
-                    &ast.NameNamePart{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{
+                        &ast.NameNamePart{
+                            Node: ast.Node{
+                                Position: position.NewTokenPosition($1),
+                            },
+                            StringTkn: $1,
+                            Value:     $1.Value,
                         },
-                        StringTkn: $1,
-                        Value:     $1.Value,
                     },
                 }
             }
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
-                $$ = append($1, &ast.NameNamePart{
+                part := &ast.NameNamePart{
                     Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $3),
+                        Position: position.NewTokenPosition($3),
                     },
-                    NsSeparatorTkn: $2,
                     StringTkn:      $3,
                     Value:          $3.Value,
-                })
+                }
+
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, part)
+
+                $$ = $1
             }
 ;
 
@@ -355,9 +359,10 @@ top_statement:
                     NsTkn: $1,
                     Name: &ast.NameName{
                         Node:  ast.Node{
-                            Position: position.NewNodeListPosition($2),
+                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $2,
+                        Parts:         $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     SemiColonTkn: $3,
                 }
@@ -371,9 +376,10 @@ top_statement:
                     NsTkn: $1,
                     Name: &ast.NameName{
                         Node:  ast.Node{
-                            Position: position.NewNodeListPosition($2),
+                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $2,
+                        Parts:         $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     OpenCurlyBracket:  $3,
                     Stmts:             $4,
@@ -399,7 +405,8 @@ top_statement:
                         Position: position.NewTokensPosition($1, $3),
                     },
                     UseTkn:          $1,
-                    UseDeclarations: $2,
+                    UseDeclarations: $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     SemiColonTkn:    $3,
                 }
             }
@@ -417,7 +424,8 @@ top_statement:
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
-                    UseDeclarations: $3,
+                    UseDeclarations: $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
                     SemiColonTkn:    $4,
                 }
             }
@@ -435,7 +443,8 @@ top_statement:
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
-                    UseDeclarations: $3,
+                    UseDeclarations: $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
                     SemiColonTkn:    $4,
                 }
             }
@@ -450,13 +459,16 @@ top_statement:
 use_declarations:
         use_declarations ',' use_declaration
             {
-                $1[len($1)-1].(*ast.StmtUseDeclaration).CommaTkn = $2
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                $$ = append($1, $3)
+                $$ = $1
             }
     |   use_declaration
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -465,13 +477,14 @@ use_declaration:
             {
                 $$ = &ast.StmtUseDeclaration{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($1),
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     },
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($1),
+                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $1,
+                        Parts:         $1.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -479,13 +492,14 @@ use_declaration:
             {
                 $$ = &ast.StmtUseDeclaration{
                     Node: ast.Node{
-                        Position: position.NewNodeListTokenPosition($1, $3),
+                        Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
                     },
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($1),
+                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $1,
+                        Parts:         $1.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
@@ -501,14 +515,15 @@ use_declaration:
             {
                 $$ = &ast.StmtUseDeclaration{
                     Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2),
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     },
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
+                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $2,
+                        Parts:         $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -521,9 +536,10 @@ use_declaration:
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
+                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $2,
+                        Parts:         $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $3,
                     Alias: &ast.Identifier{
@@ -540,13 +556,16 @@ use_declaration:
 use_function_declarations:
         use_function_declarations ',' use_function_declaration
             {
-                $1[len($1)-1].(*ast.StmtUseDeclaration).CommaTkn = $2
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                $$ = append($1, $3)
+                $$ = $1
             }
     |   use_function_declaration
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -555,13 +574,14 @@ use_function_declaration:
             {
                 $$ = &ast.StmtUseDeclaration{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($1),
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     },
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($1),
+                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $1,
+                        Parts:         $1.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -569,13 +589,14 @@ use_function_declaration:
             {
                 $$ = &ast.StmtUseDeclaration{
                     Node: ast.Node{
-                        Position: position.NewNodeListTokenPosition($1, $3),
+                        Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
                     },
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($1),
+                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $1,
+                        Parts:         $1.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
@@ -591,14 +612,15 @@ use_function_declaration:
             {
                 $$ = &ast.StmtUseDeclaration{
                     Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2),
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     },
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
+                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $2,
+                        Parts:         $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -611,9 +633,10 @@ use_function_declaration:
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
+                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $2,
+                        Parts:         $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $3,
                     Alias: &ast.Identifier{
@@ -630,13 +653,16 @@ use_function_declaration:
 use_const_declarations:
         use_const_declarations ',' use_const_declaration
             {
-                $1[len($1)-1].(*ast.StmtUseDeclaration).CommaTkn = $2
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                $$ = append($1, $3)
+                $$ = $1
             }
     |   use_const_declaration
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -645,13 +671,14 @@ use_const_declaration:
             {
                 $$ = &ast.StmtUseDeclaration{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($1),
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     },
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($1),
+                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $1,
+                        Parts:         $1.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -659,13 +686,14 @@ use_const_declaration:
             {
                 $$ = &ast.StmtUseDeclaration{
                     Node: ast.Node{
-                        Position: position.NewNodeListTokenPosition($1, $3),
+                        Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
                     },
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($1),
+                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $1,
+                        Parts:         $1.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
@@ -681,14 +709,15 @@ use_const_declaration:
             {
                 $$ = &ast.StmtUseDeclaration{
                     Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2),
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     },
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
+                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $2,
+                        Parts:         $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -701,9 +730,10 @@ use_const_declaration:
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
                         Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
+                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $2,
+                        Parts:         $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $3,
                     Alias: &ast.Identifier{
@@ -2888,7 +2918,7 @@ class_constant_declaration:
             {
                 constList := $1.(*ast.StmtClassConstList)
                 constList.Node.Position = position.NewNodesPosition($1, $5)
-                lastNode($$.(*ast.StmtClassConstList).Consts).(*ast.StmtConstant).CommaTkn = $2
+                constList.SeparatorTkns = append(constList.SeparatorTkns, $2)
                 constList.Consts = append(constList.Consts, &ast.StmtConstant{
                     Node: ast.Node{
                         Position: position.NewTokenNodePosition($3, $5),
@@ -4165,13 +4195,14 @@ function_call:
             {
                 $$ = &ast.ExprFunctionCall{
                     Node: ast.Node{
-                        Position: position.NewNodeListNodePosition($1, $2),
+                        Position: position.NewNodeListNodePosition($1.(*ast.ParserSeparatedList).Items, $2),
                     },
                     Function: &ast.NameName{
                         Node:  ast.Node{
-                            Position: position.NewNodeListPosition($1),
+                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $1,
+                        Parts:         $1.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
@@ -4187,11 +4218,12 @@ function_call:
                     },
                     Function: &ast.NameRelative{
                         Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $3),
+                            Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                         },
                         NsTkn:          $1,
                         NsSeparatorTkn: $2,
-                        Parts:          $3,
+                        Parts:          $3.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $4.(*ast.ArgumentList).Arguments,
@@ -4207,10 +4239,11 @@ function_call:
                     },
                     Function: &ast.NameFullyQualified{
                         Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $2),
+                            Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                         },
                         NsSeparatorTkn: $1,
-                        Parts:          $2,
+                        Parts:          $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     OpenParenthesisTkn:  $3.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $3.(*ast.ArgumentList).Arguments,
@@ -4308,30 +4341,33 @@ class_name:
             {
                 $$ = &ast.NameName{
                     Node:  ast.Node{
-                        Position: position.NewNodeListPosition($1),
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     },
-                    Parts: $1,
+                    Parts:         $1.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameRelative{
                     Node:  ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $3),
+                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     },
                     NsTkn:          $1,
                     NsSeparatorTkn: $2,
-                    Parts:          $3,
+                    Parts:          $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameFullyQualified{
                     Node:  ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2),
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     },
                     NsSeparatorTkn: $1,
-                    Parts:          $2,
+                    Parts:          $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
             }
 ;
@@ -4341,30 +4377,33 @@ fully_qualified_class_name:
             {
                 $$ = &ast.NameName{
                     Node:  ast.Node{
-                        Position: position.NewNodeListPosition($1),
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     },
-                    Parts: $1,
+                    Parts:         $1.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameRelative{
                     Node:  ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $3),
+                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     },
                     NsTkn:          $1,
                     NsSeparatorTkn: $2,
-                    Parts:          $3,
+                    Parts:          $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameFullyQualified{
                     Node:  ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2),
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     },
                     NsSeparatorTkn: $1,
-                    Parts:          $2,
+                    Parts:          $2.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
             }
 ;
@@ -4670,13 +4709,14 @@ static_scalar_value:
             {
                 $$ = &ast.ExprConstFetch{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($1),
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     },
                     Const: &ast.NameName{
                         Node:  ast.Node{
-                            Position: position.NewNodeListPosition($1),
+                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $1,
+                        Parts:         $1.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -4684,15 +4724,16 @@ static_scalar_value:
             {
                 $$ = &ast.ExprConstFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $3),
+                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     },
                     Const: &ast.NameRelative{
                         Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $3),
+                            Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                         },
                         NsTkn:          $1,
                         NsSeparatorTkn: $2,
-                        Parts:          $3,
+                        Parts:          $3.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -4700,14 +4741,15 @@ static_scalar_value:
             {
                 $$ = &ast.ExprConstFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2),
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     },
                     Const: &ast.NameFullyQualified{
                         Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $2),
+                            Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                         },
                         NsSeparatorTkn: $1,
-                        Parts:          $2,
+                        Parts:          $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -5131,13 +5173,14 @@ general_constant:
             {
                 $$ = &ast.ExprConstFetch{
                     Node: ast.Node{
-                        Position: position.NewNodeListPosition($1),
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     },
                     Const: &ast.NameName{
                         Node:  ast.Node{
-                            Position: position.NewNodeListPosition($1),
+                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         },
-                        Parts: $1,
+                        Parts:         $1.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -5145,15 +5188,16 @@ general_constant:
             {
                 $$ = &ast.ExprConstFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $3),
+                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     },
                     Const: &ast.NameRelative{
                         Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $3),
+                            Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                         },
                         NsTkn:          $1,
                         NsSeparatorTkn: $2,
-                        Parts:          $3,
+                        Parts:          $3.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -5161,14 +5205,15 @@ general_constant:
             {
                 $$ = &ast.ExprConstFetch{
                     Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2),
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     },
                     Const: &ast.NameFullyQualified{
                         Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $2),
+                            Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                         },
                         NsSeparatorTkn: $1,
-                        Parts:          $2,
+                        Parts:          $2.(*ast.ParserSeparatedList).Items,
+                        SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
