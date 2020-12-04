@@ -230,12 +230,6 @@ func (v *Dump) Identifier(n *ast.Identifier) {
 	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
 }
 
-func (v *Dump) ArgumentList(n *ast.ArgumentList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ArgumentList{\n")
-	v.printNode(n.GetNode())
-}
-
 func (v *Dump) Argument(n *ast.Argument) {
 	v.printIndentIfNotSingle(v.indent - 1)
 	v.print("&ast.Argument{\n")

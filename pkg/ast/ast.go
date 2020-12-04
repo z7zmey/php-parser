@@ -24,7 +24,6 @@ type NodeVisitor interface {
 	Variadic(n *Variadic)
 	Parameter(n *Parameter)
 	Identifier(n *Identifier)
-	ArgumentList(n *ArgumentList)
 	Argument(n *Argument)
 
 	StmtBreak(n *StmtBreak)

@@ -23,7 +23,8 @@ func (n *Node) GetPosition() *position.Position {
 // Root node
 type Root struct {
 	Node
-	Stmts []Vertex
+	Stmts  []Vertex
+	EndTkn *token.Token
 }
 
 func (n *Root) Accept(v NodeVisitor) {
@@ -85,19 +86,6 @@ type Identifier struct {
 
 func (n *Identifier) Accept(v NodeVisitor) {
 	v.Identifier(n)
-}
-
-// ArgumentList node
-type ArgumentList struct {
-	Node
-	OpenParenthesisTkn  *token.Token
-	Arguments           []Vertex
-	SeparatorTkns       []*token.Token
-	CloseParenthesisTkn *token.Token
-}
-
-func (n *ArgumentList) Accept(v NodeVisitor) {
-	v.ArgumentList(n)
 }
 
 // Argument node
@@ -238,15 +226,17 @@ func (n *StmtCatch) Accept(v NodeVisitor) {
 // StmtClass node
 type StmtClass struct {
 	Node
-	Modifiers         []Vertex
-	ClassTkn          *token.Token
-	ClassName         Vertex
-	ArgumentList      Vertex
-	Extends           Vertex
-	Implements        Vertex
-	OpenCurlyBracket  *token.Token
-	Stmts             []Vertex
-	CloseCurlyBracket *token.Token
+	Modifiers           []Vertex
+	ClassTkn            *token.Token
+	ClassName           Vertex
+	OpenParenthesisTkn  *token.Token
+	Arguments           []Vertex
+	CloseParenthesisTkn *token.Token
+	Extends             Vertex
+	Implements          Vertex
+	OpenCurlyBracket    *token.Token
+	Stmts               []Vertex
+	CloseCurlyBracket   *token.Token
 }
 
 func (n *StmtClass) Accept(v NodeVisitor) {
@@ -2096,6 +2086,19 @@ type ParserSeparatedList struct {
 
 func (n *ParserSeparatedList) Accept(v NodeVisitor) {
 	v.ParserSeparatedList(n)
+}
+
+// ArgumentList node
+type ArgumentList struct {
+	Node
+	OpenParenthesisTkn  *token.Token
+	Arguments           []Vertex
+	SeparatorTkns       []*token.Token
+	CloseParenthesisTkn *token.Token
+}
+
+func (n *ArgumentList) Accept(v NodeVisitor) {
+	// do nothing
 }
 
 type ReturnType struct {

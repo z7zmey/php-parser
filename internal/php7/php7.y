@@ -288,12 +288,13 @@ import (
 start:
         top_statement_list
             {
-                yylex.(*Parser).rootNode = &ast.Root{ast.Node{}, $1}
-
-                // save position
-                yylex.(*Parser).rootNode.GetNode().Position = position.NewNodeListPosition($1)
-
-                yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, token.End, yylex.(*Parser).currentToken.SkippedTokens)
+                yylex.(*Parser).rootNode = &ast.Root{
+                    Node: ast.Node{
+                        Position: position.NewNodeListPosition($1),
+                    },
+                    Stmts:  $1,
+                    EndTkn: yylex.(*Parser).currentToken,
+                }
             }
 ;
 
@@ -2754,13 +2755,15 @@ anonymous_class:
                     Node: ast.Node{
                         Position: position.NewTokensPosition($1, $8),
                     },
-                    ClassTkn:          $1,
-                    ArgumentList:      $2,
-                    Extends:           $3,
-                    Implements:        $4,
-                    OpenCurlyBracket:  $6,
-                    Stmts:             $7,
-                    CloseCurlyBracket: $8,
+                    ClassTkn:            $1,
+                    OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $2.(*ast.ArgumentList).Arguments,
+                    CloseParenthesisTkn: $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Extends:             $3,
+                    Implements:          $4,
+                    OpenCurlyBracket:    $6,
+                    Stmts:               $7,
+                    CloseCurlyBracket:   $8,
                 }
             }
 ;

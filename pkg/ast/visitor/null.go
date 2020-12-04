@@ -46,10 +46,6 @@ func (v *Null) Identifier(_ *ast.Identifier) {
 	// do nothing
 }
 
-func (v *Null) ArgumentList(_ *ast.ArgumentList) {
-	// do nothing
-}
-
 func (v *Null) Argument(_ *ast.Argument) {
 	// do nothing
 }

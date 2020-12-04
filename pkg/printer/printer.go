@@ -2067,10 +2067,10 @@ func (p *Printer) printStmtClass(n ast.Vertex) {
 		p.Print(nn.ClassName)
 	}
 
-	if nn.ArgumentList != nil {
-		p.printFreeFloatingOrDefault(nn.ArgumentList, token.Start, "(")
-		p.joinPrint(",", nn.ArgumentList.(*ast.ArgumentList).Arguments)
-		p.printFreeFloatingOrDefault(nn.ArgumentList, token.End, ")")
+	if nn.Arguments != nil {
+		p.printToken(nn.OpenParenthesisTkn, "(")
+		p.joinPrint(",", nn.Arguments)
+		p.printToken(nn.CloseParenthesisTkn, ")")
 	}
 
 	if nn.Extends != nil {

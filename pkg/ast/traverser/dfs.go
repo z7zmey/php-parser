@@ -93,20 +93,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
-	case *ast.ArgumentList:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Arguments != nil {
-			t.visitor.Enter("Arguments", false)
-			for _, c := range nn.Arguments {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("Arguments", false)
-		}
 	case *ast.Argument:
 		if nn == nil {
 			return
@@ -195,10 +181,12 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			}
 			t.visitor.Leave("Modifiers", false)
 		}
-		if nn.ArgumentList != nil {
-			t.visitor.Enter("ArgumentList", true)
-			t.Traverse(nn.ArgumentList)
-			t.visitor.Leave("ArgumentList", true)
+		if nn.Arguments != nil {
+			t.visitor.Enter("Arguments", false)
+			for _, c := range nn.Arguments {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Arguments", false)
 		}
 		if nn.Extends != nil {
 			t.visitor.Enter("Extends", true)

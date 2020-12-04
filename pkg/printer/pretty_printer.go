@@ -1450,9 +1450,9 @@ func (p *PrettyPrinter) printStmtClass(n ast.Vertex) {
 		p.Print(nn.ClassName)
 	}
 
-	if nn.ArgumentList != nil {
+	if nn.Arguments != nil {
 		io.WriteString(p.w, "(")
-		p.joinPrint(", ", nn.ArgumentList.(*ast.ArgumentList).Arguments)
+		p.joinPrint(", ", nn.Arguments)
 		io.WriteString(p.w, ")")
 	}
 
