@@ -1993,7 +1993,7 @@ type:
 return_type:
         /* empty */
             {
-                $$ = nil
+                $$ = &ast.ReturnType{}
             }
     |   ':' type_expr
             {
