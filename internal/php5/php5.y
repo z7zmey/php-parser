@@ -4529,7 +4529,7 @@ backticks_expr:
 ctor_arguments:
         /* empty */
             {
-                $$ = nil
+                $$ = &ast.ArgumentList{}
             }
     |   function_call_parameter_list
             {
