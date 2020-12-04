@@ -280,11 +280,6 @@ start:
 top_statement_list:
         top_statement_list top_statement
             {
-                if inlineHtmlNode, ok := $2.(*ast.StmtInlineHtml); ok && len($1) > 0 {
-                    prevNode := lastNode($1)
-                    yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
-                }
-
                 if $2 != nil {
                     $$ = append($1, $2)
                 }
@@ -744,8 +739,6 @@ constant_declaration:
                 })
 
                 $$ = $1
-
-                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.StmtConstList).Consts).(*ast.StmtConstant).Name, token.Start, $3.SkippedTokens)
             }
     |   T_CONST T_STRING '=' static_scalar
             {
@@ -771,19 +764,12 @@ constant_declaration:
                         },
                     },
                 }
-
-                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.StmtConstList).Consts).(*ast.StmtConstant).Name, token.Start, $2.SkippedTokens)
             }
 ;
 
 inner_statement_list:
         inner_statement_list inner_statement
             {
-                if inlineHtmlNode, ok := $2.(*ast.StmtInlineHtml); ok && len($1) > 0 {
-                    prevNode := lastNode($1)
-                    yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
-                }
-
                 if $2 != nil {
                     $$ = append($1, $2)
                 }
@@ -1752,8 +1738,6 @@ declare_list:
                         },
                     },
                 }
-
-                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.ParserSeparatedList).Items).(*ast.StmtConstant).Name, token.Start, $1.SkippedTokens)
             }
     |   declare_list ',' T_STRING '=' static_scalar
             {
@@ -1777,8 +1761,6 @@ declare_list:
                 )
 
                 $$ = $1
-
-                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.ParserSeparatedList).Items).(*ast.StmtConstant).Name, token.Start, $3.SkippedTokens)
             }
 ;
 
@@ -2923,8 +2905,6 @@ class_constant_declaration:
                 })
 
                 $$ = $1
-
-                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.StmtClassConstList).Consts).(*ast.StmtConstant).Name, token.Start, $3.SkippedTokens)
             }
     |   T_CONST T_STRING '=' static_scalar
             {
@@ -2950,8 +2930,6 @@ class_constant_declaration:
                         },
                     },
                 }
-
-                yylex.(*Parser).setFreeFloating(lastNode($$.(*ast.StmtClassConstList).Consts).(*ast.StmtConstant).Name, token.Start, $2.SkippedTokens)
             }
 ;
 
@@ -3624,7 +3602,6 @@ expr_without_variable:
                     OpTkn: $2,
                     Right: $3,
                 }
-                yylex.(*Parser).setToken($$, token.Equal, $2.SkippedTokens)
             }
     |   expr '<' expr
             {
@@ -4416,13 +4393,11 @@ dynamic_class_name_reference:
                             nn.Var = $$
                             $$.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
                             $$.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
                     }
                 }
 
@@ -4432,13 +4407,11 @@ dynamic_class_name_reference:
                             nn.Var = $$
                             $$.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
                             $$.GetNode().Position = position.NewNodesPosition($$, nn)
                             $$ = nn
-                            yylex.(*Parser).MoveFreeFloating(nn.Var, $$)
                     }
                 }
             }
@@ -5046,7 +5019,6 @@ static_operation:
                     OpTkn: $2,
                     Right: $3,
                 }
-                yylex.(*Parser).setToken($$, token.Equal, $2.SkippedTokens)
             }
     |   static_scalar_value '<' static_scalar_value
             {
@@ -6333,12 +6305,6 @@ encaps_var_offset:
                         Value:     $1.Value,
                     }
                 }
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
             }
     |   T_VARIABLE
             {
