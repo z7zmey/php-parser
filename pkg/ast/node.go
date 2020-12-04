@@ -438,10 +438,13 @@ type StmtFor struct {
 	ForTkn              *token.Token
 	OpenParenthesisTkn  *token.Token
 	Init                []Vertex
+	InitSeparatorTkns   []*token.Token
 	InitSemiColonTkn    *token.Token
 	Cond                []Vertex
+	CondSeparatorTkns   []*token.Token
 	CondSemiColonTkn    *token.Token
 	Loop                []Vertex
+	LoopSeparatorTkns   []*token.Token
 	CloseParenthesisTkn *token.Token
 	ColonTkn            *token.Token
 	Stmt                Vertex
@@ -792,10 +795,11 @@ func (n *StmtTraitUse) Accept(v NodeVisitor) {
 // StmtTraitUseAlias node
 type StmtTraitUseAlias struct {
 	Node
-	Ref      Vertex
-	AsTkn    *token.Token
-	Modifier Vertex
-	Alias    Vertex
+	Ref          Vertex
+	AsTkn        *token.Token
+	Modifier     Vertex
+	Alias        Vertex
+	SemiColonTkn *token.Token
 }
 
 func (n *StmtTraitUseAlias) Accept(v NodeVisitor) {
@@ -809,6 +813,7 @@ type StmtTraitUsePrecedence struct {
 	InsteadofTkn  *token.Token
 	Insteadof     []Vertex
 	SeparatorTkns []*token.Token
+	SemiColonTkn  *token.Token
 }
 
 func (n *StmtTraitUsePrecedence) Accept(v NodeVisitor) {

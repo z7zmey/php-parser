@@ -234,7 +234,7 @@ import (
 %type <node> interface_declaration_statement
 %type <node> group_use_declaration inline_use_declaration
 %type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
-%type <node> const_decl inner_statement
+%type <node> const_decl inner_statement for_exprs non_empty_for_exprs
 %type <node> expr optional_expr parameter_list non_empty_parameter_list
 %type <node> declare_statement finally_statement unset_variable variable
 %type <node> parameter optional_type argument expr_without_variable global_var_list global_var
@@ -272,7 +272,6 @@ import (
 
 
 %type <list> encaps_list backticks_expr namespace_name catch_list class_const_list
-%type <list> for_exprs non_empty_for_exprs
 %type <list> unprefixed_use_declarations inline_use_declarations
 %type <list> case_list trait_adaptation_list
 %type <list> use_declarations
@@ -900,11 +899,14 @@ statement:
             {
                 $9.(*ast.StmtFor).ForTkn = $1
                 $9.(*ast.StmtFor).OpenParenthesisTkn = $2
-                $9.(*ast.StmtFor).Init = $3
+                $9.(*ast.StmtFor).Init = $3.(*ast.ParserSeparatedList).Items
+                $9.(*ast.StmtFor).InitSeparatorTkns = $3.(*ast.ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).InitSemiColonTkn = $4
-                $9.(*ast.StmtFor).Cond = $5
+                $9.(*ast.StmtFor).Cond = $5.(*ast.ParserSeparatedList).Items
+                $9.(*ast.StmtFor).CondSeparatorTkns = $5.(*ast.ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).CondSemiColonTkn = $6
-                $9.(*ast.StmtFor).Loop = $7
+                $9.(*ast.StmtFor).Loop = $7.(*ast.ParserSeparatedList).Items
+                $9.(*ast.StmtFor).LoopSeparatorTkns = $7.(*ast.ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).CloseParenthesisTkn = $8
                 $9.(*ast.StmtFor).Node.Position = position.NewTokenNodePosition($1, $9)
 
@@ -2277,19 +2279,15 @@ trait_adaptation_list:
 trait_adaptation:
         trait_precedence ';'
             {
-                $$ = $1;
+                $1.(*ast.StmtTraitUsePrecedence).SemiColonTkn = $2
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.NameList, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
+                $$ = $1;
             }
     |   trait_alias ';'
             {
-                $$ = $1;
+                $1.(*ast.StmtTraitUseAlias).SemiColonTkn = $2
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Alias, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
+                $$ = $1;
             }
 ;
 
@@ -2688,7 +2686,7 @@ echo_expr:
 for_exprs:
         /* empty */
             {
-                $$ = nil;
+                $$ = &ast.ParserSeparatedList{}
             }
     |   non_empty_for_exprs
             {
@@ -2699,14 +2697,16 @@ for_exprs:
 non_empty_for_exprs:
         non_empty_for_exprs ',' expr
             {
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   expr
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
 ;
 

@@ -240,7 +240,7 @@ import (
 %type <node> switch_case_list non_empty_function_call_parameter_list assignment_list lexical_var_list
 %type <node> method_body trait_reference_list static_array_pair_list non_empty_static_array_pair_list
 %type <node> foreach_statement for_statement while_statement isset_variables
-%type <node> foreach_variable foreach_optional_arg
+%type <node> foreach_variable foreach_optional_arg for_expr non_empty_for_expr
 %type <node> extends_from interface_list trait_list
 %type <node> implements_list
 %type <node> interface_extends_list
@@ -248,8 +248,8 @@ import (
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list encaps_list
-%type <list> elseif_list new_elseif_list non_empty_for_expr
-%type <list> for_expr case_list catch_statement additional_catches
+%type <list> elseif_list new_elseif_list
+%type <list> case_list catch_statement additional_catches
 %type <list> non_empty_additional_catches class_statement_list
 %type <list> class_statement_list variable_modifiers method_modifiers
 %type <list> trait_adaptation_list non_empty_trait_adaptation_list
@@ -938,11 +938,14 @@ unticked_statement:
             {
                 $9.(*ast.StmtFor).ForTkn = $1
                 $9.(*ast.StmtFor).OpenParenthesisTkn = $2
-                $9.(*ast.StmtFor).Init = $3
+                $9.(*ast.StmtFor).Init = $3.(*ast.ParserSeparatedList).Items
+                $9.(*ast.StmtFor).InitSeparatorTkns = $3.(*ast.ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).InitSemiColonTkn = $4
-                $9.(*ast.StmtFor).Cond = $5
+                $9.(*ast.StmtFor).Cond = $5.(*ast.ParserSeparatedList).Items
+                $9.(*ast.StmtFor).CondSeparatorTkns = $5.(*ast.ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).CondSemiColonTkn = $6
-                $9.(*ast.StmtFor).Loop = $7
+                $9.(*ast.StmtFor).Loop = $7.(*ast.ParserSeparatedList).Items
+                $9.(*ast.StmtFor).LoopSeparatorTkns = $7.(*ast.ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).CloseParenthesisTkn = $8
                 $9.(*ast.StmtFor).Node.Position = position.NewTokenNodePosition($1, $9)
 
@@ -2537,19 +2540,15 @@ non_empty_trait_adaptation_list:
 trait_adaptation_statement:
         trait_precedence ';'
             {
-                $$ = $1;
+                $1.(*ast.StmtTraitUsePrecedence).SemiColonTkn = $2
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.NameList, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
+                $$ = $1;
             }
     |   trait_alias ';'
             {
-                $$ = $1;
+                $1.(*ast.StmtTraitUseAlias).SemiColonTkn = $2
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Alias, $2.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.SemiColon, $2.SkippedTokens)
+                $$ = $1;
             }
 ;
 
@@ -2976,7 +2975,7 @@ echo_expr_list:
 for_expr:
         /* empty */
             {
-                $$ = nil
+                $$ = &ast.ParserSeparatedList{}
             }
     |   non_empty_for_expr
             {
@@ -2987,14 +2986,16 @@ for_expr:
 non_empty_for_expr:
         non_empty_for_expr ',' expr
             {
-                $$ = append($1, $3)
+                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
 
-                // save comments
-                yylex.(*Parser).setFreeFloating(lastNode($1), token.End, $2.SkippedTokens)
+                $$ = $1
             }
     |   expr
             {
-                $$ = []ast.Vertex{$1}
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
             }
 ;
 
@@ -4461,10 +4462,9 @@ dynamic_class_name_variable_properties:
 dynamic_class_name_variable_property:
         T_OBJECT_OPERATOR object_property
             {
-                $$ = $2
+                $2[0].(*ast.ExprPropertyFetch).ObjectOperatorTkn = $1
 
-                // save comments
-                yylex.(*Parser).setFreeFloating($2[0], token.Var, $1.SkippedTokens)
+                $$ = $2
             }
 ;
 
