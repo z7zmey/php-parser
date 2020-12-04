@@ -3799,80 +3799,73 @@ expr_without_variable:
             }
     |   T_INT_CAST expr
             {
-                $$ = &ast.ExprCastInt{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
+                $$ = &ast.ExprCastInt{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    CastTkn: $1,
+                    Expr:    $2,
+                }
             }
     |   T_DOUBLE_CAST expr
             {
-                $$ = &ast.ExprCastDouble{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
+                $$ = &ast.ExprCastDouble{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    CastTkn: $1,
+                    Expr:    $2,
+                }
             }
     |   T_STRING_CAST expr
             {
-                $$ = &ast.ExprCastString{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
+                $$ = &ast.ExprCastString{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    CastTkn: $1,
+                    Expr:    $2,
+                }
             }
     |   T_ARRAY_CAST expr
             {
-                $$ = &ast.ExprCastArray{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
+                $$ = &ast.ExprCastArray{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    CastTkn: $1,
+                    Expr:    $2,
+                }
             }
     |   T_OBJECT_CAST expr
             {
-                $$ = &ast.ExprCastObject{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
+                $$ = &ast.ExprCastObject{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    CastTkn: $1,
+                    Expr:    $2,
+                }
             }
     |   T_BOOL_CAST expr
             {
-                $$ = &ast.ExprCastBool{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
+                $$ = &ast.ExprCastBool{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    CastTkn: $1,
+                    Expr:    $2,
+                }
             }
     |   T_UNSET_CAST expr
             {
-                $$ = &ast.ExprCastUnset{ast.Node{}, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setToken($$, token.Cast, $1.SkippedTokens)
+                $$ = &ast.ExprCastUnset{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    CastTkn: $1,
+                    Expr:    $2,
+                }
             }
     |   T_EXIT exit_expr
             {
@@ -3936,13 +3929,12 @@ expr_without_variable:
             }
     |   T_YIELD
             {
-                $$ = &ast.ExprYield{ast.Node{}, nil, nil}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenPosition($1)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprYield{
+                    Node: ast.Node{
+                        Position: position.NewTokenPosition($1),
+                    },
+                    YieldTkn: $1,
+                }
             }
     |   function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
@@ -3984,45 +3976,47 @@ expr_without_variable:
 yield_expr:
         T_YIELD expr_without_variable
             {
-                $$ = &ast.ExprYield{ast.Node{}, nil, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprYield{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    YieldTkn: $1,
+                    Value:    $2,
+                }
             }
     |   T_YIELD variable
             {
-                $$ = &ast.ExprYield{ast.Node{}, nil, $2}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $2)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
+                $$ = &ast.ExprYield{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $2),
+                    },
+                    YieldTkn: $1,
+                    Value:    $2,
+                }
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr_without_variable
             {
-                $$ = &ast.ExprYield{ast.Node{}, $2, $4}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
+                $$ = &ast.ExprYield{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $4),
+                    },
+                    YieldTkn:       $1,
+                    Key:            $2,
+                    DoubleArrowTkn: $3,
+                    Value:          $4,
+                }
             }
     |   T_YIELD expr T_DOUBLE_ARROW variable
             {
-                $$ = &ast.ExprYield{ast.Node{}, $2, $4}
-
-                // save position
-                $$.GetNode().Position = position.NewTokenNodePosition($1, $4)
-
-                // save comments
-                yylex.(*Parser).setFreeFloating($$, token.Start, $1.SkippedTokens)
-                yylex.(*Parser).setFreeFloating($$, token.Expr, $3.SkippedTokens)
+                $$ = &ast.ExprYield{
+                    Node: ast.Node{
+                        Position: position.NewTokenNodePosition($1, $4),
+                    },
+                    YieldTkn:       $1,
+                    Key:            $2,
+                    DoubleArrowTkn: $3,
+                    Value:          $4,
+                }
             }
 ;
 

@@ -1428,8 +1428,10 @@ func (n *ExprVariable) Accept(v NodeVisitor) {
 // ExprYield node
 type ExprYield struct {
 	Node
-	Key   Vertex
-	Value Vertex
+	YieldTkn       *token.Token
+	Key            Vertex
+	DoubleArrowTkn *token.Token
+	Value          Vertex
 }
 
 func (n *ExprYield) Accept(v NodeVisitor) {
@@ -1439,7 +1441,8 @@ func (n *ExprYield) Accept(v NodeVisitor) {
 // ExprYieldFrom node
 type ExprYieldFrom struct {
 	Node
-	Expr Vertex
+	YieldFromTkn *token.Token
+	Expr         Vertex
 }
 
 func (n *ExprYieldFrom) Accept(v NodeVisitor) {
@@ -1449,7 +1452,8 @@ func (n *ExprYieldFrom) Accept(v NodeVisitor) {
 // ExprCastArray node
 type ExprCastArray struct {
 	Node
-	Expr Vertex
+	CastTkn *token.Token
+	Expr    Vertex
 }
 
 func (n *ExprCastArray) Accept(v NodeVisitor) {
@@ -1459,7 +1463,8 @@ func (n *ExprCastArray) Accept(v NodeVisitor) {
 // ExprCastBool node
 type ExprCastBool struct {
 	Node
-	Expr Vertex
+	CastTkn *token.Token
+	Expr    Vertex
 }
 
 func (n *ExprCastBool) Accept(v NodeVisitor) {
@@ -1469,7 +1474,8 @@ func (n *ExprCastBool) Accept(v NodeVisitor) {
 // ExprCastDouble node
 type ExprCastDouble struct {
 	Node
-	Expr Vertex
+	CastTkn *token.Token
+	Expr    Vertex
 }
 
 func (n *ExprCastDouble) Accept(v NodeVisitor) {
@@ -1479,7 +1485,8 @@ func (n *ExprCastDouble) Accept(v NodeVisitor) {
 // ExprCastInt node
 type ExprCastInt struct {
 	Node
-	Expr Vertex
+	CastTkn *token.Token
+	Expr    Vertex
 }
 
 func (n *ExprCastInt) Accept(v NodeVisitor) {
@@ -1489,7 +1496,8 @@ func (n *ExprCastInt) Accept(v NodeVisitor) {
 // ExprCastObject node
 type ExprCastObject struct {
 	Node
-	Expr Vertex
+	CastTkn *token.Token
+	Expr    Vertex
 }
 
 func (n *ExprCastObject) Accept(v NodeVisitor) {
@@ -1499,7 +1507,8 @@ func (n *ExprCastObject) Accept(v NodeVisitor) {
 // ExprCastString node
 type ExprCastString struct {
 	Node
-	Expr Vertex
+	CastTkn *token.Token
+	Expr    Vertex
 }
 
 func (n *ExprCastString) Accept(v NodeVisitor) {
@@ -1509,7 +1518,8 @@ func (n *ExprCastString) Accept(v NodeVisitor) {
 // ExprCastUnset node
 type ExprCastUnset struct {
 	Node
-	Expr Vertex
+	CastTkn *token.Token
+	Expr    Vertex
 }
 
 func (n *ExprCastUnset) Accept(v NodeVisitor) {
