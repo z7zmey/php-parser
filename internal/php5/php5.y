@@ -266,9 +266,7 @@ start:
         top_statement_list
             {
                 yylex.(*Parser).rootNode = &ast.Root{
-                    Node: ast.Node{
-                        Position: position.NewNodeListPosition($1),
-                    },
+                    Position: position.NewNodeListPosition($1),
                     Stmts:  $1,
                     EndTkn: yylex.(*Parser).currentToken,
                 }
@@ -294,9 +292,7 @@ namespace_name:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.NameNamePart{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($1),
-                            },
+                            Position: position.NewTokenPosition($1),
                             StringTkn: $1,
                             Value:     $1.Value,
                         },
@@ -306,9 +302,7 @@ namespace_name:
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
                 part := &ast.NameNamePart{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
-                    },
+                    Position: position.NewTokenPosition($3),
                     StringTkn:      $3,
                     Value:          $3.Value,
                 }
@@ -341,9 +335,7 @@ top_statement:
     |   T_HALT_COMPILER '(' ')' ';'
             {
                 $$ = &ast.StmtHaltCompiler{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     HaltCompilerTkn:     $1,
                     OpenParenthesisTkn:  $2,
                     CloseParenthesisTkn: $3,
@@ -353,14 +345,10 @@ top_statement:
     |   T_NAMESPACE namespace_name ';'
             {
                 $$ = &ast.StmtNamespace{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     NsTkn: $1,
                     Name: &ast.NameName{
-                        Node:  ast.Node{
-                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -370,14 +358,10 @@ top_statement:
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
             {
                 $$ = &ast.StmtNamespace{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $5),
-                    },
+                    Position: position.NewTokensPosition($1, $5),
                     NsTkn: $1,
                     Name: &ast.NameName{
-                        Node:  ast.Node{
-                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -389,9 +373,7 @@ top_statement:
     |   T_NAMESPACE '{' top_statement_list '}'
             {
                 $$ = &ast.StmtNamespace{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     NsTkn:             $1,
                     OpenCurlyBracket:  $2,
                     Stmts:             $3,
@@ -401,9 +383,7 @@ top_statement:
     |   T_USE use_declarations ';'
             {
                 $$ = &ast.StmtUse{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     UseTkn:          $1,
                     UseDeclarations: $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -413,14 +393,10 @@ top_statement:
     |   T_USE T_FUNCTION use_function_declarations ';'
             {
                 $$ = &ast.StmtUse{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     UseTkn: $1,
                     Type: &ast.Identifier{
-                        Node:  ast.Node{
-                            Position: position.NewTokenPosition($2),
-                        },
+                        Position: position.NewTokenPosition($2),
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
@@ -432,14 +408,10 @@ top_statement:
     |   T_USE T_CONST use_const_declarations ';'
             {
                 $$ = &ast.StmtUse{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     UseTkn: $1,
                     Type: &ast.Identifier{
-                        Node:  ast.Node{
-                            Position: position.NewTokenPosition($2),
-                        },
+                        Position: position.NewTokenPosition($2),
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
@@ -451,7 +423,7 @@ top_statement:
     |   constant_declaration ';'
             {
                 $1.(*ast.StmtConstList).SemiColonTkn = $2
-                $1.(*ast.StmtConstList).Node.Position = position.NewNodeTokenPosition($1, $2)
+                $1.(*ast.StmtConstList).Position = position.NewNodeTokenPosition($1, $2)
                 $$ = $1
             }
 ;
@@ -476,13 +448,9 @@ use_declaration:
         namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -491,21 +459,15 @@ use_declaration:
     |   namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
-                    },
+                    Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -514,14 +476,10 @@ use_declaration:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -530,22 +488,16 @@ use_declaration:
     |   T_NS_SEPARATOR namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $3,
                     Alias: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         IdentifierTkn: $4,
                         Value:         $4.Value,
                     },
@@ -573,13 +525,9 @@ use_function_declaration:
         namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -588,21 +536,15 @@ use_function_declaration:
     |   namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
-                    },
+                    Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -611,14 +553,10 @@ use_function_declaration:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -627,22 +565,16 @@ use_function_declaration:
     |   T_NS_SEPARATOR namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $3,
                     Alias: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         IdentifierTkn: $4,
                         Value:         $4.Value,
                     },
@@ -670,13 +602,9 @@ use_const_declaration:
         namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -685,21 +613,15 @@ use_const_declaration:
     |   namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
-                    },
+                    Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -708,14 +630,10 @@ use_const_declaration:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -724,22 +642,16 @@ use_const_declaration:
     |   T_NS_SEPARATOR namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $3,
                     Alias: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         IdentifierTkn: $4,
                         Value:         $4.Value,
                     },
@@ -751,16 +663,12 @@ constant_declaration:
         constant_declaration ',' T_STRING '=' static_scalar
             {
                 constList := $1.(*ast.StmtConstList)
-                constList.Node.Position = position.NewNodesPosition($1, $5)
+                constList.Position = position.NewNodesPosition($1, $5)
                 constList.SeparatorTkns = append(constList.SeparatorTkns, $2)
                 constList.Consts = append(constList.Consts, &ast.StmtConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($3, $5),
-                    },
+                    Position: position.NewTokenNodePosition($3, $5),
                     Name: &ast.Identifier{
-                        Node:  ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -773,19 +681,13 @@ constant_declaration:
     |   T_CONST T_STRING '=' static_scalar
             {
                 $$ = &ast.StmtConstList{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $4),
-                    },
+                    Position: position.NewTokenNodePosition($1, $4),
                     ConstTkn: $1,
                     Consts: []ast.Vertex{
                         &ast.StmtConstant{
-                            Node: ast.Node{
-                                Position: position.NewTokenNodePosition($2, $4),
-                            },
+                            Position: position.NewTokenNodePosition($2, $4),
                             Name: &ast.Identifier{
-                                Node:  ast.Node{
-                                    Position: position.NewTokenPosition($2),
-                                },
+                                Position: position.NewTokenPosition($2),
                                 IdentifierTkn: $2,
                                 Value:         $2.Value,
                             },
@@ -832,9 +734,7 @@ inner_statement:
     |   T_HALT_COMPILER '(' ')' ';'
             {
                 $$ = &ast.StmtHaltCompiler{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     HaltCompilerTkn:     $1,
                     OpenParenthesisTkn:  $2,
                     CloseParenthesisTkn: $3,
@@ -852,13 +752,9 @@ statement:
     |   T_STRING ':'
             {
                 $$ = &ast.StmtLabel{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $2),
-                    },
+                    Position: position.NewTokensPosition($1, $2),
                     LabelName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -871,9 +767,7 @@ unticked_statement:
         '{' inner_statement_list '}'
             {
                 $$ = &ast.StmtStmtList{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenCurlyBracket:  $1,
                     Stmts:             $2,
                     CloseCurlyBracket: $3,
@@ -889,9 +783,7 @@ unticked_statement:
                 }
 
                 $$ = &ast.StmtIf{
-                    Node: ast.Node{
-                        Position: pos,
-                    },
+                    Position: pos,
                     IfTkn:               $1,
                     OpenParenthesisTkn:  $2.(*ast.ParserBrackets).OpenBracketTkn,
                     Cond:                $2.(*ast.ParserBrackets).Child,
@@ -904,9 +796,7 @@ unticked_statement:
     |   T_IF parenthesis_expr ':' inner_statement_list new_elseif_list new_else_single T_ENDIF ';'
             {
                 $$ = &ast.StmtIf{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $8),
-                    },
+                    Position: position.NewTokensPosition($1, $8),
                     Alt:                 true,
                     IfTkn:               $1,
                     OpenParenthesisTkn:  $2.(*ast.ParserBrackets).OpenBracketTkn,
@@ -914,9 +804,7 @@ unticked_statement:
                     CloseParenthesisTkn: $2.(*ast.ParserBrackets).CloseBracketTkn,
                     ColonTkn:            $3,
                     Stmt: &ast.StmtStmtList{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($4),
-                        },
+                        Position: position.NewNodeListPosition($4),
                         Stmts: $4,
                     },
                     ElseIf:       $5,
@@ -931,16 +819,14 @@ unticked_statement:
                 $3.(*ast.StmtWhile).OpenParenthesisTkn = $2.(*ast.ParserBrackets).OpenBracketTkn
                 $3.(*ast.StmtWhile).Cond = $2.(*ast.ParserBrackets).Child
                 $3.(*ast.StmtWhile).CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
-                $3.(*ast.StmtWhile).Node.Position = position.NewTokenNodePosition($1, $3)
+                $3.(*ast.StmtWhile).Position = position.NewTokenNodePosition($1, $3)
 
                 $$ = $3
             }
     |   T_DO statement T_WHILE parenthesis_expr ';'
             {
                 $$ = &ast.StmtDo{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $5),
-                    },
+                    Position: position.NewTokensPosition($1, $5),
                     DoTkn:               $1,
                     Stmt:                $2,
                     WhileTkn:            $3,
@@ -963,7 +849,7 @@ unticked_statement:
                 $9.(*ast.StmtFor).Loop = $7.(*ast.ParserSeparatedList).Items
                 $9.(*ast.StmtFor).LoopSeparatorTkns = $7.(*ast.ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).CloseParenthesisTkn = $8
-                $9.(*ast.StmtFor).Node.Position = position.NewTokenNodePosition($1, $9)
+                $9.(*ast.StmtFor).Position = position.NewTokenNodePosition($1, $9)
 
                 $$ = $9
             }
@@ -973,16 +859,14 @@ unticked_statement:
                 $3.(*ast.StmtSwitch).OpenParenthesisTkn = $2.(*ast.ParserBrackets).OpenBracketTkn
                 $3.(*ast.StmtSwitch).Cond = $2.(*ast.ParserBrackets).Child
                 $3.(*ast.StmtSwitch).CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
-                $3.(*ast.StmtSwitch).Node.Position = position.NewTokenNodePosition($1, $3)
+                $3.(*ast.StmtSwitch).Position = position.NewTokenNodePosition($1, $3)
 
                 $$ = $3
             }
     |   T_BREAK ';'
             {
                 $$ = &ast.StmtBreak{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $2),
-                    },
+                    Position: position.NewTokensPosition($1, $2),
                     BreakTkn:     $1,
                     SemiColonTkn: $2,
                 }
@@ -990,9 +874,7 @@ unticked_statement:
     |   T_BREAK expr ';'
             {
                 $$ = &ast.StmtBreak{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     BreakTkn:     $1,
                     Expr:         $2,
                     SemiColonTkn: $3,
@@ -1001,9 +883,7 @@ unticked_statement:
     |   T_CONTINUE ';'
             {
                 $$ = &ast.StmtContinue{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $2),
-                    },
+                    Position: position.NewTokensPosition($1, $2),
                     ContinueTkn:  $1,
                     SemiColonTkn: $2,
                 }
@@ -1011,9 +891,7 @@ unticked_statement:
     |   T_CONTINUE expr ';'
             {
                 $$ = &ast.StmtContinue{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     ContinueTkn:  $1,
                     Expr:         $2,
                     SemiColonTkn: $3,
@@ -1022,9 +900,7 @@ unticked_statement:
     |   T_RETURN ';'
             {
                 $$ = &ast.StmtReturn{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $2),
-                    },
+                    Position: position.NewTokensPosition($1, $2),
                     ReturnTkn:    $1,
                     SemiColonTkn: $2,
                 }
@@ -1032,9 +908,7 @@ unticked_statement:
     |   T_RETURN expr_without_variable ';'
             {
                 $$ = &ast.StmtReturn{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     ReturnTkn:    $1,
                     Expr:         $2,
                     SemiColonTkn: $3,
@@ -1043,9 +917,7 @@ unticked_statement:
     |   T_RETURN variable ';'
             {
                 $$ = &ast.StmtReturn{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     ReturnTkn:    $1,
                     Expr:         $2,
                     SemiColonTkn: $3,
@@ -1054,9 +926,7 @@ unticked_statement:
     |   yield_expr ';'
             {
                 $$ = &ast.StmtExpression{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $2),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $2),
                     Expr:         $1,
                     SemiColonTkn: $2,
                 }
@@ -1066,7 +936,7 @@ unticked_statement:
                 $2.(*ast.StmtGlobal).GlobalTkn = $1
                 $2.(*ast.StmtGlobal).SemiColonTkn = $3
                 $2.(*ast.StmtGlobal).SeparatorTkns = append($2.(*ast.StmtGlobal).SeparatorTkns, nil)
-                $2.(*ast.StmtGlobal).Node.Position = position.NewTokensPosition($1, $3)
+                $2.(*ast.StmtGlobal).Position = position.NewTokensPosition($1, $3)
 
                 $$ = $2
             }
@@ -1075,7 +945,7 @@ unticked_statement:
                 $2.(*ast.StmtStatic).StaticTkn = $1
                 $2.(*ast.StmtStatic).SemiColonTkn = $3
                 $2.(*ast.StmtStatic).SeparatorTkns = append($2.(*ast.StmtStatic).SeparatorTkns, nil)
-                $2.(*ast.StmtStatic).Node.Position = position.NewTokensPosition($1, $3)
+                $2.(*ast.StmtStatic).Position = position.NewTokensPosition($1, $3)
 
                 $$ = $2
             }
@@ -1083,16 +953,14 @@ unticked_statement:
             {
                 $2.(*ast.StmtEcho).EchoTkn = $1
                 $2.(*ast.StmtEcho).SemiColonTkn = $3
-                $2.(*ast.StmtEcho).Node.Position = position.NewTokensPosition($1, $3)
+                $2.(*ast.StmtEcho).Position = position.NewTokensPosition($1, $3)
 
                 $$ = $2
             }
     |   T_INLINE_HTML
             {
                 $$ = &ast.StmtInlineHtml{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     InlineHtmlTkn: $1,
                     Value:         $1.Value,
                 }
@@ -1100,9 +968,7 @@ unticked_statement:
     |   expr ';'
             {
                 $$ = &ast.StmtExpression{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $2),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $2),
                     Expr:         $1,
                     SemiColonTkn: $2,
                 }
@@ -1113,7 +979,7 @@ unticked_statement:
                 $3.(*ast.StmtUnset).OpenParenthesisTkn = $2
                 $3.(*ast.StmtUnset).CloseParenthesisTkn = $4
                 $3.(*ast.StmtUnset).SemiColonTkn = $5
-                $3.(*ast.StmtUnset).Node.Position = position.NewTokensPosition($1, $5)
+                $3.(*ast.StmtUnset).Position = position.NewTokensPosition($1, $5)
 
                 $$ = $3
             }
@@ -1131,7 +997,7 @@ unticked_statement:
                     $8.(*ast.StmtForeach).Var = $6.(*ast.StmtForeach).Var
                 }
                 $8.(*ast.StmtForeach).CloseParenthesisTkn = $7
-                $8.(*ast.StmtForeach).Node.Position = position.NewTokenNodePosition($1, $8)
+                $8.(*ast.StmtForeach).Position = position.NewTokenNodePosition($1, $8)
 
                 $$ = $8
             }
@@ -1149,7 +1015,7 @@ unticked_statement:
                     $8.(*ast.StmtForeach).Var = $6.(*ast.StmtForeach).Var
                 }
                 $8.(*ast.StmtForeach).CloseParenthesisTkn = $7
-                $8.(*ast.StmtForeach).Node.Position = position.NewTokenNodePosition($1, $8)
+                $8.(*ast.StmtForeach).Position = position.NewTokenNodePosition($1, $8)
 
                 $$ = $8
             }
@@ -1160,22 +1026,26 @@ unticked_statement:
                 $5.(*ast.StmtDeclare).Consts = $3.(*ast.ParserSeparatedList).Items
                 $5.(*ast.StmtDeclare).SeparatorTkns = $3.(*ast.ParserSeparatedList).SeparatorTkns
                 $5.(*ast.StmtDeclare).CloseParenthesisTkn = $4
-                $5.(*ast.StmtDeclare).Node.Position = position.NewTokenNodePosition($1, $5)
+                $5.(*ast.StmtDeclare).Position = position.NewTokenNodePosition($1, $5)
 
                 $$ = $5
             }
     |   ';'
             {
                 $$ = &ast.StmtNop{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     SemiColonTkn: $1,
                 }
             }
     |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement
             {
+                pos := position.NewTokenNodeListPosition($1, $5)
+                if $6 != nil {
+                    pos = position.NewTokenNodePosition($1, $6)
+                }
+
                 $$ = &ast.StmtTry{
+                    Position: pos,
                     TryTkn:            $1,
                     OpenCurlyBracket:  $2,
                     Stmts:             $3,
@@ -1183,19 +1053,11 @@ unticked_statement:
                     Catches:           $5,
                     Finally:           $6,
                 }
-
-                if $6 == nil {
-                    $$.GetNode().Position = position.NewTokenNodeListPosition($1, $5)
-                } else {
-                    $$.GetNode().Position = position.NewTokenNodePosition($1, $6)
-                }
             }
     |   T_THROW expr ';'
             {
                 $$ = &ast.StmtThrow{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     ThrowTkn:     $1,
                     Expr:         $2,
                     SemiColonTkn: $3,
@@ -1204,14 +1066,10 @@ unticked_statement:
     |   T_GOTO T_STRING ';'
             {
                 $$ = &ast.StmtGoto{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     GotoTkn: $1,
                     Label: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -1228,20 +1086,14 @@ catch_statement:
     |   T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}' additional_catches
             {
                 catch := &ast.StmtCatch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $8),
-                    },
+                    Position: position.NewTokensPosition($1, $8),
                     CatchTkn:           $1,
                     OpenParenthesisTkn: $2,
                     Types:              []ast.Vertex{$3},
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($4),
-                            },
+                            Position: position.NewTokenPosition($4),
                             IdentifierTkn: $4,
                             Value:         $4.Value,
                         },
@@ -1263,9 +1115,7 @@ finally_statement:
     |   T_FINALLY '{' inner_statement_list '}'
             {
                 $$ = &ast.StmtFinally{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     FinallyTkn:           $1,
                     OpenCurlyBracketTkn:  $2,
                     Stmts:                $3,
@@ -1300,20 +1150,14 @@ additional_catch:
         T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}'
             {
                 $$ = &ast.StmtCatch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $8),
-                    },
+                    Position: position.NewTokensPosition($1, $8),
                     CatchTkn:           $1,
                     OpenParenthesisTkn: $2,
                     Types:              []ast.Vertex{$3},
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($4),
-                            },
+                            Position: position.NewTokenPosition($4),
                             IdentifierTkn: $4,
                             Value:         $4.Value,
                         },
@@ -1389,15 +1233,11 @@ unticked_function_declaration_statement:
         function is_reference T_STRING '(' parameter_list ')' '{' inner_statement_list '}'
             {
                 $$ = &ast.StmtFunction{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $9),
-                    },
+                    Position: position.NewTokensPosition($1, $9),
                     FunctionTkn:  $1,
                     AmpersandTkn: $2,
                     FunctionName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -1419,9 +1259,7 @@ unticked_class_declaration_statement:
                     case *ast.StmtClass :
                         n.Position = position.NewNodeTokenPosition($1, $7)
                         n.ClassName = &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($2),
-                            },
+                            Position: position.NewTokenPosition($2),
                             IdentifierTkn: $2,
                             Value:         $2.Value,
                         }
@@ -1433,9 +1271,7 @@ unticked_class_declaration_statement:
                     case *ast.StmtTrait :
                         n.Position = position.NewNodeTokenPosition($1, $7)
                         n.TraitName = &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($2),
-                            },
+                            Position: position.NewTokenPosition($2),
                             IdentifierTkn: $2,
                             Value:         $2.Value,
                         }
@@ -1451,14 +1287,10 @@ unticked_class_declaration_statement:
     |   interface_entry T_STRING interface_extends_list '{' class_statement_list '}'
             {
                 $$ = &ast.StmtInterface{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $6),
-                    },
+                    Position: position.NewTokensPosition($1, $6),
                     InterfaceTkn: $1,
                     InterfaceName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($2),
-                        },
+                        Position: position.NewTokenPosition($2),
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
@@ -1475,23 +1307,17 @@ class_entry_type:
         T_CLASS
             {
                 $$ = &ast.StmtClass{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     ClassTkn: $1,
                 }
             }
     |   T_ABSTRACT T_CLASS
             {
                 $$ = &ast.StmtClass{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $2),
-                    },
+                    Position: position.NewTokensPosition($1, $2),
                     Modifiers: []ast.Vertex{
                         &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($1),
-                            },
+                            Position: position.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
@@ -1502,23 +1328,17 @@ class_entry_type:
     |   T_TRAIT
             {
                 $$ = &ast.StmtTrait{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     TraitTkn: $1,
                 }
             }
     |   T_FINAL T_CLASS
             {
                 $$ = &ast.StmtClass{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $2),
-                    },
+                    Position: position.NewTokensPosition($1, $2),
                     Modifiers: []ast.Vertex{
                         &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($1),
-                            },
+                            Position: position.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
@@ -1536,9 +1356,7 @@ extends_from:
     |   T_EXTENDS fully_qualified_class_name
             {
                 $$ = &ast.StmtClassExtends{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     ExtendTkn: $1,
                     ClassName: $2,
                 }
@@ -1560,9 +1378,7 @@ interface_extends_list:
     |   T_EXTENDS interface_list
             {
                 $$ = &ast.StmtInterfaceExtends{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     ExtendsTkn:     $1,
                     InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -1578,9 +1394,7 @@ implements_list:
     |   T_IMPLEMENTS interface_list
             {
                 $$ = &ast.StmtClassImplements{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     ImplementsTkn:  $1,
                     InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -1626,9 +1440,7 @@ foreach_variable:
     |   '&' variable
             {
                 $$ = &ast.ExprReference{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     AmpersandTkn: $1,
                     Var:          $2,
                 }
@@ -1643,9 +1455,7 @@ foreach_variable:
                 }
 
                 $$ = &ast.ExprList{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     ListTkn:         $1,
                     OpenBracketTkn:  $2,
                     Items:           $3.(*ast.ParserSeparatedList).Items,
@@ -1659,24 +1469,18 @@ for_statement:
         statement
             {
                 $$ = &ast.StmtFor{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($1),
-                    },
+                    Position: position.NewNodePosition($1),
                     Stmt: $1,
                 }
             }
     |   ':' inner_statement_list T_ENDFOR ';'
             {
                 $$ = &ast.StmtFor{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
-                        },
+                        Position: position.NewNodeListPosition($2),
                         Stmts: $2,
                     },
                     EndForTkn:    $3,
@@ -1689,24 +1493,18 @@ foreach_statement:
         statement
             {
                 $$ = &ast.StmtForeach{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($1),
-                    },
+                    Position: position.NewNodePosition($1),
                     Stmt: $1,
                 }
             }
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
                 $$ = &ast.StmtForeach{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
-                        },
+                        Position: position.NewNodeListPosition($2),
                         Stmts: $2,
                     },
                     EndForeachTkn: $3,
@@ -1720,24 +1518,18 @@ declare_statement:
         statement
             {
                 $$ = &ast.StmtDeclare{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($1),
-                    },
+                    Position: position.NewNodePosition($1),
                     Stmt: $1,
                 }
             }
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
                 $$ = &ast.StmtDeclare{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
-                        },
+                        Position: position.NewNodeListPosition($2),
                         Stmts: $2,
                     },
                     EndDeclareTkn: $3,
@@ -1753,13 +1545,9 @@ declare_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.StmtConstant{
-                            Node: ast.Node{
-                                Position: position.NewTokenNodePosition($1, $3),
-                            },
+                            Position: position.NewTokenNodePosition($1, $3),
                             Name: &ast.Identifier{
-                                Node:  ast.Node{
-                                    Position: position.NewTokenPosition($1),
-                                },
+                                Position: position.NewTokenPosition($1),
                                 IdentifierTkn: $1,
                                 Value:         $1.Value,
                             },
@@ -1775,13 +1563,9 @@ declare_list:
                 $1.(*ast.ParserSeparatedList).Items = append(
                     $1.(*ast.ParserSeparatedList).Items,
                     &ast.StmtConstant{
-                        Node: ast.Node{
-                            Position: position.NewTokenNodePosition($3, $5),
-                        },
+                        Position: position.NewTokenNodePosition($3, $5),
                         Name: &ast.Identifier{
-                            Node:  ast.Node{
-                                Position: position.NewTokenPosition($3),
-                            },
+                            Position: position.NewTokenPosition($3),
                             IdentifierTkn: $3,
                             Value:         $3.Value,
                         },
@@ -1799,9 +1583,7 @@ switch_case_list:
         '{' case_list '}'
             {
                 $$ = &ast.StmtSwitch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenCurlyBracketTkn:  $1,
                     CaseList:             $2,
                     CloseCurlyBracketTkn: $3,
@@ -1810,9 +1592,7 @@ switch_case_list:
     |   '{' ';' case_list '}'
             {
                 $$ = &ast.StmtSwitch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     OpenCurlyBracketTkn:  $1,
                     CaseSeparatorTkn:     $2,
                     CaseList:             $3,
@@ -1822,9 +1602,7 @@ switch_case_list:
     |   ':' case_list T_ENDSWITCH ';'
             {
                 $$ = &ast.StmtSwitch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     Alt:          true,
                     ColonTkn:     $1,
                     CaseList:     $2,
@@ -1835,9 +1613,7 @@ switch_case_list:
     |   ':' ';' case_list T_ENDSWITCH ';'
             {
                 $$ = &ast.StmtSwitch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $5),
-                    },
+                    Position: position.NewTokensPosition($1, $5),
                     Alt:              true,
                     ColonTkn:         $1,
                     CaseSeparatorTkn: $2,
@@ -1857,9 +1633,7 @@ case_list:
     |   case_list T_CASE expr case_separator inner_statement_list
             {
                 $$ = append($1, &ast.StmtCase{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($2, $5),
-                    },
+                    Position: position.NewTokenNodeListPosition($2, $5),
                     CaseTkn:          $2,
                     Cond:             $3,
                     CaseSeparatorTkn: $4,
@@ -1869,9 +1643,7 @@ case_list:
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
                 $$ = append($1, &ast.StmtDefault{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($2, $4),
-                    },
+                    Position: position.NewTokenNodeListPosition($2, $4),
                     DefaultTkn:       $2,
                     CaseSeparatorTkn: $3,
                     Stmts:            $4,
@@ -1896,24 +1668,18 @@ while_statement:
         statement
             {
                 $$ = &ast.StmtWhile{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($1),
-                    },
+                    Position: position.NewNodePosition($1),
                     Stmt: $1,
                 }
             }
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
                 $$ = &ast.StmtWhile{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($2),
-                        },
+                        Position: position.NewNodeListPosition($2),
                         Stmts: $2,
                     },
                     EndWhileTkn:  $3,
@@ -1932,9 +1698,7 @@ elseif_list:
     |   elseif_list T_ELSEIF parenthesis_expr statement
             {
                 $$ = append($1, &ast.StmtElseIf{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($2, $4),
-                    },
+                    Position: position.NewTokenNodePosition($2, $4),
                     ElseIfTkn:           $2,
                     OpenParenthesisTkn:  $3.(*ast.ParserBrackets).OpenBracketTkn,
                     Cond:                $3.(*ast.ParserBrackets).Child,
@@ -1953,9 +1717,7 @@ new_elseif_list:
     |   new_elseif_list T_ELSEIF parenthesis_expr ':' inner_statement_list
             {
                 $$ = append($1, &ast.StmtElseIf{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($2, $5),
-                    },
+                    Position: position.NewTokenNodeListPosition($2, $5),
                     Alt:                 true,
                     ElseIfTkn:           $2,
                     OpenParenthesisTkn:  $3.(*ast.ParserBrackets).OpenBracketTkn,
@@ -1963,9 +1725,7 @@ new_elseif_list:
                     CloseParenthesisTkn: $3.(*ast.ParserBrackets).CloseBracketTkn,
                     ColonTkn:            $4,
                     Stmt: &ast.StmtStmtList{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($5),
-                        },
+                        Position: position.NewNodeListPosition($5),
                         Stmts: $5,
                     },
                 })
@@ -1981,9 +1741,7 @@ else_single:
     |   T_ELSE statement
             {
                 $$ = &ast.StmtElse{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     ElseTkn: $1,
                     Stmt:    $2,
                 }
@@ -1999,16 +1757,12 @@ new_else_single:
     |   T_ELSE ':' inner_statement_list
             {
                 $$ = &ast.StmtElse{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $3),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $3),
                     Alt:      true,
                     ElseTkn:  $1,
                     ColonTkn: $2,
                     Stmt: &ast.StmtStmtList{
-                        Node: ast.Node{
-                            Position: position.NewNodeListPosition($3),
-                        },
+                        Position: position.NewNodeListPosition($3),
                         Stmts: $3,
                     },
                 }
@@ -2056,20 +1810,14 @@ parameter:
                 }
 
                 $$ = &ast.Parameter{
-                    Node: ast.Node{
-                        Position: pos,
-                    },
+                    Position: pos,
                     Type:         $1,
                     AmpersandTkn: $2,
                     VariadicTkn:  $3,
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($4),
-                            },
+                            Position: position.NewTokenPosition($4),
                             IdentifierTkn: $4,
                             Value:         $4.Value,
                         },
@@ -2088,20 +1836,14 @@ parameter:
                 }
 
                 $$ = &ast.Parameter{
-                    Node: ast.Node{
-                        Position: pos,
-                    },
+                    Position: pos,
                     Type:         $1,
                     AmpersandTkn: $2,
                     VariadicTkn:  $3,
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($4),
-                            },
+                            Position: position.NewTokenPosition($4),
                             IdentifierTkn: $4,
                             Value:         $4.Value,
                         },
@@ -2121,9 +1863,7 @@ optional_class_type:
     |   T_ARRAY
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2131,9 +1871,7 @@ optional_class_type:
     |   T_CALLABLE
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2149,9 +1887,7 @@ function_call_parameter_list:
         '(' ')'
             {
                 $$ = &ast.ArgumentList{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $2),
-                    },
+                    Position: position.NewTokensPosition($1, $2),
                     OpenParenthesisTkn: $1,
                     CloseParenthesisTkn: $2,
                 }
@@ -2168,15 +1904,11 @@ function_call_parameter_list:
     |   '(' yield_expr ')'
             {
                 $$ = &ast.ArgumentList{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenParenthesisTkn: $1,
                     Arguments: []ast.Vertex{
                         &ast.Argument{
-                            Node: ast.Node{
-                                Position: position.NewNodePosition($2),
-                            },
+                            Position: position.NewNodePosition($2),
                             Expr: $2,
                         },
                     },
@@ -2206,27 +1938,21 @@ function_call_parameter:
         expr_without_variable
             {
                 $$ = &ast.Argument{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($1),
-                    },
+                    Position: position.NewNodePosition($1),
                     Expr: $1,
                 }
             }
     |   variable
             {
                 $$ = &ast.Argument{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($1),
-                    },
+                    Position: position.NewNodePosition($1),
                     Expr: $1,
                 }
             }
     |   '&' w_variable
             {
                 $$ = &ast.Argument{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     AmpersandTkn: $1,
                     Expr:         $2,
                 }
@@ -2234,9 +1960,7 @@ function_call_parameter:
     |   T_ELLIPSIS expr
             {
                 $$ = &ast.Argument{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     VariadicTkn: $1,
                     Expr:        $2,
                 }
@@ -2264,13 +1988,9 @@ global_var:
         T_VARIABLE
             {
                 $$ = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     VarName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -2279,9 +1999,7 @@ global_var:
     |   '$' r_variable
             {
                 $$ = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     DollarTkn: $1,
                     VarName:   $2,
                 }
@@ -2289,14 +2007,10 @@ global_var:
     |   '$' '{' expr '}'
             {
                 $$ = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     DollarTkn: $1,
                     VarName: &ast.ParserBrackets{
-                        Node: ast.Node{
-                            Position: position.NewTokensPosition($2, $4),
-                        },
+                        Position: position.NewTokensPosition($2, $4),
                         OpenBracketTkn:  $2,
                         Child:           $3,
                         CloseBracketTkn: $4,
@@ -2310,17 +2024,11 @@ static_var_list:
         static_var_list ',' T_VARIABLE
             {
                 $1.(*ast.StmtStatic).Vars = append($1.(*ast.StmtStatic).Vars, &ast.StmtStaticVar{
-                    Node: ast.Node{
-                        Position:  position.NewTokenPosition($3),
-                    },
+                    Position: position.NewTokenPosition($3),
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($3),
-                            },
+                            Position: position.NewTokenPosition($3),
                             IdentifierTkn: $3,
                             Value:         $3.Value,
                         },
@@ -2333,17 +2041,11 @@ static_var_list:
     |   static_var_list ',' T_VARIABLE '=' static_scalar
             {
                 $1.(*ast.StmtStatic).Vars = append($1.(*ast.StmtStatic).Vars, &ast.StmtStaticVar{
-                    Node: ast.Node{
-                        Position:  position.NewTokenNodePosition($3, $5),
-                    },
+                    Position: position.NewTokenNodePosition($3, $5),
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($3),
-                            },
+                            Position: position.NewTokenPosition($3),
                             IdentifierTkn: $3,
                             Value:         $3.Value,
                         },
@@ -2360,17 +2062,11 @@ static_var_list:
                 $$ = &ast.StmtStatic{
                     Vars: []ast.Vertex{
                         &ast.StmtStaticVar{
-                            Node: ast.Node{
-                                Position:  position.NewTokenPosition($1),
-                            },
+                            Position: position.NewTokenPosition($1),
                             Var: &ast.ExprVariable{
-                                Node: ast.Node{
-                                    Position: position.NewTokenPosition($1),
-                                },
+                                Position: position.NewTokenPosition($1),
                                 VarName: &ast.Identifier{
-                                    Node: ast.Node{
-                                        Position: position.NewTokenPosition($1),
-                                    },
+                                    Position: position.NewTokenPosition($1),
                                     IdentifierTkn: $1,
                                     Value:         $1.Value,
                                 },
@@ -2384,17 +2080,11 @@ static_var_list:
                 $$ = &ast.StmtStatic{
                     Vars: []ast.Vertex{
                         &ast.StmtStaticVar{
-                            Node: ast.Node{
-                                Position:  position.NewTokenNodePosition($1, $3),
-                            },
+                            Position: position.NewTokenNodePosition($1, $3),
                             Var: &ast.ExprVariable{
-                                Node: ast.Node{
-                                    Position: position.NewTokenPosition($1),
-                                },
+                                Position: position.NewTokenPosition($1),
                                 VarName: &ast.Identifier{
-                                    Node: ast.Node{
-                                        Position: position.NewTokenPosition($1),
-                                    },
+                                    Position: position.NewTokenPosition($1),
                                     IdentifierTkn: $1,
                                     Value:         $1.Value,
                                 },
@@ -2424,9 +2114,7 @@ class_statement:
         variable_modifiers class_variable_declaration ';'
             {
                 $$ = &ast.StmtPropertyList{
-                    Node: ast.Node{
-                        Position: position.NewNodeListTokenPosition($1, $3),
-                    },
+                    Position: position.NewNodeListTokenPosition($1, $3),
                     Modifiers:     $1,
                     Properties:    $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -2436,7 +2124,7 @@ class_statement:
     |   class_constant_declaration ';'
             {
                 $1.(*ast.StmtClassConstList).SemiColonTkn = $2
-                $1.(*ast.StmtClassConstList).Node.Position = position.NewNodeTokenPosition($1, $2)
+                $1.(*ast.StmtClassConstList).Position = position.NewNodeTokenPosition($1, $2)
                 $$ = $1
             }
     |   trait_use_statement
@@ -2447,20 +2135,16 @@ class_statement:
             {
                 pos := position.NewTokenNodePosition($2, $8)
                 if $1 != nil {
-                    $$.GetNode().Position = position.NewNodeListNodePosition($1, $8)
+                    pos = position.NewNodeListNodePosition($1, $8)
                 }
 
                 $$ = &ast.StmtClassMethod{
-                    Node: ast.Node{
-                        Position: pos,
-                    },
+                    Position: pos,
                     Modifiers:    $1,
                     FunctionTkn:  $2,
                     AmpersandTkn: $3,
                     MethodName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         IdentifierTkn: $4,
                         Value:         $4.Value,
                     },
@@ -2477,9 +2161,7 @@ trait_use_statement:
         T_USE trait_list trait_adaptations
             {
                 $$ = &ast.StmtTraitUse{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $3),
-                    },
+                    Position: position.NewTokenNodePosition($1, $3),
                     UseTkn:        $1,
                     Traits:        $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -2508,18 +2190,14 @@ trait_adaptations:
         ';'
             {
                 $$ = &ast.StmtNop{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     SemiColonTkn: $1,
                 }
             }
     |   '{' trait_adaptation_list '}'
             {
                 $$ = &ast.StmtTraitAdaptationList{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenParenthesisTkn:  $1,
                     Adaptations:         $2,
                     CloseParenthesisTkn: $3,
@@ -2568,9 +2246,7 @@ trait_precedence:
         trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list
             {
                 $$ = &ast.StmtTraitUsePrecedence{
-                    Node: ast.Node{
-                        Position: position.NewNodeNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewNodeNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     Ref:           $1,
                     InsteadofTkn:  $2,
                     Insteadof:     $3.(*ast.ParserSeparatedList).Items,
@@ -2599,13 +2275,9 @@ trait_method_reference:
         T_STRING
             {
                 $$ = &ast.StmtTraitMethodRef{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     Method: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -2621,15 +2293,11 @@ trait_method_reference_fully_qualified:
         fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
                 $$ = &ast.StmtTraitMethodRef{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $3),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $3),
                     Trait:          $1,
                     DoubleColonTkn: $2,
                     Method: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -2641,16 +2309,12 @@ trait_alias:
         trait_method_reference T_AS trait_modifiers T_STRING
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $4),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $4),
                     Ref:      $1,
                     AsTkn:    $2,
                     Modifier: $3,
                     Alias: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         IdentifierTkn: $4,
                         Value:         $4.Value,
                     },
@@ -2659,9 +2323,7 @@ trait_alias:
     |   trait_method_reference T_AS member_modifier
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Ref:      $1,
                     AsTkn:    $2,
                     Modifier: $3,
@@ -2684,18 +2346,14 @@ method_body:
         ';' /* abstract method */
             {
                 $$ = &ast.StmtNop{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     SemiColonTkn: $1,
                 }
             }
     |   '{' inner_statement_list '}'
             {
                 $$ = &ast.StmtStmtList{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenCurlyBracket:  $1,
                     Stmts:             $2,
                     CloseCurlyBracket: $3,
@@ -2712,9 +2370,7 @@ variable_modifiers:
             {
                 $$ = []ast.Vertex{
                     &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -2748,9 +2404,7 @@ member_modifier:
         T_PUBLIC
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2758,9 +2412,7 @@ member_modifier:
     |   T_PROTECTED
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2768,9 +2420,7 @@ member_modifier:
     |   T_PRIVATE
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2778,9 +2428,7 @@ member_modifier:
     |   T_STATIC
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2788,9 +2436,7 @@ member_modifier:
     |   T_ABSTRACT
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2798,9 +2444,7 @@ member_modifier:
     |   T_FINAL
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2811,17 +2455,11 @@ class_variable_declaration:
         class_variable_declaration ',' T_VARIABLE
             {
                 item := &ast.StmtProperty{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
-                    },
+                    Position: position.NewTokenPosition($3),
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($3),
-                            },
+                            Position: position.NewTokenPosition($3),
                             IdentifierTkn: $3,
                             Value:         $3.Value,
                         },
@@ -2836,17 +2474,11 @@ class_variable_declaration:
     |   class_variable_declaration ',' T_VARIABLE '=' static_scalar
             {
                 item := &ast.StmtProperty{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($3, $5),
-                    },
+                    Position: position.NewTokenNodePosition($3, $5),
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($3),
-                            },
+                            Position: position.NewTokenPosition($3),
                             IdentifierTkn: $3,
                             Value:         $3.Value,
                         },
@@ -2865,17 +2497,11 @@ class_variable_declaration:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.StmtProperty{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($1),
-                            },
+                            Position: position.NewTokenPosition($1),
                             Var: &ast.ExprVariable{
-                                Node: ast.Node{
-                                    Position: position.NewTokenPosition($1),
-                                },
+                                Position: position.NewTokenPosition($1),
                                 VarName: &ast.Identifier{
-                                    Node: ast.Node{
-                                        Position: position.NewTokenPosition($1),
-                                    },
+                                    Position: position.NewTokenPosition($1),
                                     IdentifierTkn: $1,
                                     Value:         $1.Value,
                                 },
@@ -2890,17 +2516,11 @@ class_variable_declaration:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.StmtProperty{
-                            Node: ast.Node{
-                                Position: position.NewTokenNodePosition($1, $3),
-                            },
+                            Position: position.NewTokenNodePosition($1, $3),
                             Var: &ast.ExprVariable{
-                                Node: ast.Node{
-                                    Position: position.NewTokenPosition($1),
-                                },
+                                Position: position.NewTokenPosition($1),
                                 VarName: &ast.Identifier{
-                                    Node: ast.Node{
-                                        Position: position.NewTokenPosition($1),
-                                    },
+                                    Position: position.NewTokenPosition($1),
                                     IdentifierTkn: $1,
                                     Value:         $1.Value,
                                 },
@@ -2917,16 +2537,12 @@ class_constant_declaration:
         class_constant_declaration ',' T_STRING '=' static_scalar
             {
                 constList := $1.(*ast.StmtClassConstList)
-                constList.Node.Position = position.NewNodesPosition($1, $5)
+                constList.Position = position.NewNodesPosition($1, $5)
                 constList.SeparatorTkns = append(constList.SeparatorTkns, $2)
                 constList.Consts = append(constList.Consts, &ast.StmtConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($3, $5),
-                    },
+                    Position: position.NewTokenNodePosition($3, $5),
                     Name: &ast.Identifier{
-                        Node:  ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -2939,19 +2555,13 @@ class_constant_declaration:
     |   T_CONST T_STRING '=' static_scalar
             {
                 $$ = &ast.StmtClassConstList{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $4),
-                    },
+                    Position: position.NewTokenNodePosition($1, $4),
                     ConstTkn: $1,
                     Consts: []ast.Vertex{
                         &ast.StmtConstant{
-                            Node: ast.Node{
-                                Position: position.NewTokenNodePosition($2, $4),
-                            },
+                            Position: position.NewTokenNodePosition($2, $4),
                             Name: &ast.Identifier{
-                                Node:  ast.Node{
-                                    Position: position.NewTokenPosition($2),
-                                },
+                                Position: position.NewTokenPosition($2),
                                 IdentifierTkn: $2,
                                 Value:         $2.Value,
                             },
@@ -3022,9 +2632,7 @@ chaining_dereference:
         chaining_dereference '[' dim_offset ']'
             {
                 fetch := &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
-                    },
+                    Position: position.NewTokensPosition($2, $4),
                     Var:             nil,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -3036,9 +2644,7 @@ chaining_dereference:
     |   '[' dim_offset ']'
             {
                 fetch := &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     Var:             nil,
                     OpenBracketTkn:  $1,
                     Dim:             $2,
@@ -3080,9 +2686,7 @@ new_expr:
             {
                 if $3 != nil {
                     $$ = &ast.ExprNew{
-                        Node: ast.Node{
-                            Position: position.NewTokenNodePosition($1, $3),
-                        },
+                        Position: position.NewTokenNodePosition($1, $3),
                         NewTkn:              $1,
                         Class:               $2,
                         OpenParenthesisTkn:  $3.(*ast.ArgumentList).OpenParenthesisTkn,
@@ -3092,9 +2696,7 @@ new_expr:
                     }
                 } else {
                     $$ = &ast.ExprNew{
-                        Node: ast.Node{
-                            Position: position.NewTokenNodePosition($1, $2),
-                        },
+                        Position: position.NewTokenNodePosition($1, $2),
                         Class: $2,
                     }
                 }
@@ -3105,13 +2707,9 @@ expr_without_variable:
         T_LIST '(' assignment_list ')' '=' expr
             {
                 $$ = &ast.ExprAssign{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $6),
-                    },
+                    Position: position.NewTokenNodePosition($1, $6),
                     Var: &ast.ExprList{
-                        Node: ast.Node{
-                            Position: position.NewTokensPosition($1, $4),
-                        },
+                        Position: position.NewTokensPosition($1, $4),
                         ListTkn:         $1,
                         OpenBracketTkn:  $2,
                         Items:           $3.(*ast.ParserSeparatedList).Items,
@@ -3125,9 +2723,7 @@ expr_without_variable:
     |   variable '=' expr
             {
                 $$ = &ast.ExprAssign{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3136,9 +2732,7 @@ expr_without_variable:
     |   variable '=' '&' variable
             {
                 $$ = &ast.ExprAssignReference{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $4),
-                    },
+                    Position: position.NewNodesPosition($1, $4),
                     Var:          $1,
                     EqualTkn:     $2,
                     AmpersandTkn: $3,
@@ -3150,9 +2744,7 @@ expr_without_variable:
                 var _new *ast.ExprNew
                 if $3 != nil {
                     _new = &ast.ExprNew{
-                        Node: ast.Node{
-                            Position: position.NewTokenNodePosition($4, $6),
-                        },
+                        Position: position.NewTokenNodePosition($4, $6),
                         NewTkn:              $4,
                         Class:               $5,
                         OpenParenthesisTkn:  $6.(*ast.ArgumentList).OpenParenthesisTkn,
@@ -3162,18 +2754,14 @@ expr_without_variable:
                     }
                 } else {
                     _new = &ast.ExprNew{
-                        Node: ast.Node{
-                            Position: position.NewTokenNodePosition($4, $5),
-                        },
+                        Position: position.NewTokenNodePosition($4, $5),
                         NewTkn: $4,
                         Class:  $5,
                     }
                 }
 
                 $$ = &ast.ExprAssignReference{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, _new),
-                    },
+                    Position: position.NewNodesPosition($1, _new),
                     Var:          $1,
                     EqualTkn:     $2,
                     AmpersandTkn: $3,
@@ -3183,9 +2771,7 @@ expr_without_variable:
     |   T_CLONE expr
             {
                 $$ = &ast.ExprClone{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     CloneTkn: $1,
                     Expr:     $2,
                 }
@@ -3193,9 +2779,7 @@ expr_without_variable:
     |   variable T_PLUS_EQUAL expr
             {
                 $$ = &ast.ExprAssignPlus{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3204,9 +2788,7 @@ expr_without_variable:
     |   variable T_MINUS_EQUAL expr
             {
                 $$ = &ast.ExprAssignMinus{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3215,9 +2797,7 @@ expr_without_variable:
     |   variable T_MUL_EQUAL expr
             {
                 $$ = &ast.ExprAssignMul{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3226,9 +2806,7 @@ expr_without_variable:
     |   variable T_POW_EQUAL expr
             {
                 $$ = &ast.ExprAssignPow{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3237,9 +2815,7 @@ expr_without_variable:
     |   variable T_DIV_EQUAL expr
             {
                 $$ = &ast.ExprAssignDiv{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3248,9 +2824,7 @@ expr_without_variable:
     |   variable T_CONCAT_EQUAL expr
             {
                 $$ = &ast.ExprAssignConcat{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3259,9 +2833,7 @@ expr_without_variable:
     |   variable T_MOD_EQUAL expr
             {
                 $$ = &ast.ExprAssignMod{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3270,9 +2842,7 @@ expr_without_variable:
     |   variable T_AND_EQUAL expr
             {
                 $$ = &ast.ExprAssignBitwiseAnd{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3281,9 +2851,7 @@ expr_without_variable:
     |   variable T_OR_EQUAL expr
             {
                 $$ = &ast.ExprAssignBitwiseOr{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3292,9 +2860,7 @@ expr_without_variable:
     |   variable T_XOR_EQUAL expr
             {
                 $$ = &ast.ExprAssignBitwiseXor{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3303,9 +2869,7 @@ expr_without_variable:
     |   variable T_SL_EQUAL expr
             {
                 $$ = &ast.ExprAssignShiftLeft{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3314,9 +2878,7 @@ expr_without_variable:
     |   variable T_SR_EQUAL expr
             {
                 $$ = &ast.ExprAssignShiftRight{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -3325,9 +2887,7 @@ expr_without_variable:
     |   rw_variable T_INC
             {
                 $$ = &ast.ExprPostInc{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $2),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $2),
                     Var:    $1,
                     IncTkn: $2,
                 }
@@ -3335,9 +2895,7 @@ expr_without_variable:
     |   T_INC rw_variable
             {
                 $$ = &ast.ExprPreInc{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     IncTkn: $1,
                     Var:    $2,
                 }
@@ -3345,9 +2903,7 @@ expr_without_variable:
     |   rw_variable T_DEC
             {
                 $$ = &ast.ExprPostDec{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $2),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $2),
                     Var:    $1,
                     DecTkn: $2,
                 }
@@ -3355,9 +2911,7 @@ expr_without_variable:
     |   T_DEC rw_variable
             {
                 $$ = &ast.ExprPreDec{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     DecTkn: $1,
                     Var:    $2,
                 }
@@ -3365,9 +2919,7 @@ expr_without_variable:
     |   expr T_BOOLEAN_OR expr
             {
                 $$ = &ast.ExprBinaryBooleanOr{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3376,9 +2928,7 @@ expr_without_variable:
     |   expr T_BOOLEAN_AND expr
             {
                 $$ = &ast.ExprBinaryBooleanAnd{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3387,9 +2937,7 @@ expr_without_variable:
     |   expr T_LOGICAL_OR expr
             {
                 $$ = &ast.ExprBinaryLogicalOr{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3398,9 +2946,7 @@ expr_without_variable:
     |   expr T_LOGICAL_AND expr
             {
                 $$ = &ast.ExprBinaryLogicalAnd{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3409,9 +2955,7 @@ expr_without_variable:
     |   expr T_LOGICAL_XOR expr
             {
                 $$ = &ast.ExprBinaryLogicalXor{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3420,9 +2964,7 @@ expr_without_variable:
     |   expr '|' expr
             {
                 $$ = &ast.ExprBinaryBitwiseOr{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3431,9 +2973,7 @@ expr_without_variable:
     |   expr '&' expr
             {
                 $$ = &ast.ExprBinaryBitwiseAnd{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3442,9 +2982,7 @@ expr_without_variable:
     |   expr '^' expr
             {
                 $$ = &ast.ExprBinaryBitwiseXor{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3453,9 +2991,7 @@ expr_without_variable:
     |   expr '.' expr
             {
                 $$ = &ast.ExprBinaryConcat{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3464,9 +3000,7 @@ expr_without_variable:
     |   expr '+' expr
             {
                 $$ = &ast.ExprBinaryPlus{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3475,9 +3009,7 @@ expr_without_variable:
     |   expr '-' expr
             {
                 $$ = &ast.ExprBinaryMinus{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3486,9 +3018,7 @@ expr_without_variable:
     |   expr '*' expr
             {
                 $$ = &ast.ExprBinaryMul{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3497,9 +3027,7 @@ expr_without_variable:
     |   expr T_POW expr
             {
                 $$ = &ast.ExprBinaryPow{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3508,9 +3036,7 @@ expr_without_variable:
     |   expr '/' expr
             {
                 $$ = &ast.ExprBinaryDiv{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3519,9 +3045,7 @@ expr_without_variable:
     |   expr '%' expr
             {
                 $$ = &ast.ExprBinaryMod{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3530,9 +3054,7 @@ expr_without_variable:
     |   expr T_SL expr
             {
                 $$ = &ast.ExprBinaryShiftLeft{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3541,9 +3063,7 @@ expr_without_variable:
     |   expr T_SR expr
             {
                 $$ = &ast.ExprBinaryShiftRight{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3552,9 +3072,7 @@ expr_without_variable:
     |   '+' expr %prec T_INC
             {
                 $$ = &ast.ExprUnaryPlus{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     PlusTkn: $1,
                     Expr:    $2,
                 }
@@ -3562,9 +3080,7 @@ expr_without_variable:
     |   '-' expr %prec T_INC
             {
                 $$ = &ast.ExprUnaryMinus{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     MinusTkn: $1,
                     Expr:     $2,
                 }
@@ -3572,9 +3088,7 @@ expr_without_variable:
     |   '!' expr
             {
                 $$ = &ast.ExprBooleanNot{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     ExclamationTkn: $1,
                     Expr:           $2,
                 }
@@ -3582,9 +3096,7 @@ expr_without_variable:
     |   '~' expr
             {
                 $$ = &ast.ExprBitwiseNot{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     TildaTkn: $1,
                     Expr:     $2,
                 }
@@ -3592,9 +3104,7 @@ expr_without_variable:
     |   expr T_IS_IDENTICAL expr
             {
                 $$ = &ast.ExprBinaryIdentical{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3603,9 +3113,7 @@ expr_without_variable:
     |   expr T_IS_NOT_IDENTICAL expr
             {
                 $$ = &ast.ExprBinaryNotIdentical{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3614,9 +3122,7 @@ expr_without_variable:
     |   expr T_IS_EQUAL expr
             {
                 $$ = &ast.ExprBinaryEqual{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3625,9 +3131,7 @@ expr_without_variable:
     |   expr T_IS_NOT_EQUAL expr
             {
                 $$ = &ast.ExprBinaryNotEqual{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3636,9 +3140,7 @@ expr_without_variable:
     |   expr '<' expr
             {
                 $$ = &ast.ExprBinarySmaller{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3647,9 +3149,7 @@ expr_without_variable:
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
                 $$ = &ast.ExprBinarySmallerOrEqual{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3658,9 +3158,7 @@ expr_without_variable:
     |   expr '>' expr
             {
                 $$ = &ast.ExprBinaryGreater{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3669,9 +3167,7 @@ expr_without_variable:
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
                 $$ = &ast.ExprBinaryGreaterOrEqual{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3680,9 +3176,7 @@ expr_without_variable:
     |   expr T_INSTANCEOF class_name_reference
             {
                 $$ = &ast.ExprInstanceOf{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Expr:          $1,
                     InstanceOfTkn: $2,
                     Class:         $3,
@@ -3699,9 +3193,7 @@ expr_without_variable:
     |   '(' new_expr ')' instance_call
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -3711,22 +3203,22 @@ expr_without_variable:
                     switch nn := n.(type) {
                         case *ast.ExprFunctionCall:
                             nn.Function = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprMethodCall:
                             nn.Var = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                     }
                 }
@@ -3734,9 +3226,7 @@ expr_without_variable:
     |   expr '?' expr ':' expr
             {
                 $$ = &ast.ExprTernary{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $5),
-                    },
+                    Position: position.NewNodesPosition($1, $5),
                     Condition:   $1,
                     QuestionTkn: $2,
                     IfTrue:      $3,
@@ -3747,9 +3237,7 @@ expr_without_variable:
     |   expr '?' ':' expr
             {
                 $$ = &ast.ExprTernary{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $4),
-                    },
+                    Position: position.NewNodesPosition($1, $4),
                     Condition:   $1,
                     QuestionTkn: $2,
                     ColonTkn:    $3,
@@ -3763,9 +3251,7 @@ expr_without_variable:
     |   T_INT_CAST expr
             {
                 $$ = &ast.ExprCastInt{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3773,9 +3259,7 @@ expr_without_variable:
     |   T_DOUBLE_CAST expr
             {
                 $$ = &ast.ExprCastDouble{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3783,9 +3267,7 @@ expr_without_variable:
     |   T_STRING_CAST expr
             {
                 $$ = &ast.ExprCastString{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3793,9 +3275,7 @@ expr_without_variable:
     |   T_ARRAY_CAST expr
             {
                 $$ = &ast.ExprCastArray{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3803,9 +3283,7 @@ expr_without_variable:
     |   T_OBJECT_CAST expr
             {
                 $$ = &ast.ExprCastObject{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3813,9 +3291,7 @@ expr_without_variable:
     |   T_BOOL_CAST expr
             {
                 $$ = &ast.ExprCastBool{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3823,9 +3299,7 @@ expr_without_variable:
     |   T_UNSET_CAST expr
             {
                 $$ = &ast.ExprCastUnset{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3837,9 +3311,9 @@ expr_without_variable:
                 }
 
                 if $2 == nil {
-                    exit.Node.Position = position.NewTokenPosition($1)
+                    exit.Position = position.NewTokenPosition($1)
                 } else {
-                    exit.Node.Position       = position.NewTokenNodePosition($1, $2)
+                    exit.Position       = position.NewTokenNodePosition($1, $2)
                     exit.OpenParenthesisTkn  = $2.(*ast.ParserBrackets).OpenBracketTkn
                     exit.Expr                = $2.(*ast.ParserBrackets).Child
                     exit.CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
@@ -3850,9 +3324,7 @@ expr_without_variable:
     |   '@' expr
             {
                 $$ = &ast.ExprErrorSuppress{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     AtTkn: $1,
                     Expr:  $2,
                 }
@@ -3872,9 +3344,7 @@ expr_without_variable:
     |   '`' backticks_expr '`'
             {
                 $$ = &ast.ExprShellExec{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBacktickTkn:  $1,
                     Parts:            $2,
                     CloseBacktickTkn: $3,
@@ -3883,9 +3353,7 @@ expr_without_variable:
     |   T_PRINT expr
             {
                 $$ = &ast.ExprPrint{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     PrintTkn: $1,
                     Expr:     $2,
                 }
@@ -3893,18 +3361,14 @@ expr_without_variable:
     |   T_YIELD
             {
                 $$ = &ast.ExprYield{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     YieldTkn: $1,
                 }
             }
     |   function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
                 $$ = &ast.ExprClosure{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $9),
-                    },
+                    Position: position.NewTokensPosition($1, $9),
                     FunctionTkn:          $1,
                     AmpersandTkn:         $2,
                     OpenParenthesisTkn:   $3,
@@ -3920,9 +3384,7 @@ expr_without_variable:
     |   T_STATIC function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
                 $$ = &ast.ExprClosure{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $10),
-                    },
+                    Position: position.NewTokensPosition($1, $10),
                     StaticTkn:            $1,
                     FunctionTkn:          $2,
                     AmpersandTkn:         $3,
@@ -3942,9 +3404,7 @@ yield_expr:
         T_YIELD expr_without_variable
             {
                 $$ = &ast.ExprYield{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     YieldTkn: $1,
                     Value:    $2,
                 }
@@ -3952,9 +3412,7 @@ yield_expr:
     |   T_YIELD variable
             {
                 $$ = &ast.ExprYield{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     YieldTkn: $1,
                     Value:    $2,
                 }
@@ -3962,9 +3420,7 @@ yield_expr:
     |   T_YIELD expr T_DOUBLE_ARROW expr_without_variable
             {
                 $$ = &ast.ExprYield{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $4),
-                    },
+                    Position: position.NewTokenNodePosition($1, $4),
                     YieldTkn:       $1,
                     Key:            $2,
                     DoubleArrowTkn: $3,
@@ -3974,9 +3430,7 @@ yield_expr:
     |   T_YIELD expr T_DOUBLE_ARROW variable
             {
                 $$ = &ast.ExprYield{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $4),
-                    },
+                    Position: position.NewTokenNodePosition($1, $4),
                     YieldTkn:       $1,
                     Key:            $2,
                     DoubleArrowTkn: $3,
@@ -3989,9 +3443,7 @@ combined_scalar_offset:
         combined_scalar '[' dim_offset ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $4),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -4001,9 +3453,7 @@ combined_scalar_offset:
     |   combined_scalar_offset '[' dim_offset ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $4),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -4013,13 +3463,9 @@ combined_scalar_offset:
     |   T_CONSTANT_ENCAPSED_STRING '[' dim_offset ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     Var: &ast.ScalarString{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         StringTkn: $1,
                         Value:     $1.Value,
                     },
@@ -4031,9 +3477,7 @@ combined_scalar_offset:
     |   general_constant '[' dim_offset ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $4),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -4046,9 +3490,7 @@ combined_scalar:
         T_ARRAY '(' array_pair_list ')'
             {
                 $$ = &ast.ExprArray{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     ArrayTkn:        $1,
                     OpenBracketTkn:  $2,
                     Items:           $3.(*ast.ParserSeparatedList).Items,
@@ -4059,9 +3501,7 @@ combined_scalar:
     |   '[' array_pair_list ']'
             {
                 $$ = &ast.ExprArray{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Items:           $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -4085,9 +3525,7 @@ lexical_vars:
     |   T_USE '(' lexical_var_list ')'
             {
                 $$ = &ast.ExprClosureUse{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     UseTkn:              $1,
                     OpenParenthesisTkn:  $2,
                     Uses:                $3.(*ast.ParserSeparatedList).Items,
@@ -4101,13 +3539,9 @@ lexical_var_list:
         lexical_var_list ',' T_VARIABLE
             {
                 variable := &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($3),
-                    },
+                    Position: position.NewTokenPosition($3),
                     VarName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -4121,18 +3555,12 @@ lexical_var_list:
     |   lexical_var_list ',' '&' T_VARIABLE
             {
                 reference := &ast.ExprReference{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($3, $4),
-                    },
+                    Position: position.NewTokensPosition($3, $4),
                     AmpersandTkn: $3,
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($4),
-                        },
+                        Position: position.NewTokenPosition($4),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($4),
-                            },
+                            Position: position.NewTokenPosition($4),
                             IdentifierTkn: $4,
                             Value:         $4.Value,
                         },
@@ -4149,13 +3577,9 @@ lexical_var_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprVariable{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($1),
-                            },
+                            Position: position.NewTokenPosition($1),
                             VarName: &ast.Identifier{
-                                Node: ast.Node{
-                                    Position: position.NewTokenPosition($1),
-                                },
+                                Position: position.NewTokenPosition($1),
                                 IdentifierTkn: $1,
                                 Value:         $1.Value,
                             },
@@ -4168,18 +3592,12 @@ lexical_var_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprReference{
-                            Node: ast.Node{
-                                Position: position.NewTokensPosition($1, $2),
-                            },
+                            Position: position.NewTokensPosition($1, $2),
                             AmpersandTkn: $1,
                             Var: &ast.ExprVariable{
-                                Node: ast.Node{
-                                    Position: position.NewTokenPosition($2),
-                                },
+                                Position: position.NewTokenPosition($2),
                                 VarName: &ast.Identifier{
-                                    Node: ast.Node{
-                                        Position: position.NewTokenPosition($2),
-                                    },
+                                    Position: position.NewTokenPosition($2),
                                     IdentifierTkn: $2,
                                     Value:         $2.Value,
                                 },
@@ -4194,13 +3612,9 @@ function_call:
         namespace_name function_call_parameter_list
             {
                 $$ = &ast.ExprFunctionCall{
-                    Node: ast.Node{
-                        Position: position.NewNodeListNodePosition($1.(*ast.ParserSeparatedList).Items, $2),
-                    },
+                    Position: position.NewNodeListNodePosition($1.(*ast.ParserSeparatedList).Items, $2),
                     Function: &ast.NameName{
-                        Node:  ast.Node{
-                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -4213,13 +3627,9 @@ function_call:
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name function_call_parameter_list
             {
                 $$ = &ast.ExprFunctionCall{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $4),
-                    },
+                    Position: position.NewTokenNodePosition($1, $4),
                     Function: &ast.NameRelative{
-                        Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                         NsTkn:          $1,
                         NsSeparatorTkn: $2,
                         Parts:          $3.(*ast.ParserSeparatedList).Items,
@@ -4234,13 +3644,9 @@ function_call:
     |   T_NS_SEPARATOR namespace_name function_call_parameter_list
             {
                 $$ = &ast.ExprFunctionCall{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $3),
-                    },
+                    Position: position.NewTokenNodePosition($1, $3),
                     Function: &ast.NameFullyQualified{
-                        Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                         NsSeparatorTkn: $1,
                         Parts:          $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -4254,9 +3660,7 @@ function_call:
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
                 $$ = &ast.ExprStaticCall{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $4),
-                    },
+                    Position: position.NewNodesPosition($1, $4),
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
@@ -4269,9 +3673,7 @@ function_call:
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
                 $$ = &ast.ExprStaticCall{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $4),
-                    },
+                    Position: position.NewNodesPosition($1, $4),
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
@@ -4284,9 +3686,7 @@ function_call:
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
                 $$ = &ast.ExprStaticCall{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $4),
-                    },
+                    Position: position.NewNodesPosition($1, $4),
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
@@ -4299,9 +3699,7 @@ function_call:
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
                 $$ = &ast.ExprStaticCall{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $4),
-                    },
+                    Position: position.NewNodesPosition($1, $4),
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
@@ -4314,9 +3712,7 @@ function_call:
     |   variable_without_objects function_call_parameter_list
             {
                 $$ = &ast.ExprFunctionCall{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $2),
-                    },
+                    Position: position.NewNodesPosition($1, $2),
                     Function:            $1,
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
@@ -4330,9 +3726,7 @@ class_name:
         T_STATIC
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -4340,9 +3734,7 @@ class_name:
     |   namespace_name
             {
                 $$ = &ast.NameName{
-                    Node:  ast.Node{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     Parts:         $1.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
@@ -4350,9 +3742,7 @@ class_name:
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameRelative{
-                    Node:  ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     NsTkn:          $1,
                     NsSeparatorTkn: $2,
                     Parts:          $3.(*ast.ParserSeparatedList).Items,
@@ -4362,9 +3752,7 @@ class_name:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameFullyQualified{
-                    Node:  ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
                     Parts:          $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -4376,9 +3764,7 @@ fully_qualified_class_name:
         namespace_name
             {
                 $$ = &ast.NameName{
-                    Node:  ast.Node{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     Parts:         $1.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
@@ -4386,9 +3772,7 @@ fully_qualified_class_name:
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameRelative{
-                    Node:  ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     NsTkn:          $1,
                     NsSeparatorTkn: $2,
                     Parts:          $3.(*ast.ParserSeparatedList).Items,
@@ -4398,9 +3782,7 @@ fully_qualified_class_name:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameFullyQualified{
-                    Node:  ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
                     Parts:          $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -4430,12 +3812,12 @@ dynamic_class_name_reference:
                     switch nn := n.(type) {
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            $$.GetNode().Position = position.NewNodesPosition($$, nn)
+                            *$$.GetPosition() = *position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            $$.GetNode().Position = position.NewNodesPosition($$, nn)
+                            *$$.GetPosition() = *position.NewNodesPosition($$, nn)
                             $$ = nn
                     }
                 }
@@ -4444,12 +3826,12 @@ dynamic_class_name_reference:
                     switch nn := n.(type) {
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            $$.GetNode().Position = position.NewNodesPosition($$, nn)
+                            *$$.GetPosition() = *position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            $$.GetNode().Position = position.NewNodesPosition($$, nn)
+                            *$$.GetPosition() = *position.NewNodesPosition($$, nn)
                             $$ = nn
                     }
                 }
@@ -4490,9 +3872,7 @@ exit_expr:
     |   '(' ')'
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $2),
-                    },
+                    Position: position.NewTokensPosition($1, $2),
                     OpenBracketTkn:  $1,
                     CloseBracketTkn: $2,
                 }
@@ -4512,9 +3892,7 @@ backticks_expr:
             {
                 $$ = []ast.Vertex{
                     &ast.ScalarEncapsedStringPart{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         EncapsedStrTkn: $1,
                         Value:          $1.Value,
                     },
@@ -4541,9 +3919,7 @@ common_scalar:
         T_LNUMBER
             {
                 $$ = &ast.ScalarLnumber{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     NumberTkn: $1,
                     Value:     $1.Value,
                 }
@@ -4551,9 +3927,7 @@ common_scalar:
     |   T_DNUMBER
             {
                 $$ = &ast.ScalarDnumber{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     NumberTkn: $1,
                     Value:     $1.Value,
                 }
@@ -4561,9 +3935,7 @@ common_scalar:
     |   T_CONSTANT_ENCAPSED_STRING
             {
                 $$ = &ast.ScalarString{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     StringTkn: $1,
                     Value:     $1.Value,
                 }
@@ -4571,9 +3943,7 @@ common_scalar:
     |   T_LINE
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -4581,9 +3951,7 @@ common_scalar:
     |   T_FILE
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -4591,9 +3959,7 @@ common_scalar:
     |   T_DIR
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -4601,9 +3967,7 @@ common_scalar:
     |   T_TRAIT_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -4611,9 +3975,7 @@ common_scalar:
     |   T_METHOD_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -4621,9 +3983,7 @@ common_scalar:
     |   T_FUNC_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -4631,9 +3991,7 @@ common_scalar:
     |   T_NS_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -4641,15 +3999,11 @@ common_scalar:
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
                 $$ = &ast.ScalarHeredoc{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenHeredocTkn: $1,
                     Parts: []ast.Vertex{
                         &ast.ScalarEncapsedStringPart{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($2),
-                            },
+                            Position: position.NewTokenPosition($2),
                             EncapsedStrTkn: $2,
                             Value:          $2.Value,
                         },
@@ -4660,9 +4014,7 @@ common_scalar:
     |   T_START_HEREDOC T_END_HEREDOC
             {
                 $$ = &ast.ScalarHeredoc{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $2),
-                    },
+                    Position: position.NewTokensPosition($1, $2),
                     OpenHeredocTkn:  $1,
                     CloseHeredocTkn: $2,
                 }
@@ -4673,15 +4025,11 @@ static_class_constant:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
                 $$ = &ast.ExprClassConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $3),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     ConstantName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -4708,13 +4056,9 @@ static_scalar_value:
     |   namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     Const: &ast.NameName{
-                        Node:  ast.Node{
-                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -4723,13 +4067,9 @@ static_scalar_value:
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     Const: &ast.NameRelative{
-                        Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                         NsTkn:          $1,
                         NsSeparatorTkn: $2,
                         Parts:          $3.(*ast.ParserSeparatedList).Items,
@@ -4740,13 +4080,9 @@ static_scalar_value:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     Const: &ast.NameFullyQualified{
-                        Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                         NsSeparatorTkn: $1,
                         Parts:          $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -4756,9 +4092,7 @@ static_scalar_value:
     |   T_ARRAY '(' static_array_pair_list ')'
             {
                 $$ = &ast.ExprArray{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     ArrayTkn:        $1,
                     OpenBracketTkn:  $2,
                     Items:           $3.(*ast.ParserSeparatedList).Items,
@@ -4769,9 +4103,7 @@ static_scalar_value:
     |   '[' static_array_pair_list ']'
             {
                 $$ = &ast.ExprArray{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Items:           $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -4785,9 +4117,7 @@ static_scalar_value:
     |   T_CLASS_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -4802,9 +4132,7 @@ static_operation:
         static_scalar_value '[' static_scalar_value ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $4),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -4814,9 +4142,7 @@ static_operation:
     |   static_scalar_value '+' static_scalar_value
             {
                 $$ = &ast.ExprBinaryPlus{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4825,9 +4151,7 @@ static_operation:
     |   static_scalar_value '-' static_scalar_value
             {
                 $$ = &ast.ExprBinaryMinus{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4836,9 +4160,7 @@ static_operation:
     |   static_scalar_value '*' static_scalar_value
             {
                 $$ = &ast.ExprBinaryMul{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4847,9 +4169,7 @@ static_operation:
     |   static_scalar_value T_POW static_scalar_value
             {
                 $$ = &ast.ExprBinaryPow{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4858,9 +4178,7 @@ static_operation:
     |   static_scalar_value '/' static_scalar_value
             {
                 $$ = &ast.ExprBinaryDiv{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4869,9 +4187,7 @@ static_operation:
     |   static_scalar_value '%' static_scalar_value
             {
                 $$ = &ast.ExprBinaryMod{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4880,9 +4196,7 @@ static_operation:
     |   '!' static_scalar_value
             {
                 $$ = &ast.ExprBooleanNot{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     ExclamationTkn: $1,
                     Expr:           $2,
                 }
@@ -4890,9 +4204,7 @@ static_operation:
     |   '~' static_scalar_value
             {
                 $$ = &ast.ExprBitwiseNot{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     TildaTkn: $1,
                     Expr:     $2,
                 }
@@ -4900,9 +4212,7 @@ static_operation:
     |   static_scalar_value '|' static_scalar_value
             {
                 $$ = &ast.ExprBinaryBitwiseOr{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4911,9 +4221,7 @@ static_operation:
     |   static_scalar_value '&' static_scalar_value
             {
                 $$ = &ast.ExprBinaryBitwiseAnd{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4922,9 +4230,7 @@ static_operation:
     |   static_scalar_value '^' static_scalar_value
             {
                 $$ = &ast.ExprBinaryBitwiseXor{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4933,9 +4239,7 @@ static_operation:
     |   static_scalar_value T_SL static_scalar_value
             {
                 $$ = &ast.ExprBinaryShiftLeft{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4944,9 +4248,7 @@ static_operation:
     |   static_scalar_value T_SR static_scalar_value
             {
                 $$ = &ast.ExprBinaryShiftRight{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4955,9 +4257,7 @@ static_operation:
     |   static_scalar_value '.' static_scalar_value
             {
                 $$ = &ast.ExprBinaryConcat{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4966,9 +4266,7 @@ static_operation:
     |   static_scalar_value T_LOGICAL_XOR static_scalar_value
             {
                 $$ = &ast.ExprBinaryLogicalXor{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4977,9 +4275,7 @@ static_operation:
     |   static_scalar_value T_LOGICAL_AND static_scalar_value
             {
                 $$ = &ast.ExprBinaryLogicalAnd{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4988,9 +4284,7 @@ static_operation:
     |   static_scalar_value T_LOGICAL_OR static_scalar_value
             {
                 $$ = &ast.ExprBinaryLogicalOr{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -4999,9 +4293,7 @@ static_operation:
     |   static_scalar_value T_BOOLEAN_AND static_scalar_value
             {
                 $$ = &ast.ExprBinaryBooleanAnd{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5010,9 +4302,7 @@ static_operation:
     |   static_scalar_value T_BOOLEAN_OR static_scalar_value
             {
                 $$ = &ast.ExprBinaryBooleanOr{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5021,9 +4311,7 @@ static_operation:
     |   static_scalar_value T_IS_IDENTICAL static_scalar_value
             {
                 $$ = &ast.ExprBinaryIdentical{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5032,9 +4320,7 @@ static_operation:
     |   static_scalar_value T_IS_NOT_IDENTICAL static_scalar_value
             {
                 $$ = &ast.ExprBinaryNotIdentical{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5043,9 +4329,7 @@ static_operation:
     |   static_scalar_value T_IS_EQUAL static_scalar_value
             {
                 $$ = &ast.ExprBinaryEqual{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5054,9 +4338,7 @@ static_operation:
     |   static_scalar_value T_IS_NOT_EQUAL static_scalar_value
             {
                 $$ = &ast.ExprBinaryNotEqual{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5065,9 +4347,7 @@ static_operation:
     |   static_scalar_value '<' static_scalar_value
             {
                 $$ = &ast.ExprBinarySmaller{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5076,9 +4356,7 @@ static_operation:
     |   static_scalar_value '>' static_scalar_value
             {
                 $$ = &ast.ExprBinaryGreater{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5087,9 +4365,7 @@ static_operation:
     |   static_scalar_value T_IS_SMALLER_OR_EQUAL static_scalar_value
             {
                 $$ = &ast.ExprBinarySmallerOrEqual{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5098,9 +4374,7 @@ static_operation:
     |   static_scalar_value T_IS_GREATER_OR_EQUAL static_scalar_value
             {
                 $$ = &ast.ExprBinaryGreaterOrEqual{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -5109,9 +4383,7 @@ static_operation:
     |   static_scalar_value '?' ':' static_scalar_value
             {
                 $$ = &ast.ExprTernary{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $4),
-                    },
+                    Position: position.NewNodesPosition($1, $4),
                     Condition:   $1,
                     QuestionTkn: $2,
                     ColonTkn:    $3,
@@ -5121,9 +4393,7 @@ static_operation:
     |   static_scalar_value '?' static_scalar_value ':' static_scalar_value
             {
                 $$ = &ast.ExprTernary{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $5),
-                    },
+                    Position: position.NewNodesPosition($1, $5),
                     Condition:   $1,
                     QuestionTkn: $2,
                     IfTrue:      $3,
@@ -5134,9 +4404,7 @@ static_operation:
     |   '+' static_scalar_value
             {
                 $$ = &ast.ExprUnaryPlus{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     PlusTkn: $1,
                     Expr:    $2,
                 }
@@ -5144,9 +4412,7 @@ static_operation:
     |   '-' static_scalar_value
             {
                 $$ = &ast.ExprUnaryMinus{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     MinusTkn: $1,
                     Expr:     $2,
                 }
@@ -5154,9 +4420,7 @@ static_operation:
     |   '(' static_scalar_value ')'
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -5172,13 +4436,9 @@ general_constant:
     |   namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     Const: &ast.NameName{
-                        Node:  ast.Node{
-                            Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -5187,13 +4447,9 @@ general_constant:
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     Const: &ast.NameRelative{
-                        Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                         NsTkn:          $1,
                         NsSeparatorTkn: $2,
                         Parts:          $3.(*ast.ParserSeparatedList).Items,
@@ -5204,13 +4460,9 @@ general_constant:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    },
+                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     Const: &ast.NameFullyQualified{
-                        Node:  ast.Node{
-                            Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                        },
+                        Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                         NsSeparatorTkn: $1,
                         Parts:          $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -5223,13 +4475,9 @@ scalar:
         T_STRING_VARNAME
             {
                 $$ = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     VarName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -5250,9 +4498,7 @@ scalar:
     |   '"' encaps_list '"'
             {
                 $$ = &ast.ScalarEncapsed{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenQoteTkn:  $1,
                     Parts:        $2,
                     CloseQoteTkn: $1,
@@ -5261,9 +4507,7 @@ scalar:
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
                 $$ = &ast.ScalarHeredoc{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenHeredocTkn:  $1,
                     Parts:           $2,
                     CloseHeredocTkn: $3,
@@ -5272,9 +4516,7 @@ scalar:
     |   T_CLASS_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -5312,9 +4554,7 @@ non_empty_static_array_pair_list:
         non_empty_static_array_pair_list ',' static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
                 arrayItem := &ast.ExprArrayItem{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($3, $5),
-                    },
+                    Position: position.NewNodesPosition($3, $5),
                     Key:            $3,
                     DoubleArrowTkn: $4,
                     Val:            $5,
@@ -5328,9 +4568,7 @@ non_empty_static_array_pair_list:
     |   non_empty_static_array_pair_list ',' static_scalar_value
             {
                 arrayItem := &ast.ExprArrayItem{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($3),
-                    },
+                    Position: position.NewNodePosition($3),
                     Val: $3,
                 }
 
@@ -5344,9 +4582,7 @@ non_empty_static_array_pair_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
-                            Node: ast.Node{
-                                Position: position.NewNodesPosition($1, $3),
-                            },
+                            Position: position.NewNodesPosition($1, $3),
                             Key:            $1,
                             DoubleArrowTkn: $2,
                             Val:            $3,
@@ -5359,9 +4595,7 @@ non_empty_static_array_pair_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
-                            Node: ast.Node{
-                                Position: position.NewNodePosition($1),
-                            },
+                            Position: position.NewNodePosition($1),
                             Val: $1,
                         },
                     },
@@ -5384,9 +4618,7 @@ parenthesis_expr:
         '(' expr ')'
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -5395,9 +4627,7 @@ parenthesis_expr:
     |   '(' yield_expr ')'
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -5441,9 +4671,7 @@ variable:
                         case *ast.ExprArrayDimFetch:
                             mc := $4[0].(*ast.ExprMethodCall)
                             $3 = append($3, &ast.ExprFunctionCall{
-                                    Node: ast.Node{
-                                        Position: position.NewNodePosition(mc),
-                                    },
+                                    Position: position.NewNodePosition(mc),
                                     OpenParenthesisTkn:  mc.OpenParenthesisTkn,
                                     Arguments:           mc.Arguments,
                                     SeparatorTkns:       mc.SeparatorTkns,
@@ -5462,22 +4690,22 @@ variable:
                     switch nn := n.(type) {
                         case *ast.ExprFunctionCall:
                             nn.Function = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprMethodCall:
                             nn.Var = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                     }
                 }
@@ -5486,22 +4714,22 @@ variable:
                     switch nn := n.(type) {
                         case *ast.ExprFunctionCall:
                             nn.Function = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprArrayDimFetch:
                             nn.Var = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprPropertyFetch:
                             nn.Var = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
 
                         case *ast.ExprMethodCall:
                             nn.Var = $$
-                            nn.Node.Position = position.NewNodesPosition($$, nn)
+                            nn.Position = position.NewNodesPosition($$, nn)
                             $$ = nn
                     }
                 }
@@ -5535,9 +4763,7 @@ variable_property:
                         case *ast.ExprArrayDimFetch:
                             mc := $3[0].(*ast.ExprMethodCall)
                             $2 = append($2, &ast.ExprFunctionCall{
-                                    Node: ast.Node{
-                                        Position: position.NewNodePosition(mc),
-                                    },
+                                    Position: position.NewNodePosition(mc),
                                     OpenParenthesisTkn:  mc.OpenParenthesisTkn,
                                     Arguments:           mc.Arguments,
                                     SeparatorTkns:       mc.SeparatorTkns,
@@ -5560,9 +4786,7 @@ array_method_dereference:
         array_method_dereference '[' dim_offset ']'
             {
                 fetch := &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
-                    },
+                    Position: position.NewTokensPosition($2, $4),
                     Var:             nil,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -5574,9 +4798,7 @@ array_method_dereference:
     |   method '[' dim_offset ']'
             {
                 fetch := &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
-                    },
+                    Position: position.NewTokensPosition($2, $4),
                     Var:             nil,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -5591,9 +4813,7 @@ method:
         function_call_parameter_list
             {
                 $$ = &ast.ExprMethodCall{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($1),
-                    },
+                    Position: position.NewNodePosition($1),
                     OpenParenthesisTkn:  $1.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $1.(*ast.ArgumentList).Arguments,
                     SeparatorTkns:       $1.(*ast.ArgumentList).SeparatorTkns,
@@ -5626,7 +4846,7 @@ variable_without_objects:
             {
                 for i := len($1)-1; i>=0; i-- {
                     $1[i].(*ast.ExprVariable).VarName = $2
-                    $1[i].(*ast.ExprVariable).Node.Position = position.NewNodesPosition($1[i], $2)
+                    $1[i].(*ast.ExprVariable).Position = position.NewNodesPosition($1[i], $2)
                     $2 = $1[i]
                 }
 
@@ -5638,9 +4858,7 @@ static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
                 $$ = &ast.ExprStaticPropertyFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     Property:       $3,
@@ -5649,9 +4867,7 @@ static_member:
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
                 $$ = &ast.ExprStaticPropertyFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($1, $3),
-                    },
+                    Position: position.NewNodesPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     Property:       $3,
@@ -5670,9 +4886,7 @@ array_function_dereference:
         array_function_dereference '[' dim_offset ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $4),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -5682,9 +4896,7 @@ array_function_dereference:
     |   function_call '[' dim_offset ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $4),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -5718,7 +4930,7 @@ base_variable:
             {
                 for i := len($1)-1; i>=0; i-- {
                     $1[i].(*ast.ExprVariable).VarName = $2
-                    $1[i].(*ast.ExprVariable).Node.Position = position.NewNodesPosition($1[i], $2)
+                    $1[i].(*ast.ExprVariable).Position = position.NewNodesPosition($1[i], $2)
                     $2 = $1[i]
                 }
 
@@ -5734,9 +4946,7 @@ reference_variable:
         reference_variable '[' dim_offset ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $4),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -5746,9 +4956,7 @@ reference_variable:
     |   reference_variable '{' expr '}'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $4),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -5766,13 +4974,9 @@ compound_variable:
         T_VARIABLE
             {
                 $$ = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     VarName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -5781,14 +4985,10 @@ compound_variable:
     |   '$' '{' expr '}'
             {
                 $$ = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     DollarTkn: $1,
                     VarName: &ast.ParserBrackets{
-                        Node: ast.Node{
-                            Position: position.NewTokensPosition($2, $4),
-                        },
+                        Position: position.NewTokensPosition($2, $4),
                         OpenBracketTkn:  $2,
                         Child:           $3,
                         CloseBracketTkn: $4,
@@ -5818,9 +5018,7 @@ object_property:
             {
                 $$ = []ast.Vertex{
                     &ast.ExprPropertyFetch{
-                        Node: ast.Node{
-                            Position: position.NewNodePosition($1),
-                        },
+                        Position: position.NewNodePosition($1),
                         Property: $1,
                     },
                 }
@@ -5831,9 +5029,7 @@ object_dim_list:
         object_dim_list '[' dim_offset ']'
             {
                 fetch := &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
-                    },
+                    Position: position.NewTokensPosition($2, $4),
                     Var:             nil,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -5845,9 +5041,7 @@ object_dim_list:
     |   object_dim_list '{' expr '}'
             {
                 fetch := &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($2, $4),
-                    },
+                    Position: position.NewTokensPosition($2, $4),
                     Var:             nil,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -5860,9 +5054,7 @@ object_dim_list:
             {
                 $$ = []ast.Vertex{
                     &ast.ExprPropertyFetch{
-                        Node: ast.Node{
-                            Position: position.NewNodePosition($1),
-                        },
+                        Position: position.NewNodePosition($1),
                         Property: $1,
                     },
                 }
@@ -5873,9 +5065,7 @@ variable_name:
         T_STRING
             {
                 $$ = &ast.Identifier{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -5883,9 +5073,7 @@ variable_name:
     |   '{' expr '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -5898,9 +5086,7 @@ simple_indirect_reference:
             {
                 $$ = []ast.Vertex{
                     &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         DollarTkn: $1,
                     },
                 }
@@ -5908,9 +5094,7 @@ simple_indirect_reference:
     |   simple_indirect_reference '$'
             {
                 $$ = append($1, &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($2),
-                    },
+                    Position: position.NewTokenPosition($2),
                     DollarTkn: $2,
                 })
             }
@@ -5937,9 +5121,7 @@ assignment_list_element:
         variable
             {
                 $$ = &ast.ExprArrayItem{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($1),
-                    },
+                    Position: position.NewNodePosition($1),
                     Val: $1,
                 }
             }
@@ -5953,13 +5135,9 @@ assignment_list_element:
                 }
 
                 $$ = &ast.ExprArrayItem{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     Val: &ast.ExprList{
-                        Node: ast.Node{
-                            Position: position.NewTokensPosition($1, $4),
-                        },
+                        Position: position.NewTokensPosition($1, $4),
                         ListTkn:         $1,
                         OpenBracketTkn:  $2,
                         Items:           $3.(*ast.ParserSeparatedList).Items,
@@ -5995,9 +5173,7 @@ non_empty_array_pair_list:
         non_empty_array_pair_list ',' expr T_DOUBLE_ARROW expr
             {
                 arrayItem := &ast.ExprArrayItem{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($3, $5),
-                    },
+                    Position: position.NewNodesPosition($3, $5),
                     Key:            $3,
                     DoubleArrowTkn: $4,
                     Val:            $5,
@@ -6011,9 +5187,7 @@ non_empty_array_pair_list:
     |   non_empty_array_pair_list ',' expr
             {
                 arrayItem := &ast.ExprArrayItem{
-                    Node: ast.Node{
-                        Position: position.NewNodePosition($3),
-                    },
+                    Position: position.NewNodePosition($3),
                     Val:            $3,
                 }
 
@@ -6027,9 +5201,7 @@ non_empty_array_pair_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
-                            Node: ast.Node{
-                                Position: position.NewNodesPosition($1, $3),
-                            },
+                            Position: position.NewNodesPosition($1, $3),
                             Key:            $1,
                             DoubleArrowTkn: $2,
                             Val:            $3,
@@ -6042,9 +5214,7 @@ non_empty_array_pair_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
-                            Node: ast.Node{
-                                Position: position.NewNodePosition($1),
-                            },
+                            Position: position.NewNodePosition($1),
                             Val: $1,
                         },
                     },
@@ -6053,15 +5223,11 @@ non_empty_array_pair_list:
     |   non_empty_array_pair_list ',' expr T_DOUBLE_ARROW '&' w_variable
             {
                 arrayItem := &ast.ExprArrayItem{
-                    Node: ast.Node{
-                        Position: position.NewNodesPosition($3, $6),
-                    },
+                    Position: position.NewNodesPosition($3, $6),
                     Key:            $3,
                     DoubleArrowTkn: $4,
                     Val: &ast.ExprReference{
-                        Node: ast.Node{
-                            Position: position.NewTokenNodePosition($5, $6),
-                        },
+                        Position: position.NewTokenNodePosition($5, $6),
                         AmpersandTkn: $5,
                         Var:          $6,
                     },
@@ -6075,13 +5241,9 @@ non_empty_array_pair_list:
     |   non_empty_array_pair_list ',' '&' w_variable
             {
                 arrayItem := &ast.ExprArrayItem{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($3, $4),
-                    },
+                    Position: position.NewTokenNodePosition($3, $4),
                     Val: &ast.ExprReference{
-                        Node: ast.Node{
-                            Position: position.NewTokenNodePosition($3, $4),
-                        },
+                        Position: position.NewTokenNodePosition($3, $4),
                         AmpersandTkn: $3,
                         Var:          $4,
                     },
@@ -6097,15 +5259,11 @@ non_empty_array_pair_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
-                            Node: ast.Node{
-                                Position: position.NewNodesPosition($1, $4),
-                            },
+                            Position: position.NewNodesPosition($1, $4),
                             Key:            $1,
                             DoubleArrowTkn: $2,
                             Val: &ast.ExprReference{
-                                Node: ast.Node{
-                                    Position: position.NewTokenNodePosition($3, $4),
-                                },
+                                Position: position.NewTokenNodePosition($3, $4),
                                 AmpersandTkn: $3,
                                 Var:          $4,
                             },
@@ -6118,13 +5276,9 @@ non_empty_array_pair_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
-                            Node: ast.Node{
-                                Position: position.NewTokenNodePosition($1, $2),
-                            },
+                            Position: position.NewTokenNodePosition($1, $2),
                             Val: &ast.ExprReference{
-                                Node: ast.Node{
-                                    Position: position.NewTokenNodePosition($1, $2),
-                                },
+                                Position: position.NewTokenNodePosition($1, $2),
                                 AmpersandTkn: $1,
                                 Var:          $2,
                             },
@@ -6144,9 +5298,7 @@ encaps_list:
                 $$ = append(
                     $1,
                     &ast.ScalarEncapsedStringPart{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($2),
-                        },
+                        Position: position.NewTokenPosition($2),
                         EncapsedStrTkn: $2,
                         Value:          $2.Value,
                     },
@@ -6160,9 +5312,7 @@ encaps_list:
             {
                 $$ = []ast.Vertex{
                     &ast.ScalarEncapsedStringPart{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         EncapsedStrTkn: $1,
                         Value:          $1.Value,
                     },
@@ -6175,13 +5325,9 @@ encaps_var:
         T_VARIABLE
             {
                 $$ = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     VarName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -6190,17 +5336,11 @@ encaps_var:
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($1),
-                            },
+                            Position: position.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
@@ -6213,26 +5353,18 @@ encaps_var:
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
                 $$ = &ast.ExprPropertyFetch{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     Var: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($1),
-                            },
+                            Position: position.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
                     },
                     ObjectOperatorTkn: $2,
                     Property: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -6241,14 +5373,10 @@ encaps_var:
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn: $1,
                     Child: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewNodePosition($2),
-                        },
+                        Position: position.NewNodePosition($2),
                         VarName: $2,
                     },
                     CloseBracketTkn: $3,
@@ -6257,18 +5385,12 @@ encaps_var:
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn: $1,
                     Child: &ast.ExprVariable{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($2),
-                        },
+                        Position: position.NewTokenPosition($2),
                         VarName: &ast.Identifier{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($2),
-                            },
+                            Position: position.NewTokenPosition($2),
                             IdentifierTkn: $2,
                             Value:         $2.Value,
                         },
@@ -6279,22 +5401,14 @@ encaps_var:
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $6),
-                    },
+                    Position: position.NewTokensPosition($1, $6),
                     OpenBracketTkn: $1,
                     Child: &ast.ExprArrayDimFetch{
-                        Node: ast.Node{
-                            Position: position.NewTokensPosition($2, $5),
-                        },
+                        Position: position.NewTokensPosition($2, $5),
                         Var: &ast.ExprVariable{
-                            Node: ast.Node{
-                                Position: position.NewTokenPosition($2),
-                            },
+                            Position: position.NewTokenPosition($2),
                             VarName: &ast.Identifier{
-                                Node: ast.Node{
-                                    Position: position.NewTokenPosition($2),
-                                },
+                                Position: position.NewTokenPosition($2),
                                 IdentifierTkn: $2,
                                 Value:         $2.Value,
                             },
@@ -6309,9 +5423,7 @@ encaps_var:
     |   T_CURLY_OPEN variable '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $3),
-                    },
+                    Position: position.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -6323,9 +5435,7 @@ encaps_var_offset:
         T_STRING
             {
                 $$ = &ast.ScalarString{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     StringTkn: $1,
                     Value:     $1.Value,
                 }
@@ -6335,17 +5445,13 @@ encaps_var_offset:
                 // TODO: add option to handle 64 bit integer
                 if _, err := strconv.Atoi(string($1.Value)); err == nil {
                     $$ = &ast.ScalarLnumber{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         NumberTkn: $1,
                         Value:     $1.Value,
                     }
                 } else {
                     $$ = &ast.ScalarString{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         StringTkn: $1,
                         Value:     $1.Value,
                     }
@@ -6354,13 +5460,9 @@ encaps_var_offset:
     |   T_VARIABLE
             {
                 $$ = &ast.ExprVariable{
-                    Node: ast.Node{
-                        Position: position.NewTokenPosition($1),
-                    },
+                    Position: position.NewTokenPosition($1),
                     VarName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($1),
-                        },
+                        Position: position.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -6372,9 +5474,7 @@ internal_functions_in_yacc:
         T_ISSET '(' isset_variables ')'
             {
                 $$ = &ast.ExprIsset{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     IssetTkn:            $1,
                     OpenParenthesisTkn:  $2,
                     Vars:                $3.(*ast.ParserSeparatedList).Items,
@@ -6385,9 +5485,7 @@ internal_functions_in_yacc:
     |   T_EMPTY '(' variable ')'
             {
                 $$ = &ast.ExprEmpty{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     EmptyTkn:            $1,
                     OpenParenthesisTkn:  $2,
                     Expr:                $3,
@@ -6397,9 +5495,7 @@ internal_functions_in_yacc:
     |   T_EMPTY '(' expr ')'
             {
                 $$ = &ast.ExprEmpty{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     EmptyTkn:            $1,
                     OpenParenthesisTkn:  $2,
                     Expr:                $3,
@@ -6409,9 +5505,7 @@ internal_functions_in_yacc:
     |   T_INCLUDE expr
             {
                 $$ = &ast.ExprInclude{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     IncludeTkn: $1,
                     Expr:       $2,
                 }
@@ -6419,9 +5513,7 @@ internal_functions_in_yacc:
     |   T_INCLUDE_ONCE expr
             {
                 $$ = &ast.ExprIncludeOnce{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     IncludeTkn: $1,
                     Expr:       $2,
                 }
@@ -6429,9 +5521,7 @@ internal_functions_in_yacc:
     |   T_EVAL '(' expr ')'
             {
                 $$ = &ast.ExprEval{
-                    Node: ast.Node{
-                        Position: position.NewTokensPosition($1, $4),
-                    },
+                    Position: position.NewTokensPosition($1, $4),
                     EvalTkn:             $1,
                     OpenParenthesisTkn:  $2,
                     Expr:                $3,
@@ -6441,9 +5531,7 @@ internal_functions_in_yacc:
     |   T_REQUIRE expr
             {
                 $$ = &ast.ExprRequire{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     RequireTkn: $1,
                     Expr:       $2,
                 }
@@ -6451,9 +5539,7 @@ internal_functions_in_yacc:
     |   T_REQUIRE_ONCE expr
             {
                 $$ = &ast.ExprRequireOnce{
-                    Node: ast.Node{
-                        Position: position.NewTokenNodePosition($1, $2),
-                    },
+                    Position: position.NewTokenNodePosition($1, $2),
                     RequireOnceTkn: $1,
                     Expr:           $2,
                 }
@@ -6491,15 +5577,11 @@ class_constant:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
                 $$ = &ast.ExprClassConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $3),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     ConstantName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -6508,15 +5590,11 @@ class_constant:
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
                 $$ = &ast.ExprClassConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $3),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     ConstantName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -6528,15 +5606,11 @@ static_class_name_scalar:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
             {
                 $$ = &ast.ExprClassConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $3),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     ConstantName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -6548,15 +5622,11 @@ class_name_scalar:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
             {
                 $$ = &ast.ExprClassConstFetch{
-                    Node: ast.Node{
-                        Position: position.NewNodeTokenPosition($1, $3),
-                    },
+                    Position: position.NewNodeTokenPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     ConstantName: &ast.Identifier{
-                        Node: ast.Node{
-                            Position: position.NewTokenPosition($3),
-                        },
+                        Position: position.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },

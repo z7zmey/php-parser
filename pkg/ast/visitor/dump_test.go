@@ -20,12 +20,6 @@ func ExampleDump() {
 					},
 				},
 			},
-			Position: &position.Position{
-				StartLine: 1,
-				EndLine:   1,
-				StartPos:  0,
-				EndPos:    1,
-			},
 		},
 		Stmts: []ast.Vertex{
 			&ast.Identifier{},

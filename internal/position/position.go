@@ -36,7 +36,7 @@ func getNodeStartPos(n ast.Vertex) startPos {
 		return startPos{-1, -1}
 	}
 
-	p := n.GetNode().Position
+	p := n.GetPosition()
 	if p != nil {
 		sl = p.StartLine
 		sp = p.StartPos
@@ -65,7 +65,7 @@ func getNodeEndPos(n ast.Vertex) endPos {
 		return endPos{-1, -1}
 	}
 
-	p := n.GetNode().Position
+	p := n.GetPosition()
 	if p != nil {
 		el = p.EndLine
 		ep = p.EndPos

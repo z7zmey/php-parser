@@ -1,8 +1,10 @@
 package ast
 
+import "github.com/z7zmey/php-parser/pkg/position"
+
 type Vertex interface {
 	Accept(v NodeVisitor)
-	GetNode() *Node
+	GetPosition() *position.Position
 }
 
 type Traverser interface {

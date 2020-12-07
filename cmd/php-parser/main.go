@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"io"
 	"io/ioutil"
@@ -21,7 +20,6 @@ import (
 	"github.com/z7zmey/php-parser/pkg/ast/visitor"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/parser"
-	"github.com/z7zmey/php-parser/pkg/printer"
 )
 
 var wg sync.WaitGroup
@@ -165,12 +163,12 @@ func printerWorker(r <-chan result) {
 		}
 
 		if *printBack {
-			o := bytes.NewBuffer([]byte{})
-			p := printer.NewPrinter(o)
-			p.Print(res.rootNode)
-
-			err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
-			checkErr(err)
+			//o := bytes.NewBuffer([]byte{})
+			//p := printer.NewPrinter(o)
+			//p.Print(res.rootNode)
+			//
+			//err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
+			//checkErr(err)
 		}
 
 		if *showResolvedNs {
