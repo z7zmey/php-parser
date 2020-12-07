@@ -113,9 +113,6 @@ func (v *Dump) printToken(key string, t *token.Token) {
 	v.printIndent(v.indent + 1)
 	v.print("Value:   []byte(" + strconv.Quote(string(t.Value)) + "),\n")
 
-	v.printIndent(v.indent + 1)
-	v.print("Skipped: []byte(" + strconv.Quote(string(t.Skipped)) + "),\n")
-
 	v.printIndent(v.indent)
 	v.print("},\n")
 }

@@ -386,8 +386,8 @@ func TestShebang(t *testing.T) {
 	tkn := lexer.Lex()
 	assert.Equal(t, tkn.ID, token.T_DNUMBER)
 
-	l := len(tkn.SkippedTokens)
-	for _, tt := range tkn.SkippedTokens[:l-1] {
+	l := len(tkn.FreeFloating)
+	for _, tt := range tkn.FreeFloating[:l-1] {
 		actual = append(actual, string(tt.Value))
 	}
 
@@ -404,7 +404,7 @@ func TestShebangHtml(t *testing.T) {
 
 	tkn := lexer.Lex()
 	assert.Equal(t, tkn.ID, token.T_INLINE_HTML)
-	assert.Equal(t, string(tkn.SkippedTokens[0].Value), "#!/usr/bin/env php\n")
+	assert.Equal(t, string(tkn.FreeFloating[0].Value), "#!/usr/bin/env php\n")
 
 	tkn = lexer.Lex()
 	assert.Equal(t, tkn.ID, token.T_DNUMBER)
@@ -1137,8 +1137,8 @@ func TestCommentEnd(t *testing.T) {
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1169,8 +1169,8 @@ func TestCommentNewLine(t *testing.T) {
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1201,8 +1201,8 @@ func TestCommentNewLine1(t *testing.T) {
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1233,8 +1233,8 @@ func TestCommentNewLine2(t *testing.T) {
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1266,8 +1266,8 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1299,8 +1299,8 @@ func TestInlineComment(t *testing.T) {
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1332,8 +1332,8 @@ func TestInlineComment2(t *testing.T) {
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1369,8 +1369,8 @@ func TestEmptyInlineComment(t *testing.T) {
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1402,8 +1402,8 @@ func TestEmptyInlineComment2(t *testing.T) {
 
 	tkn := lexer.Lex()
 
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1428,8 +1428,8 @@ func TestMethodCallTokens(t *testing.T) {
 		},
 	}
 	tkn := lexer.Lex()
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1442,8 +1442,8 @@ func TestMethodCallTokens(t *testing.T) {
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.SkippedTokens)
-	actual = tkn.SkippedTokens[:l-1]
+	l = len(tkn.FreeFloating)
+	actual = tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1456,8 +1456,8 @@ func TestMethodCallTokens(t *testing.T) {
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.SkippedTokens)
-	actual = tkn.SkippedTokens[:l-1]
+	l = len(tkn.FreeFloating)
+	actual = tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1470,8 +1470,8 @@ func TestMethodCallTokens(t *testing.T) {
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.SkippedTokens)
-	actual = tkn.SkippedTokens[:l-1]
+	l = len(tkn.FreeFloating)
+	actual = tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1484,8 +1484,8 @@ func TestMethodCallTokens(t *testing.T) {
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.SkippedTokens)
-	actual = tkn.SkippedTokens[:l-1]
+	l = len(tkn.FreeFloating)
+	actual = tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1498,8 +1498,8 @@ func TestMethodCallTokens(t *testing.T) {
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.SkippedTokens)
-	actual = tkn.SkippedTokens[:l-1]
+	l = len(tkn.FreeFloating)
+	actual = tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1512,8 +1512,8 @@ func TestMethodCallTokens(t *testing.T) {
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.SkippedTokens)
-	actual = tkn.SkippedTokens[:l-1]
+	l = len(tkn.FreeFloating)
+	actual = tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1537,8 +1537,8 @@ func TestYieldFromTokens(t *testing.T) {
 		},
 	}
 	tkn := lexer.Lex()
-	l := len(tkn.SkippedTokens)
-	actual := tkn.SkippedTokens[:l-1]
+	l := len(tkn.FreeFloating)
+	actual := tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}
@@ -1551,8 +1551,8 @@ func TestYieldFromTokens(t *testing.T) {
 		},
 	}
 	tkn = lexer.Lex()
-	l = len(tkn.SkippedTokens)
-	actual = tkn.SkippedTokens[:l-1]
+	l = len(tkn.FreeFloating)
+	actual = tkn.FreeFloating[:l-1]
 	for _, v := range actual {
 		v.Position = nil
 	}

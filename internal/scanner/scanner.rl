@@ -26,9 +26,6 @@ func (lex *Lexer) Lex() *token.Token {
 
     tkn := lex.tokenPool.Get()
 
-    lex.sts = -1
-    lex.ste = 0
-
     lblStart := 0
     lblEnd   := 0
 
@@ -127,7 +124,7 @@ func (lex *Lexer) Lex() *token.Token {
 
         main := |*
             "#!" any* :>> newline => {
-                lex.addSkippedToken(tkn, token.T_COMMENT, lex.ts, lex.te)
+                lex.addFreeFloatingToken(tkn, token.T_COMMENT, lex.ts, lex.te)
             };
             any => {
                 fnext html;
@@ -143,12 +140,12 @@ func (lex *Lexer) Lex() *token.Token {
                 fbreak;
             };
             '<?' => {
-                lex.addSkippedToken(tkn, token.T_OPEN_TAG, lex.ts, lex.te)
+                lex.addFreeFloatingToken(tkn, token.T_OPEN_TAG, lex.ts, lex.te)
                 fnext php;
             };
             '<?php'i ( [ \t] | newline ) => {
                 lex.ungetCnt(lex.te - lex.ts - 5)
-                lex.addSkippedToken(tkn, token.T_OPEN_TAG, lex.ts, lex.ts+5)
+                lex.addFreeFloatingToken(tkn, token.T_OPEN_TAG, lex.ts, lex.ts+5)
                 fnext php;
             };
             '<?='i => {
@@ -160,7 +157,7 @@ func (lex *Lexer) Lex() *token.Token {
         *|;
 
         php := |*
-            whitespace_line*                   => {lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line*                   => {lex.addFreeFloatingToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
             '?>' newline?                      => {lex.setTokenPosition(tkn); tok = token.ID(int(';')); fnext html; fbreak;};
             ';' whitespace_line* '?>' newline? => {lex.setTokenPosition(tkn); tok = token.ID(int(';')); fnext html; fbreak;};
 
@@ -320,7 +317,7 @@ func (lex *Lexer) Lex() *token.Token {
 
             ('#' | '//') any_line* when is_not_comment_end => {
                 lex.ungetStr("?>")
-                lex.addSkippedToken(tkn, token.T_COMMENT, lex.ts, lex.te)
+                lex.addFreeFloatingToken(tkn, token.T_COMMENT, lex.ts, lex.te)
             };
             '/*' any_line* :>> '*/' {
                 isDocComment := false;
@@ -329,9 +326,9 @@ func (lex *Lexer) Lex() *token.Token {
                 }
 
                 if isDocComment {
-                    lex.addSkippedToken(tkn, token.T_DOC_COMMENT, lex.ts, lex.te)
+                    lex.addFreeFloatingToken(tkn, token.T_DOC_COMMENT, lex.ts, lex.te)
                 } else {
-                    lex.addSkippedToken(tkn, token.T_COMMENT, lex.ts, lex.te)
+                    lex.addFreeFloatingToken(tkn, token.T_COMMENT, lex.ts, lex.te)
                 }
             };
 
@@ -378,7 +375,7 @@ func (lex *Lexer) Lex() *token.Token {
         *|;
 
         property := |*
-            whitespace_line* => {lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line* => {lex.addFreeFloatingToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
             "->"             => {lex.setTokenPosition(tkn); tok = token.T_OBJECT_OPERATOR; fbreak;};
             varname          => {lex.setTokenPosition(tkn); tok = token.T_STRING; fnext php; fbreak;};
             any              => {lex.ungetCnt(1); fgoto php;};
@@ -474,38 +471,32 @@ func (lex *Lexer) Lex() *token.Token {
         *|;
 
         halt_compiller_open_parenthesis := |*
-            whitespace_line* => {lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line* => {lex.addFreeFloatingToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
             "("              => {lex.setTokenPosition(tkn); tok = token.ID(int('(')); fnext halt_compiller_close_parenthesis; fbreak;};
             any              => {lex.ungetCnt(1); fnext php;};
         *|;
 
         halt_compiller_close_parenthesis := |*
-            whitespace_line* => {lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line* => {lex.addFreeFloatingToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
             ")"              => {lex.setTokenPosition(tkn); tok = token.ID(int(')')); fnext halt_compiller_close_semicolon; fbreak;};
             any              => {lex.ungetCnt(1); fnext php;};
         *|;
 
         halt_compiller_close_semicolon := |*
-            whitespace_line* => {lex.addSkippedToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
+            whitespace_line* => {lex.addFreeFloatingToken(tkn, token.T_WHITESPACE, lex.ts, lex.te)};
             ";"              => {lex.setTokenPosition(tkn); tok = token.ID(int(';')); fnext halt_compiller_end; fbreak;};
             any              => {lex.ungetCnt(1); fnext php;};
         *|;
 
         halt_compiller_end := |*
-            any_line* => { lex.addSkippedToken(tkn, token.T_HALT_COMPILER, lex.ts, lex.te); };
+            any_line* => { lex.addFreeFloatingToken(tkn, token.T_HALT_COMPILER, lex.ts, lex.te); };
         *|;
 
         write exec;
     }%%
 
-    if lex.sts == -1 {
-        lex.sts = 0
-    }
-
     tkn.Value = lex.data[lex.ts:lex.te]
     tkn.ID = token.ID(tok)
-    tkn.Skipped = lex.data[lex.sts:lex.ste]
-    lex.addSkippedToken(tkn, tok, lex.ts, lex.te);
 
     return tkn
 }

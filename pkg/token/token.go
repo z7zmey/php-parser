@@ -147,11 +147,10 @@ const (
 )
 
 type Token struct {
-	ID            ID
-	Value         []byte
-	Position      *position.Position
-	SkippedTokens []*Token
-	Skipped       []byte
+	ID           ID
+	Value        []byte
+	Position     *position.Position
+	FreeFloating []*Token
 }
 
 func (t *Token) GetPosition() *position.Position {

@@ -15,7 +15,6 @@ type Lexer struct {
 	phpVersion     string
 	errHandlerFunc func(*errors.Error)
 
-	sts, ste    int
 	p, pe, cs   int
 	ts, te, act int
 	stack       []int
@@ -57,26 +56,18 @@ func (lex *Lexer) setTokenPosition(token *token.Token) {
 	token.Position = pos
 }
 
-func (lex *Lexer) addSkippedToken(t *token.Token, id token.ID, ps, pe int) {
-	if lex.sts == -1 {
-		lex.sts = lex.ts
-	}
-
-	lex.ste = lex.te
-
-	// TODO remove after parser refactoring
-
+func (lex *Lexer) addFreeFloatingToken(t *token.Token, id token.ID, ps, pe int) {
 	skippedTkn := lex.tokenPool.Get()
 	skippedTkn.ID = id
 	skippedTkn.Value = lex.data[ps:pe]
 
 	lex.setTokenPosition(skippedTkn)
 
-	if t.SkippedTokens == nil {
-		t.SkippedTokens = make([]*token.Token, 0, 2)
+	if t.FreeFloating == nil {
+		t.FreeFloating = make([]*token.Token, 0, 2)
 	}
 
-	t.SkippedTokens = append(t.SkippedTokens, skippedTkn)
+	t.FreeFloating = append(t.FreeFloating, skippedTkn)
 }
 
 func (lex *Lexer) isNotStringVar() bool {
