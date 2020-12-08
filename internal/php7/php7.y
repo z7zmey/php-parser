@@ -4,7 +4,6 @@ package php7
 import (
     "strconv"
 
-    "github.com/z7zmey/php-parser/internal/position"
     "github.com/z7zmey/php-parser/pkg/ast"
     "github.com/z7zmey/php-parser/pkg/token"
 )
@@ -283,7 +282,7 @@ start:
         top_statement_list
             {
                 yylex.(*Parser).rootNode = &ast.Root{
-                    Position: position.NewNodeListPosition($1),
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1),
                     Stmts:  $1,
                     EndTkn: yylex.(*Parser).currentToken,
                 }
@@ -338,7 +337,7 @@ namespace_name:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.NameNamePart{
-                            Position: position.NewTokenPosition($1),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($1),
                             StringTkn: $1,
                             Value:     $1.Value,
                         },
@@ -348,7 +347,7 @@ namespace_name:
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
                 part := &ast.NameNamePart{
-                    Position: position.NewTokenPosition($3),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($3),
                     StringTkn:      $3,
                     Value:          $3.Value,
                 }
@@ -364,7 +363,7 @@ name:
         namespace_name
             {
                 $$ = &ast.NameName{
-                    Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     Parts:         $1.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
@@ -372,7 +371,7 @@ name:
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameRelative{
-                    Position: position.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     NsTkn:          $1,
                     NsSeparatorTkn: $2,
                     Parts:          $3.(*ast.ParserSeparatedList).Items,
@@ -382,7 +381,7 @@ name:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameFullyQualified{
-                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
                     Parts:          $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -419,7 +418,7 @@ top_statement:
     |   T_HALT_COMPILER '(' ')' ';'
             {
                 $$ = &ast.StmtHaltCompiler{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     HaltCompilerTkn:     $1,
                     OpenParenthesisTkn:  $2,
                     CloseParenthesisTkn: $3,
@@ -429,10 +428,10 @@ top_statement:
     |   T_NAMESPACE namespace_name ';'
             {
                 $$ = &ast.StmtNamespace{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     NsTkn: $1,
                     Name: &ast.NameName{
-                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -442,10 +441,10 @@ top_statement:
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
             {
                 $$ = &ast.StmtNamespace{
-                    Position: position.NewTokensPosition($1, $5),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $5),
                     NsTkn: $1,
                     Name: &ast.NameName{
-                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -457,7 +456,7 @@ top_statement:
     |   T_NAMESPACE '{' top_statement_list '}'
             {
                 $$ = &ast.StmtNamespace{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     NsTkn:             $1,
                     OpenCurlyBracket:  $2,
                     Stmts:             $3,
@@ -468,7 +467,7 @@ top_statement:
             {
                 use := $2.(*ast.StmtGroupUse)
 
-                use.Position = position.NewTokensPosition($1, $3)
+                use.Position = yylex.(*Parser).builder.NewTokensPosition($1, $3)
                 use.UseTkn        = $1
                 use.SemiColonTkn  = $3
 
@@ -478,7 +477,7 @@ top_statement:
             {
                 use := $3.(*ast.StmtGroupUse)
 
-                use.Position = position.NewTokensPosition($1, $4)
+                use.Position = yylex.(*Parser).builder.NewTokensPosition($1, $4)
                 use.UseTkn        = $1
                 use.Type          = $2
                 use.SemiColonTkn  = $4
@@ -488,7 +487,7 @@ top_statement:
     |   T_USE use_declarations ';'
             {
                 $$ = &ast.StmtUse{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     UseTkn:          $1,
                     UseDeclarations: $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -498,7 +497,7 @@ top_statement:
     |   T_USE use_type use_declarations ';'
             {
                 $$ = &ast.StmtUse{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     UseTkn:          $1,
                     Type:            $2,
                     UseDeclarations: $3.(*ast.ParserSeparatedList).Items,
@@ -509,7 +508,7 @@ top_statement:
     |   T_CONST const_list ';'
             {
                 $$ = &ast.StmtConstList{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     ConstTkn:      $1,
                     Consts:        $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -522,7 +521,7 @@ use_type:
         T_FUNCTION
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -530,7 +529,7 @@ use_type:
     |   T_CONST
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -543,9 +542,9 @@ group_use_declaration:
                 $4.(*ast.ParserSeparatedList).SeparatorTkns = append($4.(*ast.ParserSeparatedList).SeparatorTkns, $5)
 
                 $$ = &ast.StmtGroupUse{
-                    Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $6),
+                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $6),
                     Prefix: &ast.NameName{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -561,10 +560,10 @@ group_use_declaration:
                 $5.(*ast.ParserSeparatedList).SeparatorTkns = append($5.(*ast.ParserSeparatedList).SeparatorTkns, $6)
 
                 $$ = &ast.StmtGroupUse{
-                    Position: position.NewTokensPosition($1, $7),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $7),
                     LeadingNsSeparatorTkn: $1,
                     Prefix: &ast.NameName{
-                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -583,9 +582,9 @@ mixed_group_use_declaration:
                 $4.(*ast.ParserSeparatedList).SeparatorTkns = append($4.(*ast.ParserSeparatedList).SeparatorTkns, $5)
 
                 $$ = &ast.StmtGroupUse{
-                    Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $6),
+                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $6),
                     Prefix: &ast.NameName{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -601,10 +600,10 @@ mixed_group_use_declaration:
                 $5.(*ast.ParserSeparatedList).SeparatorTkns = append($5.(*ast.ParserSeparatedList).SeparatorTkns, $6)
 
                 $$ = &ast.StmtGroupUse{
-                    Position: position.NewTokensPosition($1, $7),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $7),
                     LeadingNsSeparatorTkn: $1,
                     Prefix: &ast.NameName{
-                        Position: position.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -685,7 +684,7 @@ inline_use_declaration:
             {
                 decl := $2.(*ast.StmtUseDeclaration)
                 decl.Type = $1
-                decl.Position = position.NewNodesPosition($1, $2)
+                decl.Position = yylex.(*Parser).builder.NewNodesPosition($1, $2)
 
                 $$ = $2
             }
@@ -695,9 +694,9 @@ unprefixed_use_declaration:
         namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                     Use: &ast.NameName{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
@@ -706,15 +705,15 @@ unprefixed_use_declaration:
     |   namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: position.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
+                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
                     Use: &ast.NameName{
-                        Position: position.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
                         Parts:         $1.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
-                        Position: position.NewTokenPosition($3),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -731,7 +730,7 @@ use_declaration:
             {
                 decl := $2.(*ast.StmtUseDeclaration)
                 decl.NsSeparatorTkn = $1
-                decl.Position = position.NewTokenNodePosition($1, $2)
+                decl.Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $2)
 
                 $$ = $2
             }
@@ -795,7 +794,7 @@ inner_statement:
     |   T_HALT_COMPILER '(' ')' ';'
             {
                 $$ = &ast.StmtHaltCompiler{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     HaltCompilerTkn:     $1,
                     OpenParenthesisTkn:  $2,
                     CloseParenthesisTkn: $3,
@@ -807,7 +806,7 @@ statement:
         '{' inner_statement_list '}'
             {
                 $$ = &ast.StmtStmtList{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenCurlyBracket:  $1,
                     Stmts:             $2,
                     CloseCurlyBracket: $3,
@@ -827,14 +826,14 @@ statement:
                 $5.(*ast.StmtWhile).OpenParenthesisTkn = $2
                 $5.(*ast.StmtWhile).Cond = $3
                 $5.(*ast.StmtWhile).CloseParenthesisTkn = $4
-                $5.(*ast.StmtWhile).Position = position.NewTokenNodePosition($1, $5)
+                $5.(*ast.StmtWhile).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $5)
 
                 $$ = $5
             }
     |   T_DO statement T_WHILE '(' expr ')' ';'
             {
                 $$ = &ast.StmtDo{
-                    Position: position.NewTokensPosition($1, $7),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $7),
                     DoTkn:               $1,
                     Stmt:                $2,
                     WhileTkn:            $3,
@@ -857,7 +856,7 @@ statement:
                 $9.(*ast.StmtFor).Loop = $7.(*ast.ParserSeparatedList).Items
                 $9.(*ast.StmtFor).LoopSeparatorTkns = $7.(*ast.ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).CloseParenthesisTkn = $8
-                $9.(*ast.StmtFor).Position = position.NewTokenNodePosition($1, $9)
+                $9.(*ast.StmtFor).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $9)
 
                 $$ = $9
             }
@@ -867,14 +866,14 @@ statement:
                 $5.(*ast.StmtSwitch).OpenParenthesisTkn = $2
                 $5.(*ast.StmtSwitch).Cond = $3
                 $5.(*ast.StmtSwitch).CloseParenthesisTkn = $4
-                $5.(*ast.StmtSwitch).Position = position.NewTokenNodePosition($1, $5)
+                $5.(*ast.StmtSwitch).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $5)
 
                 $$ = $5
             }
     |   T_BREAK optional_expr ';'
             {
                 $$ = &ast.StmtBreak{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     BreakTkn:     $1,
                     Expr:         $2,
                     SemiColonTkn: $3,
@@ -883,7 +882,7 @@ statement:
     |   T_CONTINUE optional_expr ';'
             {
                 $$ = &ast.StmtContinue{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     ContinueTkn:  $1,
                     Expr:         $2,
                     SemiColonTkn: $3,
@@ -892,7 +891,7 @@ statement:
     |   T_RETURN optional_expr ';'
             {
                 $$ = &ast.StmtReturn{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     ReturnTkn:    $1,
                     Expr:         $2,
                     SemiColonTkn: $3,
@@ -902,7 +901,7 @@ statement:
             {
                 $2.(*ast.StmtGlobal).GlobalTkn = $1
                 $2.(*ast.StmtGlobal).SemiColonTkn = $3
-                $2.(*ast.StmtGlobal).Position = position.NewTokensPosition($1, $3)
+                $2.(*ast.StmtGlobal).Position = yylex.(*Parser).builder.NewTokensPosition($1, $3)
 
                 $$ = $2
             }
@@ -910,7 +909,7 @@ statement:
             {
                 $2.(*ast.StmtStatic).StaticTkn = $1
                 $2.(*ast.StmtStatic).SemiColonTkn = $3
-                $2.(*ast.StmtStatic).Position = position.NewTokensPosition($1, $3)
+                $2.(*ast.StmtStatic).Position = yylex.(*Parser).builder.NewTokensPosition($1, $3)
 
                 $$ = $2
             }
@@ -918,14 +917,14 @@ statement:
             {
                 $2.(*ast.StmtEcho).EchoTkn = $1
                 $2.(*ast.StmtEcho).SemiColonTkn = $3
-                $2.(*ast.StmtEcho).Position = position.NewTokensPosition($1, $3)
+                $2.(*ast.StmtEcho).Position = yylex.(*Parser).builder.NewTokensPosition($1, $3)
 
                 $$ = $2
             }
     |   T_INLINE_HTML
             {
                 $$ = &ast.StmtInlineHtml{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     InlineHtmlTkn: $1,
                     Value:         $1.Value,
                 }
@@ -933,7 +932,7 @@ statement:
     |   expr ';'
             {
                 $$ = &ast.StmtExpression{
-                    Position: position.NewNodeTokenPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $2),
                     Expr:         $1,
                     SemiColonTkn: $2,
                 }
@@ -945,7 +944,7 @@ statement:
                 $3.(*ast.StmtUnset).SeparatorTkns = append($3.(*ast.StmtUnset).SeparatorTkns, $4)
                 $3.(*ast.StmtUnset).CloseParenthesisTkn = $5
                 $3.(*ast.StmtUnset).SemiColonTkn = $6
-                $3.(*ast.StmtUnset).Position = position.NewTokensPosition($1, $6)
+                $3.(*ast.StmtUnset).Position = yylex.(*Parser).builder.NewTokensPosition($1, $6)
 
                 $$ = $3
             }
@@ -957,7 +956,7 @@ statement:
                 $7.(*ast.StmtForeach).AsTkn = $4
                 $7.(*ast.StmtForeach).Var = $5
                 $7.(*ast.StmtForeach).CloseParenthesisTkn = $6
-                $7.(*ast.StmtForeach).Position = position.NewTokenNodePosition($1, $7)
+                $7.(*ast.StmtForeach).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $7)
 
                 $$ = $7
             }
@@ -971,7 +970,7 @@ statement:
                 $9.(*ast.StmtForeach).DoubleArrowTkn = $6
                 $9.(*ast.StmtForeach).Var = $7
                 $9.(*ast.StmtForeach).CloseParenthesisTkn = $8
-                $9.(*ast.StmtForeach).Position = position.NewTokenNodePosition($1, $9)
+                $9.(*ast.StmtForeach).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $9)
 
                 $$ = $9
             }
@@ -982,22 +981,22 @@ statement:
                 $5.(*ast.StmtDeclare).Consts = $3.(*ast.ParserSeparatedList).Items
                 $5.(*ast.StmtDeclare).SeparatorTkns = $3.(*ast.ParserSeparatedList).SeparatorTkns
                 $5.(*ast.StmtDeclare).CloseParenthesisTkn = $4
-                $5.(*ast.StmtDeclare).Position = position.NewTokenNodePosition($1, $5)
+                $5.(*ast.StmtDeclare).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $5)
 
                 $$ = $5
             }
     |   ';'
             {
                 $$ = &ast.StmtNop{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     SemiColonTkn: $1,
                 }
             }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
-                pos := position.NewTokenNodeListPosition($1, $5)
+                pos := yylex.(*Parser).builder.NewTokenNodeListPosition($1, $5)
                 if $6 != nil {
-                    pos = position.NewTokenNodePosition($1, $6)
+                    pos = yylex.(*Parser).builder.NewTokenNodePosition($1, $6)
                 }
 
                 $$ = &ast.StmtTry{
@@ -1013,7 +1012,7 @@ statement:
     |   T_THROW expr ';'
             {
                 $$ = &ast.StmtThrow{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     ThrowTkn:     $1,
                     Expr:         $2,
                     SemiColonTkn: $3,
@@ -1022,10 +1021,10 @@ statement:
     |   T_GOTO T_STRING ';'
             {
                 $$ = &ast.StmtGoto{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     GotoTkn: $1,
                     Label: &ast.Identifier{
-                        Position: position.NewTokenPosition($2),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($2),
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
@@ -1035,9 +1034,9 @@ statement:
     |   T_STRING ':'
             {
                 $$ = &ast.StmtLabel{
-                    Position: position.NewTokensPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                     LabelName: &ast.Identifier{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -1056,9 +1055,9 @@ catch_list:
                 catch.CatchTkn = $2
                 catch.OpenParenthesisTkn = $3
                 catch.Var = &ast.ExprVariable{
-                    Position: position.NewTokenPosition($5),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($5),
                     VarName: &ast.Identifier{
-                        Position: position.NewTokenPosition($5),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($5),
                         IdentifierTkn: $5,
                         Value:         $5.Value,
                     },
@@ -1067,7 +1066,7 @@ catch_list:
                 catch.OpenCurlyBracketTkn = $7
                 catch.Stmts = $8
                 catch.CloseCurlyBracketTkn = $9
-                catch.Position = position.NewTokensPosition($2, $9)
+                catch.Position = yylex.(*Parser).builder.NewTokensPosition($2, $9)
 
                 $$ = append($1, catch)
             }
@@ -1096,7 +1095,7 @@ finally_statement:
     |   T_FINALLY '{' inner_statement_list '}'
             {
                 $$ = &ast.StmtFinally{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     FinallyTkn:           $1,
                     OpenCurlyBracketTkn:  $2,
                     Stmts:                $3,
@@ -1132,11 +1131,11 @@ function_declaration_statement:
         T_FUNCTION returns_ref T_STRING backup_doc_comment '(' parameter_list ')' return_type '{' inner_statement_list '}'
             {
                 $$ = &ast.StmtFunction{
-                    Position: position.NewTokensPosition($1, $11),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $11),
                     FunctionTkn:  $1,
                     AmpersandTkn: $2,
                     FunctionName: &ast.Identifier{
-                        Position: position.NewTokenPosition($3),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -1179,11 +1178,11 @@ class_declaration_statement:
     class_modifiers T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
                 $$ = &ast.StmtClass{
-                    Position: position.NewOptionalListTokensPosition($1, $2, $9),
+                    Position: yylex.(*Parser).builder.NewOptionalListTokensPosition($1, $2, $9),
                     Modifiers: $1,
                     ClassTkn:  $2,
                     ClassName: &ast.Identifier{
-                        Position: position.NewTokenPosition($3),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -1197,10 +1196,10 @@ class_declaration_statement:
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
                 $$ = &ast.StmtClass{
-                    Position: position.NewTokensPosition($1, $8),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $8),
                     ClassTkn: $1,
                     ClassName: &ast.Identifier{
-                        Position: position.NewTokenPosition($2),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($2),
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
@@ -1228,7 +1227,7 @@ class_modifier:
         T_ABSTRACT
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -1236,7 +1235,7 @@ class_modifier:
     |   T_FINAL
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -1247,10 +1246,10 @@ trait_declaration_statement:
         T_TRAIT T_STRING backup_doc_comment '{' class_statement_list '}'
             {
                 $$ = &ast.StmtTrait{
-                    Position: position.NewTokensPosition($1, $6),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $6),
                     TraitTkn: $1,
                     TraitName: &ast.Identifier{
-                        Position: position.NewTokenPosition($2),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($2),
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
@@ -1265,10 +1264,10 @@ interface_declaration_statement:
         T_INTERFACE T_STRING interface_extends_list backup_doc_comment '{' class_statement_list '}'
             {
                 $$ = &ast.StmtInterface{
-                    Position: position.NewTokensPosition($1, $7),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $7),
                     InterfaceTkn: $1,
                     InterfaceName: &ast.Identifier{
-                        Position: position.NewTokenPosition($2),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($2),
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
@@ -1288,7 +1287,7 @@ extends_from:
     |   T_EXTENDS name
             {
                 $$ = &ast.StmtClassExtends{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     ExtendTkn: $1,
                     ClassName: $2,
                 }
@@ -1303,7 +1302,7 @@ interface_extends_list:
     |   T_EXTENDS name_list
             {
                 $$ = &ast.StmtInterfaceExtends{
-                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     ExtendsTkn:     $1,
                     InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -1319,7 +1318,7 @@ implements_list:
     |   T_IMPLEMENTS name_list
             {
                 $$ = &ast.StmtClassImplements{
-                    Position: position.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
                     ImplementsTkn:  $1,
                     InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -1335,7 +1334,7 @@ foreach_variable:
     |   '&' variable
             {
                 $$ = &ast.ExprReference{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     AmpersandTkn: $1,
                     Var:          $2,
                 }
@@ -1343,7 +1342,7 @@ foreach_variable:
     |   T_LIST '(' array_pair_list ')'
             {
                 $$ = &ast.ExprList{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     ListTkn:         $1,
                     OpenBracketTkn:  $2,
                     Items:           $3.(*ast.ParserSeparatedList).Items,
@@ -1354,7 +1353,7 @@ foreach_variable:
     |   '[' array_pair_list ']'
             {
                 $$ = &ast.ExprList{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Items:           $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -1367,18 +1366,18 @@ for_statement:
         statement
             {
                 $$ = &ast.StmtFor{
-                    Position: position.NewNodePosition($1),
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
                     Stmt: $1,
                 }
             }
     |   ':' inner_statement_list T_ENDFOR ';'
             {
                 $$ = &ast.StmtFor{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
-                        Position: position.NewNodeListPosition($2),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2),
                         Stmts: $2,
                     },
                     EndForTkn:    $3,
@@ -1391,18 +1390,18 @@ foreach_statement:
         statement
             {
                 $$ = &ast.StmtForeach{
-                    Position: position.NewNodePosition($1),
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
                     Stmt: $1,
                 }
             }
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
                 $$ = &ast.StmtForeach{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
-                        Position: position.NewNodeListPosition($2),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2),
                         Stmts: $2,
                     },
                     EndForeachTkn: $3,
@@ -1415,18 +1414,18 @@ declare_statement:
         statement
             {
                 $$ = &ast.StmtDeclare{
-                    Position: position.NewNodePosition($1),
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
                     Stmt: $1,
                 }
             }
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
                 $$ = &ast.StmtDeclare{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
-                        Position: position.NewNodeListPosition($2),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2),
                         Stmts: $2,
                     },
                     EndDeclareTkn: $3,
@@ -1439,7 +1438,7 @@ switch_case_list:
         '{' case_list '}'
             {
                 $$ = &ast.StmtSwitch{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenCurlyBracketTkn:  $1,
                     CaseList:             $2,
                     CloseCurlyBracketTkn: $3,
@@ -1448,7 +1447,7 @@ switch_case_list:
     |   '{' ';' case_list '}'
             {
                 $$ = &ast.StmtSwitch{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     OpenCurlyBracketTkn:  $1,
                     CaseSeparatorTkn:     $2,
                     CaseList:             $3,
@@ -1458,7 +1457,7 @@ switch_case_list:
     |   ':' case_list T_ENDSWITCH ';'
             {
                 $$ = &ast.StmtSwitch{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     Alt:          true,
                     ColonTkn:     $1,
                     CaseList:     $2,
@@ -1469,7 +1468,7 @@ switch_case_list:
     |   ':' ';' case_list T_ENDSWITCH ';'
             {
                 $$ = &ast.StmtSwitch{
-                    Position: position.NewTokensPosition($1, $5),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $5),
                     Alt:              true,
                     ColonTkn:         $1,
                     CaseSeparatorTkn: $2,
@@ -1488,7 +1487,7 @@ case_list:
     |   case_list T_CASE expr case_separator inner_statement_list
             {
                 $$ = append($1, &ast.StmtCase{
-                    Position: position.NewTokenNodeListPosition($2, $5),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($2, $5),
                     CaseTkn:          $2,
                     Cond:             $3,
                     CaseSeparatorTkn: $4,
@@ -1498,7 +1497,7 @@ case_list:
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
                 $$ = append($1, &ast.StmtDefault{
-                    Position: position.NewTokenNodeListPosition($2, $4),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($2, $4),
                     DefaultTkn:       $2,
                     CaseSeparatorTkn: $3,
                     Stmts:            $4,
@@ -1521,18 +1520,18 @@ while_statement:
         statement
             {
                 $$ = &ast.StmtWhile{
-                    Position: position.NewNodePosition($1),
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
                     Stmt: $1,
                 }
             }
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
                 $$ = &ast.StmtWhile{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
-                        Position: position.NewNodeListPosition($2),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2),
                         Stmts: $2,
                     },
                     EndWhileTkn:  $3,
@@ -1545,7 +1544,7 @@ if_stmt_without_else:
         T_IF '(' expr ')' statement
             {
                 $$ = &ast.StmtIf{
-                    Position: position.NewTokenNodePosition($1, $5),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $5),
                     IfTkn:               $1,
                     OpenParenthesisTkn:  $2,
                     Cond:                $3,
@@ -1556,7 +1555,7 @@ if_stmt_without_else:
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             {
                 $1.(*ast.StmtIf).ElseIf = append($1.(*ast.StmtIf).ElseIf, &ast.StmtElseIf{
-                    Position: position.NewTokenNodePosition($2, $6),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($2, $6),
                     ElseIfTkn:           $2,
                     OpenParenthesisTkn:  $3,
                     Cond:                $4,
@@ -1564,7 +1563,7 @@ if_stmt_without_else:
                     Stmt:                $6,
                 })
 
-                $1.(*ast.StmtIf).Position = position.NewNodesPosition($1, $6)
+                $1.(*ast.StmtIf).Position = yylex.(*Parser).builder.NewNodesPosition($1, $6)
 
                 $$ = $1
             }
@@ -1578,12 +1577,12 @@ if_stmt:
     |   if_stmt_without_else T_ELSE statement
             {
                 $1.(*ast.StmtIf).Else = &ast.StmtElse{
-                    Position: position.NewTokenNodePosition($2, $3),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($2, $3),
                     ElseTkn: $2,
                     Stmt:    $3,
                 }
 
-                $1.(*ast.StmtIf).Position = position.NewNodesPosition($1, $3)
+                $1.(*ast.StmtIf).Position = yylex.(*Parser).builder.NewNodesPosition($1, $3)
 
                 $$ = $1
             }
@@ -1593,7 +1592,7 @@ alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             {
                 $$ = &ast.StmtIf{
-                    Position: position.NewTokenNodeListPosition($1, $6),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $6),
                     Alt:                 true,
                     IfTkn:               $1,
                     OpenParenthesisTkn:  $2,
@@ -1601,7 +1600,7 @@ alt_if_stmt_without_else:
                     CloseParenthesisTkn: $4,
                     ColonTkn:            $5,
                     Stmt: &ast.StmtStmtList{
-                        Position: position.NewNodeListPosition($6),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($6),
                         Stmts: $6,
                     },
                 }
@@ -1609,7 +1608,7 @@ alt_if_stmt_without_else:
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
                 $1.(*ast.StmtIf).ElseIf = append($1.(*ast.StmtIf).ElseIf, &ast.StmtElseIf{
-                    Position: position.NewTokenNodeListPosition($2, $7),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($2, $7),
                     Alt:                 true,
                     ElseIfTkn:           $2,
                     OpenParenthesisTkn:  $3,
@@ -1617,7 +1616,7 @@ alt_if_stmt_without_else:
                     CloseParenthesisTkn: $5,
                     ColonTkn:            $6,
                     Stmt: &ast.StmtStmtList{
-                        Position: position.NewNodeListPosition($7),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($7),
                         Stmts: $7,
                     },
                 })
@@ -1631,25 +1630,25 @@ alt_if_stmt:
             {
                 $1.(*ast.StmtIf).EndIfTkn = $2
                 $1.(*ast.StmtIf).SemiColonTkn = $3
-                $1.(*ast.StmtIf).Position = position.NewNodeTokenPosition($1, $3)
+                $1.(*ast.StmtIf).Position = yylex.(*Parser).builder.NewNodeTokenPosition($1, $3)
 
                 $$ = $1
             }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
                 $1.(*ast.StmtIf).Else = &ast.StmtElse{
-                    Position: position.NewTokenNodeListPosition($2, $4),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($2, $4),
                     Alt:      true,
                     ElseTkn:  $2,
                     ColonTkn: $3,
                     Stmt: &ast.StmtStmtList{
-                        Position: position.NewNodeListPosition($4),
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($4),
                         Stmts: $4,
                     },
                 }
                 $1.(*ast.StmtIf).EndIfTkn = $5
                 $1.(*ast.StmtIf).SemiColonTkn = $6
-                $1.(*ast.StmtIf).Position = position.NewNodeTokenPosition($1, $6)
+                $1.(*ast.StmtIf).Position = yylex.(*Parser).builder.NewNodeTokenPosition($1, $6)
 
                 $$ = $1
             }
@@ -1685,13 +1684,13 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                pos := position.NewTokenPosition($4)
+                pos := yylex.(*Parser).builder.NewTokenPosition($4)
                 if $1 != nil {
-                    pos = position.NewNodeTokenPosition($1, $4)
+                    pos = yylex.(*Parser).builder.NewNodeTokenPosition($1, $4)
                 } else if $2 != nil {
-                    pos = position.NewTokensPosition($2, $4)
+                    pos = yylex.(*Parser).builder.NewTokensPosition($2, $4)
                 } else if $3 != nil {
-                    pos = position.NewTokensPosition($3, $4)
+                    pos = yylex.(*Parser).builder.NewTokensPosition($3, $4)
                 }
 
                 $$ = &ast.Parameter{
@@ -1700,9 +1699,9 @@ parameter:
                     AmpersandTkn: $2,
                     VariadicTkn:  $3,
                     Var: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($4),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($4),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($4),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($4),
                             IdentifierTkn: $4,
                             Value:         $4.Value,
                         },
@@ -1711,13 +1710,13 @@ parameter:
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                pos := position.NewTokenNodePosition($4, $6)
+                pos := yylex.(*Parser).builder.NewTokenNodePosition($4, $6)
                 if $1 != nil {
-                    pos = position.NewNodesPosition($1, $6)
+                    pos = yylex.(*Parser).builder.NewNodesPosition($1, $6)
                 } else if $2 != nil {
-                    pos = position.NewTokenNodePosition($2, $6)
+                    pos = yylex.(*Parser).builder.NewTokenNodePosition($2, $6)
                 } else if $3 != nil {
-                    pos = position.NewTokenNodePosition($3, $6)
+                    pos = yylex.(*Parser).builder.NewTokenNodePosition($3, $6)
                 }
 
                 $$ = &ast.Parameter{
@@ -1726,9 +1725,9 @@ parameter:
                     AmpersandTkn: $2,
                     VariadicTkn:  $3,
                     Var: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($4),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($4),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($4),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($4),
                             IdentifierTkn: $4,
                             Value:         $4.Value,
                         },
@@ -1758,7 +1757,7 @@ type_expr:
     |   '?' type
             {
                 $$ = &ast.Nullable{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     QuestionTkn: $1,
                     Expr:        $2,
                 }
@@ -1769,7 +1768,7 @@ type:
         T_ARRAY
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -1777,7 +1776,7 @@ type:
     |   T_CALLABLE
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -1806,7 +1805,7 @@ argument_list:
         '(' ')'
             {
                 $$ = &ast.ArgumentList{
-                    Position: position.NewTokensPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                     OpenParenthesisTkn: $1,
                     CloseParenthesisTkn: $2,
                 }
@@ -1814,7 +1813,7 @@ argument_list:
     |   '(' non_empty_argument_list possible_comma ')'
             {
                 argumentList := $2.(*ast.ArgumentList)
-                argumentList.Position = position.NewTokensPosition($1, $4)
+                argumentList.Position = yylex.(*Parser).builder.NewTokensPosition($1, $4)
                 argumentList.OpenParenthesisTkn = $1
                 argumentList.SeparatorTkns = append(argumentList.SeparatorTkns, $3)
                 argumentList.CloseParenthesisTkn = $4
@@ -1843,14 +1842,14 @@ argument:
         expr
             {
                 $$ = &ast.Argument{
-                    Position: position.NewNodePosition($1),
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
                     Expr:        $1,
                 }
             }
     |   T_ELLIPSIS expr
             {
                 $$ = &ast.Argument{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     VariadicTkn: $1,
                     Expr:        $2,
                 }
@@ -1901,11 +1900,11 @@ static_var:
             {
 
                 $$ = &ast.StmtStaticVar{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     Var: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($1),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
@@ -1915,11 +1914,11 @@ static_var:
     |   T_VARIABLE '=' expr
             {
                 $$ = &ast.StmtStaticVar{
-                    Position: position.NewTokenNodePosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                     Var: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($1),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
@@ -1945,7 +1944,7 @@ class_statement:
         variable_modifiers optional_type property_list ';'
             {
                 $$ = &ast.StmtPropertyList{
-                    Position: position.NewNodeListTokenPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1, $4),
                     Modifiers:     $1,
                     Type:          $2,
                     Properties:    $3.(*ast.ParserSeparatedList).Items,
@@ -1956,7 +1955,7 @@ class_statement:
     |   method_modifiers T_CONST class_const_list ';'
             {
                 $$ = &ast.StmtClassConstList{
-                    Position: position.NewOptionalListTokensPosition($1, $2, $4),
+                    Position: yylex.(*Parser).builder.NewOptionalListTokensPosition($1, $2, $4),
                     Modifiers:     $1,
                     ConstTkn:      $2,
                     Consts:        $3.(*ast.ParserSeparatedList).Items,
@@ -1967,7 +1966,7 @@ class_statement:
     |   T_USE name_list trait_adaptations
             {
                 $$ = &ast.StmtTraitUse{
-                    Position: position.NewTokenNodePosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                     UseTkn:        $1,
                     Traits:        $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -1976,9 +1975,9 @@ class_statement:
             }
     |   method_modifiers T_FUNCTION returns_ref identifier backup_doc_comment '(' parameter_list ')' return_type method_body
             {
-                pos := position.NewTokenNodePosition($2, $10)
+                pos := yylex.(*Parser).builder.NewTokenNodePosition($2, $10)
                 if $1 != nil {
-                    pos = position.NewNodeListNodePosition($1, $10)
+                    pos = yylex.(*Parser).builder.NewNodeListNodePosition($1, $10)
                 }
 
                 $$ = &ast.StmtClassMethod{
@@ -1987,7 +1986,7 @@ class_statement:
                     FunctionTkn:  $2,
                     AmpersandTkn: $3,
                     MethodName: &ast.Identifier{
-                        Position: position.NewTokenPosition($4),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($4),
                         IdentifierTkn: $4,
                         Value:         $4.Value,
                     },
@@ -2022,14 +2021,14 @@ trait_adaptations:
         ';'
             {
                 $$ = &ast.StmtNop{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     SemiColonTkn: $1,
                 }
             }
     |   '{' '}'
             {
                 $$ = &ast.StmtTraitAdaptationList{
-                    Position: position.NewTokensPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                     OpenParenthesisTkn:  $1,
                     CloseParenthesisTkn: $2,
                 }
@@ -2037,7 +2036,7 @@ trait_adaptations:
     |   '{' trait_adaptation_list '}'
             {
                 $$ = &ast.StmtTraitAdaptationList{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenParenthesisTkn:  $1,
                     Adaptations:         $2,
                     CloseParenthesisTkn: $3,
@@ -2075,7 +2074,7 @@ trait_precedence:
         absolute_trait_method_reference T_INSTEADOF name_list
             {
                 $$ = &ast.StmtTraitUsePrecedence{
-                    Position: position.NewNodeNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewNodeNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
                     Ref:           $1,
                     InsteadofTkn:  $2,
                     Insteadof:     $3.(*ast.ParserSeparatedList).Items,
@@ -2088,11 +2087,11 @@ trait_alias:
         trait_method_reference T_AS T_STRING
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Position: position.NewNodeTokenPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
                     Ref:   $1,
                     AsTkn: $2,
                     Alias: &ast.Identifier{
-                        Position: position.NewTokenPosition($3),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -2101,11 +2100,11 @@ trait_alias:
     |   trait_method_reference T_AS reserved_non_modifiers
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Position: position.NewNodeTokenPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
                     Ref:   $1,
                     AsTkn: $2,
                     Alias: &ast.Identifier{
-                        Position: position.NewTokenPosition($3),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -2114,12 +2113,12 @@ trait_alias:
     |   trait_method_reference T_AS member_modifier identifier
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Position: position.NewNodeTokenPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $4),
                     Ref:      $1,
                     AsTkn:    $2,
                     Modifier: $3,
                     Alias: &ast.Identifier{
-                        Position: position.NewTokenPosition($4),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($4),
                         IdentifierTkn: $4,
                         Value:         $4.Value,
                     },
@@ -2128,7 +2127,7 @@ trait_alias:
     |   trait_method_reference T_AS member_modifier
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Ref:      $1,
                     AsTkn:    $2,
                     Modifier: $3,
@@ -2140,9 +2139,9 @@ trait_method_reference:
         identifier
             {
                 $$ = &ast.StmtTraitMethodRef{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     Method: &ast.Identifier{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -2158,11 +2157,11 @@ absolute_trait_method_reference:
         name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
                 $$ = &ast.StmtTraitMethodRef{
-                    Position: position.NewNodeTokenPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
                     Trait:          $1,
                     DoubleColonTkn: $2,
                     Method: &ast.Identifier{
-                        Position: position.NewTokenPosition($3),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -2174,14 +2173,14 @@ method_body:
         ';' /* abstract method */
             {
                 $$ = &ast.StmtNop{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     SemiColonTkn: $1,
                 }
             }
     |   '{' inner_statement_list '}'
             {
                 $$ = &ast.StmtStmtList{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenCurlyBracket:  $1,
                     Stmts:             $2,
                     CloseCurlyBracket: $3,
@@ -2198,7 +2197,7 @@ variable_modifiers:
             {
                 $$ = []ast.Vertex{
                     &ast.Identifier{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -2232,7 +2231,7 @@ member_modifier:
         T_PUBLIC
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2240,7 +2239,7 @@ member_modifier:
     |   T_PROTECTED
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2248,7 +2247,7 @@ member_modifier:
     |   T_PRIVATE
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2256,7 +2255,7 @@ member_modifier:
     |   T_STATIC
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2264,7 +2263,7 @@ member_modifier:
     |   T_ABSTRACT
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2272,7 +2271,7 @@ member_modifier:
     |   T_FINAL
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -2299,11 +2298,11 @@ property:
         T_VARIABLE backup_doc_comment
             {
                 $$ = &ast.StmtProperty{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     Var: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($1),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
@@ -2314,11 +2313,11 @@ property:
     |   T_VARIABLE '=' expr backup_doc_comment
             {
                 $$ = &ast.StmtProperty{
-                    Position: position.NewTokenNodePosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                     Var: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($1),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
@@ -2349,9 +2348,9 @@ class_const_decl:
         identifier '=' expr backup_doc_comment
             {
                 $$ = &ast.StmtConstant{
-                    Position: position.NewTokenNodePosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                     Name: &ast.Identifier{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -2365,9 +2364,9 @@ const_decl:
         T_STRING '=' expr backup_doc_comment
             {
                 $$ = &ast.StmtConstant{
-                    Position: position.NewTokenNodePosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                     Name: &ast.Identifier{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -2431,7 +2430,7 @@ anonymous_class:
         T_CLASS ctor_arguments extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
                 $$ = &ast.StmtClass{
-                    Position: position.NewTokensPosition($1, $8),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $8),
                     ClassTkn:            $1,
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
@@ -2451,7 +2450,7 @@ new_expr:
             {
                 if $3 != nil {
                     $$ = &ast.ExprNew{
-                        Position: position.NewTokenNodePosition($1, $3),
+                        Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                         NewTkn:              $1,
                         Class:               $2,
                         OpenParenthesisTkn:  $3.(*ast.ArgumentList).OpenParenthesisTkn,
@@ -2461,7 +2460,7 @@ new_expr:
                     }
                 } else {
                     $$ = &ast.ExprNew{
-                        Position: position.NewTokenNodePosition($1, $2),
+                        Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                         NewTkn: $1,
                         Class:  $2,
                     }
@@ -2470,7 +2469,7 @@ new_expr:
     |   T_NEW anonymous_class
             {
                 $$ = &ast.ExprNew{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     NewTkn: $1,
                     Class:  $2,
                 }
@@ -2481,9 +2480,9 @@ expr_without_variable:
         T_LIST '(' array_pair_list ')' '=' expr
             {
                 $$ = &ast.ExprAssign{
-                    Position: position.NewTokenNodePosition($1, $6),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $6),
                     Var: &ast.ExprList{
-                        Position: position.NewTokensPosition($1, $4),
+                        Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                         ListTkn:         $1,
                         OpenBracketTkn:  $2,
                         Items:           $3.(*ast.ParserSeparatedList).Items,
@@ -2497,9 +2496,9 @@ expr_without_variable:
     |   '[' array_pair_list ']' '=' expr
             {
                 $$ = &ast.ExprAssign{
-                    Position: position.NewTokenNodePosition($1, $5),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $5),
                     Var: &ast.ExprList{
-                        Position: position.NewTokensPosition($1, $3),
+                        Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                         OpenBracketTkn:  $1,
                         Items:           $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -2512,7 +2511,7 @@ expr_without_variable:
     |   variable '=' expr
             {
                 $$ = &ast.ExprAssign{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2521,7 +2520,7 @@ expr_without_variable:
     |   variable '=' '&' expr
             {
                 $$ = &ast.ExprAssignReference{
-                    Position: position.NewNodesPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Var:          $1,
                     EqualTkn:     $2,
                     AmpersandTkn: $3,
@@ -2531,7 +2530,7 @@ expr_without_variable:
     |   T_CLONE expr
             {
                 $$ = &ast.ExprClone{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     CloneTkn: $1,
                     Expr:     $2,
                 }
@@ -2539,7 +2538,7 @@ expr_without_variable:
     |   variable T_PLUS_EQUAL expr
             {
                 $$ = &ast.ExprAssignPlus{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2548,7 +2547,7 @@ expr_without_variable:
     |   variable T_MINUS_EQUAL expr
             {
                 $$ = &ast.ExprAssignMinus{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2557,7 +2556,7 @@ expr_without_variable:
     |   variable T_MUL_EQUAL expr
             {
                 $$ = &ast.ExprAssignMul{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2566,7 +2565,7 @@ expr_without_variable:
     |   variable T_POW_EQUAL expr
             {
                 $$ = &ast.ExprAssignPow{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2575,7 +2574,7 @@ expr_without_variable:
     |   variable T_DIV_EQUAL expr
             {
                 $$ = &ast.ExprAssignDiv{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2584,7 +2583,7 @@ expr_without_variable:
     |   variable T_CONCAT_EQUAL expr
             {
                 $$ = &ast.ExprAssignConcat{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2593,7 +2592,7 @@ expr_without_variable:
     |   variable T_MOD_EQUAL expr
             {
                 $$ = &ast.ExprAssignMod{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2602,7 +2601,7 @@ expr_without_variable:
     |   variable T_AND_EQUAL expr
             {
                 $$ = &ast.ExprAssignBitwiseAnd{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2611,7 +2610,7 @@ expr_without_variable:
     |   variable T_OR_EQUAL expr
             {
                 $$ = &ast.ExprAssignBitwiseOr{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2620,7 +2619,7 @@ expr_without_variable:
     |   variable T_XOR_EQUAL expr
             {
                 $$ = &ast.ExprAssignBitwiseXor{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2629,7 +2628,7 @@ expr_without_variable:
     |   variable T_SL_EQUAL expr
             {
                 $$ = &ast.ExprAssignShiftLeft{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2638,7 +2637,7 @@ expr_without_variable:
     |   variable T_SR_EQUAL expr
             {
                 $$ = &ast.ExprAssignShiftRight{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2647,7 +2646,7 @@ expr_without_variable:
     |   variable T_COALESCE_EQUAL expr
             {
                 $$ = &ast.ExprAssignCoalesce{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:      $1,
                     EqualTkn: $2,
                     Expr:     $3,
@@ -2656,7 +2655,7 @@ expr_without_variable:
     |   variable T_INC
             {
                 $$ = &ast.ExprPostInc{
-                    Position: position.NewNodeTokenPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $2),
                     Var:    $1,
                     IncTkn: $2,
                 }
@@ -2664,7 +2663,7 @@ expr_without_variable:
     |   T_INC variable
             {
                 $$ = &ast.ExprPreInc{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     IncTkn: $1,
                     Var:    $2,
                 }
@@ -2672,7 +2671,7 @@ expr_without_variable:
     |   variable T_DEC
             {
                 $$ = &ast.ExprPostDec{
-                    Position: position.NewNodeTokenPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $2),
                     Var:    $1,
                     DecTkn: $2,
                 }
@@ -2680,7 +2679,7 @@ expr_without_variable:
     |   T_DEC variable
             {
                 $$ = &ast.ExprPreDec{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     DecTkn: $1,
                     Var:    $2,
                 }
@@ -2688,7 +2687,7 @@ expr_without_variable:
     |   expr T_BOOLEAN_OR expr
             {
                 $$ = &ast.ExprBinaryBooleanOr{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2697,7 +2696,7 @@ expr_without_variable:
     |   expr T_BOOLEAN_AND expr
             {
                 $$ = &ast.ExprBinaryBooleanAnd{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2706,7 +2705,7 @@ expr_without_variable:
     |   expr T_LOGICAL_OR expr
             {
                 $$ = &ast.ExprBinaryLogicalOr{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2715,7 +2714,7 @@ expr_without_variable:
     |   expr T_LOGICAL_AND expr
             {
                 $$ = &ast.ExprBinaryLogicalAnd{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2724,7 +2723,7 @@ expr_without_variable:
     |   expr T_LOGICAL_XOR expr
             {
                 $$ = &ast.ExprBinaryLogicalXor{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2733,7 +2732,7 @@ expr_without_variable:
     |   expr '|' expr
             {
                 $$ = &ast.ExprBinaryBitwiseOr{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2742,7 +2741,7 @@ expr_without_variable:
     |   expr '&' expr
             {
                 $$ = &ast.ExprBinaryBitwiseAnd{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2751,7 +2750,7 @@ expr_without_variable:
     |   expr '^' expr
             {
                 $$ = &ast.ExprBinaryBitwiseXor{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2760,7 +2759,7 @@ expr_without_variable:
     |   expr '.' expr
             {
                 $$ = &ast.ExprBinaryConcat{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2769,7 +2768,7 @@ expr_without_variable:
     |   expr '+' expr
             {
                 $$ = &ast.ExprBinaryPlus{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2778,7 +2777,7 @@ expr_without_variable:
     |   expr '-' expr
             {
                 $$ = &ast.ExprBinaryMinus{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2787,7 +2786,7 @@ expr_without_variable:
     |   expr '*' expr
             {
                 $$ = &ast.ExprBinaryMul{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2796,7 +2795,7 @@ expr_without_variable:
     |   expr T_POW expr
             {
                 $$ = &ast.ExprBinaryPow{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2805,7 +2804,7 @@ expr_without_variable:
     |   expr '/' expr
             {
                 $$ = &ast.ExprBinaryDiv{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2814,7 +2813,7 @@ expr_without_variable:
     |   expr '%' expr
             {
                 $$ = &ast.ExprBinaryMod{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2823,7 +2822,7 @@ expr_without_variable:
     |   expr T_SL expr
             {
                 $$ = &ast.ExprBinaryShiftLeft{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2832,7 +2831,7 @@ expr_without_variable:
     |   expr T_SR expr
             {
                 $$ = &ast.ExprBinaryShiftRight{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2841,7 +2840,7 @@ expr_without_variable:
     |   '+' expr %prec T_INC
             {
                 $$ = &ast.ExprUnaryPlus{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     PlusTkn: $1,
                     Expr:    $2,
                 }
@@ -2849,7 +2848,7 @@ expr_without_variable:
     |   '-' expr %prec T_INC
             {
                 $$ = &ast.ExprUnaryMinus{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     MinusTkn: $1,
                     Expr:     $2,
                 }
@@ -2857,7 +2856,7 @@ expr_without_variable:
     |   '!' expr
             {
                 $$ = &ast.ExprBooleanNot{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     ExclamationTkn: $1,
                     Expr:           $2,
                 }
@@ -2865,7 +2864,7 @@ expr_without_variable:
     |   '~' expr
             {
                 $$ = &ast.ExprBitwiseNot{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     TildaTkn: $1,
                     Expr:     $2,
                 }
@@ -2873,7 +2872,7 @@ expr_without_variable:
     |   expr T_IS_IDENTICAL expr
             {
                 $$ = &ast.ExprBinaryIdentical{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2882,7 +2881,7 @@ expr_without_variable:
     |   expr T_IS_NOT_IDENTICAL expr
             {
                 $$ = &ast.ExprBinaryNotIdentical{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2891,7 +2890,7 @@ expr_without_variable:
     |   expr T_IS_EQUAL expr
             {
                 $$ = &ast.ExprBinaryEqual{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2900,7 +2899,7 @@ expr_without_variable:
     |   expr T_IS_NOT_EQUAL expr
             {
                 $$ = &ast.ExprBinaryNotEqual{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2909,7 +2908,7 @@ expr_without_variable:
     |   expr '<' expr
             {
                 $$ = &ast.ExprBinarySmaller{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2918,7 +2917,7 @@ expr_without_variable:
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
                 $$ = &ast.ExprBinarySmallerOrEqual{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2927,7 +2926,7 @@ expr_without_variable:
     |   expr '>' expr
             {
                 $$ = &ast.ExprBinaryGreater{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2936,7 +2935,7 @@ expr_without_variable:
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
                 $$ = &ast.ExprBinaryGreaterOrEqual{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2945,7 +2944,7 @@ expr_without_variable:
     |   expr T_SPACESHIP expr
             {
                 $$ = &ast.ExprBinarySpaceship{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -2954,7 +2953,7 @@ expr_without_variable:
     |   expr T_INSTANCEOF class_name_reference
             {
                 $$ = &ast.ExprInstanceOf{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Expr:          $1,
                     InstanceOfTkn: $2,
                     Class:         $3,
@@ -2963,7 +2962,7 @@ expr_without_variable:
     |   '(' expr ')'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -2976,7 +2975,7 @@ expr_without_variable:
     |   expr '?' expr ':' expr
             {
                 $$ = &ast.ExprTernary{
-                    Position: position.NewNodesPosition($1, $5),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $5),
                     Condition:   $1,
                     QuestionTkn: $2,
                     IfTrue:      $3,
@@ -2987,7 +2986,7 @@ expr_without_variable:
     |   expr '?' ':' expr
             {
                 $$ = &ast.ExprTernary{
-                    Position: position.NewNodesPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Condition:   $1,
                     QuestionTkn: $2,
                     ColonTkn:    $3,
@@ -2997,7 +2996,7 @@ expr_without_variable:
     |   expr T_COALESCE expr
             {
                 $$ = &ast.ExprBinaryCoalesce{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Left:  $1,
                     OpTkn: $2,
                     Right: $3,
@@ -3010,7 +3009,7 @@ expr_without_variable:
     |   T_INT_CAST expr
             {
                 $$ = &ast.ExprCastInt{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3018,7 +3017,7 @@ expr_without_variable:
     |   T_DOUBLE_CAST expr
             {
                 $$ = &ast.ExprCastDouble{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3026,7 +3025,7 @@ expr_without_variable:
     |   T_STRING_CAST expr
             {
                 $$ = &ast.ExprCastString{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3034,7 +3033,7 @@ expr_without_variable:
     |   T_ARRAY_CAST expr
             {
                 $$ = &ast.ExprCastArray{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3042,7 +3041,7 @@ expr_without_variable:
     |   T_OBJECT_CAST expr
             {
                 $$ = &ast.ExprCastObject{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3050,7 +3049,7 @@ expr_without_variable:
     |   T_BOOL_CAST expr
             {
                 $$ = &ast.ExprCastBool{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3058,7 +3057,7 @@ expr_without_variable:
     |   T_UNSET_CAST expr
             {
                 $$ = &ast.ExprCastUnset{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     CastTkn: $1,
                     Expr:    $2,
                 }
@@ -3070,9 +3069,9 @@ expr_without_variable:
                 }
 
                 if $2 == nil {
-                    exit.Position = position.NewTokenPosition($1)
+                    exit.Position = yylex.(*Parser).builder.NewTokenPosition($1)
                 } else {
-                    exit.Position       = position.NewTokenNodePosition($1, $2)
+                    exit.Position       = yylex.(*Parser).builder.NewTokenNodePosition($1, $2)
                     exit.OpenParenthesisTkn  = $2.(*ast.ParserBrackets).OpenBracketTkn
                     exit.Expr                = $2.(*ast.ParserBrackets).Child
                     exit.CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
@@ -3083,7 +3082,7 @@ expr_without_variable:
     |   '@' expr
             {
                 $$ = &ast.ExprErrorSuppress{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     AtTkn: $1,
                     Expr:  $2,
                 }
@@ -3095,7 +3094,7 @@ expr_without_variable:
     |   '`' backticks_expr '`'
             {
                 $$ = &ast.ExprShellExec{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBacktickTkn:  $1,
                     Parts:            $2,
                     CloseBacktickTkn: $3,
@@ -3104,7 +3103,7 @@ expr_without_variable:
     |   T_PRINT expr
             {
                 $$ = &ast.ExprPrint{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     PrintTkn: $1,
                     Expr:     $2,
                 }
@@ -3112,14 +3111,14 @@ expr_without_variable:
     |   T_YIELD
             {
                 $$ = &ast.ExprYield{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     YieldTkn: $1,
                 }
             }
     |   T_YIELD expr
             {
                 $$ = &ast.ExprYield{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     YieldTkn: $1,
                     Value:    $2,
                 }
@@ -3127,7 +3126,7 @@ expr_without_variable:
     |   T_YIELD expr T_DOUBLE_ARROW expr
             {
                 $$ = &ast.ExprYield{
-                    Position: position.NewTokenNodePosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $4),
                     YieldTkn:       $1,
                     Key:            $2,
                     DoubleArrowTkn: $3,
@@ -3137,7 +3136,7 @@ expr_without_variable:
     |   T_YIELD_FROM expr
             {
                 $$ = &ast.ExprYieldFrom{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     YieldFromTkn: $1,
                     Expr:         $2,
                 }
@@ -3150,10 +3149,10 @@ expr_without_variable:
             {
                 switch n := $2.(type) {
                 case *ast.ExprClosure :
-                    n.Position = position.NewTokenNodePosition($1, $2)
+                    n.Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $2)
                     n.StaticTkn = $1;
                 case *ast.ExprArrowFunction :
-                    n.Position = position.NewTokenNodePosition($1, $2)
+                    n.Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $2)
                     n.StaticTkn = $1;
                 };
 
@@ -3165,7 +3164,7 @@ inline_function:
         T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
                 $$ = &ast.ExprClosure{
-                    Position: position.NewTokensPosition($1, $11),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $11),
                     FunctionTkn:          $1,
                     AmpersandTkn:         $2,
                     OpenParenthesisTkn:   $4,
@@ -3183,7 +3182,7 @@ inline_function:
     |   T_FN returns_ref '(' parameter_list ')' return_type backup_doc_comment T_DOUBLE_ARROW expr
             {
                 $$ = &ast.ExprArrowFunction{
-                    Position: position.NewTokenNodePosition($1, $9),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $9),
                     FnTkn:               $1,
                     AmpersandTkn:        $2,
                     OpenParenthesisTkn:  $3,
@@ -3221,7 +3220,7 @@ lexical_vars:
     |   T_USE '(' lexical_var_list ')'
             {
                 $$ = &ast.ExprClosureUse{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     UseTkn:              $1,
                     OpenParenthesisTkn:  $2,
                     Uses:                $3.(*ast.ParserSeparatedList).Items,
@@ -3251,9 +3250,9 @@ lexical_var:
     T_VARIABLE
             {
                 $$ = &ast.ExprVariable{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     VarName: &ast.Identifier{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -3262,12 +3261,12 @@ lexical_var:
     |   '&' T_VARIABLE
             {
                 $$ = &ast.ExprReference{
-                    Position: position.NewTokensPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                     AmpersandTkn: $1,
                     Var: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($2),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($2),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($2),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
                             IdentifierTkn: $2,
                             Value:         $2.Value,
                         },
@@ -3280,7 +3279,7 @@ function_call:
         name argument_list
             {
                 $$ = &ast.ExprFunctionCall{
-                    Position: position.NewNodesPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $2),
                     Function:            $1,
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
@@ -3291,7 +3290,7 @@ function_call:
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
                 $$ = &ast.ExprStaticCall{
-                    Position: position.NewNodesPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
@@ -3304,7 +3303,7 @@ function_call:
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
                 $$ = &ast.ExprStaticCall{
-                    Position: position.NewNodesPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
@@ -3317,7 +3316,7 @@ function_call:
     |   callable_expr argument_list
             {
                 $$ = &ast.ExprFunctionCall{
-                    Position: position.NewNodesPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $2),
                     Function:            $1,
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
@@ -3331,7 +3330,7 @@ class_name:
         T_STATIC
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3361,7 +3360,7 @@ exit_expr:
     |   '(' optional_expr ')'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -3378,7 +3377,7 @@ backticks_expr:
             {
                 $$ = []ast.Vertex{
                     &ast.ScalarEncapsedStringPart{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         EncapsedStrTkn: $1,
                         Value:          $1.Value,
                     },
@@ -3405,7 +3404,7 @@ dereferencable_scalar:
     T_ARRAY '(' array_pair_list ')'
             {
                 $$ = &ast.ExprArray{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     ArrayTkn:        $1,
                     OpenBracketTkn:  $2,
                     Items:           $3.(*ast.ParserSeparatedList).Items,
@@ -3416,7 +3415,7 @@ dereferencable_scalar:
     |   '[' array_pair_list ']'
             {
                 $$ = &ast.ExprArray{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Items:           $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
@@ -3426,7 +3425,7 @@ dereferencable_scalar:
     |   T_CONSTANT_ENCAPSED_STRING
             {
                 $$ = &ast.ScalarString{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     StringTkn: $1,
                     Value:     $1.Value,
                 }
@@ -3437,7 +3436,7 @@ scalar:
         T_LNUMBER
             {
                 $$ = &ast.ScalarLnumber{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     NumberTkn: $1,
                     Value:     $1.Value,
                 }
@@ -3445,7 +3444,7 @@ scalar:
     |   T_DNUMBER
             {
                 $$ = &ast.ScalarDnumber{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     NumberTkn: $1,
                     Value:     $1.Value,
                 }
@@ -3453,7 +3452,7 @@ scalar:
     |   T_LINE
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3461,7 +3460,7 @@ scalar:
     |   T_FILE
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3469,7 +3468,7 @@ scalar:
     |   T_DIR
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3477,7 +3476,7 @@ scalar:
     |   T_TRAIT_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3485,7 +3484,7 @@ scalar:
     |   T_METHOD_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3493,7 +3492,7 @@ scalar:
     |   T_FUNC_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3501,7 +3500,7 @@ scalar:
     |   T_NS_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3509,7 +3508,7 @@ scalar:
     |   T_CLASS_C
             {
                 $$ = &ast.ScalarMagicConstant{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     MagicConstTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3517,11 +3516,11 @@ scalar:
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
                 $$ = &ast.ScalarHeredoc{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenHeredocTkn: $1,
                     Parts: []ast.Vertex{
                         &ast.ScalarEncapsedStringPart{
-                            Position: position.NewTokenPosition($2),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
                             EncapsedStrTkn: $2,
                             Value:          $2.Value,
                         },
@@ -3532,7 +3531,7 @@ scalar:
     |   T_START_HEREDOC T_END_HEREDOC
             {
                 $$ = &ast.ScalarHeredoc{
-                    Position: position.NewTokensPosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                     OpenHeredocTkn:  $1,
                     CloseHeredocTkn: $2,
                 }
@@ -3540,7 +3539,7 @@ scalar:
     |   '"' encaps_list '"'
             {
                 $$ = &ast.ScalarEncapsed{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenQoteTkn:  $1,
                     Parts:        $2,
                     CloseQoteTkn: $1,
@@ -3549,7 +3548,7 @@ scalar:
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
                 $$ = &ast.ScalarHeredoc{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenHeredocTkn:  $1,
                     Parts:           $2,
                     CloseHeredocTkn: $3,
@@ -3569,18 +3568,18 @@ constant:
         name
             {
                 $$ = &ast.ExprConstFetch{
-                    Position: position.NewNodePosition($1),
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
                     Const: $1,
                 }
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
                 $$ = &ast.ExprClassConstFetch{
-                    Position: position.NewNodeTokenPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     ConstantName: &ast.Identifier{
-                        Position: position.NewTokenPosition($3),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -3589,11 +3588,11 @@ constant:
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
                 $$ = &ast.ExprClassConstFetch{
-                    Position: position.NewNodeTokenPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     ConstantName: &ast.Identifier{
-                        Position: position.NewTokenPosition($3),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -3638,7 +3637,7 @@ dereferencable:
     |   '(' expr ')'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -3658,7 +3657,7 @@ callable_expr:
     |   '(' expr ')'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -3678,7 +3677,7 @@ callable_variable:
     |   dereferencable '[' optional_expr ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Position: position.NewNodeTokenPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -3688,7 +3687,7 @@ callable_variable:
     |   constant '[' optional_expr ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Position: position.NewNodeTokenPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -3698,7 +3697,7 @@ callable_variable:
     |   dereferencable '{' expr '}'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Position: position.NewNodeTokenPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -3708,7 +3707,7 @@ callable_variable:
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
             {
                 $$ = &ast.ExprMethodCall{
-                    Position: position.NewNodesPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Var:                 $1,
                     ObjectOperatorTkn:   $2,
                     Method:              $3,
@@ -3736,7 +3735,7 @@ variable:
     |   dereferencable T_OBJECT_OPERATOR property_name
             {
                 $$ = &ast.ExprPropertyFetch{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:               $1,
                     ObjectOperatorTkn: $2,
                     Property:          $3,
@@ -3748,9 +3747,9 @@ simple_variable:
         T_VARIABLE
             {
                 $$ = &ast.ExprVariable{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     VarName: &ast.Identifier{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -3759,10 +3758,10 @@ simple_variable:
     |   '$' '{' expr '}'
             {
                 $$ = &ast.ExprVariable{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     DollarTkn: $1,
                     VarName: &ast.ParserBrackets{
-                        Position: position.NewTokensPosition($2, $4),
+                        Position: yylex.(*Parser).builder.NewTokensPosition($2, $4),
                         OpenBracketTkn:  $2,
                         Child:           $3,
                         CloseBracketTkn: $4,
@@ -3772,7 +3771,7 @@ simple_variable:
     |   '$' simple_variable
             {
                 $$ = &ast.ExprVariable{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     DollarTkn: $1,
                     VarName:   $2,
                 }
@@ -3783,7 +3782,7 @@ static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
                 $$ = &ast.ExprStaticPropertyFetch{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     Property:       $3,
@@ -3792,7 +3791,7 @@ static_member:
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
                 $$ = &ast.ExprStaticPropertyFetch{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     Property:       $3,
@@ -3808,7 +3807,7 @@ new_variable:
     |   new_variable '[' optional_expr ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Position: position.NewNodeTokenPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -3818,7 +3817,7 @@ new_variable:
     |   new_variable '{' expr '}'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Position: position.NewNodeTokenPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $4),
                     Var:             $1,
                     OpenBracketTkn:  $2,
                     Dim:             $3,
@@ -3828,7 +3827,7 @@ new_variable:
     |   new_variable T_OBJECT_OPERATOR property_name
             {
                 $$ = &ast.ExprPropertyFetch{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:               $1,
                     ObjectOperatorTkn: $2,
                     Property:          $3,
@@ -3837,7 +3836,7 @@ new_variable:
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
                 $$ = &ast.ExprStaticPropertyFetch{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     Property:       $3,
@@ -3846,7 +3845,7 @@ new_variable:
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
                 $$ = &ast.ExprStaticPropertyFetch{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Class:          $1,
                     DoubleColonTkn: $2,
                     Property:       $3,
@@ -3858,7 +3857,7 @@ member_name:
         identifier
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3866,7 +3865,7 @@ member_name:
     |   '{' expr '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -3882,7 +3881,7 @@ property_name:
         T_STRING
             {
                 $$ = &ast.Identifier{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     IdentifierTkn: $1,
                     Value:         $1.Value,
                 }
@@ -3890,7 +3889,7 @@ property_name:
     |   '{' expr '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -3947,7 +3946,7 @@ array_pair:
         expr T_DOUBLE_ARROW expr
             {
                 $$ = &ast.ExprArrayItem{
-                    Position: position.NewNodesPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Key:            $1,
                     DoubleArrowTkn: $2,
                     Val:            $3,
@@ -3956,18 +3955,18 @@ array_pair:
     |   expr
             {
                 $$ = &ast.ExprArrayItem{
-                    Position: position.NewNodePosition($1),
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
                     Val: $1,
                 }
             }
     |   expr T_DOUBLE_ARROW '&' variable
             {
                 $$ = &ast.ExprArrayItem{
-                    Position: position.NewNodesPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Key:            $1,
                     DoubleArrowTkn: $2,
                     Val: &ast.ExprReference{
-                        Position: position.NewTokenNodePosition($3, $4),
+                        Position: yylex.(*Parser).builder.NewTokenNodePosition($3, $4),
                         AmpersandTkn: $3,
                         Var:          $4,
                     },
@@ -3976,9 +3975,9 @@ array_pair:
     |   '&' variable
             {
                 $$ = &ast.ExprArrayItem{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     Val: &ast.ExprReference{
-                        Position: position.NewTokenNodePosition($1, $2),
+                        Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                         AmpersandTkn: $1,
                         Var:          $2,
                     },
@@ -3987,7 +3986,7 @@ array_pair:
     |   T_ELLIPSIS expr
             {
                 $$ = &ast.ExprArrayItem{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     EllipsisTkn: $1,
                     Val:         $2,
                 }
@@ -3995,11 +3994,11 @@ array_pair:
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
                 $$ = &ast.ExprArrayItem{
-                    Position: position.NewNodeTokenPosition($1, $6),
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $6),
                     Key:            $1,
                     DoubleArrowTkn: $2,
                     Val: &ast.ExprList{
-                        Position: position.NewTokensPosition($3, $6),
+                        Position: yylex.(*Parser).builder.NewTokensPosition($3, $6),
                         ListTkn:         $3,
                         OpenBracketTkn:  $4,
                         Items:           $5.(*ast.ParserSeparatedList).Items,
@@ -4011,9 +4010,9 @@ array_pair:
     |   T_LIST '(' array_pair_list ')'
             {
                 $$ = &ast.ExprArrayItem{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     Val: &ast.ExprList{
-                        Position: position.NewTokensPosition($1, $4),
+                        Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                         ListTkn:         $1,
                         OpenBracketTkn:  $2,
                         Items:           $3.(*ast.ParserSeparatedList).Items,
@@ -4034,7 +4033,7 @@ encaps_list:
                 $$ = append(
                     $1,
                     &ast.ScalarEncapsedStringPart{
-                        Position: position.NewTokenPosition($2),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($2),
                         EncapsedStrTkn: $2,
                         Value:          $2.Value,
                     },
@@ -4048,7 +4047,7 @@ encaps_list:
             {
                 $$ = []ast.Vertex{
                     &ast.ScalarEncapsedStringPart{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         EncapsedStrTkn: $1,
                         Value:          $1.Value,
                     },
@@ -4061,9 +4060,9 @@ encaps_var:
         T_VARIABLE
             {
                 $$ = &ast.ExprVariable{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     VarName: &ast.Identifier{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -4072,11 +4071,11 @@ encaps_var:
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
                 $$ = &ast.ExprArrayDimFetch{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     Var: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($1),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
@@ -4089,18 +4088,18 @@ encaps_var:
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
                 $$ = &ast.ExprPropertyFetch{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     Var: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($1),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($1),
                             IdentifierTkn: $1,
                             Value:         $1.Value,
                         },
                     },
                     ObjectOperatorTkn: $2,
                     Property: &ast.Identifier{
-                        Position: position.NewTokenPosition($3),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
@@ -4109,10 +4108,10 @@ encaps_var:
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn: $1,
                     Child: &ast.ExprVariable{
-                        Position: position.NewNodePosition($2),
+                        Position: yylex.(*Parser).builder.NewNodePosition($2),
                         VarName: $2,
                     },
                     CloseBracketTkn: $3,
@@ -4121,12 +4120,12 @@ encaps_var:
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn: $1,
                     Child: &ast.ExprVariable{
-                        Position: position.NewTokenPosition($2),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($2),
                         VarName: &ast.Identifier{
-                            Position: position.NewTokenPosition($2),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
                             IdentifierTkn: $2,
                             Value:         $2.Value,
                         },
@@ -4137,14 +4136,14 @@ encaps_var:
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $6),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $6),
                     OpenBracketTkn: $1,
                     Child: &ast.ExprArrayDimFetch{
-                        Position: position.NewTokensPosition($2, $5),
+                        Position: yylex.(*Parser).builder.NewTokensPosition($2, $5),
                         Var: &ast.ExprVariable{
-                            Position: position.NewTokenPosition($2),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
                             VarName: &ast.Identifier{
-                                Position: position.NewTokenPosition($2),
+                                Position: yylex.(*Parser).builder.NewTokenPosition($2),
                                 IdentifierTkn: $2,
                                 Value:         $2.Value,
                             },
@@ -4159,7 +4158,7 @@ encaps_var:
     |   T_CURLY_OPEN variable '}'
             {
                 $$ = &ast.ParserBrackets{
-                    Position: position.NewTokensPosition($1, $3),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
                     CloseBracketTkn: $3,
@@ -4171,7 +4170,7 @@ encaps_var_offset:
         T_STRING
             {
                 $$ = &ast.ScalarString{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     StringTkn: $1,
                     Value:     $1.Value,
                 }
@@ -4181,13 +4180,13 @@ encaps_var_offset:
                 // TODO: add option to handle 64 bit integer
                 if _, err := strconv.Atoi(string($1.Value)); err == nil {
                     $$ = &ast.ScalarLnumber{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         NumberTkn: $1,
                         Value:     $1.Value,
                     }
                 } else {
                     $$ = &ast.ScalarString{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         StringTkn: $1,
                         Value:     $1.Value,
                     }
@@ -4200,17 +4199,17 @@ encaps_var_offset:
 
                 if isInt {
                     $$ = &ast.ExprUnaryMinus{
-                        Position: position.NewTokensPosition($1, $2),
+                        Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                         MinusTkn: $1,
                         Expr: &ast.ScalarLnumber{
-                            Position: position.NewTokenPosition($2),
+                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
                             NumberTkn: $2,
                             Value:     $2.Value,
                         },
                     }
                 } else {
                     $$ = &ast.ScalarString{
-                        Position: position.NewTokensPosition($1, $2),
+                        Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                         MinusTkn:  $1,
                         StringTkn: $2,
                         Value:     append([]byte("-"), $2.Value...),
@@ -4220,9 +4219,9 @@ encaps_var_offset:
     |   T_VARIABLE
             {
                 $$ = &ast.ExprVariable{
-                    Position: position.NewTokenPosition($1),
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     VarName: &ast.Identifier{
-                        Position: position.NewTokenPosition($1),
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
                         IdentifierTkn: $1,
                         Value:         $1.Value,
                     },
@@ -4238,7 +4237,7 @@ internal_functions_in_yacc:
                 }
 
                 $$ = &ast.ExprIsset{
-                    Position: position.NewTokensPosition($1, $5),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $5),
                     IssetTkn:            $1,
                     OpenParenthesisTkn:  $2,
                     Vars:                $3.(*ast.ParserSeparatedList).Items,
@@ -4249,7 +4248,7 @@ internal_functions_in_yacc:
     |   T_EMPTY '(' expr ')'
             {
                 $$ = &ast.ExprEmpty{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     EmptyTkn:            $1,
                     OpenParenthesisTkn:  $2,
                     Expr:                $3,
@@ -4259,7 +4258,7 @@ internal_functions_in_yacc:
     |   T_INCLUDE expr
             {
                 $$ = &ast.ExprInclude{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     IncludeTkn: $1,
                     Expr:       $2,
                 }
@@ -4267,7 +4266,7 @@ internal_functions_in_yacc:
     |   T_INCLUDE_ONCE expr
             {
                 $$ = &ast.ExprIncludeOnce{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     IncludeTkn: $1,
                     Expr:       $2,
                 }
@@ -4275,7 +4274,7 @@ internal_functions_in_yacc:
     |   T_EVAL '(' expr ')'
             {
                 $$ = &ast.ExprEval{
-                    Position: position.NewTokensPosition($1, $4),
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     EvalTkn:             $1,
                     OpenParenthesisTkn:  $2,
                     Expr:                $3,
@@ -4285,7 +4284,7 @@ internal_functions_in_yacc:
     |   T_REQUIRE expr
             {
                 $$ = &ast.ExprRequire{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     RequireTkn: $1,
                     Expr:       $2,
                 }
@@ -4293,7 +4292,7 @@ internal_functions_in_yacc:
     |   T_REQUIRE_ONCE expr
             {
                 $$ = &ast.ExprRequireOnce{
-                    Position: position.NewTokenNodePosition($1, $2),
+                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     RequireOnceTkn: $1,
                     Expr:           $2,
                 }

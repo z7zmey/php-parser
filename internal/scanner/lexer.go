@@ -36,7 +36,7 @@ func NewLexer(data []byte, phpVersion string, errHandlerFunc func(*errors.Error)
 		stack: make([]int, 0),
 
 		tokenPool:    token.NewPool(position.DefaultBlockSize),
-		positionPool: position.NewPool(position.DefaultBlockSize),
+		positionPool: position.NewPool(token.DefaultBlockSize),
 		newLines:     NewLines{make([]int, 0, 128)},
 	}
 

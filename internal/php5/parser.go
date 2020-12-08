@@ -1,6 +1,7 @@
 package php5
 
 import (
+	builder "github.com/z7zmey/php-parser/internal/position"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
 	"github.com/z7zmey/php-parser/pkg/errors"
@@ -13,6 +14,7 @@ type Parser struct {
 	currentToken   *token.Token
 	rootNode       ast.Vertex
 	errHandlerFunc func(*errors.Error)
+	builder        *builder.Builder
 }
 
 // NewParser creates and returns new Parser
@@ -20,6 +22,7 @@ func NewParser(lexer *scanner.Lexer, errHandlerFunc func(*errors.Error)) *Parser
 	return &Parser{
 		Lexer:          lexer,
 		errHandlerFunc: errHandlerFunc,
+		builder:        builder.NewBuilder(),
 	}
 }
 

@@ -1,6 +1,6 @@
 PHPFILE=example.php
 
-all: compile fmt build run
+all: compile fmt build
 
 fmt:
 	find . -type f -iregex '.*\.go' -exec gofmt -l -s -w '{}' +
@@ -8,9 +8,6 @@ fmt:
 build:
 	go generate ./...
 	go build ./cmd/...
-
-run:
-	./php-parser -d go $(PHPFILE)
 
 test:
 	go test ./...
@@ -22,7 +19,7 @@ bench:
 	go test -benchmem -bench=. ./internal/php5
 	go test -benchmem -bench=. ./internal/php7
 
-compile: ./internal/php5/php5.go ./internal/php7/php7.go ./internal/scanner/scanner.go fmt
+compile: ./internal/php5/php5.go ./internal/php7/php7.go ./internal/scanner/scanner.go
 	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/php7/php7.go
 	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/php5/php5.go
 	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/php5/php5.go

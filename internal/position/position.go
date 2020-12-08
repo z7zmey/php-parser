@@ -16,6 +16,16 @@ type endPos struct {
 	endPos  int
 }
 
+type Builder struct {
+	pool *position.Pool
+}
+
+func NewBuilder() *Builder {
+	return &Builder{
+		pool: position.NewPool(position.DefaultBlockSize),
+	}
+}
+
 func getListStartPos(l []ast.Vertex) startPos {
 	if l == nil {
 		return startPos{-1, -1}
@@ -75,130 +85,153 @@ func getNodeEndPos(n ast.Vertex) endPos {
 }
 
 // NewNodeListPosition returns new Position
-func NewNodeListPosition(list []ast.Vertex) *position.Position {
-	return &position.Position{
-		StartLine: getListStartPos(list).startLine,
-		EndLine:   getListEndPos(list).endLine,
-		StartPos:  getListStartPos(list).startPos,
-		EndPos:    getListEndPos(list).endPos,
-	}
+func (b *Builder) NewNodeListPosition(list []ast.Vertex) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = getListStartPos(list).startLine
+	pos.EndLine = getListEndPos(list).endLine
+	pos.StartPos = getListStartPos(list).startPos
+	pos.EndPos = getListEndPos(list).endPos
+
+	return pos
 }
 
 // NewNodePosition returns new Position
-func NewNodePosition(n ast.Vertex) *position.Position {
-	return &position.Position{
-		StartLine: getNodeStartPos(n).startLine,
-		EndLine:   getNodeEndPos(n).endLine,
-		StartPos:  getNodeStartPos(n).startPos,
-		EndPos:    getNodeEndPos(n).endPos,
-	}
+func (b *Builder) NewNodePosition(n ast.Vertex) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = getNodeStartPos(n).startLine
+	pos.EndLine = getNodeEndPos(n).endLine
+	pos.StartPos = getNodeStartPos(n).startPos
+	pos.EndPos = getNodeEndPos(n).endPos
+
+	return pos
 }
 
 // NewTokenPosition returns new Position
-func NewTokenPosition(t *token.Token) *position.Position {
-	return &position.Position{
-		StartLine: t.Position.StartLine,
-		EndLine:   t.Position.EndLine,
-		StartPos:  t.Position.StartPos,
-		EndPos:    t.Position.EndPos,
-	}
+func (b *Builder) NewTokenPosition(t *token.Token) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = t.Position.StartLine
+	pos.EndLine = t.Position.EndLine
+	pos.StartPos = t.Position.StartPos
+	pos.EndPos = t.Position.EndPos
+
+	return pos
 }
 
 // NewTokensPosition returns new Position
-func NewTokensPosition(startToken *token.Token, endToken *token.Token) *position.Position {
-	return &position.Position{
-		StartLine: startToken.Position.StartLine,
-		EndLine:   endToken.Position.EndLine,
-		StartPos:  startToken.Position.StartPos,
-		EndPos:    endToken.Position.EndPos,
-	}
+func (b *Builder) NewTokensPosition(startToken *token.Token, endToken *token.Token) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = startToken.Position.StartLine
+	pos.EndLine = endToken.Position.EndLine
+	pos.StartPos = startToken.Position.StartPos
+	pos.EndPos = endToken.Position.EndPos
+
+	return pos
 }
 
 // NewTokenNodePosition returns new Position
-func NewTokenNodePosition(t *token.Token, n ast.Vertex) *position.Position {
-	return &position.Position{
-		StartLine: t.Position.StartLine,
-		EndLine:   getNodeEndPos(n).endLine,
-		StartPos:  t.Position.StartPos,
-		EndPos:    getNodeEndPos(n).endPos,
-	}
+func (b *Builder) NewTokenNodePosition(t *token.Token, n ast.Vertex) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = t.Position.StartLine
+	pos.EndLine = getNodeEndPos(n).endLine
+	pos.StartPos = t.Position.StartPos
+	pos.EndPos = getNodeEndPos(n).endPos
+
+	return pos
 }
 
 // NewNodeTokenPosition returns new Position
-func NewNodeTokenPosition(n ast.Vertex, t *token.Token) *position.Position {
-	return &position.Position{
-		StartLine: getNodeStartPos(n).startLine,
-		EndLine:   t.Position.EndLine,
-		StartPos:  getNodeStartPos(n).startPos,
-		EndPos:    t.Position.EndPos,
-	}
+func (b *Builder) NewNodeTokenPosition(n ast.Vertex, t *token.Token) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = getNodeStartPos(n).startLine
+	pos.EndLine = t.Position.EndLine
+	pos.StartPos = getNodeStartPos(n).startPos
+	pos.EndPos = t.Position.EndPos
+
+	return pos
 }
 
 // NewNodesPosition returns new Position
-func NewNodesPosition(startNode ast.Vertex, endNode ast.Vertex) *position.Position {
-	return &position.Position{
-		StartLine: getNodeStartPos(startNode).startLine,
-		EndLine:   getNodeEndPos(endNode).endLine,
-		StartPos:  getNodeStartPos(startNode).startPos,
-		EndPos:    getNodeEndPos(endNode).endPos,
-	}
+func (b *Builder) NewNodesPosition(startNode ast.Vertex, endNode ast.Vertex) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = getNodeStartPos(startNode).startLine
+	pos.EndLine = getNodeEndPos(endNode).endLine
+	pos.StartPos = getNodeStartPos(startNode).startPos
+	pos.EndPos = getNodeEndPos(endNode).endPos
+
+	return pos
 }
 
 // NewNodeListTokenPosition returns new Position
-func NewNodeListTokenPosition(list []ast.Vertex, t *token.Token) *position.Position {
-	return &position.Position{
-		StartLine: getListStartPos(list).startLine,
-		EndLine:   t.Position.EndLine,
-		StartPos:  getListStartPos(list).startPos,
-		EndPos:    t.Position.EndPos,
-	}
+func (b *Builder) NewNodeListTokenPosition(list []ast.Vertex, t *token.Token) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = getListStartPos(list).startLine
+	pos.EndLine = t.Position.EndLine
+	pos.StartPos = getListStartPos(list).startPos
+	pos.EndPos = t.Position.EndPos
+
+	return pos
 }
 
 // NewTokenNodeListPosition returns new Position
-func NewTokenNodeListPosition(t *token.Token, list []ast.Vertex) *position.Position {
-	return &position.Position{
-		StartLine: t.Position.StartLine,
-		EndLine:   getListEndPos(list).endLine,
-		StartPos:  t.Position.StartPos,
-		EndPos:    getListEndPos(list).endPos,
-	}
+func (b *Builder) NewTokenNodeListPosition(t *token.Token, list []ast.Vertex) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = t.Position.StartLine
+	pos.EndLine = getListEndPos(list).endLine
+	pos.StartPos = t.Position.StartPos
+	pos.EndPos = getListEndPos(list).endPos
+
+	return pos
 }
 
 // NewNodeNodeListPosition returns new Position
-func NewNodeNodeListPosition(n ast.Vertex, list []ast.Vertex) *position.Position {
-	return &position.Position{
-		StartLine: getNodeStartPos(n).startLine,
-		EndLine:   getListEndPos(list).endLine,
-		StartPos:  getNodeStartPos(n).startPos,
-		EndPos:    getListEndPos(list).endPos,
-	}
+func (b *Builder) NewNodeNodeListPosition(n ast.Vertex, list []ast.Vertex) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = getNodeStartPos(n).startLine
+	pos.EndLine = getListEndPos(list).endLine
+	pos.StartPos = getNodeStartPos(n).startPos
+	pos.EndPos = getListEndPos(list).endPos
+
+	return pos
 }
 
 // NewNodeListNodePosition returns new Position
-func NewNodeListNodePosition(list []ast.Vertex, n ast.Vertex) *position.Position {
-	return &position.Position{
-		StartLine: getListStartPos(list).startLine,
-		EndLine:   getNodeEndPos(n).endLine,
-		StartPos:  getListStartPos(list).startPos,
-		EndPos:    getNodeEndPos(n).endPos,
-	}
+func (b *Builder) NewNodeListNodePosition(list []ast.Vertex, n ast.Vertex) *position.Position {
+	pos := b.pool.Get()
+
+	pos.StartLine = getListStartPos(list).startLine
+	pos.EndLine = getNodeEndPos(n).endLine
+	pos.StartPos = getListStartPos(list).startPos
+	pos.EndPos = getNodeEndPos(n).endPos
+
+	return pos
 }
 
 // NewOptionalListTokensPosition returns new Position
-func NewOptionalListTokensPosition(list []ast.Vertex, t *token.Token, endToken *token.Token) *position.Position {
-	if list == nil {
-		return &position.Position{
-			StartLine: t.Position.StartLine,
-			EndLine:   endToken.Position.EndLine,
-			StartPos:  t.Position.StartPos,
-			EndPos:    endToken.Position.EndPos,
-		}
-	}
+func (b *Builder) NewOptionalListTokensPosition(list []ast.Vertex, t *token.Token, endToken *token.Token) *position.Position {
+	pos := b.pool.Get()
 
-	return &position.Position{
-		StartLine: getListStartPos(list).startLine,
-		EndLine:   endToken.Position.EndLine,
-		StartPos:  getListStartPos(list).startPos,
-		EndPos:    endToken.Position.EndPos,
+	if list == nil {
+		pos.StartLine = t.Position.StartLine
+		pos.EndLine = endToken.Position.EndLine
+		pos.StartPos = t.Position.StartPos
+		pos.EndPos = endToken.Position.EndPos
+
+		return pos
 	}
+	pos.StartLine = getListStartPos(list).startLine
+	pos.EndLine = endToken.Position.EndLine
+	pos.StartPos = getListStartPos(list).startPos
+	pos.EndPos = endToken.Position.EndPos
+
+	return pos
 }
