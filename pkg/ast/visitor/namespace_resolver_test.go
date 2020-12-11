@@ -24,9 +24,8 @@ func TestResolveStaticCall(t *testing.T) {
 				},
 			},
 			&ast.ExprStaticCall{
-				Class:        nameBC,
-				Call:         &ast.Identifier{Value: []byte("foo")},
-				ArgumentList: &ast.ArgumentList{},
+				Class: nameBC,
+				Call:  &ast.Identifier{Value: []byte("foo")},
 			},
 		},
 	}
@@ -119,7 +118,6 @@ func TestResolveNew(t *testing.T) {
 			},
 			&ast.ExprNew{
 				Class:        nameBC,
-				ArgumentList: &ast.ArgumentList{},
 			},
 		},
 	}
@@ -230,7 +228,6 @@ func TestResolveFunctionCall(t *testing.T) {
 			},
 			&ast.ExprFunctionCall{
 				Function:     nameB,
-				ArgumentList: &ast.ArgumentList{},
 			},
 		},
 	}
@@ -313,11 +310,9 @@ func TestResolveGroupUse(t *testing.T) {
 			},
 			&ast.ExprFunctionCall{
 				Function:     nameF,
-				ArgumentList: &ast.ArgumentList{},
 			},
 			&ast.ExprFunctionCall{
 				Function:     nameE,
-				ArgumentList: &ast.ArgumentList{},
 			},
 		},
 	}
@@ -359,7 +354,7 @@ func TestResolveTraitUse(t *testing.T) {
 					nameB,
 					relativeNameB,
 				},
-				TraitAdaptationList: &ast.StmtTraitAdaptationList{
+				Adaptations: &ast.StmtTraitAdaptationList{
 					Adaptations: []ast.Vertex{
 						&ast.StmtTraitUsePrecedence{
 							Ref: &ast.StmtTraitMethodRef{
@@ -498,7 +493,6 @@ func TestResolveFunctionName(t *testing.T) {
 	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
 
 	functionNode := &ast.StmtFunction{
-		ReturnsRef:   false,
 		FunctionName: &ast.Identifier{Value: []byte("A")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
@@ -534,7 +528,6 @@ func TestResolveMethodName(t *testing.T) {
 	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
 
 	methodNode := &ast.StmtClassMethod{
-		ReturnsRef: false,
 		MethodName: &ast.Identifier{Value: []byte("A")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
@@ -565,8 +558,6 @@ func TestResolveClosureName(t *testing.T) {
 	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
 
 	closureNode := &ast.ExprClosure{
-		ReturnsRef: false,
-		Static:     false,
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Type: nameAB,
@@ -660,7 +651,6 @@ func TestResolveNamespaces(t *testing.T) {
 			&ast.ExprStaticCall{
 				Class:        nameFG,
 				Call:         &ast.Identifier{Value: []byte("foo")},
-				ArgumentList: &ast.ArgumentList{},
 			},
 			&ast.StmtNamespace{
 				Stmts: []ast.Vertex{},
@@ -678,12 +668,10 @@ func TestResolveNamespaces(t *testing.T) {
 					&ast.ExprStaticCall{
 						Class:        relativeNameCE,
 						Call:         &ast.Identifier{Value: []byte("foo")},
-						ArgumentList: &ast.ArgumentList{},
 					},
 					&ast.ExprStaticCall{
 						Class:        nameCF,
 						Call:         &ast.Identifier{Value: []byte("foo")},
-						ArgumentList: &ast.ArgumentList{},
 					},
 				},
 			},
@@ -711,7 +699,6 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 			&ast.ExprStaticCall{
 				Class:        &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
 				Call:         &ast.Identifier{Value: []byte("foo")},
-				ArgumentList: &ast.ArgumentList{},
 			},
 		},
 	}
@@ -932,21 +919,18 @@ func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 				Expr: &ast.ExprStaticCall{
 					Class:        nameSelf,
 					Call:         &ast.Identifier{Value: []byte("func")},
-					ArgumentList: &ast.ArgumentList{},
 				},
 			},
 			&ast.StmtExpression{
 				Expr: &ast.ExprStaticCall{
 					Class:        nameStatic,
 					Call:         &ast.Identifier{Value: []byte("func")},
-					ArgumentList: &ast.ArgumentList{},
 				},
 			},
 			&ast.StmtExpression{
 				Expr: &ast.ExprStaticCall{
 					Class:        nameParent,
 					Call:         &ast.Identifier{Value: []byte("func")},
-					ArgumentList: &ast.ArgumentList{},
 				},
 			},
 		},
