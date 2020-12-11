@@ -459,10 +459,10 @@ top_statement:
             {
                 $$ = &ast.StmtNamespace{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    NsTkn:               $1,
-                    OpenCurlyBracketTkn: $2,
-                    Stmts:               $3,
-                    CloseCurlyBracket:   $4,
+                    NsTkn:                $1,
+                    OpenCurlyBracketTkn:  $2,
+                    Stmts:                $3,
+                    CloseCurlyBracketTkn: $4,
                 }
             }
     |   T_USE mixed_group_use_declaration ';'
@@ -1382,7 +1382,6 @@ for_statement:
             {
                 $$ = &ast.StmtFor{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($2),
@@ -1406,7 +1405,6 @@ foreach_statement:
             {
                 $$ = &ast.StmtForeach{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($2),
@@ -1430,7 +1428,6 @@ declare_statement:
             {
                 $$ = &ast.StmtDeclare{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($2),
@@ -1466,7 +1463,6 @@ switch_case_list:
             {
                 $$ = &ast.StmtSwitch{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:          true,
                     ColonTkn:     $1,
                     CaseList:     $2,
                     EndSwitchTkn: $3,
@@ -1477,7 +1473,6 @@ switch_case_list:
             {
                 $$ = &ast.StmtSwitch{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $5),
-                    Alt:              true,
                     ColonTkn:         $1,
                     CaseSeparatorTkn: $2,
                     CaseList:         $3,
@@ -1536,7 +1531,6 @@ while_statement:
             {
                 $$ = &ast.StmtWhile{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($2),
@@ -1601,7 +1595,6 @@ alt_if_stmt_without_else:
             {
                 $$ = &ast.StmtIf{
                     Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $6),
-                    Alt:                 true,
                     IfTkn:               $1,
                     OpenParenthesisTkn:  $2,
                     Cond:                $3,
@@ -1617,7 +1610,6 @@ alt_if_stmt_without_else:
             {
                 $1.(*ast.StmtIf).ElseIf = append($1.(*ast.StmtIf).ElseIf, &ast.StmtElseIf{
                     Position: yylex.(*Parser).builder.NewTokenNodeListPosition($2, $7),
-                    Alt:                 true,
                     ElseIfTkn:           $2,
                     OpenParenthesisTkn:  $3,
                     Cond:                $4,
@@ -1646,7 +1638,6 @@ alt_if_stmt:
             {
                 $1.(*ast.StmtIf).Else = &ast.StmtElse{
                     Position: yylex.(*Parser).builder.NewTokenNodeListPosition($2, $4),
-                    Alt:      true,
                     ElseTkn:  $2,
                     ColonTkn: $3,
                     Stmt: &ast.StmtStmtList{

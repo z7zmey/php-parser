@@ -798,7 +798,6 @@ unticked_statement:
             {
                 $$ = &ast.StmtIf{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $8),
-                    Alt:                 true,
                     IfTkn:               $1,
                     OpenParenthesisTkn:  $2.(*ast.ParserBrackets).OpenBracketTkn,
                     Cond:                $2.(*ast.ParserBrackets).Child,
@@ -1264,9 +1263,9 @@ unticked_class_declaration_statement:
                         }
                         n.Extends = $3
                         n.Implements = $4
-                        n.OpenCurlyBracket = $5
+                        n.OpenCurlyBracketTkn = $5
                         n.Stmts = $6
-                        n.CloseCurlyBracket = $7
+                        n.CloseCurlyBracketTkn = $7
                     case *ast.StmtTrait :
                         n.Position = yylex.(*Parser).builder.NewNodeTokenPosition($1, $7)
                         n.TraitName = &ast.Identifier{
@@ -1276,9 +1275,9 @@ unticked_class_declaration_statement:
                         }
                         n.Extends = $3
                         n.Implements = $4
-                        n.OpenCurlyBracket = $5
+                        n.OpenCurlyBracketTkn = $5
                         n.Stmts = $6
-                        n.CloseCurlyBracket = $7
+                        n.CloseCurlyBracketTkn = $7
                 }
 
                 $$ = $1
@@ -1476,7 +1475,6 @@ for_statement:
             {
                 $$ = &ast.StmtFor{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($2),
@@ -1500,7 +1498,6 @@ foreach_statement:
             {
                 $$ = &ast.StmtForeach{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($2),
@@ -1525,7 +1522,6 @@ declare_statement:
             {
                 $$ = &ast.StmtDeclare{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($2),
@@ -1602,7 +1598,6 @@ switch_case_list:
             {
                 $$ = &ast.StmtSwitch{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:          true,
                     ColonTkn:     $1,
                     CaseList:     $2,
                     EndSwitchTkn: $3,
@@ -1613,7 +1608,6 @@ switch_case_list:
             {
                 $$ = &ast.StmtSwitch{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $5),
-                    Alt:              true,
                     ColonTkn:         $1,
                     CaseSeparatorTkn: $2,
                     CaseList:         $3,
@@ -1675,7 +1669,6 @@ while_statement:
             {
                 $$ = &ast.StmtWhile{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    Alt:      true,
                     ColonTkn: $1,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($2),
@@ -1717,7 +1710,6 @@ new_elseif_list:
             {
                 $$ = append($1, &ast.StmtElseIf{
                     Position: yylex.(*Parser).builder.NewTokenNodeListPosition($2, $5),
-                    Alt:                 true,
                     ElseIfTkn:           $2,
                     OpenParenthesisTkn:  $3.(*ast.ParserBrackets).OpenBracketTkn,
                     Cond:                $3.(*ast.ParserBrackets).Child,
@@ -1757,7 +1749,6 @@ new_else_single:
             {
                 $$ = &ast.StmtElse{
                     Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3),
-                    Alt:      true,
                     ElseTkn:  $1,
                     ColonTkn: $2,
                     Stmt: &ast.StmtStmtList{

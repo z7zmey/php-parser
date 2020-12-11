@@ -398,7 +398,6 @@ func (n *StmtContinue) GetPosition() *position.Position {
 // StmtDeclare node
 type StmtDeclare struct {
 	Position            *position.Position
-	Alt                 bool
 	DeclareTkn          *token.Token
 	OpenParenthesisTkn  *token.Token
 	Consts              []Vertex
@@ -474,7 +473,6 @@ func (n *StmtEcho) GetPosition() *position.Position {
 // StmtElse node
 type StmtElse struct {
 	Position *position.Position
-	Alt      bool
 	ElseTkn  *token.Token
 	ColonTkn *token.Token
 	Stmt     Vertex
@@ -491,7 +489,6 @@ func (n *StmtElse) GetPosition() *position.Position {
 // StmtElseIf node
 type StmtElseIf struct {
 	Position            *position.Position
-	Alt                 bool
 	ElseIfTkn           *token.Token
 	OpenParenthesisTkn  *token.Token
 	Cond                Vertex
@@ -543,7 +540,6 @@ func (n *StmtFinally) GetPosition() *position.Position {
 // StmtFor node
 type StmtFor struct {
 	Position            *position.Position
-	Alt                 bool
 	ForTkn              *token.Token
 	OpenParenthesisTkn  *token.Token
 	Init                []Vertex
@@ -572,7 +568,6 @@ func (n *StmtFor) GetPosition() *position.Position {
 // StmtForeach node
 type StmtForeach struct {
 	Position            *position.Position
-	Alt                 bool
 	ForeachTkn          *token.Token
 	OpenParenthesisTkn  *token.Token
 	Expr                Vertex
@@ -673,7 +668,6 @@ func (n *StmtHaltCompiler) GetPosition() *position.Position {
 // StmtIf node
 type StmtIf struct {
 	Position            *position.Position
-	Alt                 bool
 	IfTkn               *token.Token
 	OpenParenthesisTkn  *token.Token
 	Cond                Vertex
@@ -894,7 +888,6 @@ func (n *StmtStmtList) GetPosition() *position.Position {
 // StmtSwitch node
 type StmtSwitch struct {
 	Position             *position.Position
-	Alt                  bool
 	SwitchTkn            *token.Token
 	OpenParenthesisTkn   *token.Token
 	Cond                 Vertex
@@ -1137,7 +1130,6 @@ func (n *StmtUseDeclaration) GetPosition() *position.Position {
 // StmtWhile node
 type StmtWhile struct {
 	Position            *position.Position
-	Alt                 bool
 	WhileTkn            *token.Token
 	OpenParenthesisTkn  *token.Token
 	Cond                Vertex
