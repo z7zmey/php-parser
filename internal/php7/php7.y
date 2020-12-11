@@ -281,6 +281,8 @@ import (
 start:
         top_statement_list
             {
+                yylex.(*Parser).currentToken.Value = nil
+
                 yylex.(*Parser).rootNode = &ast.Root{
                     Position: yylex.(*Parser).builder.NewNodeListPosition($1),
                     Stmts:  $1,
@@ -579,7 +581,9 @@ group_use_declaration:
 mixed_group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
-                $4.(*ast.ParserSeparatedList).SeparatorTkns = append($4.(*ast.ParserSeparatedList).SeparatorTkns, $5)
+                if $5 != nil {
+                    $4.(*ast.ParserSeparatedList).SeparatorTkns = append($4.(*ast.ParserSeparatedList).SeparatorTkns, $5)
+                }
 
                 $$ = &ast.StmtGroupUse{
                     Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $6),
@@ -597,7 +601,9 @@ mixed_group_use_declaration:
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
-                $5.(*ast.ParserSeparatedList).SeparatorTkns = append($5.(*ast.ParserSeparatedList).SeparatorTkns, $6)
+                if $6 != nil {
+                    $5.(*ast.ParserSeparatedList).SeparatorTkns = append($5.(*ast.ParserSeparatedList).SeparatorTkns, $6)
+                }
 
                 $$ = &ast.StmtGroupUse{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $7),
@@ -941,7 +947,9 @@ statement:
             {
                 $3.(*ast.StmtUnset).UnsetTkn = $1
                 $3.(*ast.StmtUnset).OpenParenthesisTkn = $2
-                $3.(*ast.StmtUnset).SeparatorTkns = append($3.(*ast.StmtUnset).SeparatorTkns, $4)
+                if $4 != nil {
+                    $3.(*ast.StmtUnset).SeparatorTkns = append($3.(*ast.StmtUnset).SeparatorTkns, $4)
+                }
                 $3.(*ast.StmtUnset).CloseParenthesisTkn = $5
                 $3.(*ast.StmtUnset).SemiColonTkn = $6
                 $3.(*ast.StmtUnset).Position = yylex.(*Parser).builder.NewTokensPosition($1, $6)
@@ -1815,7 +1823,9 @@ argument_list:
                 argumentList := $2.(*ast.ArgumentList)
                 argumentList.Position = yylex.(*Parser).builder.NewTokensPosition($1, $4)
                 argumentList.OpenParenthesisTkn = $1
-                argumentList.SeparatorTkns = append(argumentList.SeparatorTkns, $3)
+                if $3 != nil {
+                    argumentList.SeparatorTkns = append(argumentList.SeparatorTkns, $3)
+                }
                 argumentList.CloseParenthesisTkn = $4
 
                 $$ = argumentList
@@ -2029,17 +2039,17 @@ trait_adaptations:
             {
                 $$ = &ast.StmtTraitAdaptationList{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
-                    OpenParenthesisTkn:  $1,
-                    CloseParenthesisTkn: $2,
+                    OpenCurlyBracketTkn:  $1,
+                    CloseCurlyBracketTkn: $2,
                 }
             }
     |   '{' trait_adaptation_list '}'
             {
                 $$ = &ast.StmtTraitAdaptationList{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenParenthesisTkn:  $1,
-                    Adaptations:         $2,
-                    CloseParenthesisTkn: $3,
+                    OpenCurlyBracketTkn:  $1,
+                    Adaptations:          $2,
+                    CloseCurlyBracketTkn: $3,
                 }
             }
 ;
@@ -2435,7 +2445,7 @@ anonymous_class:
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
                     SeparatorTkns:       $2.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                    CloseParenthesisTkn: $2.(*ast.ArgumentList).CloseParenthesisTkn,
                     Extends:             $3,
                     Implements:          $4,
                     OpenCurlyBracket:    $6,
@@ -2456,7 +2466,7 @@ new_expr:
                         OpenParenthesisTkn:  $3.(*ast.ArgumentList).OpenParenthesisTkn,
                         Arguments:           $3.(*ast.ArgumentList).Arguments,
                         SeparatorTkns:       $3.(*ast.ArgumentList).SeparatorTkns,
-                        CloseParenthesisTkn: $3.(*ast.ArgumentList).OpenParenthesisTkn,
+                        CloseParenthesisTkn: $3.(*ast.ArgumentList).CloseParenthesisTkn,
                     }
                 } else {
                     $$ = &ast.ExprNew{
@@ -3284,7 +3294,7 @@ function_call:
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
                     SeparatorTkns:       $2.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                    CloseParenthesisTkn: $2.(*ast.ArgumentList).CloseParenthesisTkn,
                 }
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
@@ -3297,7 +3307,7 @@ function_call:
                     OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $4.(*ast.ArgumentList).Arguments,
                     SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                    CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
                 }
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
@@ -3310,7 +3320,7 @@ function_call:
                     OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $4.(*ast.ArgumentList).Arguments,
                     SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $4.(*ast.ArgumentList).OpenParenthesisTkn,
+                    CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
                 }
             }
     |   callable_expr argument_list
@@ -3321,7 +3331,7 @@ function_call:
                     OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:           $2.(*ast.ArgumentList).Arguments,
                     SeparatorTkns:       $2.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                    CloseParenthesisTkn: $2.(*ast.ArgumentList).CloseParenthesisTkn,
                 }
             }
 ;
@@ -3542,7 +3552,7 @@ scalar:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenQoteTkn:  $1,
                     Parts:        $2,
-                    CloseQoteTkn: $1,
+                    CloseQoteTkn: $3,
                 }
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC

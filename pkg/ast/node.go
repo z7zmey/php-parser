@@ -954,10 +954,10 @@ func (n *StmtTrait) GetPosition() *position.Position {
 
 // StmtTraitAdaptationList node
 type StmtTraitAdaptationList struct {
-	Position            *position.Position
-	OpenParenthesisTkn  *token.Token
-	Adaptations         []Vertex
-	CloseParenthesisTkn *token.Token
+	Position             *position.Position
+	OpenCurlyBracketTkn  *token.Token
+	Adaptations          []Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *StmtTraitAdaptationList) Accept(v NodeVisitor) {

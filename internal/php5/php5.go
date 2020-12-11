@@ -2315,6 +2315,8 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php5/php5.y:266
 		{
+			yylex.(*Parser).currentToken.Value = nil
+
 			yylex.(*Parser).rootNode = &ast.Root{
 				Position: yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].list),
 				Stmts:    yyDollar[1].list,
@@ -2323,7 +2325,7 @@ yydefault:
 		}
 	case 2:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:277
+		// line internal/php5/php5.y:279
 		{
 			if yyDollar[2].node != nil {
 				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
@@ -2331,13 +2333,13 @@ yydefault:
 		}
 	case 3:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line internal/php5/php5.y:283
+		// line internal/php5/php5.y:285
 		{
 			yyVAL.list = []ast.Vertex{}
 		}
 	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:290
+		// line internal/php5/php5.y:292
 		{
 			yyVAL.node = &ast.ParserSeparatedList{
 				Items: []ast.Vertex{
@@ -2351,7 +2353,7 @@ yydefault:
 		}
 	case 5:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:302
+		// line internal/php5/php5.y:304
 		{
 			part := &ast.NameNamePart{
 				Position:  yylex.(*Parser).builder.NewTokenPosition(yyDollar[3].token),
@@ -2366,32 +2368,32 @@ yydefault:
 		}
 	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:318
+		// line internal/php5/php5.y:320
 		{
 			// error
 			yyVAL.node = nil
 		}
 	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:323
+		// line internal/php5/php5.y:325
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 8:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:327
+		// line internal/php5/php5.y:329
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:331
+		// line internal/php5/php5.y:333
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 10:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line internal/php5/php5.y:335
+		// line internal/php5/php5.y:337
 		{
 			yyVAL.node = &ast.StmtHaltCompiler{
 				Position:            yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
@@ -2403,7 +2405,7 @@ yydefault:
 		}
 	case 11:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:345
+		// line internal/php5/php5.y:347
 		{
 			yyVAL.node = &ast.StmtNamespace{
 				Position: yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
@@ -2418,7 +2420,7 @@ yydefault:
 		}
 	case 12:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line internal/php5/php5.y:358
+		// line internal/php5/php5.y:360
 		{
 			yyVAL.node = &ast.StmtNamespace{
 				Position: yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
@@ -2435,7 +2437,7 @@ yydefault:
 		}
 	case 13:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line internal/php5/php5.y:373
+		// line internal/php5/php5.y:375
 		{
 			yyVAL.node = &ast.StmtNamespace{
 				Position:          yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
@@ -2447,7 +2449,7 @@ yydefault:
 		}
 	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:383
+		// line internal/php5/php5.y:385
 		{
 			yyVAL.node = &ast.StmtUse{
 				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
@@ -2459,7 +2461,7 @@ yydefault:
 		}
 	case 15:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line internal/php5/php5.y:393
+		// line internal/php5/php5.y:395
 		{
 			yyVAL.node = &ast.StmtUse{
 				Position: yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
@@ -2476,7 +2478,7 @@ yydefault:
 		}
 	case 16:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line internal/php5/php5.y:408
+		// line internal/php5/php5.y:410
 		{
 			yyVAL.node = &ast.StmtUse{
 				Position: yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
@@ -2493,7 +2495,7 @@ yydefault:
 		}
 	case 17:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:423
+		// line internal/php5/php5.y:425
 		{
 			yyDollar[1].node.(*ast.StmtConstList).SemiColonTkn = yyDollar[2].token
 			yyDollar[1].node.(*ast.StmtConstList).Position = yylex.(*Parser).builder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token)
@@ -2501,7 +2503,7 @@ yydefault:
 		}
 	case 18:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:432
+		// line internal/php5/php5.y:434
 		{
 			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
 			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
@@ -2510,7 +2512,7 @@ yydefault:
 		}
 	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:439
+		// line internal/php5/php5.y:441
 		{
 			yyVAL.node = &ast.ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
@@ -2518,7 +2520,7 @@ yydefault:
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:448
+		// line internal/php5/php5.y:450
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position: yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items),
@@ -2531,7 +2533,7 @@ yydefault:
 		}
 	case 21:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:459
+		// line internal/php5/php5.y:461
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position: yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].token),
@@ -2550,7 +2552,7 @@ yydefault:
 		}
 	case 22:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:476
+		// line internal/php5/php5.y:478
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position:       yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].node.(*ast.ParserSeparatedList).Items),
@@ -2564,7 +2566,7 @@ yydefault:
 		}
 	case 23:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line internal/php5/php5.y:488
+		// line internal/php5/php5.y:490
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position:       yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
@@ -2584,7 +2586,7 @@ yydefault:
 		}
 	case 24:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:509
+		// line internal/php5/php5.y:511
 		{
 			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
 			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
@@ -2593,7 +2595,7 @@ yydefault:
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:516
+		// line internal/php5/php5.y:518
 		{
 			yyVAL.node = &ast.ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
@@ -2601,7 +2603,7 @@ yydefault:
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:525
+		// line internal/php5/php5.y:527
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position: yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items),
@@ -2614,7 +2616,7 @@ yydefault:
 		}
 	case 27:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:536
+		// line internal/php5/php5.y:538
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position: yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].token),
@@ -2633,7 +2635,7 @@ yydefault:
 		}
 	case 28:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:553
+		// line internal/php5/php5.y:555
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position:       yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].node.(*ast.ParserSeparatedList).Items),
@@ -2647,7 +2649,7 @@ yydefault:
 		}
 	case 29:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line internal/php5/php5.y:565
+		// line internal/php5/php5.y:567
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position:       yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
@@ -2667,7 +2669,7 @@ yydefault:
 		}
 	case 30:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:586
+		// line internal/php5/php5.y:588
 		{
 			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
 			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
@@ -2676,7 +2678,7 @@ yydefault:
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:593
+		// line internal/php5/php5.y:595
 		{
 			yyVAL.node = &ast.ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
@@ -2684,7 +2686,7 @@ yydefault:
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:602
+		// line internal/php5/php5.y:604
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position: yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items),
@@ -2697,7 +2699,7 @@ yydefault:
 		}
 	case 33:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:613
+		// line internal/php5/php5.y:615
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position: yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].token),
@@ -2716,7 +2718,7 @@ yydefault:
 		}
 	case 34:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:630
+		// line internal/php5/php5.y:632
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position:       yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].node.(*ast.ParserSeparatedList).Items),
@@ -2730,7 +2732,7 @@ yydefault:
 		}
 	case 35:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line internal/php5/php5.y:642
+		// line internal/php5/php5.y:644
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
 				Position:       yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
@@ -2750,7 +2752,7 @@ yydefault:
 		}
 	case 36:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line internal/php5/php5.y:663
+		// line internal/php5/php5.y:665
 		{
 			constList := yyDollar[1].node.(*ast.StmtConstList)
 			constList.Position = yylex.(*Parser).builder.NewNodesPosition(yyDollar[1].node, yyDollar[5].node)
@@ -2770,7 +2772,7 @@ yydefault:
 		}
 	case 37:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line internal/php5/php5.y:681
+		// line internal/php5/php5.y:683
 		{
 			yyVAL.node = &ast.StmtConstList{
 				Position: yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node),
@@ -2791,7 +2793,7 @@ yydefault:
 		}
 	case 38:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:703
+		// line internal/php5/php5.y:705
 		{
 			if yyDollar[2].node != nil {
 				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
@@ -2799,38 +2801,38 @@ yydefault:
 		}
 	case 39:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		// line internal/php5/php5.y:709
+		// line internal/php5/php5.y:711
 		{
 			yyVAL.list = []ast.Vertex{}
 		}
 	case 40:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:717
+		// line internal/php5/php5.y:719
 		{
 			// error
 			yyVAL.node = nil
 		}
 	case 41:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:722
+		// line internal/php5/php5.y:724
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 42:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:726
+		// line internal/php5/php5.y:728
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 43:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:730
+		// line internal/php5/php5.y:732
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 44:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		// line internal/php5/php5.y:734
+		// line internal/php5/php5.y:736
 		{
 			yyVAL.node = &ast.StmtHaltCompiler{
 				Position:            yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
@@ -2842,13 +2844,13 @@ yydefault:
 		}
 	case 45:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		// line internal/php5/php5.y:748
+		// line internal/php5/php5.y:750
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 46:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:752
+		// line internal/php5/php5.y:754
 		{
 			yyVAL.node = &ast.StmtLabel{
 				Position: yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
@@ -2862,7 +2864,7 @@ yydefault:
 		}
 	case 47:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:767
+		// line internal/php5/php5.y:769
 		{
 			yyVAL.node = &ast.StmtStmtList{
 				Position:          yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
@@ -2873,7 +2875,7 @@ yydefault:
 		}
 	case 48:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line internal/php5/php5.y:776
+		// line internal/php5/php5.y:778
 		{
 			pos := yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node)
 			if yyDollar[5].node != nil {
@@ -2895,7 +2897,7 @@ yydefault:
 		}
 	case 49:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		// line internal/php5/php5.y:796
+		// line internal/php5/php5.y:798
 		{
 			yyVAL.node = &ast.StmtIf{
 				Position:            yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
@@ -2917,7 +2919,7 @@ yydefault:
 		}
 	case 50:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:816
+		// line internal/php5/php5.y:818
 		{
 			yyDollar[3].node.(*ast.StmtWhile).WhileTkn = yyDollar[1].token
 			yyDollar[3].node.(*ast.StmtWhile).OpenParenthesisTkn = yyDollar[2].node.(*ast.ParserBrackets).OpenBracketTkn
@@ -2929,7 +2931,7 @@ yydefault:
 		}
 	case 51:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		// line internal/php5/php5.y:826
+		// line internal/php5/php5.y:828
 		{
 			yyVAL.node = &ast.StmtDo{
 				Position:            yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
@@ -2944,7 +2946,7 @@ yydefault:
 		}
 	case 52:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		// line internal/php5/php5.y:839
+		// line internal/php5/php5.y:841
 		{
 			yyDollar[9].node.(*ast.StmtFor).ForTkn = yyDollar[1].token
 			yyDollar[9].node.(*ast.StmtFor).OpenParenthesisTkn = yyDollar[2].token
@@ -2963,7 +2965,7 @@ yydefault:
 		}
 	case 53:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:856
+		// line internal/php5/php5.y:858
 		{
 			yyDollar[3].node.(*ast.StmtSwitch).SwitchTkn = yyDollar[1].token
 			yyDollar[3].node.(*ast.StmtSwitch).OpenParenthesisTkn = yyDollar[2].node.(*ast.ParserBrackets).OpenBracketTkn
@@ -2975,7 +2977,7 @@ yydefault:
 		}
 	case 54:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:866
+		// line internal/php5/php5.y:868
 		{
 			yyVAL.node = &ast.StmtBreak{
 				Position:     yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
@@ -2985,7 +2987,7 @@ yydefault:
 		}
 	case 55:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:874
+		// line internal/php5/php5.y:876
 		{
 			yyVAL.node = &ast.StmtBreak{
 				Position:     yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
@@ -2996,7 +2998,7 @@ yydefault:
 		}
 	case 56:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:883
+		// line internal/php5/php5.y:885
 		{
 			yyVAL.node = &ast.StmtContinue{
 				Position:     yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
@@ -3006,7 +3008,7 @@ yydefault:
 		}
 	case 57:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:891
+		// line internal/php5/php5.y:893
 		{
 			yyVAL.node = &ast.StmtContinue{
 				Position:     yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
@@ -3017,7 +3019,7 @@ yydefault:
 		}
 	case 58:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:900
+		// line internal/php5/php5.y:902
 		{
 			yyVAL.node = &ast.StmtReturn{
 				Position:     yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
@@ -3027,7 +3029,7 @@ yydefault:
 		}
 	case 59:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:908
+		// line internal/php5/php5.y:910
 		{
 			yyVAL.node = &ast.StmtReturn{
 				Position:     yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
@@ -3038,7 +3040,7 @@ yydefault:
 		}
 	case 60:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:917
+		// line internal/php5/php5.y:919
 		{
 			yyVAL.node = &ast.StmtReturn{
 				Position:     yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
@@ -3049,7 +3051,7 @@ yydefault:
 		}
 	case 61:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		// line internal/php5/php5.y:926
+		// line internal/php5/php5.y:928
 		{
 			yyVAL.node = &ast.StmtExpression{
 				Position:     yylex.(*Parser).builder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
@@ -3059,22 +3061,20 @@ yydefault:
 		}
 	case 62:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:934
+		// line internal/php5/php5.y:936
 		{
 			yyDollar[2].node.(*ast.StmtGlobal).GlobalTkn = yyDollar[1].token
 			yyDollar[2].node.(*ast.StmtGlobal).SemiColonTkn = yyDollar[3].token
-			yyDollar[2].node.(*ast.StmtGlobal).SeparatorTkns = append(yyDollar[2].node.(*ast.StmtGlobal).SeparatorTkns, nil)
 			yyDollar[2].node.(*ast.StmtGlobal).Position = yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			yyVAL.node = yyDollar[2].node
 		}
 	case 63:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		// line internal/php5/php5.y:943
+		// line internal/php5/php5.y:944
 		{
 			yyDollar[2].node.(*ast.StmtStatic).StaticTkn = yyDollar[1].token
 			yyDollar[2].node.(*ast.StmtStatic).SemiColonTkn = yyDollar[3].token
-			yyDollar[2].node.(*ast.StmtStatic).SeparatorTkns = append(yyDollar[2].node.(*ast.StmtStatic).SeparatorTkns, nil)
 			yyDollar[2].node.(*ast.StmtStatic).Position = yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 
 			yyVAL.node = yyDollar[2].node
@@ -3222,8 +3222,8 @@ yydefault:
 				GotoTkn:  yyDollar[1].token,
 				Label: &ast.Identifier{
 					Position:      yylex.(*Parser).builder.NewTokenPosition(yyDollar[1].token),
-					IdentifierTkn: yyDollar[1].token,
-					Value:         yyDollar[1].token.Value,
+					IdentifierTkn: yyDollar[2].token,
+					Value:         yyDollar[2].token.Value,
 				},
 				SemiColonTkn: yyDollar[3].token,
 			}
@@ -4395,10 +4395,10 @@ yydefault:
 		// line internal/php5/php5.y:2197
 		{
 			yyVAL.node = &ast.StmtTraitAdaptationList{
-				Position:            yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
-				OpenParenthesisTkn:  yyDollar[1].token,
-				Adaptations:         yyDollar[2].list,
-				CloseParenthesisTkn: yyDollar[3].token,
+				Position:             yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				OpenCurlyBracketTkn:  yyDollar[1].token,
+				Adaptations:          yyDollar[2].list,
+				CloseCurlyBracketTkn: yyDollar[3].token,
 			}
 		}
 	case 180:
@@ -4921,7 +4921,7 @@ yydefault:
 					OpenParenthesisTkn:  yyDollar[3].node.(*ast.ArgumentList).OpenParenthesisTkn,
 					Arguments:           yyDollar[3].node.(*ast.ArgumentList).Arguments,
 					SeparatorTkns:       yyDollar[3].node.(*ast.ArgumentList).SeparatorTkns,
-					CloseParenthesisTkn: yyDollar[3].node.(*ast.ArgumentList).OpenParenthesisTkn,
+					CloseParenthesisTkn: yyDollar[3].node.(*ast.ArgumentList).CloseParenthesisTkn,
 				}
 			} else {
 				yyVAL.node = &ast.ExprNew{
@@ -4984,7 +4984,7 @@ yydefault:
 					OpenParenthesisTkn:  yyDollar[6].node.(*ast.ArgumentList).OpenParenthesisTkn,
 					Arguments:           yyDollar[6].node.(*ast.ArgumentList).Arguments,
 					SeparatorTkns:       yyDollar[6].node.(*ast.ArgumentList).SeparatorTkns,
-					CloseParenthesisTkn: yyDollar[6].node.(*ast.ArgumentList).OpenParenthesisTkn,
+					CloseParenthesisTkn: yyDollar[6].node.(*ast.ArgumentList).CloseParenthesisTkn,
 				}
 			} else {
 				_new = &ast.ExprNew{
@@ -6010,7 +6010,7 @@ yydefault:
 				OpenParenthesisTkn:  yyDollar[2].node.(*ast.ArgumentList).OpenParenthesisTkn,
 				Arguments:           yyDollar[2].node.(*ast.ArgumentList).Arguments,
 				SeparatorTkns:       yyDollar[2].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[2].node.(*ast.ArgumentList).OpenParenthesisTkn,
+				CloseParenthesisTkn: yyDollar[2].node.(*ast.ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 324:
@@ -6029,7 +6029,7 @@ yydefault:
 				OpenParenthesisTkn:  yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
 				Arguments:           yyDollar[4].node.(*ast.ArgumentList).Arguments,
 				SeparatorTkns:       yyDollar[4].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
+				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 325:
@@ -6047,7 +6047,7 @@ yydefault:
 				OpenParenthesisTkn:  yyDollar[3].node.(*ast.ArgumentList).OpenParenthesisTkn,
 				Arguments:           yyDollar[3].node.(*ast.ArgumentList).Arguments,
 				SeparatorTkns:       yyDollar[3].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[3].node.(*ast.ArgumentList).OpenParenthesisTkn,
+				CloseParenthesisTkn: yyDollar[3].node.(*ast.ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 326:
@@ -6062,7 +6062,7 @@ yydefault:
 				OpenParenthesisTkn:  yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
 				Arguments:           yyDollar[4].node.(*ast.ArgumentList).Arguments,
 				SeparatorTkns:       yyDollar[4].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
+				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 327:
@@ -6077,7 +6077,7 @@ yydefault:
 				OpenParenthesisTkn:  yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
 				Arguments:           yyDollar[4].node.(*ast.ArgumentList).Arguments,
 				SeparatorTkns:       yyDollar[4].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
+				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 328:
@@ -6092,7 +6092,7 @@ yydefault:
 				OpenParenthesisTkn:  yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
 				Arguments:           yyDollar[4].node.(*ast.ArgumentList).Arguments,
 				SeparatorTkns:       yyDollar[4].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
+				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 329:
@@ -6107,7 +6107,7 @@ yydefault:
 				OpenParenthesisTkn:  yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
 				Arguments:           yyDollar[4].node.(*ast.ArgumentList).Arguments,
 				SeparatorTkns:       yyDollar[4].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
+				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 330:
@@ -6120,7 +6120,7 @@ yydefault:
 				OpenParenthesisTkn:  yyDollar[2].node.(*ast.ArgumentList).OpenParenthesisTkn,
 				Arguments:           yyDollar[2].node.(*ast.ArgumentList).Arguments,
 				SeparatorTkns:       yyDollar[2].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[2].node.(*ast.ArgumentList).OpenParenthesisTkn,
+				CloseParenthesisTkn: yyDollar[2].node.(*ast.ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 331:
@@ -7030,7 +7030,7 @@ yydefault:
 				Position:     yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 				OpenQoteTkn:  yyDollar[1].token,
 				Parts:        yyDollar[2].list,
-				CloseQoteTkn: yyDollar[1].token,
+				CloseQoteTkn: yyDollar[3].token,
 			}
 		}
 	case 419:
@@ -7211,7 +7211,7 @@ yydefault:
 						OpenParenthesisTkn:  mc.OpenParenthesisTkn,
 						Arguments:           mc.Arguments,
 						SeparatorTkns:       mc.SeparatorTkns,
-						CloseParenthesisTkn: mc.OpenParenthesisTkn,
+						CloseParenthesisTkn: mc.CloseParenthesisTkn,
 					},
 					)
 					yyDollar[3].list = append(yyDollar[3].list, yyDollar[4].list[1:len(yyDollar[4].list)]...)
