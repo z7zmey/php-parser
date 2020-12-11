@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"io"
 	"io/ioutil"
@@ -163,12 +164,12 @@ func printerWorker(r <-chan result) {
 		}
 
 		if *printBack {
-			//o := bytes.NewBuffer([]byte{})
-			//p := printer.NewPrinter(o)
-			//p.Print(res.rootNode)
-			//
-			//err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
-			//checkErr(err)
+			o := bytes.NewBuffer([]byte{})
+			p := visitor.NewPrinter(o)
+			res.rootNode.Accept(p)
+
+			err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
+			checkErr(err)
 		}
 
 		if *showResolvedNs {
@@ -181,9 +182,7 @@ func printerWorker(r <-chan result) {
 		}
 
 		if *dump == true {
-			v := visitor.NewDump(os.Stdout)
-			t := traverser.NewDFS(v)
-			t.Traverse(res.rootNode)
+			visitor.NewDump(os.Stdout).WithPositions().WithTokens().Dump(res.rootNode)
 		}
 
 		wg.Done()

@@ -1,985 +1,2373 @@
 package visitor
 
 import (
-	"fmt"
-	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/z7zmey/php-parser/pkg/ast"
 )
 
-type meta struct {
-	singleNode bool
-}
-
 type Dump struct {
-	writer io.Writer
-	indent int
-	depth  int
-	stack  []meta
+	writer        io.Writer
+	indent        int
+	withTokens    bool
+	withPositions bool
 }
 
 func NewDump(writer io.Writer) *Dump {
 	return &Dump{writer: writer}
 }
 
-func (v *Dump) print(str string) {
-	_, err := io.WriteString(v.writer, str)
+func (v *Dump) WithTokens() *Dump {
+	v.withTokens = true
+	return v
+}
+
+func (v *Dump) WithPositions() *Dump {
+	v.withPositions = true
+	return v
+}
+
+func (v *Dump) Dump(n ast.Vertex) {
+	n.Accept(v)
+}
+
+func (v *Dump) print(indent int, str string) {
+	_, err := io.WriteString(v.writer, strings.Repeat("\t", indent))
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = io.WriteString(v.writer, str)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (v *Dump) printIndent(indentDepth int) {
-	if indentDepth < 0 {
-		indentDepth = 0
-	}
-
-	v.print(strings.Repeat("\t", indentDepth))
-}
-
-func (v *Dump) printIndentIfNotSingle(indentDepth int) {
-	if indentDepth < 0 {
-		indentDepth = 0
-	}
-
-	if !v.stack[v.depth-1].singleNode {
-		v.print(strings.Repeat("\t", indentDepth))
-	}
-}
-
-func (v *Dump) Enter(key string, singleNode bool) {
-	if len(v.stack) < v.depth+1 {
-		v.stack = append(v.stack, meta{})
-	}
-
-	v.stack[v.depth].singleNode = singleNode
-
-	v.printIndent(v.indent)
-	v.print(key)
-	v.print(": ")
-
-	if !singleNode {
-		v.print("[]ast.Vertex{\n")
-		v.indent++
-	}
-}
-
-func (v *Dump) Leave(_ string, singleNode bool) {
-	if !singleNode {
-		v.indent--
-		v.printIndent(v.indent)
-		v.print("},\n")
-	}
-}
-
-func (v *Dump) EnterNode(n ast.Vertex) bool {
-	v.indent++
-	v.depth++
-
-	if len(v.stack) < v.depth {
-		v.stack = append(v.stack, meta{})
-	}
-
-	n.Accept(v)
-
-	return true
-}
-
-func (v *Dump) LeaveNode(_ ast.Vertex) {
-	v.indent--
-	v.depth--
-	v.printIndent(v.indent)
-	v.print("}")
-	if v.depth != 0 {
-		v.print(",")
-	}
-	v.print("\n")
-}
-
-func (v *Dump) printToken(key string, t *token.Token) {
-	if t == nil {
+func (v *Dump) dumpVertex(key string, node ast.Vertex) {
+	if node == nil {
 		return
 	}
 
-	v.printIndent(v.indent)
-	v.print(key)
-	v.print(": &token.Token{\n")
+	v.print(v.indent, key+": ")
+	node.Accept(v)
+}
 
-	v.printIndent(v.indent + 1)
-	v.print("ID:      token." + t.ID.String() + ",\n")
+func (v *Dump) dumpVertexList(key string, list []ast.Vertex) {
+	if list == nil {
+		return
+	}
 
-	v.printIndent(v.indent + 1)
-	v.print("Value:   []byte(" + strconv.Quote(string(t.Value)) + "),\n")
+	if len(list) == 0 {
+		v.print(v.indent, key+": []ast.Vertex{},\n")
+		return
+	}
 
-	v.printIndent(v.indent)
-	v.print("},\n")
+	v.print(v.indent, key+": []ast.Vertex{\n")
+	v.indent++
+
+	for _, nn := range list {
+		v.print(v.indent, "")
+		nn.Accept(v)
+	}
+
+	v.indent--
+	v.print(v.indent, "},\n")
+}
+
+func (v *Dump) dumpToken(key string, tok *token.Token) {
+	if !v.withTokens {
+		return
+	}
+
+	if tok == nil {
+		return
+	}
+
+	if key == "" {
+		v.print(v.indent, "{\n")
+	} else {
+		v.print(v.indent, key+": &token.Token{\n")
+	}
+
+	v.indent++
+
+	if tok.ID > 0 {
+		v.print(v.indent, "ID: token."+tok.ID.String()+",\n")
+	}
+	if tok.Value != nil {
+		v.print(v.indent, "Value: []byte("+strconv.Quote(string(tok.Value))+"),\n")
+	}
+	v.dumpPosition(tok.Position)
+	v.dumpTokenList("FreeFloating", tok.FreeFloating)
+
+	v.indent--
+	v.print(v.indent, "},\n")
+}
+
+func (v *Dump) dumpTokenList(key string, list []*token.Token) {
+	if !v.withTokens {
+		return
+	}
+
+	if list == nil {
+		return
+	}
+
+	if len(list) == 0 {
+		v.print(v.indent, key+": []*token.Token{},\n")
+		return
+	}
+
+	v.print(v.indent, key+": []*token.Token{\n")
+	v.indent++
+
+	for _, tok := range list {
+		v.dumpToken("", tok)
+	}
+
+	v.indent--
+	v.print(v.indent, "},\n")
+}
+
+func (v *Dump) dumpPosition(pos *position.Position) {
+	if !v.withPositions {
+		return
+	}
+
+	if pos == nil {
+		return
+	}
+
+	v.print(v.indent, "Position: &position.Position{\n")
+	v.indent++
+
+	v.print(v.indent, "StartLine: "+strconv.Itoa(pos.StartLine)+",\n")
+	v.print(v.indent, "EndLine:   "+strconv.Itoa(pos.EndLine)+",\n")
+	v.print(v.indent, "StartPos:  "+strconv.Itoa(pos.StartPos)+",\n")
+	v.print(v.indent, "EndPos:    "+strconv.Itoa(pos.EndPos)+",\n")
+
+	v.indent--
+	v.print(v.indent, "},\n")
+}
+
+func (v *Dump) dumpValue(key string, val []byte) {
+	if val == nil {
+		return
+	}
+
+	v.print(v.indent, key+": []byte("+strconv.Quote(string(val))+"),\n")
+
 }
 
 func (v *Dump) Root(n *ast.Root) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.Root{\n")
+	v.print(0, "&ast.Root{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("EndTkn", n.EndTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) Nullable(n *ast.Nullable) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.Nullable{\n")
+	v.print(0, "&ast.Nullable{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("QuestionTkn", n.QuestionTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) Parameter(n *ast.Parameter) {
-	v.printIndent(v.indent - 1)
-	v.print("&ast.Parameter{\n")
+	v.print(0, "&ast.Parameter{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Type", n.Type)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
+	v.dumpToken("VariadicTkn", n.VariadicTkn)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("DefaultValue", n.DefaultValue)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) Identifier(n *ast.Identifier) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.Identifier{\n")
+	v.print(0, "&ast.Identifier{\n")
+	v.indent++
 
-	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
+	v.dumpPosition(n.Position)
+	v.dumpToken("IdentifierTkn", n.IdentifierTkn)
+	v.dumpValue("Value", n.Value)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) Argument(n *ast.Argument) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.Argument{\n")
+	v.print(0, "&ast.Argument{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
+	v.dumpToken("VariadicTkn", n.VariadicTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtBreak(n *ast.StmtBreak) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtBreak{\n")
+	v.print(0, "&ast.StmtBreak{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("BreakTkn", n.BreakTkn)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtCase(n *ast.StmtCase) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtCase{\n")
+	v.print(0, "&ast.StmtCase{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CaseTkn", n.CaseTkn)
+	v.dumpVertex("Cond", n.Cond)
+	v.dumpToken("CaseSeparatorTkn", n.CaseSeparatorTkn)
+	v.dumpVertexList("Stmts", n.Stmts)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtCatch(n *ast.StmtCatch) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtCatch{\n")
+	v.print(0, "&ast.StmtCatch{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CatchTkn", n.CatchTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Types", n.Types)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtClass(n *ast.StmtClass) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtClass{\n")
+	v.print(0, "&ast.StmtClass{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertexList("Modifiers", n.Modifiers)
+	v.dumpToken("ClassTkn", n.ClassTkn)
+	v.dumpVertex("ClassName", n.ClassName)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Arguments", n.Arguments)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpVertex("Extends", n.Extends)
+	v.dumpVertex("Implements", n.Implements)
+	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtClassConstList(n *ast.StmtClassConstList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtClassConstList{\n")
+	v.print(0, "&ast.StmtClassConstList{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertexList("Modifiers", n.Modifiers)
+	v.dumpToken("ConstTkn", n.ConstTkn)
+	v.dumpVertexList("Consts", n.Consts)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtClassExtends(n *ast.StmtClassExtends) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtClassExtends{\n")
+	v.print(0, "&ast.StmtClassExtends{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ExtendTkn", n.ExtendTkn)
+	v.dumpVertex("ClassName", n.ClassName)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtClassImplements(n *ast.StmtClassImplements) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtClassImplements{\n")
+	v.print(0, "&ast.StmtClassImplements{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ImplementsTkn", n.ImplementsTkn)
+	v.dumpVertexList("InterfaceNames", n.InterfaceNames)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtClassMethod(n *ast.StmtClassMethod) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtClassMethod{\n")
+	v.print(0, "&ast.StmtClassMethod{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertexList("Modifiers", n.Modifiers)
+	v.dumpToken("FunctionTkn", n.FunctionTkn)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
+	v.dumpVertex("MethodName", n.MethodName)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Params", n.Params)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("ReturnType", n.ReturnType)
+	v.dumpVertex("Stmt", n.Stmt)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtConstList(n *ast.StmtConstList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtConstList{\n")
+	v.print(0, "&ast.StmtConstList{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ConstTkn", n.ConstTkn)
+	v.dumpVertexList("Consts", n.Consts)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtConstant(n *ast.StmtConstant) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtConstant{\n")
+	v.print(0, "&ast.StmtConstant{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Name", n.Name)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtContinue(n *ast.StmtContinue) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtContinue{\n")
+	v.print(0, "&ast.StmtContinue{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ContinueTkn", n.ContinueTkn)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtDeclare(n *ast.StmtDeclare) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtDeclare{\n")
+	v.print(0, "&ast.StmtDeclare{\n")
+	v.indent++
 
-	if n.Alt {
-		v.printIndent(v.indent)
-		v.print("Alt: true,\n")
-	}
+	v.dumpPosition(n.Position)
+	v.dumpToken("DeclareTkn", n.DeclareTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Consts", n.Consts)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("Stmt", n.Stmt)
+	v.dumpToken("EndDeclareTkn", n.EndDeclareTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtDefault(n *ast.StmtDefault) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtDefault{\n")
+	v.print(0, "&ast.StmtDefault{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("DefaultTkn", n.DefaultTkn)
+	v.dumpToken("CaseSeparatorTkn", n.CaseSeparatorTkn)
+	v.dumpVertexList("Stmts", n.Stmts)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtDo(n *ast.StmtDo) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtDo{\n")
+	v.print(0, "&ast.StmtDo{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("DoTkn", n.DoTkn)
+	v.dumpVertex("Stmt", n.Stmt)
+	v.dumpToken("WhileTkn", n.WhileTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Cond", n.Cond)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
+
 }
 
 func (v *Dump) StmtEcho(n *ast.StmtEcho) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtEcho{\n")
+	v.print(0, "&ast.StmtEcho{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("EchoTkn", n.EchoTkn)
+	v.dumpVertexList("Exprs", n.Exprs)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtElse(n *ast.StmtElse) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtElse{\n")
+	v.print(0, "&ast.StmtElse{\n")
+	v.indent++
 
-	if n.Alt {
-		v.printIndent(v.indent)
-		v.print("Alt: true,\n")
-	}
+	v.dumpPosition(n.Position)
+	v.dumpToken("ElseTkn", n.ElseTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("Stmt", n.Stmt)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtElseIf(n *ast.StmtElseIf) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtElseIf{\n")
+	v.print(0, "&ast.StmtElseIf{\n")
+	v.indent++
 
-	if n.Alt {
-		v.printIndent(v.indent)
-		v.print("Alt: true,\n")
-	}
+	v.dumpPosition(n.Position)
+	v.dumpToken("ElseIfTkn", n.ElseIfTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Cond", n.Cond)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("Stmt", n.Stmt)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtExpression(n *ast.StmtExpression) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtExpression{\n")
+	v.print(0, "&ast.StmtExpression{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtFinally(n *ast.StmtFinally) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtFinally{\n")
+	v.print(0, "&ast.StmtFinally{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("FinallyTkn", n.FinallyTkn)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtFor(n *ast.StmtFor) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtFor{\n")
+	v.print(0, "&ast.StmtFor{\n")
+	v.indent++
 
-	if n.Alt {
-		v.printIndent(v.indent)
-		v.print("Alt: true,\n")
-	}
+	v.dumpPosition(n.Position)
+	v.dumpToken("ForTkn", n.ForTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Init", n.Init)
+	v.dumpTokenList("InitSeparatorTkns", n.InitSeparatorTkns)
+	v.dumpToken("InitSemiColonTkn", n.InitSemiColonTkn)
+	v.dumpVertexList("Cond", n.Cond)
+	v.dumpTokenList("CondSeparatorTkns", n.CondSeparatorTkns)
+	v.dumpToken("CondSemiColonTkn", n.CondSemiColonTkn)
+	v.dumpVertexList("Loop", n.Loop)
+	v.dumpTokenList("LoopSeparatorTkns", n.LoopSeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("Stmt", n.Stmt)
+	v.dumpToken("EndForTkn", n.EndForTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtForeach(n *ast.StmtForeach) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtForeach{\n")
+	v.print(0, "&ast.StmtForeach{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ForeachTkn", n.ForeachTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("AsTkn", n.AsTkn)
+	v.dumpVertex("Key", n.Key)
+	v.dumpToken("DoubleArrowTkn", n.DoubleArrowTkn)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("Stmt", n.Stmt)
+	v.dumpToken("EndForeachTkn", n.EndForeachTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtFunction(n *ast.StmtFunction) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtFunction{\n")
+	v.print(0, "&ast.StmtFunction{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("FunctionTkn", n.FunctionTkn)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
+	v.dumpVertex("FunctionName", n.FunctionName)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Params", n.Params)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("ReturnType", n.ReturnType)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtGlobal(n *ast.StmtGlobal) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtGlobal{\n")
+	v.print(0, "&ast.StmtGlobal{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("GlobalTkn", n.GlobalTkn)
+	v.dumpVertexList("Vars", n.Vars)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtGoto(n *ast.StmtGoto) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtGoto{\n")
+	v.print(0, "&ast.StmtGoto{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("GotoTkn", n.GotoTkn)
+	v.dumpVertex("Label", n.Label)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtHaltCompiler(n *ast.StmtHaltCompiler) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtHaltCompiler{\n")
+	v.print(0, "&ast.StmtHaltCompiler{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("HaltCompilerTkn", n.HaltCompilerTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtIf(n *ast.StmtIf) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtIf{\n")
+	v.print(0, "&ast.StmtIf{\n")
+	v.indent++
 
-	if n.Alt {
-		v.printIndent(v.indent)
-		v.print("Alt: true,\n")
-	}
+	v.dumpPosition(n.Position)
+	v.dumpToken("IfTkn", n.IfTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Cond", n.Cond)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("Stmt", n.Stmt)
+	v.dumpVertexList("ElseIf", n.ElseIf)
+	v.dumpVertex("Else", n.Else)
+	v.dumpToken("EndIfTkn", n.EndIfTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtInlineHtml(n *ast.StmtInlineHtml) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtInlineHtml{\n")
+	v.print(0, "&ast.StmtInlineHtml{\n")
+	v.indent++
 
-	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
+	v.dumpPosition(n.Position)
+	v.dumpToken("InlineHtmlTkn", n.InlineHtmlTkn)
+	v.dumpValue("Value", n.Value)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtInterface(n *ast.StmtInterface) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtInterface{\n")
+	v.print(0, "&ast.StmtInterface{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("InterfaceTkn", n.InterfaceTkn)
+	v.dumpVertex("InterfaceName", n.InterfaceName)
+	v.dumpVertex("Extends", n.Extends)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtInterfaceExtends(n *ast.StmtInterfaceExtends) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtInterfaceExtends{\n")
+	v.print(0, "&ast.StmtInterfaceExtends{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ExtendsTkn", n.ExtendsTkn)
+	v.dumpVertexList("InterfaceNames", n.InterfaceNames)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtLabel(n *ast.StmtLabel) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtLabel{\n")
+	v.print(0, "&ast.StmtLabel{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("LabelName", n.LabelName)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtNamespace(n *ast.StmtNamespace) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtNamespace{\n")
+	v.print(0, "&ast.StmtNamespace{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("NsTkn", n.NsTkn)
+	v.dumpVertex("Name", n.Name)
+	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtNop(n *ast.StmtNop) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtNop{\n")
+	v.print(0, "&ast.StmtNop{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtProperty(n *ast.StmtProperty) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtProperty{\n")
+	v.print(0, "&ast.StmtProperty{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtPropertyList(n *ast.StmtPropertyList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtPropertyList{\n")
+	v.print(0, "&ast.StmtPropertyList{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertexList("Modifiers", n.Modifiers)
+	v.dumpVertex("Type", n.Type)
+	v.dumpVertexList("Properties", n.Properties)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtReturn(n *ast.StmtReturn) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtReturn{\n")
+	v.print(0, "&ast.StmtReturn{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ReturnTkn", n.ReturnTkn)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtStatic(n *ast.StmtStatic) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtStatic{\n")
+	v.print(0, "&ast.StmtStatic{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("StaticTkn", n.StaticTkn)
+	v.dumpVertexList("Vars", n.Vars)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtStaticVar(n *ast.StmtStaticVar) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtStaticVar{\n")
+	v.print(0, "&ast.StmtStaticVar{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtStmtList(n *ast.StmtStmtList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtStmtList{\n")
+	v.print(0, "&ast.StmtStmtList{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtSwitch(n *ast.StmtSwitch) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtSwitch{\n")
+	v.print(0, "&ast.StmtSwitch{\n")
+	v.indent++
 
-	if n.Alt {
-		v.printIndent(v.indent)
-		v.print("Alt: true,\n")
-	}
+	v.dumpPosition(n.Position)
+	v.dumpToken("SwitchTkn", n.SwitchTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Cond", n.Cond)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpToken("CaseSeparatorTkn", n.CaseSeparatorTkn)
+	v.dumpVertexList("CaseList", n.CaseList)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+	v.dumpToken("EndSwitchTkn", n.EndSwitchTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtThrow(n *ast.StmtThrow) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtThrow{\n")
+	v.print(0, "&ast.StmtThrow{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ThrowTkn", n.ThrowTkn)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtTrait(n *ast.StmtTrait) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtTrait{\n")
+	v.print(0, "&ast.StmtTrait{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("TraitTkn", n.TraitTkn)
+	v.dumpVertex("TraitName", n.TraitName)
+	v.dumpVertex("Extends", n.Extends)
+	v.dumpVertex("Implements", n.Implements)
+	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtTraitAdaptationList(n *ast.StmtTraitAdaptationList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtTraitAdaptationList{\n")
+	v.print(0, "&ast.StmtTraitAdaptationList{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpVertexList("Adaptations", n.Adaptations)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtTraitMethodRef{\n")
+	v.print(0, "&ast.StmtTraitMethodRef{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Trait", n.Trait)
+	v.dumpToken("DoubleColonTkn", n.DoubleColonTkn)
+	v.dumpVertex("Method", n.Method)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtTraitUse(n *ast.StmtTraitUse) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtTraitUse{\n")
+	v.print(0, "&ast.StmtTraitUse{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("UseTkn", n.UseTkn)
+	v.dumpVertexList("Traits", n.Traits)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpVertex("Adaptations", n.Adaptations)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtTraitUseAlias{\n")
+	v.print(0, "&ast.StmtTraitUseAlias{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Ref", n.Ref)
+	v.dumpToken("AsTkn", n.AsTkn)
+	v.dumpVertex("Modifier", n.Modifier)
+	v.dumpVertex("Alias", n.Alias)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtTraitUsePrecedence(n *ast.StmtTraitUsePrecedence) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtTraitUsePrecedence{\n")
+	v.print(0, "&ast.StmtTraitUsePrecedence{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Ref", n.Ref)
+	v.dumpToken("InsteadofTkn", n.InsteadofTkn)
+	v.dumpVertexList("Insteadof", n.Insteadof)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtTry(n *ast.StmtTry) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtTry{\n")
+	v.print(0, "&ast.StmtTry{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("TryTkn", n.TryTkn)
+	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+	v.dumpVertexList("Catches", n.Catches)
+	v.dumpVertex("Finally", n.Finally)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtUnset(n *ast.StmtUnset) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtUnset{\n")
+	v.print(0, "&ast.StmtUnset{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("UnsetTkn", n.UnsetTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Vars", n.Vars)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtUse(n *ast.StmtUse) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtUse{\n")
-	v.printToken("UseTkn", n.UseTkn)
-	v.printToken("SemiColonTkn", n.SemiColonTkn)
+	v.print(0, "&ast.StmtUse{\n")
+	v.indent++
 
+	v.dumpPosition(n.Position)
+	v.dumpToken("UseTkn", n.UseTkn)
+	v.dumpVertex("Type", n.Type)
+	v.dumpVertexList("UseDeclarations", n.UseDeclarations)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtGroupUse(n *ast.StmtGroupUse) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtGroupUse{\n")
-	v.printToken("UseTkn", n.UseTkn)
-	v.printToken("LeadingNsSeparatorTkn", n.LeadingNsSeparatorTkn)
-	v.printToken("NsSeparatorTkn", n.NsSeparatorTkn)
-	v.printToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
-	v.printToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
-	v.printToken("SemiColonTkn", n.SemiColonTkn)
+	v.print(0, "&ast.StmtGroupUse{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("UseTkn", n.UseTkn)
+	v.dumpVertex("Type", n.Type)
+	v.dumpToken("LeadingNsSeparatorTkn", n.LeadingNsSeparatorTkn)
+	v.dumpVertex("Prefix", n.Prefix)
+	v.dumpToken("NsSeparatorTkn", n.NsSeparatorTkn)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpVertexList("UseDeclarations", n.UseDeclarations)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtUseDeclaration{\n")
-	v.printToken("NsSeparatorTkn", n.NsSeparatorTkn)
-	v.printToken("AsTkn", n.AsTkn)
+	v.print(0, "&ast.StmtUseDeclaration{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Type", n.Type)
+	v.dumpToken("NsSeparatorTkn", n.NsSeparatorTkn)
+	v.dumpVertex("Use", n.Use)
+	v.dumpToken("AsTkn", n.AsTkn)
+	v.dumpVertex("Alias", n.Alias)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) StmtWhile(n *ast.StmtWhile) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.StmtWhile{\n")
+	v.print(0, "&ast.StmtWhile{\n")
+	v.indent++
 
-	if n.Alt {
-		v.printIndent(v.indent)
-		v.print("Alt: true,\n")
-	}
+	v.dumpPosition(n.Position)
+	v.dumpToken("WhileTkn", n.WhileTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Cond", n.Cond)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("Stmt", n.Stmt)
+	v.dumpToken("EndWhileTkn", n.EndWhileTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprArray(n *ast.ExprArray) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprArray{\n")
+	v.print(0, "&ast.ExprArray{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ArrayTkn", n.ArrayTkn)
+	v.dumpToken("OpenBracketTkn", n.OpenBracketTkn)
+	v.dumpVertexList("Items", n.Items)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseBracketTkn", n.CloseBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprArrayDimFetch(n *ast.ExprArrayDimFetch) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprArrayDimFetch{\n")
+	v.print(0, "&ast.ExprArrayDimFetch{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("OpenBracketTkn", n.OpenBracketTkn)
+	v.dumpVertex("Dim", n.Dim)
+	v.dumpToken("CloseBracketTkn", n.CloseBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprArrayItem(n *ast.ExprArrayItem) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprArrayItem{\n")
+	v.print(0, "&ast.ExprArrayItem{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("EllipsisTkn", n.EllipsisTkn)
+	v.dumpVertex("Key", n.Key)
+	v.dumpToken("DoubleArrowTkn", n.DoubleArrowTkn)
+	v.dumpVertex("Val", n.Val)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprArrowFunction(n *ast.ExprArrowFunction) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprArrowFunction{\n")
+	v.print(0, "&ast.ExprArrowFunction{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("StaticTkn", n.StaticTkn)
+	v.dumpToken("FnTkn", n.FnTkn)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Params", n.Params)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("ReturnType", n.ReturnType)
+	v.dumpToken("DoubleArrowTkn", n.DoubleArrowTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBitwiseNot(n *ast.ExprBitwiseNot) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBitwiseNot{\n")
+	v.print(0, "&ast.ExprBitwiseNot{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("TildaTkn", n.TildaTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBooleanNot(n *ast.ExprBooleanNot) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBooleanNot{\n")
+	v.print(0, "&ast.ExprBooleanNot{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ExclamationTkn", n.ExclamationTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprClassConstFetch(n *ast.ExprClassConstFetch) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprClassConstFetch{\n")
+	v.print(0, "&ast.ExprClassConstFetch{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Class", n.Class)
+	v.dumpToken("DoubleColonTkn", n.DoubleColonTkn)
+	v.dumpVertex("ConstantName", n.ConstantName)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprClone(n *ast.ExprClone) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprClone{\n")
+	v.print(0, "&ast.ExprClone{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CloneTkn", n.CloneTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprClosure(n *ast.ExprClosure) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprClosure{\n")
+	v.print(0, "&ast.ExprClosure{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("StaticTkn", n.StaticTkn)
+	v.dumpToken("FunctionTkn", n.FunctionTkn)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Params", n.Params)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpVertex("ClosureUse", n.ClosureUse)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("ReturnType", n.ReturnType)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpVertexList("Stmts", n.Stmts)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprClosureUse(n *ast.ExprClosureUse) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprClosureUse{\n")
+	v.print(0, "&ast.ExprClosureUse{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("UseTkn", n.UseTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Uses", n.Uses)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprConstFetch(n *ast.ExprConstFetch) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprConstFetch{\n")
+	v.print(0, "&ast.ExprConstFetch{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Const", n.Const)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprEmpty(n *ast.ExprEmpty) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprEmpty{\n")
+	v.print(0, "&ast.ExprEmpty{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("EmptyTkn", n.EmptyTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprErrorSuppress(n *ast.ExprErrorSuppress) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprErrorSuppress{\n")
+	v.print(0, "&ast.ExprErrorSuppress{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("AtTkn", n.AtTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprEval(n *ast.ExprEval) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprEval{\n")
+	v.print(0, "&ast.ExprEval{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("EvalTkn", n.EvalTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprExit(n *ast.ExprExit) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprExit{\n")
+	v.print(0, "&ast.ExprExit{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("DieTkn", n.DieTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprFunctionCall(n *ast.ExprFunctionCall) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprFunctionCall{\n")
+	v.print(0, "&ast.ExprFunctionCall{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Function", n.Function)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Arguments", n.Arguments)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprInclude(n *ast.ExprInclude) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprInclude{\n")
+	v.print(0, "&ast.ExprInclude{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("IncludeTkn", n.IncludeTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprIncludeOnce(n *ast.ExprIncludeOnce) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprIncludeOnce{\n")
+	v.print(0, "&ast.ExprIncludeOnce{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("IncludeTkn", n.IncludeTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprInstanceOf(n *ast.ExprInstanceOf) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprInstanceOf{\n")
+	v.print(0, "&ast.ExprInstanceOf{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("InstanceOfTkn", n.InstanceOfTkn)
+	v.dumpVertex("Class", n.Class)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprIsset(n *ast.ExprIsset) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprIsset{\n")
+	v.print(0, "&ast.ExprIsset{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("IssetTkn", n.IssetTkn)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Vars", n.Vars)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprList(n *ast.ExprList) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprList{\n")
+	v.print(0, "&ast.ExprList{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("ListTkn", n.ListTkn)
+	v.dumpToken("OpenBracketTkn", n.OpenBracketTkn)
+	v.dumpVertexList("Items", n.Items)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseBracketTkn", n.CloseBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprMethodCall(n *ast.ExprMethodCall) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprMethodCall{\n")
+	v.print(0, "&ast.ExprMethodCall{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("ObjectOperatorTkn", n.ObjectOperatorTkn)
+	v.dumpVertex("Method", n.Method)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Arguments", n.Arguments)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprNew(n *ast.ExprNew) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprNew{\n")
+	v.print(0, "&ast.ExprNew{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("NewTkn", n.NewTkn)
+	v.dumpVertex("Class", n.Class)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Arguments", n.Arguments)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprPostDec(n *ast.ExprPostDec) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprPostDec{\n")
+	v.print(0, "&ast.ExprPostDec{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("DecTkn", n.DecTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprPostInc(n *ast.ExprPostInc) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprPostInc{\n")
+	v.print(0, "&ast.ExprPostInc{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("IncTkn", n.IncTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprPreDec(n *ast.ExprPreDec) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprPreDec{\n")
+	v.print(0, "&ast.ExprPreDec{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("DecTkn", n.DecTkn)
+	v.dumpVertex("Var", n.Var)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprPreInc(n *ast.ExprPreInc) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprPreInc{\n")
+	v.print(0, "&ast.ExprPreInc{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("IncTkn", n.IncTkn)
+	v.dumpVertex("Var", n.Var)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprPrint(n *ast.ExprPrint) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprPrint{\n")
+	v.print(0, "&ast.ExprPrint{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("PrintTkn", n.PrintTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprPropertyFetch{\n")
+	v.print(0, "&ast.ExprPropertyFetch{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("ObjectOperatorTkn", n.ObjectOperatorTkn)
+	v.dumpVertex("Property", n.Property)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprReference(n *ast.ExprReference) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprReference{\n")
+	v.print(0, "&ast.ExprReference{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
+	v.dumpVertex("Var", n.Var)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprRequire(n *ast.ExprRequire) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprRequire{\n")
+	v.print(0, "&ast.ExprRequire{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("RequireTkn", n.RequireTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprRequireOnce(n *ast.ExprRequireOnce) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprRequireOnce{\n")
+	v.print(0, "&ast.ExprRequireOnce{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("RequireOnceTkn", n.RequireOnceTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprShellExec(n *ast.ExprShellExec) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprShellExec{\n")
+	v.print(0, "&ast.ExprShellExec{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("OpenBacktickTkn", n.OpenBacktickTkn)
+	v.dumpVertexList("Parts", n.Parts)
+	v.dumpToken("CloseBacktickTkn", n.CloseBacktickTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprStaticCall(n *ast.ExprStaticCall) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprStaticCall{\n")
+	v.print(0, "&ast.ExprStaticCall{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Class", n.Class)
+	v.dumpToken("DoubleColonTkn", n.DoubleColonTkn)
+	v.dumpVertex("Call", n.Call)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Arguments", n.Arguments)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprStaticPropertyFetch(n *ast.ExprStaticPropertyFetch) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprStaticPropertyFetch{\n")
+	v.print(0, "&ast.ExprStaticPropertyFetch{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Class", n.Class)
+	v.dumpToken("DoubleColonTkn", n.DoubleColonTkn)
+	v.dumpVertex("Property", n.Property)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprTernary(n *ast.ExprTernary) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprTernary{\n")
+	v.print(0, "&ast.ExprTernary{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Condition", n.Condition)
+	v.dumpToken("QuestionTkn", n.QuestionTkn)
+	v.dumpVertex("IfTrue", n.IfTrue)
+	v.dumpToken("ColonTkn", n.ColonTkn)
+	v.dumpVertex("IfFalse", n.IfFalse)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprUnaryMinus(n *ast.ExprUnaryMinus) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprUnaryMinus{\n")
+	v.print(0, "&ast.ExprUnaryMinus{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("MinusTkn", n.MinusTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprUnaryPlus(n *ast.ExprUnaryPlus) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprUnaryPlus{\n")
+	v.print(0, "&ast.ExprUnaryPlus{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("PlusTkn", n.PlusTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprVariable(n *ast.ExprVariable) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprVariable{\n")
+	v.print(0, "&ast.ExprVariable{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("DollarTkn", n.DollarTkn)
+	v.dumpVertex("VarName", n.VarName)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprYield(n *ast.ExprYield) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprYield{\n")
+	v.print(0, "&ast.ExprYield{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("YieldTkn", n.YieldTkn)
+	v.dumpVertex("Key", n.Key)
+	v.dumpToken("DoubleArrowTkn", n.DoubleArrowTkn)
+	v.dumpVertex("Value", n.Value)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprYieldFrom(n *ast.ExprYieldFrom) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprYieldFrom{\n")
+	v.print(0, "&ast.ExprYieldFrom{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("YieldFromTkn", n.YieldFromTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssign(n *ast.ExprAssign) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssign{\n")
+	v.print(0, "&ast.ExprAssign{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignReference(n *ast.ExprAssignReference) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignReference{\n")
+	v.print(0, "&ast.ExprAssignReference{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignBitwiseAnd(n *ast.ExprAssignBitwiseAnd) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignBitwiseAnd{\n")
+	v.print(0, "&ast.ExprAssignBitwiseAnd{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignBitwiseOr(n *ast.ExprAssignBitwiseOr) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignBitwiseOr{\n")
+	v.print(0, "&ast.ExprAssignBitwiseOr{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignBitwiseXor(n *ast.ExprAssignBitwiseXor) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignBitwiseXor{\n")
+	v.print(0, "&ast.ExprAssignBitwiseXor{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignCoalesce(n *ast.ExprAssignCoalesce) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignCoalesce{\n")
+	v.print(0, "&ast.ExprAssignCoalesce{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignConcat(n *ast.ExprAssignConcat) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignConcat{\n")
+	v.print(0, "&ast.ExprAssignConcat{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignDiv(n *ast.ExprAssignDiv) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignDiv{\n")
+	v.print(0, "&ast.ExprAssignDiv{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignMinus(n *ast.ExprAssignMinus) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignMinus{\n")
+	v.print(0, "&ast.ExprAssignMinus{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignMod(n *ast.ExprAssignMod) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignMod{\n")
+	v.print(0, "&ast.ExprAssignMod{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignMul(n *ast.ExprAssignMul) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignMul{\n")
+	v.print(0, "&ast.ExprAssignMul{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignPlus(n *ast.ExprAssignPlus) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignPlus{\n")
+	v.print(0, "&ast.ExprAssignPlus{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignPow(n *ast.ExprAssignPow) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignPow{\n")
+	v.print(0, "&ast.ExprAssignPow{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignShiftLeft(n *ast.ExprAssignShiftLeft) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignShiftLeft{\n")
+	v.print(0, "&ast.ExprAssignShiftLeft{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprAssignShiftRight(n *ast.ExprAssignShiftRight) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprAssignShiftRight{\n")
+	v.print(0, "&ast.ExprAssignShiftRight{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("EqualTkn", n.EqualTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryBitwiseAnd(n *ast.ExprBinaryBitwiseAnd) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryBitwiseAnd{\n")
+	v.print(0, "&ast.ExprBinaryBitwiseAnd{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryBitwiseOr(n *ast.ExprBinaryBitwiseOr) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryBitwiseOr{\n")
+	v.print(0, "&ast.ExprBinaryBitwiseOr{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryBitwiseXor(n *ast.ExprBinaryBitwiseXor) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryBitwiseXor{\n")
+	v.print(0, "&ast.ExprBinaryBitwiseXor{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryBooleanAnd(n *ast.ExprBinaryBooleanAnd) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryBooleanAnd{\n")
+	v.print(0, "&ast.ExprBinaryBooleanAnd{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryBooleanOr(n *ast.ExprBinaryBooleanOr) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryBooleanOr{\n")
+	v.print(0, "&ast.ExprBinaryBooleanOr{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryCoalesce(n *ast.ExprBinaryCoalesce) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryCoalesce{\n")
+	v.print(0, "&ast.ExprBinaryCoalesce{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryConcat(n *ast.ExprBinaryConcat) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryConcat{\n")
+	v.print(0, "&ast.ExprBinaryConcat{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryDiv(n *ast.ExprBinaryDiv) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryDiv{\n")
+	v.print(0, "&ast.ExprBinaryDiv{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryEqual(n *ast.ExprBinaryEqual) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryEqual{\n")
+	v.print(0, "&ast.ExprBinaryEqual{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryGreater(n *ast.ExprBinaryGreater) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryGreater{\n")
+	v.print(0, "&ast.ExprBinaryGreater{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryGreaterOrEqual(n *ast.ExprBinaryGreaterOrEqual) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryGreaterOrEqual{\n")
+	v.print(0, "&ast.ExprBinaryGreaterOrEqual{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryIdentical(n *ast.ExprBinaryIdentical) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryIdentical{\n")
+	v.print(0, "&ast.ExprBinaryIdentical{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryLogicalAnd(n *ast.ExprBinaryLogicalAnd) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryLogicalAnd{\n")
+	v.print(0, "&ast.ExprBinaryLogicalAnd{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryLogicalOr(n *ast.ExprBinaryLogicalOr) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryLogicalOr{\n")
+	v.print(0, "&ast.ExprBinaryLogicalOr{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryLogicalXor(n *ast.ExprBinaryLogicalXor) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryLogicalXor{\n")
+	v.print(0, "&ast.ExprBinaryLogicalXor{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryMinus(n *ast.ExprBinaryMinus) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryMinus{\n")
+	v.print(0, "&ast.ExprBinaryMinus{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryMod(n *ast.ExprBinaryMod) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryMod{\n")
+	v.print(0, "&ast.ExprBinaryMod{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryMul(n *ast.ExprBinaryMul) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryMul{\n")
+	v.print(0, "&ast.ExprBinaryMul{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryNotEqual(n *ast.ExprBinaryNotEqual) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryNotEqual{\n")
+	v.print(0, "&ast.ExprBinaryNotEqual{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryNotIdentical(n *ast.ExprBinaryNotIdentical) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryNotIdentical{\n")
+	v.print(0, "&ast.ExprBinaryNotIdentical{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryPlus(n *ast.ExprBinaryPlus) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryPlus{\n")
+	v.print(0, "&ast.ExprBinaryPlus{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryPow(n *ast.ExprBinaryPow) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryPow{\n")
+	v.print(0, "&ast.ExprBinaryPow{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryShiftLeft(n *ast.ExprBinaryShiftLeft) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryShiftLeft{\n")
+	v.print(0, "&ast.ExprBinaryShiftLeft{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinaryShiftRight(n *ast.ExprBinaryShiftRight) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinaryShiftRight{\n")
+	v.print(0, "&ast.ExprBinaryShiftRight{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinarySmaller(n *ast.ExprBinarySmaller) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinarySmaller{\n")
+	v.print(0, "&ast.ExprBinarySmaller{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinarySmallerOrEqual(n *ast.ExprBinarySmallerOrEqual) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinarySmallerOrEqual{\n")
+	v.print(0, "&ast.ExprBinarySmallerOrEqual{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprBinarySpaceship(n *ast.ExprBinarySpaceship) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprBinarySpaceship{\n")
+	v.print(0, "&ast.ExprBinarySpaceship{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Left", n.Left)
+	v.dumpToken("OpTkn", n.OpTkn)
+	v.dumpVertex("Right", n.Right)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprCastArray(n *ast.ExprCastArray) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprCastArray{\n")
+	v.print(0, "&ast.ExprCastArray{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CastTkn", n.CastTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprCastBool(n *ast.ExprCastBool) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprCastBool{\n")
+	v.print(0, "&ast.ExprCastBool{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CastTkn", n.CastTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprCastDouble(n *ast.ExprCastDouble) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprCastDouble{\n")
+	v.print(0, "&ast.ExprCastDouble{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CastTkn", n.CastTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprCastInt(n *ast.ExprCastInt) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprCastInt{\n")
+	v.print(0, "&ast.ExprCastInt{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CastTkn", n.CastTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprCastObject(n *ast.ExprCastObject) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprCastObject{\n")
+	v.print(0, "&ast.ExprCastObject{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CastTkn", n.CastTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprCastString(n *ast.ExprCastString) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprCastString{\n")
+	v.print(0, "&ast.ExprCastString{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CastTkn", n.CastTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ExprCastUnset(n *ast.ExprCastUnset) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ExprCastUnset{\n")
+	v.print(0, "&ast.ExprCastUnset{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("CastTkn", n.CastTkn)
+	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ScalarDnumber(n *ast.ScalarDnumber) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ScalarDnumber{\n")
+	v.print(0, "&ast.ScalarDnumber{\n")
+	v.indent++
 
-	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
+	v.dumpPosition(n.Position)
+	v.dumpToken("NumberTkn", n.NumberTkn)
+	v.dumpValue("Value", n.Value)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ScalarEncapsed(n *ast.ScalarEncapsed) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ScalarEncapsed{\n")
+	v.print(0, "&ast.ScalarEncapsed{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("OpenQoteTkn", n.OpenQoteTkn)
+	v.dumpVertexList("Parts", n.Parts)
+	v.dumpToken("CloseQoteTkn", n.CloseQoteTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ScalarEncapsedStringPart{\n")
+	v.print(0, "&ast.ScalarEncapsedStringPart{\n")
+	v.indent++
 
-	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
+	v.dumpPosition(n.Position)
+	v.dumpToken("EncapsedStrTkn", n.EncapsedStrTkn)
+	v.dumpValue("Value", n.Value)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ScalarHeredoc(n *ast.ScalarHeredoc) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ScalarHeredoc{\n")
+	v.print(0, "&ast.ScalarHeredoc{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("OpenHeredocTkn", n.OpenHeredocTkn)
+	v.dumpVertexList("Parts", n.Parts)
+	v.dumpToken("CloseHeredocTkn", n.CloseHeredocTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ScalarLnumber(n *ast.ScalarLnumber) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ScalarLnumber{\n")
+	v.print(0, "&ast.ScalarLnumber{\n")
+	v.indent++
 
-	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
+	v.dumpPosition(n.Position)
+	v.dumpToken("NumberTkn", n.NumberTkn)
+	v.dumpValue("Value", n.Value)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ScalarMagicConstant(n *ast.ScalarMagicConstant) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ScalarMagicConstant{\n")
+	v.print(0, "&ast.ScalarMagicConstant{\n")
+	v.indent++
 
-	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
+	v.dumpPosition(n.Position)
+	v.dumpToken("MagicConstTkn", n.MagicConstTkn)
+	v.dumpValue("Value", n.Value)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ScalarString(n *ast.ScalarString) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ScalarString{\n")
+	v.print(0, "&ast.ScalarString{\n")
+	v.indent++
 
-	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
+	v.dumpPosition(n.Position)
+	v.dumpToken("MinusTkn", n.MinusTkn)
+	v.dumpToken("StringTkn", n.StringTkn)
+	v.dumpValue("Value", n.Value)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) NameName(n *ast.NameName) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.NameName{\n")
+	v.print(0, "&ast.NameName{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertexList("Parts", n.Parts)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) NameFullyQualified(n *ast.NameFullyQualified) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.NameFullyQualified{\n")
+	v.print(0, "&ast.NameFullyQualified{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("NsSeparatorTkn", n.NsSeparatorTkn)
+	v.dumpVertexList("Parts", n.Parts)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) NameRelative(n *ast.NameRelative) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.NameRelative{\n")
+	v.print(0, "&ast.NameRelative{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("NsTkn", n.NsTkn)
+	v.dumpToken("NsSeparatorTkn", n.NsSeparatorTkn)
+	v.dumpVertexList("Parts", n.Parts)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) NameNamePart(n *ast.NameNamePart) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.NameNamePart{\n")
+	v.print(0, "&ast.NameNamePart{\n")
+	v.indent++
 
-	v.printIndent(v.indent)
-	v.print(fmt.Sprintf("Value: []byte(%q),\n", n.Value))
+	v.dumpPosition(n.Position)
+	v.dumpToken("StringTkn", n.StringTkn)
+	v.dumpValue("Value", n.Value)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ParserBrackets(n *ast.ParserBrackets) {
-	v.printIndentIfNotSingle(v.indent - 1)
-	v.print("&ast.ParserBrackets{\n")
+	v.print(0, "&ast.ParserBrackets{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("OpenBracketTkn", n.OpenBracketTkn)
+	v.dumpVertex("Child", n.Child)
+	v.dumpToken("CloseBracketTkn", n.CloseBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
 }
 
 func (v *Dump) ParserSeparatedList(n *ast.ParserSeparatedList) {

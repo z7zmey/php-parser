@@ -255,7 +255,7 @@ func (lex *Lexer) Lex() *token.Token {
             'use'i                            => {lex.setTokenPosition(tkn); tok = token.T_USE; fbreak;};
             'var'i                            => {lex.setTokenPosition(tkn); tok = token.T_VAR; fbreak;};
             'while'i                          => {lex.setTokenPosition(tkn); tok = token.T_WHILE; fbreak;};
-            'yield'i whitespace_line* 'from'i => {lex.setTokenPosition(tkn); tok = token.T_YIELD_FROM; fbreak;};
+            'yield'i whitespace_line+ 'from'i => {lex.setTokenPosition(tkn); tok = token.T_YIELD_FROM; fbreak;};
             'yield'i                          => {lex.setTokenPosition(tkn); tok = token.T_YIELD; fbreak;};
             'include'i                        => {lex.setTokenPosition(tkn); tok = token.T_INCLUDE; fbreak;};
             'include_once'i                   => {lex.setTokenPosition(tkn); tok = token.T_INCLUDE_ONCE; fbreak;};

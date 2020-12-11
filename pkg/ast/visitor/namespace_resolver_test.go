@@ -117,7 +117,7 @@ func TestResolveNew(t *testing.T) {
 				},
 			},
 			&ast.ExprNew{
-				Class:        nameBC,
+				Class: nameBC,
 			},
 		},
 	}
@@ -227,7 +227,7 @@ func TestResolveFunctionCall(t *testing.T) {
 				},
 			},
 			&ast.ExprFunctionCall{
-				Function:     nameB,
+				Function: nameB,
 			},
 		},
 	}
@@ -309,10 +309,10 @@ func TestResolveGroupUse(t *testing.T) {
 				Const: nameC,
 			},
 			&ast.ExprFunctionCall{
-				Function:     nameF,
+				Function: nameF,
 			},
 			&ast.ExprFunctionCall{
-				Function:     nameE,
+				Function: nameE,
 			},
 		},
 	}
@@ -649,8 +649,8 @@ func TestResolveNamespaces(t *testing.T) {
 				},
 			},
 			&ast.ExprStaticCall{
-				Class:        nameFG,
-				Call:         &ast.Identifier{Value: []byte("foo")},
+				Class: nameFG,
+				Call:  &ast.Identifier{Value: []byte("foo")},
 			},
 			&ast.StmtNamespace{
 				Stmts: []ast.Vertex{},
@@ -666,12 +666,12 @@ func TestResolveNamespaces(t *testing.T) {
 						},
 					},
 					&ast.ExprStaticCall{
-						Class:        relativeNameCE,
-						Call:         &ast.Identifier{Value: []byte("foo")},
+						Class: relativeNameCE,
+						Call:  &ast.Identifier{Value: []byte("foo")},
 					},
 					&ast.ExprStaticCall{
-						Class:        nameCF,
-						Call:         &ast.Identifier{Value: []byte("foo")},
+						Class: nameCF,
+						Call:  &ast.Identifier{Value: []byte("foo")},
 					},
 				},
 			},
@@ -697,8 +697,8 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.ExprStaticCall{
-				Class:        &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
-				Call:         &ast.Identifier{Value: []byte("foo")},
+				Class: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				Call:  &ast.Identifier{Value: []byte("foo")},
 			},
 		},
 	}
@@ -917,20 +917,20 @@ func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{
 				Expr: &ast.ExprStaticCall{
-					Class:        nameSelf,
-					Call:         &ast.Identifier{Value: []byte("func")},
+					Class: nameSelf,
+					Call:  &ast.Identifier{Value: []byte("func")},
 				},
 			},
 			&ast.StmtExpression{
 				Expr: &ast.ExprStaticCall{
-					Class:        nameStatic,
-					Call:         &ast.Identifier{Value: []byte("func")},
+					Class: nameStatic,
+					Call:  &ast.Identifier{Value: []byte("func")},
 				},
 			},
 			&ast.StmtExpression{
 				Expr: &ast.ExprStaticCall{
-					Class:        nameParent,
-					Call:         &ast.Identifier{Value: []byte("func")},
+					Class: nameParent,
+					Call:  &ast.Identifier{Value: []byte("func")},
 				},
 			},
 		},

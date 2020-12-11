@@ -1,62 +1,76 @@
 package visitor_test
 
 import (
-	"os"
+	"bytes"
+	"github.com/z7zmey/php-parser/pkg/position"
+	"github.com/z7zmey/php-parser/pkg/token"
+	"testing"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/ast/traverser"
 	"github.com/z7zmey/php-parser/pkg/ast/visitor"
-	"github.com/z7zmey/php-parser/pkg/token"
 )
 
-func ExampleDump() {
-	stxTree := &ast.Root{
+func TestDumper_root(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := visitor.NewDump(o)
+	n := &ast.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   2,
+			StartPos:  3,
+			EndPos:    4,
+		},
 		Stmts: []ast.Vertex{
-			&ast.Identifier{},
-			&ast.Parameter{
-				Var: &ast.ExprVariable{},
-			},
-			&ast.StmtInlineHtml{
-				Value: []byte("foo"),
-			},
+			&ast.StmtNop{},
 		},
 		EndTkn: &token.Token{
-			ID:    token.T_WHITESPACE,
-			Value: []byte(" "),
+			FreeFloating: []*token.Token{
+				{
+					ID:    token.T_WHITESPACE,
+					Value: []byte(" "),
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   2,
+						StartPos:  3,
+						EndPos:    4,
+					},
+				},
+			},
 		},
 	}
+	n.Accept(p)
 
-	traverser.NewDFS(visitor.NewDump(os.Stdout)).Traverse(stxTree)
+	expected := `&ast.Root{
+	Position: &position.Position{
+		StartLine: 1,
+		EndLine:   2,
+		StartPos:  3,
+		EndPos:    4,
+	},
+	Stmts: []ast.Vertex{
+		&ast.StmtNop{
+		},
+	},
+	EndTkn: &token.Token{
+		FreeFloating: []*token.Token{
+			{
+				ID: token.T_WHITESPACE,
+				Value: []byte(" "),
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   2,
+					StartPos:  3,
+					EndPos:    4,
+				},
+			},
+		},
+	},
+},
+`
+	actual := o.String()
 
-	//output:
-	//&ast.Root{
-	//	Node: ast.Node{
-	//		Tokens: token.Collection{
-	//			token.Start: []*token.Token{
-	//				{
-	//					ID:    token.T_WHITESPACE,
-	//					Value: []byte(" "),
-	//				},
-	//			},
-	//		},
-	//		Position: &position.Position{
-	//			StartLine: 1,
-	//			EndLine:   1,
-	//			StartPos:  0,
-	//			EndPos:    1,
-	//		},
-	//	},
-	//	Stmts: []ast.Vertex{
-	//		&ast.Identifier{
-	//			Value: []byte(""),
-	//		},
-	//		&ast.Parameter{
-	//			Var: &ast.ExprVariable{
-	//			},
-	//		},
-	//		&ast.StmtInlineHtml{
-	//			Value: []byte("foo"),
-	//		},
-	//	},
-	//}
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
 }
