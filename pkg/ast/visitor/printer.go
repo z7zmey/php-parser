@@ -196,9 +196,9 @@ func (p *printer) StmtClass(n *ast.StmtClass) {
 	p.printToken(n.CloseParenthesisTkn, p.ifNodeList(n.Arguments, []byte(")")))
 	p.printNode(n.Extends)
 	p.printNode(n.Implements)
-	p.printToken(n.OpenCurlyBracket, []byte("{"))
+	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
 	p.printList(n.Stmts)
-	p.printToken(n.CloseCurlyBracket, []byte("}"))
+	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
 }
 
 func (p *printer) StmtClassConstList(n *ast.StmtClassConstList) {
@@ -256,9 +256,9 @@ func (p *printer) StmtDeclare(n *ast.StmtDeclare) {
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
 	p.printToken(n.ColonTkn, nil)
 	if stmt, ok := n.Stmt.(*ast.StmtStmtList); ok && n.ColonTkn != nil {
-		p.printToken(stmt.OpenCurlyBracket, nil)
+		p.printToken(stmt.OpenCurlyBracketTkn, nil)
 		p.printList(stmt.Stmts)
-		p.printToken(stmt.CloseCurlyBracket, nil)
+		p.printToken(stmt.CloseCurlyBracketTkn, nil)
 	} else {
 		p.printNode(n.Stmt)
 	}
@@ -293,9 +293,9 @@ func (p *printer) StmtElse(n *ast.StmtElse) {
 	p.printToken(n.ElseTkn, []byte("else"))
 	p.printToken(n.ColonTkn, nil)
 	if stmt, ok := n.Stmt.(*ast.StmtStmtList); ok && n.ColonTkn != nil {
-		p.printToken(stmt.OpenCurlyBracket, nil)
+		p.printToken(stmt.OpenCurlyBracketTkn, nil)
 		p.printList(stmt.Stmts)
-		p.printToken(stmt.CloseCurlyBracket, nil)
+		p.printToken(stmt.CloseCurlyBracketTkn, nil)
 	} else {
 		p.printNode(n.Stmt)
 	}
@@ -308,9 +308,9 @@ func (p *printer) StmtElseIf(n *ast.StmtElseIf) {
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
 	p.printToken(n.ColonTkn, nil)
 	if stmt, ok := n.Stmt.(*ast.StmtStmtList); ok && n.ColonTkn != nil {
-		p.printToken(stmt.OpenCurlyBracket, nil)
+		p.printToken(stmt.OpenCurlyBracketTkn, nil)
 		p.printList(stmt.Stmts)
-		p.printToken(stmt.CloseCurlyBracket, nil)
+		p.printToken(stmt.CloseCurlyBracketTkn, nil)
 	} else {
 		p.printNode(n.Stmt)
 	}
@@ -339,9 +339,9 @@ func (p *printer) StmtFor(n *ast.StmtFor) {
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
 	p.printToken(n.ColonTkn, nil)
 	if stmt, ok := n.Stmt.(*ast.StmtStmtList); ok && n.ColonTkn != nil {
-		p.printToken(stmt.OpenCurlyBracket, nil)
+		p.printToken(stmt.OpenCurlyBracketTkn, nil)
 		p.printList(stmt.Stmts)
-		p.printToken(stmt.CloseCurlyBracket, nil)
+		p.printToken(stmt.CloseCurlyBracketTkn, nil)
 	} else {
 		p.printNode(n.Stmt)
 	}
@@ -360,9 +360,9 @@ func (p *printer) StmtForeach(n *ast.StmtForeach) {
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
 	p.printToken(n.ColonTkn, nil)
 	if stmt, ok := n.Stmt.(*ast.StmtStmtList); ok && n.ColonTkn != nil {
-		p.printToken(stmt.OpenCurlyBracket, nil)
+		p.printToken(stmt.OpenCurlyBracketTkn, nil)
 		p.printList(stmt.Stmts)
-		p.printToken(stmt.CloseCurlyBracket, nil)
+		p.printToken(stmt.CloseCurlyBracketTkn, nil)
 	} else {
 		p.printNode(n.Stmt)
 	}
@@ -410,9 +410,9 @@ func (p *printer) StmtIf(n *ast.StmtIf) {
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
 	p.printToken(n.ColonTkn, nil)
 	if stmt, ok := n.Stmt.(*ast.StmtStmtList); ok && n.ColonTkn != nil {
-		p.printToken(stmt.OpenCurlyBracket, nil)
+		p.printToken(stmt.OpenCurlyBracketTkn, nil)
 		p.printList(stmt.Stmts)
-		p.printToken(stmt.CloseCurlyBracket, nil)
+		p.printToken(stmt.CloseCurlyBracketTkn, nil)
 	} else {
 		p.printNode(n.Stmt)
 	}
@@ -454,9 +454,9 @@ func (p *printer) StmtLabel(n *ast.StmtLabel) {
 func (p *printer) StmtNamespace(n *ast.StmtNamespace) {
 	p.printToken(n.NsTkn, []byte("namespace"))
 	p.printNode(n.Name)
-	p.printToken(n.OpenCurlyBracket, p.ifNodeList(n.Stmts, []byte("{")))
+	p.printToken(n.OpenCurlyBracketTkn, p.ifNodeList(n.Stmts, []byte("{")))
 	p.printList(n.Stmts)
-	p.printToken(n.CloseCurlyBracket, p.ifNodeList(n.Stmts, []byte("}")))
+	p.printToken(n.CloseCurlyBracketTkn, p.ifNodeList(n.Stmts, []byte("}")))
 	p.printToken(n.SemiColonTkn, p.ifNotNodeList(n.Stmts, []byte(";")))
 }
 
@@ -496,9 +496,9 @@ func (p *printer) StmtStaticVar(n *ast.StmtStaticVar) {
 }
 
 func (p *printer) StmtStmtList(n *ast.StmtStmtList) {
-	p.printToken(n.OpenCurlyBracket, []byte("{"))
+	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
 	p.printList(n.Stmts)
-	p.printToken(n.CloseCurlyBracket, []byte("}"))
+	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
 }
 
 func (p *printer) StmtSwitch(n *ast.StmtSwitch) {
@@ -526,9 +526,9 @@ func (p *printer) StmtTrait(n *ast.StmtTrait) {
 	p.printNode(n.TraitName)
 	p.printNode(n.Extends)
 	p.printNode(n.Implements)
-	p.printToken(n.OpenCurlyBracket, []byte("{"))
+	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
 	p.printList(n.Stmts)
-	p.printToken(n.CloseCurlyBracket, []byte("}"))
+	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
 }
 
 func (p *printer) StmtTraitAdaptationList(n *ast.StmtTraitAdaptationList) {
@@ -566,9 +566,9 @@ func (p *printer) StmtTraitUsePrecedence(n *ast.StmtTraitUsePrecedence) {
 
 func (p *printer) StmtTry(n *ast.StmtTry) {
 	p.printToken(n.TryTkn, []byte("try"))
-	p.printToken(n.OpenCurlyBracket, []byte("{"))
+	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
 	p.printList(n.Stmts)
-	p.printToken(n.CloseCurlyBracket, []byte("}"))
+	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
 	p.printList(n.Catches)
 	p.printNode(n.Finally)
 }
@@ -615,9 +615,9 @@ func (p *printer) StmtWhile(n *ast.StmtWhile) {
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
 	p.printToken(n.ColonTkn, nil)
 	if stmt, ok := n.Stmt.(*ast.StmtStmtList); ok && n.ColonTkn != nil {
-		p.printToken(stmt.OpenCurlyBracket, nil)
+		p.printToken(stmt.OpenCurlyBracketTkn, nil)
 		p.printList(stmt.Stmts)
-		p.printToken(stmt.CloseCurlyBracket, nil)
+		p.printToken(stmt.CloseCurlyBracketTkn, nil)
 	} else {
 		p.printNode(n.Stmt)
 	}
@@ -1181,9 +1181,9 @@ func (p *printer) ScalarDnumber(n *ast.ScalarDnumber) {
 }
 
 func (p *printer) ScalarEncapsed(n *ast.ScalarEncapsed) {
-	p.printToken(n.OpenQoteTkn, []byte("\""))
+	p.printToken(n.OpenQuoteTkn, []byte("\""))
 	p.printList(n.Parts)
-	p.printToken(n.CloseQoteTkn, []byte("\""))
+	p.printToken(n.CloseQuoteTkn, []byte("\""))
 }
 
 func (p *printer) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {

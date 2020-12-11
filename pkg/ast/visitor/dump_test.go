@@ -13,7 +13,7 @@ import (
 func TestDumper_root(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := visitor.NewDump(o)
+	p := visitor.NewDump(o).WithTokens().WithPositions()
 	n := &ast.Root{
 		Position: &position.Position{
 			StartLine: 1,

@@ -102,10 +102,10 @@ func (n *ScalarDnumber) GetPosition() *position.Position {
 
 // ScalarEncapsed node
 type ScalarEncapsed struct {
-	Position     *position.Position
-	OpenQoteTkn  *token.Token
-	Parts        []Vertex
-	CloseQoteTkn *token.Token
+	Position      *position.Position
+	OpenQuoteTkn  *token.Token
+	Parts         []Vertex
+	CloseQuoteTkn *token.Token
 }
 
 func (n *ScalarEncapsed) Accept(v NodeVisitor) {
@@ -250,19 +250,19 @@ func (n *StmtCatch) GetPosition() *position.Position {
 
 // StmtClass node
 type StmtClass struct {
-	Position            *position.Position
-	Modifiers           []Vertex
-	ClassTkn            *token.Token
-	ClassName           Vertex
-	OpenParenthesisTkn  *token.Token
-	Arguments           []Vertex
-	SeparatorTkns       []*token.Token
-	CloseParenthesisTkn *token.Token
-	Extends             Vertex
-	Implements          Vertex
-	OpenCurlyBracket    *token.Token
-	Stmts               []Vertex
-	CloseCurlyBracket   *token.Token
+	Position             *position.Position
+	Modifiers            []Vertex
+	ClassTkn             *token.Token
+	ClassName            Vertex
+	OpenParenthesisTkn   *token.Token
+	Arguments            []Vertex
+	SeparatorTkns        []*token.Token
+	CloseParenthesisTkn  *token.Token
+	Extends              Vertex
+	Implements           Vertex
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *StmtClass) Accept(v NodeVisitor) {
@@ -761,13 +761,13 @@ func (n *StmtLabel) GetPosition() *position.Position {
 
 // StmtNamespace node
 type StmtNamespace struct {
-	Position          *position.Position
-	NsTkn             *token.Token
-	Name              Vertex
-	OpenCurlyBracket  *token.Token
-	Stmts             []Vertex
-	CloseCurlyBracket *token.Token
-	SemiColonTkn      *token.Token
+	Position             *position.Position
+	NsTkn                *token.Token
+	Name                 Vertex
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
+	SemiColonTkn         *token.Token
 }
 
 func (n *StmtNamespace) Accept(v NodeVisitor) {
@@ -877,10 +877,10 @@ func (n *StmtStaticVar) GetPosition() *position.Position {
 
 // StmtStmtList node
 type StmtStmtList struct {
-	Position          *position.Position
-	OpenCurlyBracket  *token.Token
-	Stmts             []Vertex
-	CloseCurlyBracket *token.Token
+	Position             *position.Position
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *StmtStmtList) Accept(v NodeVisitor) {
@@ -934,14 +934,14 @@ func (n *StmtThrow) GetPosition() *position.Position {
 
 // StmtTrait node
 type StmtTrait struct {
-	Position          *position.Position
-	TraitTkn          *token.Token
-	TraitName         Vertex
-	Extends           Vertex
-	Implements        Vertex
-	OpenCurlyBracket  *token.Token
-	Stmts             []Vertex
-	CloseCurlyBracket *token.Token
+	Position             *position.Position
+	TraitTkn             *token.Token
+	TraitName            Vertex
+	Extends              Vertex
+	Implements           Vertex
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *StmtTrait) Accept(v NodeVisitor) {
@@ -1039,13 +1039,13 @@ func (n *StmtTraitUsePrecedence) GetPosition() *position.Position {
 
 // StmtTry node
 type StmtTry struct {
-	Position          *position.Position
-	TryTkn            *token.Token
-	OpenCurlyBracket  *token.Token
-	Stmts             []Vertex
-	CloseCurlyBracket *token.Token
-	Catches           []Vertex
-	Finally           Vertex
+	Position             *position.Position
+	TryTkn               *token.Token
+	OpenCurlyBracketTkn  *token.Token
+	Stmts                []Vertex
+	CloseCurlyBracketTkn *token.Token
+	Catches              []Vertex
+	Finally              Vertex
 }
 
 func (n *StmtTry) Accept(v NodeVisitor) {

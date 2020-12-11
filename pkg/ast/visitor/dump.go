@@ -288,9 +288,9 @@ func (v *Dump) StmtClass(n *ast.StmtClass) {
 	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
 	v.dumpVertex("Extends", n.Extends)
 	v.dumpVertex("Implements", n.Implements)
-	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertexList("Stmts", n.Stmts)
-	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -706,9 +706,9 @@ func (v *Dump) StmtNamespace(n *ast.StmtNamespace) {
 	v.dumpPosition(n.Position)
 	v.dumpToken("NsTkn", n.NsTkn)
 	v.dumpVertex("Name", n.Name)
-	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertexList("Stmts", n.Stmts)
-	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
 	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
 
 	v.indent--
@@ -799,9 +799,9 @@ func (v *Dump) StmtStmtList(n *ast.StmtStmtList) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
-	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertexList("Stmts", n.Stmts)
-	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -850,9 +850,9 @@ func (v *Dump) StmtTrait(n *ast.StmtTrait) {
 	v.dumpVertex("TraitName", n.TraitName)
 	v.dumpVertex("Extends", n.Extends)
 	v.dumpVertex("Implements", n.Implements)
-	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertexList("Stmts", n.Stmts)
-	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -934,9 +934,9 @@ func (v *Dump) StmtTry(n *ast.StmtTry) {
 
 	v.dumpPosition(n.Position)
 	v.dumpToken("TryTkn", n.TryTkn)
-	v.dumpToken("OpenCurlyBracket", n.OpenCurlyBracket)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertexList("Stmts", n.Stmts)
-	v.dumpToken("CloseCurlyBracket", n.CloseCurlyBracket)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
 	v.dumpVertexList("Catches", n.Catches)
 	v.dumpVertex("Finally", n.Finally)
 
@@ -2236,9 +2236,9 @@ func (v *Dump) ScalarEncapsed(n *ast.ScalarEncapsed) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
-	v.dumpToken("OpenQoteTkn", n.OpenQoteTkn)
+	v.dumpToken("OpenQuoteTkn", n.OpenQuoteTkn)
 	v.dumpVertexList("Parts", n.Parts)
-	v.dumpToken("CloseQoteTkn", n.CloseQoteTkn)
+	v.dumpToken("CloseQuoteTkn", n.CloseQuoteTkn)
 
 	v.indent--
 	v.print(v.indent, "},\n")

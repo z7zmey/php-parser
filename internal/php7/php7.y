@@ -450,19 +450,19 @@ top_statement:
                         Parts:         $2.(*ast.ParserSeparatedList).Items,
                         SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                     },
-                    OpenCurlyBracket:  $3,
-                    Stmts:             $4,
-                    CloseCurlyBracket: $5,
+                    OpenCurlyBracketTkn:  $3,
+                    Stmts:                $4,
+                    CloseCurlyBracketTkn: $5,
                 }
             }
     |   T_NAMESPACE '{' top_statement_list '}'
             {
                 $$ = &ast.StmtNamespace{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    NsTkn:             $1,
-                    OpenCurlyBracket:  $2,
-                    Stmts:             $3,
-                    CloseCurlyBracket: $4,
+                    NsTkn:               $1,
+                    OpenCurlyBracketTkn: $2,
+                    Stmts:               $3,
+                    CloseCurlyBracket:   $4,
                 }
             }
     |   T_USE mixed_group_use_declaration ';'
@@ -813,9 +813,9 @@ statement:
             {
                 $$ = &ast.StmtStmtList{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenCurlyBracket:  $1,
-                    Stmts:             $2,
-                    CloseCurlyBracket: $3,
+                    OpenCurlyBracketTkn:  $1,
+                    Stmts:                $2,
+                    CloseCurlyBracketTkn: $3,
                 }
             }
     |   if_stmt
@@ -1009,12 +1009,12 @@ statement:
 
                 $$ = &ast.StmtTry{
                     Position: pos,
-                    TryTkn:            $1,
-                    OpenCurlyBracket:  $2,
-                    Stmts:             $3,
-                    CloseCurlyBracket: $4,
-                    Catches:           $5,
-                    Finally:           $6,
+                    TryTkn:               $1,
+                    OpenCurlyBracketTkn:  $2,
+                    Stmts:                $3,
+                    CloseCurlyBracketTkn: $4,
+                    Catches:              $5,
+                    Finally:              $6,
                 }
             }
     |   T_THROW expr ';'
@@ -1194,11 +1194,11 @@ class_declaration_statement:
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
-                    Extends:           $4,
-                    Implements:        $5,
-                    OpenCurlyBracket:  $7,
-                    Stmts:             $8,
-                    CloseCurlyBracket: $9,
+                    Extends:              $4,
+                    Implements:           $5,
+                    OpenCurlyBracketTkn:  $7,
+                    Stmts:                $8,
+                    CloseCurlyBracketTkn: $9,
                 }
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
@@ -1211,11 +1211,11 @@ class_declaration_statement:
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
-                    Extends:           $3,
-                    Implements:        $4,
-                    OpenCurlyBracket:  $6,
-                    Stmts:             $7,
-                    CloseCurlyBracket: $8,
+                    Extends:              $3,
+                    Implements:           $4,
+                    OpenCurlyBracketTkn:  $6,
+                    Stmts:                $7,
+                    CloseCurlyBracketTkn: $8,
                 }
             }
 ;
@@ -1261,9 +1261,9 @@ trait_declaration_statement:
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
-                    OpenCurlyBracket:  $4,
-                    Stmts:             $5,
-                    CloseCurlyBracket: $6,
+                    OpenCurlyBracketTkn:  $4,
+                    Stmts:                $5,
+                    CloseCurlyBracketTkn: $6,
                 }
             }
 ;
@@ -2191,9 +2191,9 @@ method_body:
             {
                 $$ = &ast.StmtStmtList{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenCurlyBracket:  $1,
-                    Stmts:             $2,
-                    CloseCurlyBracket: $3,
+                    OpenCurlyBracketTkn:  $1,
+                    Stmts:                $2,
+                    CloseCurlyBracketTkn: $3,
                 }
             }
 ;
@@ -2441,16 +2441,16 @@ anonymous_class:
             {
                 $$ = &ast.StmtClass{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $8),
-                    ClassTkn:            $1,
-                    OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $2.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $2.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $2.(*ast.ArgumentList).CloseParenthesisTkn,
-                    Extends:             $3,
-                    Implements:          $4,
-                    OpenCurlyBracket:    $6,
-                    Stmts:               $7,
-                    CloseCurlyBracket:   $8,
+                    ClassTkn:             $1,
+                    OpenParenthesisTkn:   $2.(*ast.ArgumentList).OpenParenthesisTkn,
+                    Arguments:            $2.(*ast.ArgumentList).Arguments,
+                    SeparatorTkns:        $2.(*ast.ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn:  $2.(*ast.ArgumentList).CloseParenthesisTkn,
+                    Extends:              $3,
+                    Implements:           $4,
+                    OpenCurlyBracketTkn:  $6,
+                    Stmts:                $7,
+                    CloseCurlyBracketTkn: $8,
                 }
             }
 ;
@@ -3550,9 +3550,9 @@ scalar:
             {
                 $$ = &ast.ScalarEncapsed{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenQoteTkn:  $1,
-                    Parts:        $2,
-                    CloseQoteTkn: $3,
+                    OpenQuoteTkn:  $1,
+                    Parts:         $2,
+                    CloseQuoteTkn: $3,
                 }
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
