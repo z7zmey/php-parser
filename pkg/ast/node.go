@@ -2700,7 +2700,7 @@ type ParserSeparatedList struct {
 }
 
 func (n *ParserSeparatedList) Accept(v NodeVisitor) {
-	v.ParserSeparatedList(n)
+	// do nothing
 }
 
 func (n *ParserSeparatedList) GetPosition() *position.Position {

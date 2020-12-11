@@ -657,7 +657,3 @@ func (v *Null) NameNamePart(_ *ast.NameNamePart) {
 func (v *Null) ParserBrackets(_ *ast.ParserBrackets) {
 	// do nothing
 }
-
-func (v *Null) ParserSeparatedList(_ *ast.ParserSeparatedList) {
-	// do nothing
-}

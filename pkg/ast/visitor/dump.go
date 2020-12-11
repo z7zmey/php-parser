@@ -2369,7 +2369,3 @@ func (v *Dump) ParserBrackets(n *ast.ParserBrackets) {
 	v.indent--
 	v.print(v.indent, "},\n")
 }
-
-func (v *Dump) ParserSeparatedList(n *ast.ParserSeparatedList) {
-	// do nothing
-}

@@ -1233,7 +1233,3 @@ func (p *printer) ParserBrackets(n *ast.ParserBrackets) {
 	p.printNode(n.Child)
 	p.printToken(n.CloseBracketTkn, nil)
 }
-
-func (p *printer) ParserSeparatedList(n *ast.ParserSeparatedList) {
-	// do nothing
-}
