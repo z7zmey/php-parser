@@ -182,7 +182,7 @@ func printerWorker(r <-chan result) {
 		}
 
 		if *dump == true {
-			visitor.NewDump(os.Stdout).WithPositions().WithTokens().Dump(res.rootNode)
+			visitor.NewDumper(os.Stdout).WithPositions().WithTokens().Dump(res.rootNode)
 		}
 
 		wg.Done()

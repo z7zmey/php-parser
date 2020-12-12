@@ -10,32 +10,32 @@ import (
 	"github.com/z7zmey/php-parser/pkg/ast"
 )
 
-type Dump struct {
+type Dumper struct {
 	writer        io.Writer
 	indent        int
 	withTokens    bool
 	withPositions bool
 }
 
-func NewDump(writer io.Writer) *Dump {
-	return &Dump{writer: writer}
+func NewDumper(writer io.Writer) *Dumper {
+	return &Dumper{writer: writer}
 }
 
-func (v *Dump) WithTokens() *Dump {
+func (v *Dumper) WithTokens() *Dumper {
 	v.withTokens = true
 	return v
 }
 
-func (v *Dump) WithPositions() *Dump {
+func (v *Dumper) WithPositions() *Dumper {
 	v.withPositions = true
 	return v
 }
 
-func (v *Dump) Dump(n ast.Vertex) {
+func (v *Dumper) Dump(n ast.Vertex) {
 	n.Accept(v)
 }
 
-func (v *Dump) print(indent int, str string) {
+func (v *Dumper) print(indent int, str string) {
 	_, err := io.WriteString(v.writer, strings.Repeat("\t", indent))
 	if err != nil {
 		panic(err)
@@ -47,7 +47,7 @@ func (v *Dump) print(indent int, str string) {
 	}
 }
 
-func (v *Dump) dumpVertex(key string, node ast.Vertex) {
+func (v *Dumper) dumpVertex(key string, node ast.Vertex) {
 	if node == nil {
 		return
 	}
@@ -56,7 +56,7 @@ func (v *Dump) dumpVertex(key string, node ast.Vertex) {
 	node.Accept(v)
 }
 
-func (v *Dump) dumpVertexList(key string, list []ast.Vertex) {
+func (v *Dumper) dumpVertexList(key string, list []ast.Vertex) {
 	if list == nil {
 		return
 	}
@@ -78,7 +78,7 @@ func (v *Dump) dumpVertexList(key string, list []ast.Vertex) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) dumpToken(key string, tok *token.Token) {
+func (v *Dumper) dumpToken(key string, tok *token.Token) {
 	if !v.withTokens {
 		return
 	}
@@ -108,7 +108,7 @@ func (v *Dump) dumpToken(key string, tok *token.Token) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) dumpTokenList(key string, list []*token.Token) {
+func (v *Dumper) dumpTokenList(key string, list []*token.Token) {
 	if !v.withTokens {
 		return
 	}
@@ -133,7 +133,7 @@ func (v *Dump) dumpTokenList(key string, list []*token.Token) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) dumpPosition(pos *position.Position) {
+func (v *Dumper) dumpPosition(pos *position.Position) {
 	if !v.withPositions {
 		return
 	}
@@ -154,7 +154,7 @@ func (v *Dump) dumpPosition(pos *position.Position) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) dumpValue(key string, val []byte) {
+func (v *Dumper) dumpValue(key string, val []byte) {
 	if val == nil {
 		return
 	}
@@ -163,7 +163,7 @@ func (v *Dump) dumpValue(key string, val []byte) {
 
 }
 
-func (v *Dump) Root(n *ast.Root) {
+func (v *Dumper) Root(n *ast.Root) {
 	v.print(0, "&ast.Root{\n")
 	v.indent++
 
@@ -175,7 +175,7 @@ func (v *Dump) Root(n *ast.Root) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) Nullable(n *ast.Nullable) {
+func (v *Dumper) Nullable(n *ast.Nullable) {
 	v.print(0, "&ast.Nullable{\n")
 	v.indent++
 
@@ -187,7 +187,7 @@ func (v *Dump) Nullable(n *ast.Nullable) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) Parameter(n *ast.Parameter) {
+func (v *Dumper) Parameter(n *ast.Parameter) {
 	v.print(0, "&ast.Parameter{\n")
 	v.indent++
 
@@ -203,7 +203,7 @@ func (v *Dump) Parameter(n *ast.Parameter) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) Identifier(n *ast.Identifier) {
+func (v *Dumper) Identifier(n *ast.Identifier) {
 	v.print(0, "&ast.Identifier{\n")
 	v.indent++
 
@@ -215,7 +215,7 @@ func (v *Dump) Identifier(n *ast.Identifier) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) Argument(n *ast.Argument) {
+func (v *Dumper) Argument(n *ast.Argument) {
 	v.print(0, "&ast.Argument{\n")
 	v.indent++
 
@@ -228,7 +228,7 @@ func (v *Dump) Argument(n *ast.Argument) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtBreak(n *ast.StmtBreak) {
+func (v *Dumper) StmtBreak(n *ast.StmtBreak) {
 	v.print(0, "&ast.StmtBreak{\n")
 	v.indent++
 
@@ -241,7 +241,7 @@ func (v *Dump) StmtBreak(n *ast.StmtBreak) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtCase(n *ast.StmtCase) {
+func (v *Dumper) StmtCase(n *ast.StmtCase) {
 	v.print(0, "&ast.StmtCase{\n")
 	v.indent++
 
@@ -255,7 +255,7 @@ func (v *Dump) StmtCase(n *ast.StmtCase) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtCatch(n *ast.StmtCatch) {
+func (v *Dumper) StmtCatch(n *ast.StmtCatch) {
 	v.print(0, "&ast.StmtCatch{\n")
 	v.indent++
 
@@ -274,7 +274,7 @@ func (v *Dump) StmtCatch(n *ast.StmtCatch) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtClass(n *ast.StmtClass) {
+func (v *Dumper) StmtClass(n *ast.StmtClass) {
 	v.print(0, "&ast.StmtClass{\n")
 	v.indent++
 
@@ -296,7 +296,7 @@ func (v *Dump) StmtClass(n *ast.StmtClass) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtClassConstList(n *ast.StmtClassConstList) {
+func (v *Dumper) StmtClassConstList(n *ast.StmtClassConstList) {
 	v.print(0, "&ast.StmtClassConstList{\n")
 	v.indent++
 
@@ -311,7 +311,7 @@ func (v *Dump) StmtClassConstList(n *ast.StmtClassConstList) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtClassExtends(n *ast.StmtClassExtends) {
+func (v *Dumper) StmtClassExtends(n *ast.StmtClassExtends) {
 	v.print(0, "&ast.StmtClassExtends{\n")
 	v.indent++
 
@@ -323,7 +323,7 @@ func (v *Dump) StmtClassExtends(n *ast.StmtClassExtends) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtClassImplements(n *ast.StmtClassImplements) {
+func (v *Dumper) StmtClassImplements(n *ast.StmtClassImplements) {
 	v.print(0, "&ast.StmtClassImplements{\n")
 	v.indent++
 
@@ -336,7 +336,7 @@ func (v *Dump) StmtClassImplements(n *ast.StmtClassImplements) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtClassMethod(n *ast.StmtClassMethod) {
+func (v *Dumper) StmtClassMethod(n *ast.StmtClassMethod) {
 	v.print(0, "&ast.StmtClassMethod{\n")
 	v.indent++
 
@@ -357,7 +357,7 @@ func (v *Dump) StmtClassMethod(n *ast.StmtClassMethod) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtConstList(n *ast.StmtConstList) {
+func (v *Dumper) StmtConstList(n *ast.StmtConstList) {
 	v.print(0, "&ast.StmtConstList{\n")
 	v.indent++
 
@@ -371,7 +371,7 @@ func (v *Dump) StmtConstList(n *ast.StmtConstList) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtConstant(n *ast.StmtConstant) {
+func (v *Dumper) StmtConstant(n *ast.StmtConstant) {
 	v.print(0, "&ast.StmtConstant{\n")
 	v.indent++
 
@@ -384,7 +384,7 @@ func (v *Dump) StmtConstant(n *ast.StmtConstant) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtContinue(n *ast.StmtContinue) {
+func (v *Dumper) StmtContinue(n *ast.StmtContinue) {
 	v.print(0, "&ast.StmtContinue{\n")
 	v.indent++
 
@@ -397,7 +397,7 @@ func (v *Dump) StmtContinue(n *ast.StmtContinue) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtDeclare(n *ast.StmtDeclare) {
+func (v *Dumper) StmtDeclare(n *ast.StmtDeclare) {
 	v.print(0, "&ast.StmtDeclare{\n")
 	v.indent++
 
@@ -416,7 +416,7 @@ func (v *Dump) StmtDeclare(n *ast.StmtDeclare) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtDefault(n *ast.StmtDefault) {
+func (v *Dumper) StmtDefault(n *ast.StmtDefault) {
 	v.print(0, "&ast.StmtDefault{\n")
 	v.indent++
 
@@ -429,7 +429,7 @@ func (v *Dump) StmtDefault(n *ast.StmtDefault) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtDo(n *ast.StmtDo) {
+func (v *Dumper) StmtDo(n *ast.StmtDo) {
 	v.print(0, "&ast.StmtDo{\n")
 	v.indent++
 
@@ -447,7 +447,7 @@ func (v *Dump) StmtDo(n *ast.StmtDo) {
 
 }
 
-func (v *Dump) StmtEcho(n *ast.StmtEcho) {
+func (v *Dumper) StmtEcho(n *ast.StmtEcho) {
 	v.print(0, "&ast.StmtEcho{\n")
 	v.indent++
 
@@ -461,7 +461,7 @@ func (v *Dump) StmtEcho(n *ast.StmtEcho) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtElse(n *ast.StmtElse) {
+func (v *Dumper) StmtElse(n *ast.StmtElse) {
 	v.print(0, "&ast.StmtElse{\n")
 	v.indent++
 
@@ -474,7 +474,7 @@ func (v *Dump) StmtElse(n *ast.StmtElse) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtElseIf(n *ast.StmtElseIf) {
+func (v *Dumper) StmtElseIf(n *ast.StmtElseIf) {
 	v.print(0, "&ast.StmtElseIf{\n")
 	v.indent++
 
@@ -490,7 +490,7 @@ func (v *Dump) StmtElseIf(n *ast.StmtElseIf) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtExpression(n *ast.StmtExpression) {
+func (v *Dumper) StmtExpression(n *ast.StmtExpression) {
 	v.print(0, "&ast.StmtExpression{\n")
 	v.indent++
 
@@ -502,7 +502,7 @@ func (v *Dump) StmtExpression(n *ast.StmtExpression) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtFinally(n *ast.StmtFinally) {
+func (v *Dumper) StmtFinally(n *ast.StmtFinally) {
 	v.print(0, "&ast.StmtFinally{\n")
 	v.indent++
 
@@ -516,7 +516,7 @@ func (v *Dump) StmtFinally(n *ast.StmtFinally) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtFor(n *ast.StmtFor) {
+func (v *Dumper) StmtFor(n *ast.StmtFor) {
 	v.print(0, "&ast.StmtFor{\n")
 	v.indent++
 
@@ -541,7 +541,7 @@ func (v *Dump) StmtFor(n *ast.StmtFor) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtForeach(n *ast.StmtForeach) {
+func (v *Dumper) StmtForeach(n *ast.StmtForeach) {
 	v.print(0, "&ast.StmtForeach{\n")
 	v.indent++
 
@@ -563,7 +563,7 @@ func (v *Dump) StmtForeach(n *ast.StmtForeach) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtFunction(n *ast.StmtFunction) {
+func (v *Dumper) StmtFunction(n *ast.StmtFunction) {
 	v.print(0, "&ast.StmtFunction{\n")
 	v.indent++
 
@@ -585,7 +585,7 @@ func (v *Dump) StmtFunction(n *ast.StmtFunction) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtGlobal(n *ast.StmtGlobal) {
+func (v *Dumper) StmtGlobal(n *ast.StmtGlobal) {
 	v.print(0, "&ast.StmtGlobal{\n")
 	v.indent++
 
@@ -599,7 +599,7 @@ func (v *Dump) StmtGlobal(n *ast.StmtGlobal) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtGoto(n *ast.StmtGoto) {
+func (v *Dumper) StmtGoto(n *ast.StmtGoto) {
 	v.print(0, "&ast.StmtGoto{\n")
 	v.indent++
 
@@ -612,7 +612,7 @@ func (v *Dump) StmtGoto(n *ast.StmtGoto) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtHaltCompiler(n *ast.StmtHaltCompiler) {
+func (v *Dumper) StmtHaltCompiler(n *ast.StmtHaltCompiler) {
 	v.print(0, "&ast.StmtHaltCompiler{\n")
 	v.indent++
 
@@ -626,7 +626,7 @@ func (v *Dump) StmtHaltCompiler(n *ast.StmtHaltCompiler) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtIf(n *ast.StmtIf) {
+func (v *Dumper) StmtIf(n *ast.StmtIf) {
 	v.print(0, "&ast.StmtIf{\n")
 	v.indent++
 
@@ -646,7 +646,7 @@ func (v *Dump) StmtIf(n *ast.StmtIf) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtInlineHtml(n *ast.StmtInlineHtml) {
+func (v *Dumper) StmtInlineHtml(n *ast.StmtInlineHtml) {
 	v.print(0, "&ast.StmtInlineHtml{\n")
 	v.indent++
 
@@ -658,7 +658,7 @@ func (v *Dump) StmtInlineHtml(n *ast.StmtInlineHtml) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtInterface(n *ast.StmtInterface) {
+func (v *Dumper) StmtInterface(n *ast.StmtInterface) {
 	v.print(0, "&ast.StmtInterface{\n")
 	v.indent++
 
@@ -674,7 +674,7 @@ func (v *Dump) StmtInterface(n *ast.StmtInterface) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtInterfaceExtends(n *ast.StmtInterfaceExtends) {
+func (v *Dumper) StmtInterfaceExtends(n *ast.StmtInterfaceExtends) {
 	v.print(0, "&ast.StmtInterfaceExtends{\n")
 	v.indent++
 
@@ -687,7 +687,7 @@ func (v *Dump) StmtInterfaceExtends(n *ast.StmtInterfaceExtends) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtLabel(n *ast.StmtLabel) {
+func (v *Dumper) StmtLabel(n *ast.StmtLabel) {
 	v.print(0, "&ast.StmtLabel{\n")
 	v.indent++
 
@@ -699,7 +699,7 @@ func (v *Dump) StmtLabel(n *ast.StmtLabel) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtNamespace(n *ast.StmtNamespace) {
+func (v *Dumper) StmtNamespace(n *ast.StmtNamespace) {
 	v.print(0, "&ast.StmtNamespace{\n")
 	v.indent++
 
@@ -715,7 +715,7 @@ func (v *Dump) StmtNamespace(n *ast.StmtNamespace) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtNop(n *ast.StmtNop) {
+func (v *Dumper) StmtNop(n *ast.StmtNop) {
 	v.print(0, "&ast.StmtNop{\n")
 	v.indent++
 
@@ -726,7 +726,7 @@ func (v *Dump) StmtNop(n *ast.StmtNop) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtProperty(n *ast.StmtProperty) {
+func (v *Dumper) StmtProperty(n *ast.StmtProperty) {
 	v.print(0, "&ast.StmtProperty{\n")
 	v.indent++
 
@@ -739,7 +739,7 @@ func (v *Dump) StmtProperty(n *ast.StmtProperty) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtPropertyList(n *ast.StmtPropertyList) {
+func (v *Dumper) StmtPropertyList(n *ast.StmtPropertyList) {
 	v.print(0, "&ast.StmtPropertyList{\n")
 	v.indent++
 
@@ -754,7 +754,7 @@ func (v *Dump) StmtPropertyList(n *ast.StmtPropertyList) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtReturn(n *ast.StmtReturn) {
+func (v *Dumper) StmtReturn(n *ast.StmtReturn) {
 	v.print(0, "&ast.StmtReturn{\n")
 	v.indent++
 
@@ -767,7 +767,7 @@ func (v *Dump) StmtReturn(n *ast.StmtReturn) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtStatic(n *ast.StmtStatic) {
+func (v *Dumper) StmtStatic(n *ast.StmtStatic) {
 	v.print(0, "&ast.StmtStatic{\n")
 	v.indent++
 
@@ -781,7 +781,7 @@ func (v *Dump) StmtStatic(n *ast.StmtStatic) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtStaticVar(n *ast.StmtStaticVar) {
+func (v *Dumper) StmtStaticVar(n *ast.StmtStaticVar) {
 	v.print(0, "&ast.StmtStaticVar{\n")
 	v.indent++
 
@@ -794,7 +794,7 @@ func (v *Dump) StmtStaticVar(n *ast.StmtStaticVar) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtStmtList(n *ast.StmtStmtList) {
+func (v *Dumper) StmtStmtList(n *ast.StmtStmtList) {
 	v.print(0, "&ast.StmtStmtList{\n")
 	v.indent++
 
@@ -807,7 +807,7 @@ func (v *Dump) StmtStmtList(n *ast.StmtStmtList) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtSwitch(n *ast.StmtSwitch) {
+func (v *Dumper) StmtSwitch(n *ast.StmtSwitch) {
 	v.print(0, "&ast.StmtSwitch{\n")
 	v.indent++
 
@@ -828,7 +828,7 @@ func (v *Dump) StmtSwitch(n *ast.StmtSwitch) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtThrow(n *ast.StmtThrow) {
+func (v *Dumper) StmtThrow(n *ast.StmtThrow) {
 	v.print(0, "&ast.StmtThrow{\n")
 	v.indent++
 
@@ -841,7 +841,7 @@ func (v *Dump) StmtThrow(n *ast.StmtThrow) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtTrait(n *ast.StmtTrait) {
+func (v *Dumper) StmtTrait(n *ast.StmtTrait) {
 	v.print(0, "&ast.StmtTrait{\n")
 	v.indent++
 
@@ -858,7 +858,7 @@ func (v *Dump) StmtTrait(n *ast.StmtTrait) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtTraitAdaptationList(n *ast.StmtTraitAdaptationList) {
+func (v *Dumper) StmtTraitAdaptationList(n *ast.StmtTraitAdaptationList) {
 	v.print(0, "&ast.StmtTraitAdaptationList{\n")
 	v.indent++
 
@@ -871,7 +871,7 @@ func (v *Dump) StmtTraitAdaptationList(n *ast.StmtTraitAdaptationList) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
+func (v *Dumper) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
 	v.print(0, "&ast.StmtTraitMethodRef{\n")
 	v.indent++
 
@@ -884,7 +884,7 @@ func (v *Dump) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtTraitUse(n *ast.StmtTraitUse) {
+func (v *Dumper) StmtTraitUse(n *ast.StmtTraitUse) {
 	v.print(0, "&ast.StmtTraitUse{\n")
 	v.indent++
 
@@ -898,7 +898,7 @@ func (v *Dump) StmtTraitUse(n *ast.StmtTraitUse) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {
+func (v *Dumper) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {
 	v.print(0, "&ast.StmtTraitUseAlias{\n")
 	v.indent++
 
@@ -913,7 +913,7 @@ func (v *Dump) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtTraitUsePrecedence(n *ast.StmtTraitUsePrecedence) {
+func (v *Dumper) StmtTraitUsePrecedence(n *ast.StmtTraitUsePrecedence) {
 	v.print(0, "&ast.StmtTraitUsePrecedence{\n")
 	v.indent++
 
@@ -928,7 +928,7 @@ func (v *Dump) StmtTraitUsePrecedence(n *ast.StmtTraitUsePrecedence) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtTry(n *ast.StmtTry) {
+func (v *Dumper) StmtTry(n *ast.StmtTry) {
 	v.print(0, "&ast.StmtTry{\n")
 	v.indent++
 
@@ -944,7 +944,7 @@ func (v *Dump) StmtTry(n *ast.StmtTry) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtUnset(n *ast.StmtUnset) {
+func (v *Dumper) StmtUnset(n *ast.StmtUnset) {
 	v.print(0, "&ast.StmtUnset{\n")
 	v.indent++
 
@@ -960,7 +960,7 @@ func (v *Dump) StmtUnset(n *ast.StmtUnset) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtUse(n *ast.StmtUse) {
+func (v *Dumper) StmtUse(n *ast.StmtUse) {
 	v.print(0, "&ast.StmtUse{\n")
 	v.indent++
 
@@ -975,7 +975,7 @@ func (v *Dump) StmtUse(n *ast.StmtUse) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtGroupUse(n *ast.StmtGroupUse) {
+func (v *Dumper) StmtGroupUse(n *ast.StmtGroupUse) {
 	v.print(0, "&ast.StmtGroupUse{\n")
 	v.indent++
 
@@ -995,7 +995,7 @@ func (v *Dump) StmtGroupUse(n *ast.StmtGroupUse) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
+func (v *Dumper) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
 	v.print(0, "&ast.StmtUseDeclaration{\n")
 	v.indent++
 
@@ -1010,7 +1010,7 @@ func (v *Dump) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) StmtWhile(n *ast.StmtWhile) {
+func (v *Dumper) StmtWhile(n *ast.StmtWhile) {
 	v.print(0, "&ast.StmtWhile{\n")
 	v.indent++
 
@@ -1028,7 +1028,7 @@ func (v *Dump) StmtWhile(n *ast.StmtWhile) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprArray(n *ast.ExprArray) {
+func (v *Dumper) ExprArray(n *ast.ExprArray) {
 	v.print(0, "&ast.ExprArray{\n")
 	v.indent++
 
@@ -1043,7 +1043,7 @@ func (v *Dump) ExprArray(n *ast.ExprArray) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprArrayDimFetch(n *ast.ExprArrayDimFetch) {
+func (v *Dumper) ExprArrayDimFetch(n *ast.ExprArrayDimFetch) {
 	v.print(0, "&ast.ExprArrayDimFetch{\n")
 	v.indent++
 
@@ -1057,7 +1057,7 @@ func (v *Dump) ExprArrayDimFetch(n *ast.ExprArrayDimFetch) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprArrayItem(n *ast.ExprArrayItem) {
+func (v *Dumper) ExprArrayItem(n *ast.ExprArrayItem) {
 	v.print(0, "&ast.ExprArrayItem{\n")
 	v.indent++
 
@@ -1071,7 +1071,7 @@ func (v *Dump) ExprArrayItem(n *ast.ExprArrayItem) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprArrowFunction(n *ast.ExprArrowFunction) {
+func (v *Dumper) ExprArrowFunction(n *ast.ExprArrowFunction) {
 	v.print(0, "&ast.ExprArrowFunction{\n")
 	v.indent++
 
@@ -1092,7 +1092,7 @@ func (v *Dump) ExprArrowFunction(n *ast.ExprArrowFunction) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBitwiseNot(n *ast.ExprBitwiseNot) {
+func (v *Dumper) ExprBitwiseNot(n *ast.ExprBitwiseNot) {
 	v.print(0, "&ast.ExprBitwiseNot{\n")
 	v.indent++
 
@@ -1104,7 +1104,7 @@ func (v *Dump) ExprBitwiseNot(n *ast.ExprBitwiseNot) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBooleanNot(n *ast.ExprBooleanNot) {
+func (v *Dumper) ExprBooleanNot(n *ast.ExprBooleanNot) {
 	v.print(0, "&ast.ExprBooleanNot{\n")
 	v.indent++
 
@@ -1116,7 +1116,7 @@ func (v *Dump) ExprBooleanNot(n *ast.ExprBooleanNot) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprClassConstFetch(n *ast.ExprClassConstFetch) {
+func (v *Dumper) ExprClassConstFetch(n *ast.ExprClassConstFetch) {
 	v.print(0, "&ast.ExprClassConstFetch{\n")
 	v.indent++
 
@@ -1129,7 +1129,7 @@ func (v *Dump) ExprClassConstFetch(n *ast.ExprClassConstFetch) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprClone(n *ast.ExprClone) {
+func (v *Dumper) ExprClone(n *ast.ExprClone) {
 	v.print(0, "&ast.ExprClone{\n")
 	v.indent++
 
@@ -1141,7 +1141,7 @@ func (v *Dump) ExprClone(n *ast.ExprClone) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprClosure(n *ast.ExprClosure) {
+func (v *Dumper) ExprClosure(n *ast.ExprClosure) {
 	v.print(0, "&ast.ExprClosure{\n")
 	v.indent++
 
@@ -1164,7 +1164,7 @@ func (v *Dump) ExprClosure(n *ast.ExprClosure) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprClosureUse(n *ast.ExprClosureUse) {
+func (v *Dumper) ExprClosureUse(n *ast.ExprClosureUse) {
 	v.print(0, "&ast.ExprClosureUse{\n")
 	v.indent++
 
@@ -1179,7 +1179,7 @@ func (v *Dump) ExprClosureUse(n *ast.ExprClosureUse) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprConstFetch(n *ast.ExprConstFetch) {
+func (v *Dumper) ExprConstFetch(n *ast.ExprConstFetch) {
 	v.print(0, "&ast.ExprConstFetch{\n")
 	v.indent++
 
@@ -1190,7 +1190,7 @@ func (v *Dump) ExprConstFetch(n *ast.ExprConstFetch) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprEmpty(n *ast.ExprEmpty) {
+func (v *Dumper) ExprEmpty(n *ast.ExprEmpty) {
 	v.print(0, "&ast.ExprEmpty{\n")
 	v.indent++
 
@@ -1204,7 +1204,7 @@ func (v *Dump) ExprEmpty(n *ast.ExprEmpty) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprErrorSuppress(n *ast.ExprErrorSuppress) {
+func (v *Dumper) ExprErrorSuppress(n *ast.ExprErrorSuppress) {
 	v.print(0, "&ast.ExprErrorSuppress{\n")
 	v.indent++
 
@@ -1216,7 +1216,7 @@ func (v *Dump) ExprErrorSuppress(n *ast.ExprErrorSuppress) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprEval(n *ast.ExprEval) {
+func (v *Dumper) ExprEval(n *ast.ExprEval) {
 	v.print(0, "&ast.ExprEval{\n")
 	v.indent++
 
@@ -1230,7 +1230,7 @@ func (v *Dump) ExprEval(n *ast.ExprEval) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprExit(n *ast.ExprExit) {
+func (v *Dumper) ExprExit(n *ast.ExprExit) {
 	v.print(0, "&ast.ExprExit{\n")
 	v.indent++
 
@@ -1244,7 +1244,7 @@ func (v *Dump) ExprExit(n *ast.ExprExit) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprFunctionCall(n *ast.ExprFunctionCall) {
+func (v *Dumper) ExprFunctionCall(n *ast.ExprFunctionCall) {
 	v.print(0, "&ast.ExprFunctionCall{\n")
 	v.indent++
 
@@ -1259,7 +1259,7 @@ func (v *Dump) ExprFunctionCall(n *ast.ExprFunctionCall) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprInclude(n *ast.ExprInclude) {
+func (v *Dumper) ExprInclude(n *ast.ExprInclude) {
 	v.print(0, "&ast.ExprInclude{\n")
 	v.indent++
 
@@ -1271,7 +1271,7 @@ func (v *Dump) ExprInclude(n *ast.ExprInclude) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprIncludeOnce(n *ast.ExprIncludeOnce) {
+func (v *Dumper) ExprIncludeOnce(n *ast.ExprIncludeOnce) {
 	v.print(0, "&ast.ExprIncludeOnce{\n")
 	v.indent++
 
@@ -1283,7 +1283,7 @@ func (v *Dump) ExprIncludeOnce(n *ast.ExprIncludeOnce) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprInstanceOf(n *ast.ExprInstanceOf) {
+func (v *Dumper) ExprInstanceOf(n *ast.ExprInstanceOf) {
 	v.print(0, "&ast.ExprInstanceOf{\n")
 	v.indent++
 
@@ -1296,7 +1296,7 @@ func (v *Dump) ExprInstanceOf(n *ast.ExprInstanceOf) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprIsset(n *ast.ExprIsset) {
+func (v *Dumper) ExprIsset(n *ast.ExprIsset) {
 	v.print(0, "&ast.ExprIsset{\n")
 	v.indent++
 
@@ -1311,7 +1311,7 @@ func (v *Dump) ExprIsset(n *ast.ExprIsset) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprList(n *ast.ExprList) {
+func (v *Dumper) ExprList(n *ast.ExprList) {
 	v.print(0, "&ast.ExprList{\n")
 	v.indent++
 
@@ -1326,7 +1326,7 @@ func (v *Dump) ExprList(n *ast.ExprList) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprMethodCall(n *ast.ExprMethodCall) {
+func (v *Dumper) ExprMethodCall(n *ast.ExprMethodCall) {
 	v.print(0, "&ast.ExprMethodCall{\n")
 	v.indent++
 
@@ -1343,7 +1343,7 @@ func (v *Dump) ExprMethodCall(n *ast.ExprMethodCall) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprNew(n *ast.ExprNew) {
+func (v *Dumper) ExprNew(n *ast.ExprNew) {
 	v.print(0, "&ast.ExprNew{\n")
 	v.indent++
 
@@ -1359,7 +1359,7 @@ func (v *Dump) ExprNew(n *ast.ExprNew) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprPostDec(n *ast.ExprPostDec) {
+func (v *Dumper) ExprPostDec(n *ast.ExprPostDec) {
 	v.print(0, "&ast.ExprPostDec{\n")
 	v.indent++
 
@@ -1371,7 +1371,7 @@ func (v *Dump) ExprPostDec(n *ast.ExprPostDec) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprPostInc(n *ast.ExprPostInc) {
+func (v *Dumper) ExprPostInc(n *ast.ExprPostInc) {
 	v.print(0, "&ast.ExprPostInc{\n")
 	v.indent++
 
@@ -1383,7 +1383,7 @@ func (v *Dump) ExprPostInc(n *ast.ExprPostInc) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprPreDec(n *ast.ExprPreDec) {
+func (v *Dumper) ExprPreDec(n *ast.ExprPreDec) {
 	v.print(0, "&ast.ExprPreDec{\n")
 	v.indent++
 
@@ -1395,7 +1395,7 @@ func (v *Dump) ExprPreDec(n *ast.ExprPreDec) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprPreInc(n *ast.ExprPreInc) {
+func (v *Dumper) ExprPreInc(n *ast.ExprPreInc) {
 	v.print(0, "&ast.ExprPreInc{\n")
 	v.indent++
 
@@ -1407,7 +1407,7 @@ func (v *Dump) ExprPreInc(n *ast.ExprPreInc) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprPrint(n *ast.ExprPrint) {
+func (v *Dumper) ExprPrint(n *ast.ExprPrint) {
 	v.print(0, "&ast.ExprPrint{\n")
 	v.indent++
 
@@ -1419,7 +1419,7 @@ func (v *Dump) ExprPrint(n *ast.ExprPrint) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
+func (v *Dumper) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	v.print(0, "&ast.ExprPropertyFetch{\n")
 	v.indent++
 
@@ -1432,7 +1432,7 @@ func (v *Dump) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprReference(n *ast.ExprReference) {
+func (v *Dumper) ExprReference(n *ast.ExprReference) {
 	v.print(0, "&ast.ExprReference{\n")
 	v.indent++
 
@@ -1444,7 +1444,7 @@ func (v *Dump) ExprReference(n *ast.ExprReference) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprRequire(n *ast.ExprRequire) {
+func (v *Dumper) ExprRequire(n *ast.ExprRequire) {
 	v.print(0, "&ast.ExprRequire{\n")
 	v.indent++
 
@@ -1456,7 +1456,7 @@ func (v *Dump) ExprRequire(n *ast.ExprRequire) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprRequireOnce(n *ast.ExprRequireOnce) {
+func (v *Dumper) ExprRequireOnce(n *ast.ExprRequireOnce) {
 	v.print(0, "&ast.ExprRequireOnce{\n")
 	v.indent++
 
@@ -1468,7 +1468,7 @@ func (v *Dump) ExprRequireOnce(n *ast.ExprRequireOnce) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprShellExec(n *ast.ExprShellExec) {
+func (v *Dumper) ExprShellExec(n *ast.ExprShellExec) {
 	v.print(0, "&ast.ExprShellExec{\n")
 	v.indent++
 
@@ -1481,7 +1481,7 @@ func (v *Dump) ExprShellExec(n *ast.ExprShellExec) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprStaticCall(n *ast.ExprStaticCall) {
+func (v *Dumper) ExprStaticCall(n *ast.ExprStaticCall) {
 	v.print(0, "&ast.ExprStaticCall{\n")
 	v.indent++
 
@@ -1498,7 +1498,7 @@ func (v *Dump) ExprStaticCall(n *ast.ExprStaticCall) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprStaticPropertyFetch(n *ast.ExprStaticPropertyFetch) {
+func (v *Dumper) ExprStaticPropertyFetch(n *ast.ExprStaticPropertyFetch) {
 	v.print(0, "&ast.ExprStaticPropertyFetch{\n")
 	v.indent++
 
@@ -1511,7 +1511,7 @@ func (v *Dump) ExprStaticPropertyFetch(n *ast.ExprStaticPropertyFetch) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprTernary(n *ast.ExprTernary) {
+func (v *Dumper) ExprTernary(n *ast.ExprTernary) {
 	v.print(0, "&ast.ExprTernary{\n")
 	v.indent++
 
@@ -1526,7 +1526,7 @@ func (v *Dump) ExprTernary(n *ast.ExprTernary) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprUnaryMinus(n *ast.ExprUnaryMinus) {
+func (v *Dumper) ExprUnaryMinus(n *ast.ExprUnaryMinus) {
 	v.print(0, "&ast.ExprUnaryMinus{\n")
 	v.indent++
 
@@ -1538,7 +1538,7 @@ func (v *Dump) ExprUnaryMinus(n *ast.ExprUnaryMinus) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprUnaryPlus(n *ast.ExprUnaryPlus) {
+func (v *Dumper) ExprUnaryPlus(n *ast.ExprUnaryPlus) {
 	v.print(0, "&ast.ExprUnaryPlus{\n")
 	v.indent++
 
@@ -1550,7 +1550,7 @@ func (v *Dump) ExprUnaryPlus(n *ast.ExprUnaryPlus) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprVariable(n *ast.ExprVariable) {
+func (v *Dumper) ExprVariable(n *ast.ExprVariable) {
 	v.print(0, "&ast.ExprVariable{\n")
 	v.indent++
 
@@ -1562,7 +1562,7 @@ func (v *Dump) ExprVariable(n *ast.ExprVariable) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprYield(n *ast.ExprYield) {
+func (v *Dumper) ExprYield(n *ast.ExprYield) {
 	v.print(0, "&ast.ExprYield{\n")
 	v.indent++
 
@@ -1576,7 +1576,7 @@ func (v *Dump) ExprYield(n *ast.ExprYield) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprYieldFrom(n *ast.ExprYieldFrom) {
+func (v *Dumper) ExprYieldFrom(n *ast.ExprYieldFrom) {
 	v.print(0, "&ast.ExprYieldFrom{\n")
 	v.indent++
 
@@ -1588,7 +1588,7 @@ func (v *Dump) ExprYieldFrom(n *ast.ExprYieldFrom) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssign(n *ast.ExprAssign) {
+func (v *Dumper) ExprAssign(n *ast.ExprAssign) {
 	v.print(0, "&ast.ExprAssign{\n")
 	v.indent++
 
@@ -1601,7 +1601,7 @@ func (v *Dump) ExprAssign(n *ast.ExprAssign) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignReference(n *ast.ExprAssignReference) {
+func (v *Dumper) ExprAssignReference(n *ast.ExprAssignReference) {
 	v.print(0, "&ast.ExprAssignReference{\n")
 	v.indent++
 
@@ -1615,7 +1615,7 @@ func (v *Dump) ExprAssignReference(n *ast.ExprAssignReference) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignBitwiseAnd(n *ast.ExprAssignBitwiseAnd) {
+func (v *Dumper) ExprAssignBitwiseAnd(n *ast.ExprAssignBitwiseAnd) {
 	v.print(0, "&ast.ExprAssignBitwiseAnd{\n")
 	v.indent++
 
@@ -1628,7 +1628,7 @@ func (v *Dump) ExprAssignBitwiseAnd(n *ast.ExprAssignBitwiseAnd) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignBitwiseOr(n *ast.ExprAssignBitwiseOr) {
+func (v *Dumper) ExprAssignBitwiseOr(n *ast.ExprAssignBitwiseOr) {
 	v.print(0, "&ast.ExprAssignBitwiseOr{\n")
 	v.indent++
 
@@ -1641,7 +1641,7 @@ func (v *Dump) ExprAssignBitwiseOr(n *ast.ExprAssignBitwiseOr) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignBitwiseXor(n *ast.ExprAssignBitwiseXor) {
+func (v *Dumper) ExprAssignBitwiseXor(n *ast.ExprAssignBitwiseXor) {
 	v.print(0, "&ast.ExprAssignBitwiseXor{\n")
 	v.indent++
 
@@ -1654,7 +1654,7 @@ func (v *Dump) ExprAssignBitwiseXor(n *ast.ExprAssignBitwiseXor) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignCoalesce(n *ast.ExprAssignCoalesce) {
+func (v *Dumper) ExprAssignCoalesce(n *ast.ExprAssignCoalesce) {
 	v.print(0, "&ast.ExprAssignCoalesce{\n")
 	v.indent++
 
@@ -1667,7 +1667,7 @@ func (v *Dump) ExprAssignCoalesce(n *ast.ExprAssignCoalesce) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignConcat(n *ast.ExprAssignConcat) {
+func (v *Dumper) ExprAssignConcat(n *ast.ExprAssignConcat) {
 	v.print(0, "&ast.ExprAssignConcat{\n")
 	v.indent++
 
@@ -1680,7 +1680,7 @@ func (v *Dump) ExprAssignConcat(n *ast.ExprAssignConcat) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignDiv(n *ast.ExprAssignDiv) {
+func (v *Dumper) ExprAssignDiv(n *ast.ExprAssignDiv) {
 	v.print(0, "&ast.ExprAssignDiv{\n")
 	v.indent++
 
@@ -1693,7 +1693,7 @@ func (v *Dump) ExprAssignDiv(n *ast.ExprAssignDiv) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignMinus(n *ast.ExprAssignMinus) {
+func (v *Dumper) ExprAssignMinus(n *ast.ExprAssignMinus) {
 	v.print(0, "&ast.ExprAssignMinus{\n")
 	v.indent++
 
@@ -1706,7 +1706,7 @@ func (v *Dump) ExprAssignMinus(n *ast.ExprAssignMinus) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignMod(n *ast.ExprAssignMod) {
+func (v *Dumper) ExprAssignMod(n *ast.ExprAssignMod) {
 	v.print(0, "&ast.ExprAssignMod{\n")
 	v.indent++
 
@@ -1719,7 +1719,7 @@ func (v *Dump) ExprAssignMod(n *ast.ExprAssignMod) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignMul(n *ast.ExprAssignMul) {
+func (v *Dumper) ExprAssignMul(n *ast.ExprAssignMul) {
 	v.print(0, "&ast.ExprAssignMul{\n")
 	v.indent++
 
@@ -1732,7 +1732,7 @@ func (v *Dump) ExprAssignMul(n *ast.ExprAssignMul) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignPlus(n *ast.ExprAssignPlus) {
+func (v *Dumper) ExprAssignPlus(n *ast.ExprAssignPlus) {
 	v.print(0, "&ast.ExprAssignPlus{\n")
 	v.indent++
 
@@ -1745,7 +1745,7 @@ func (v *Dump) ExprAssignPlus(n *ast.ExprAssignPlus) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignPow(n *ast.ExprAssignPow) {
+func (v *Dumper) ExprAssignPow(n *ast.ExprAssignPow) {
 	v.print(0, "&ast.ExprAssignPow{\n")
 	v.indent++
 
@@ -1758,7 +1758,7 @@ func (v *Dump) ExprAssignPow(n *ast.ExprAssignPow) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignShiftLeft(n *ast.ExprAssignShiftLeft) {
+func (v *Dumper) ExprAssignShiftLeft(n *ast.ExprAssignShiftLeft) {
 	v.print(0, "&ast.ExprAssignShiftLeft{\n")
 	v.indent++
 
@@ -1771,7 +1771,7 @@ func (v *Dump) ExprAssignShiftLeft(n *ast.ExprAssignShiftLeft) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprAssignShiftRight(n *ast.ExprAssignShiftRight) {
+func (v *Dumper) ExprAssignShiftRight(n *ast.ExprAssignShiftRight) {
 	v.print(0, "&ast.ExprAssignShiftRight{\n")
 	v.indent++
 
@@ -1784,7 +1784,7 @@ func (v *Dump) ExprAssignShiftRight(n *ast.ExprAssignShiftRight) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryBitwiseAnd(n *ast.ExprBinaryBitwiseAnd) {
+func (v *Dumper) ExprBinaryBitwiseAnd(n *ast.ExprBinaryBitwiseAnd) {
 	v.print(0, "&ast.ExprBinaryBitwiseAnd{\n")
 	v.indent++
 
@@ -1797,7 +1797,7 @@ func (v *Dump) ExprBinaryBitwiseAnd(n *ast.ExprBinaryBitwiseAnd) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryBitwiseOr(n *ast.ExprBinaryBitwiseOr) {
+func (v *Dumper) ExprBinaryBitwiseOr(n *ast.ExprBinaryBitwiseOr) {
 	v.print(0, "&ast.ExprBinaryBitwiseOr{\n")
 	v.indent++
 
@@ -1810,7 +1810,7 @@ func (v *Dump) ExprBinaryBitwiseOr(n *ast.ExprBinaryBitwiseOr) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryBitwiseXor(n *ast.ExprBinaryBitwiseXor) {
+func (v *Dumper) ExprBinaryBitwiseXor(n *ast.ExprBinaryBitwiseXor) {
 	v.print(0, "&ast.ExprBinaryBitwiseXor{\n")
 	v.indent++
 
@@ -1823,7 +1823,7 @@ func (v *Dump) ExprBinaryBitwiseXor(n *ast.ExprBinaryBitwiseXor) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryBooleanAnd(n *ast.ExprBinaryBooleanAnd) {
+func (v *Dumper) ExprBinaryBooleanAnd(n *ast.ExprBinaryBooleanAnd) {
 	v.print(0, "&ast.ExprBinaryBooleanAnd{\n")
 	v.indent++
 
@@ -1836,7 +1836,7 @@ func (v *Dump) ExprBinaryBooleanAnd(n *ast.ExprBinaryBooleanAnd) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryBooleanOr(n *ast.ExprBinaryBooleanOr) {
+func (v *Dumper) ExprBinaryBooleanOr(n *ast.ExprBinaryBooleanOr) {
 	v.print(0, "&ast.ExprBinaryBooleanOr{\n")
 	v.indent++
 
@@ -1849,7 +1849,7 @@ func (v *Dump) ExprBinaryBooleanOr(n *ast.ExprBinaryBooleanOr) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryCoalesce(n *ast.ExprBinaryCoalesce) {
+func (v *Dumper) ExprBinaryCoalesce(n *ast.ExprBinaryCoalesce) {
 	v.print(0, "&ast.ExprBinaryCoalesce{\n")
 	v.indent++
 
@@ -1862,7 +1862,7 @@ func (v *Dump) ExprBinaryCoalesce(n *ast.ExprBinaryCoalesce) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryConcat(n *ast.ExprBinaryConcat) {
+func (v *Dumper) ExprBinaryConcat(n *ast.ExprBinaryConcat) {
 	v.print(0, "&ast.ExprBinaryConcat{\n")
 	v.indent++
 
@@ -1875,7 +1875,7 @@ func (v *Dump) ExprBinaryConcat(n *ast.ExprBinaryConcat) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryDiv(n *ast.ExprBinaryDiv) {
+func (v *Dumper) ExprBinaryDiv(n *ast.ExprBinaryDiv) {
 	v.print(0, "&ast.ExprBinaryDiv{\n")
 	v.indent++
 
@@ -1888,7 +1888,7 @@ func (v *Dump) ExprBinaryDiv(n *ast.ExprBinaryDiv) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryEqual(n *ast.ExprBinaryEqual) {
+func (v *Dumper) ExprBinaryEqual(n *ast.ExprBinaryEqual) {
 	v.print(0, "&ast.ExprBinaryEqual{\n")
 	v.indent++
 
@@ -1901,7 +1901,7 @@ func (v *Dump) ExprBinaryEqual(n *ast.ExprBinaryEqual) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryGreater(n *ast.ExprBinaryGreater) {
+func (v *Dumper) ExprBinaryGreater(n *ast.ExprBinaryGreater) {
 	v.print(0, "&ast.ExprBinaryGreater{\n")
 	v.indent++
 
@@ -1914,7 +1914,7 @@ func (v *Dump) ExprBinaryGreater(n *ast.ExprBinaryGreater) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryGreaterOrEqual(n *ast.ExprBinaryGreaterOrEqual) {
+func (v *Dumper) ExprBinaryGreaterOrEqual(n *ast.ExprBinaryGreaterOrEqual) {
 	v.print(0, "&ast.ExprBinaryGreaterOrEqual{\n")
 	v.indent++
 
@@ -1927,7 +1927,7 @@ func (v *Dump) ExprBinaryGreaterOrEqual(n *ast.ExprBinaryGreaterOrEqual) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryIdentical(n *ast.ExprBinaryIdentical) {
+func (v *Dumper) ExprBinaryIdentical(n *ast.ExprBinaryIdentical) {
 	v.print(0, "&ast.ExprBinaryIdentical{\n")
 	v.indent++
 
@@ -1940,7 +1940,7 @@ func (v *Dump) ExprBinaryIdentical(n *ast.ExprBinaryIdentical) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryLogicalAnd(n *ast.ExprBinaryLogicalAnd) {
+func (v *Dumper) ExprBinaryLogicalAnd(n *ast.ExprBinaryLogicalAnd) {
 	v.print(0, "&ast.ExprBinaryLogicalAnd{\n")
 	v.indent++
 
@@ -1953,7 +1953,7 @@ func (v *Dump) ExprBinaryLogicalAnd(n *ast.ExprBinaryLogicalAnd) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryLogicalOr(n *ast.ExprBinaryLogicalOr) {
+func (v *Dumper) ExprBinaryLogicalOr(n *ast.ExprBinaryLogicalOr) {
 	v.print(0, "&ast.ExprBinaryLogicalOr{\n")
 	v.indent++
 
@@ -1966,7 +1966,7 @@ func (v *Dump) ExprBinaryLogicalOr(n *ast.ExprBinaryLogicalOr) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryLogicalXor(n *ast.ExprBinaryLogicalXor) {
+func (v *Dumper) ExprBinaryLogicalXor(n *ast.ExprBinaryLogicalXor) {
 	v.print(0, "&ast.ExprBinaryLogicalXor{\n")
 	v.indent++
 
@@ -1979,7 +1979,7 @@ func (v *Dump) ExprBinaryLogicalXor(n *ast.ExprBinaryLogicalXor) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryMinus(n *ast.ExprBinaryMinus) {
+func (v *Dumper) ExprBinaryMinus(n *ast.ExprBinaryMinus) {
 	v.print(0, "&ast.ExprBinaryMinus{\n")
 	v.indent++
 
@@ -1992,7 +1992,7 @@ func (v *Dump) ExprBinaryMinus(n *ast.ExprBinaryMinus) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryMod(n *ast.ExprBinaryMod) {
+func (v *Dumper) ExprBinaryMod(n *ast.ExprBinaryMod) {
 	v.print(0, "&ast.ExprBinaryMod{\n")
 	v.indent++
 
@@ -2005,7 +2005,7 @@ func (v *Dump) ExprBinaryMod(n *ast.ExprBinaryMod) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryMul(n *ast.ExprBinaryMul) {
+func (v *Dumper) ExprBinaryMul(n *ast.ExprBinaryMul) {
 	v.print(0, "&ast.ExprBinaryMul{\n")
 	v.indent++
 
@@ -2018,7 +2018,7 @@ func (v *Dump) ExprBinaryMul(n *ast.ExprBinaryMul) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryNotEqual(n *ast.ExprBinaryNotEqual) {
+func (v *Dumper) ExprBinaryNotEqual(n *ast.ExprBinaryNotEqual) {
 	v.print(0, "&ast.ExprBinaryNotEqual{\n")
 	v.indent++
 
@@ -2031,7 +2031,7 @@ func (v *Dump) ExprBinaryNotEqual(n *ast.ExprBinaryNotEqual) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryNotIdentical(n *ast.ExprBinaryNotIdentical) {
+func (v *Dumper) ExprBinaryNotIdentical(n *ast.ExprBinaryNotIdentical) {
 	v.print(0, "&ast.ExprBinaryNotIdentical{\n")
 	v.indent++
 
@@ -2044,7 +2044,7 @@ func (v *Dump) ExprBinaryNotIdentical(n *ast.ExprBinaryNotIdentical) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryPlus(n *ast.ExprBinaryPlus) {
+func (v *Dumper) ExprBinaryPlus(n *ast.ExprBinaryPlus) {
 	v.print(0, "&ast.ExprBinaryPlus{\n")
 	v.indent++
 
@@ -2057,7 +2057,7 @@ func (v *Dump) ExprBinaryPlus(n *ast.ExprBinaryPlus) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryPow(n *ast.ExprBinaryPow) {
+func (v *Dumper) ExprBinaryPow(n *ast.ExprBinaryPow) {
 	v.print(0, "&ast.ExprBinaryPow{\n")
 	v.indent++
 
@@ -2070,7 +2070,7 @@ func (v *Dump) ExprBinaryPow(n *ast.ExprBinaryPow) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryShiftLeft(n *ast.ExprBinaryShiftLeft) {
+func (v *Dumper) ExprBinaryShiftLeft(n *ast.ExprBinaryShiftLeft) {
 	v.print(0, "&ast.ExprBinaryShiftLeft{\n")
 	v.indent++
 
@@ -2083,7 +2083,7 @@ func (v *Dump) ExprBinaryShiftLeft(n *ast.ExprBinaryShiftLeft) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinaryShiftRight(n *ast.ExprBinaryShiftRight) {
+func (v *Dumper) ExprBinaryShiftRight(n *ast.ExprBinaryShiftRight) {
 	v.print(0, "&ast.ExprBinaryShiftRight{\n")
 	v.indent++
 
@@ -2096,7 +2096,7 @@ func (v *Dump) ExprBinaryShiftRight(n *ast.ExprBinaryShiftRight) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinarySmaller(n *ast.ExprBinarySmaller) {
+func (v *Dumper) ExprBinarySmaller(n *ast.ExprBinarySmaller) {
 	v.print(0, "&ast.ExprBinarySmaller{\n")
 	v.indent++
 
@@ -2109,7 +2109,7 @@ func (v *Dump) ExprBinarySmaller(n *ast.ExprBinarySmaller) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinarySmallerOrEqual(n *ast.ExprBinarySmallerOrEqual) {
+func (v *Dumper) ExprBinarySmallerOrEqual(n *ast.ExprBinarySmallerOrEqual) {
 	v.print(0, "&ast.ExprBinarySmallerOrEqual{\n")
 	v.indent++
 
@@ -2122,7 +2122,7 @@ func (v *Dump) ExprBinarySmallerOrEqual(n *ast.ExprBinarySmallerOrEqual) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprBinarySpaceship(n *ast.ExprBinarySpaceship) {
+func (v *Dumper) ExprBinarySpaceship(n *ast.ExprBinarySpaceship) {
 	v.print(0, "&ast.ExprBinarySpaceship{\n")
 	v.indent++
 
@@ -2135,7 +2135,7 @@ func (v *Dump) ExprBinarySpaceship(n *ast.ExprBinarySpaceship) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprCastArray(n *ast.ExprCastArray) {
+func (v *Dumper) ExprCastArray(n *ast.ExprCastArray) {
 	v.print(0, "&ast.ExprCastArray{\n")
 	v.indent++
 
@@ -2147,7 +2147,7 @@ func (v *Dump) ExprCastArray(n *ast.ExprCastArray) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprCastBool(n *ast.ExprCastBool) {
+func (v *Dumper) ExprCastBool(n *ast.ExprCastBool) {
 	v.print(0, "&ast.ExprCastBool{\n")
 	v.indent++
 
@@ -2159,7 +2159,7 @@ func (v *Dump) ExprCastBool(n *ast.ExprCastBool) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprCastDouble(n *ast.ExprCastDouble) {
+func (v *Dumper) ExprCastDouble(n *ast.ExprCastDouble) {
 	v.print(0, "&ast.ExprCastDouble{\n")
 	v.indent++
 
@@ -2171,7 +2171,7 @@ func (v *Dump) ExprCastDouble(n *ast.ExprCastDouble) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprCastInt(n *ast.ExprCastInt) {
+func (v *Dumper) ExprCastInt(n *ast.ExprCastInt) {
 	v.print(0, "&ast.ExprCastInt{\n")
 	v.indent++
 
@@ -2183,7 +2183,7 @@ func (v *Dump) ExprCastInt(n *ast.ExprCastInt) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprCastObject(n *ast.ExprCastObject) {
+func (v *Dumper) ExprCastObject(n *ast.ExprCastObject) {
 	v.print(0, "&ast.ExprCastObject{\n")
 	v.indent++
 
@@ -2195,7 +2195,7 @@ func (v *Dump) ExprCastObject(n *ast.ExprCastObject) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprCastString(n *ast.ExprCastString) {
+func (v *Dumper) ExprCastString(n *ast.ExprCastString) {
 	v.print(0, "&ast.ExprCastString{\n")
 	v.indent++
 
@@ -2207,7 +2207,7 @@ func (v *Dump) ExprCastString(n *ast.ExprCastString) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ExprCastUnset(n *ast.ExprCastUnset) {
+func (v *Dumper) ExprCastUnset(n *ast.ExprCastUnset) {
 	v.print(0, "&ast.ExprCastUnset{\n")
 	v.indent++
 
@@ -2219,7 +2219,7 @@ func (v *Dump) ExprCastUnset(n *ast.ExprCastUnset) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ScalarDnumber(n *ast.ScalarDnumber) {
+func (v *Dumper) ScalarDnumber(n *ast.ScalarDnumber) {
 	v.print(0, "&ast.ScalarDnumber{\n")
 	v.indent++
 
@@ -2231,7 +2231,7 @@ func (v *Dump) ScalarDnumber(n *ast.ScalarDnumber) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ScalarEncapsed(n *ast.ScalarEncapsed) {
+func (v *Dumper) ScalarEncapsed(n *ast.ScalarEncapsed) {
 	v.print(0, "&ast.ScalarEncapsed{\n")
 	v.indent++
 
@@ -2244,7 +2244,7 @@ func (v *Dump) ScalarEncapsed(n *ast.ScalarEncapsed) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
+func (v *Dumper) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 	v.print(0, "&ast.ScalarEncapsedStringPart{\n")
 	v.indent++
 
@@ -2256,7 +2256,7 @@ func (v *Dump) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ScalarHeredoc(n *ast.ScalarHeredoc) {
+func (v *Dumper) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	v.print(0, "&ast.ScalarHeredoc{\n")
 	v.indent++
 
@@ -2269,7 +2269,7 @@ func (v *Dump) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ScalarLnumber(n *ast.ScalarLnumber) {
+func (v *Dumper) ScalarLnumber(n *ast.ScalarLnumber) {
 	v.print(0, "&ast.ScalarLnumber{\n")
 	v.indent++
 
@@ -2281,7 +2281,7 @@ func (v *Dump) ScalarLnumber(n *ast.ScalarLnumber) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ScalarMagicConstant(n *ast.ScalarMagicConstant) {
+func (v *Dumper) ScalarMagicConstant(n *ast.ScalarMagicConstant) {
 	v.print(0, "&ast.ScalarMagicConstant{\n")
 	v.indent++
 
@@ -2293,7 +2293,7 @@ func (v *Dump) ScalarMagicConstant(n *ast.ScalarMagicConstant) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ScalarString(n *ast.ScalarString) {
+func (v *Dumper) ScalarString(n *ast.ScalarString) {
 	v.print(0, "&ast.ScalarString{\n")
 	v.indent++
 
@@ -2306,7 +2306,7 @@ func (v *Dump) ScalarString(n *ast.ScalarString) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) NameName(n *ast.NameName) {
+func (v *Dumper) NameName(n *ast.NameName) {
 	v.print(0, "&ast.NameName{\n")
 	v.indent++
 
@@ -2318,7 +2318,7 @@ func (v *Dump) NameName(n *ast.NameName) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) NameFullyQualified(n *ast.NameFullyQualified) {
+func (v *Dumper) NameFullyQualified(n *ast.NameFullyQualified) {
 	v.print(0, "&ast.NameFullyQualified{\n")
 	v.indent++
 
@@ -2331,7 +2331,7 @@ func (v *Dump) NameFullyQualified(n *ast.NameFullyQualified) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) NameRelative(n *ast.NameRelative) {
+func (v *Dumper) NameRelative(n *ast.NameRelative) {
 	v.print(0, "&ast.NameRelative{\n")
 	v.indent++
 
@@ -2345,7 +2345,7 @@ func (v *Dump) NameRelative(n *ast.NameRelative) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) NameNamePart(n *ast.NameNamePart) {
+func (v *Dumper) NameNamePart(n *ast.NameNamePart) {
 	v.print(0, "&ast.NameNamePart{\n")
 	v.indent++
 
@@ -2357,7 +2357,7 @@ func (v *Dump) NameNamePart(n *ast.NameNamePart) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dump) ParserBrackets(n *ast.ParserBrackets) {
+func (v *Dumper) ParserBrackets(n *ast.ParserBrackets) {
 	v.print(0, "&ast.ParserBrackets{\n")
 	v.indent++
 
