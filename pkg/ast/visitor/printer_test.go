@@ -4339,31 +4339,6 @@ func TestPrinterPrintStmtThrow(t *testing.T) {
 	}
 }
 
-func TestPrinterPrintStmtTraitAdaptationList(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n := &ast.StmtTraitAdaptationList{
-		Adaptations: []ast.Vertex{
-			&ast.StmtTraitUseAlias{
-				Ref: &ast.StmtTraitMethodRef{
-					Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-					Method: &ast.Identifier{Value: []byte("a")},
-				},
-				Alias: &ast.Identifier{Value: []byte("b")},
-			},
-		},
-	}
-	n.Accept(p)
-
-	expected := `{Foo::a as b;}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestPrinterPrintStmtTraitMethodRef(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -4454,7 +4429,6 @@ func TestPrinterPrintStmtTraitUse(t *testing.T) {
 			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
 			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
 		},
-		Adaptations: &ast.StmtNop{},
 	}
 	n.Accept(p)
 
@@ -4475,15 +4449,13 @@ func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
 			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
 		},
-		Adaptations: &ast.StmtTraitAdaptationList{
-			Adaptations: []ast.Vertex{
-				&ast.StmtTraitUseAlias{
-					Ref: &ast.StmtTraitMethodRef{
-						Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-						Method: &ast.Identifier{Value: []byte("a")},
-					},
-					Alias: &ast.Identifier{Value: []byte("b")},
+		Adaptations: []ast.Vertex{
+			&ast.StmtTraitUseAlias{
+				Ref: &ast.StmtTraitMethodRef{
+					Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+					Method: &ast.Identifier{Value: []byte("a")},
 				},
+				Alias: &ast.Identifier{Value: []byte("b")},
 			},
 		},
 	}

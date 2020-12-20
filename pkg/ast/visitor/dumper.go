@@ -858,19 +858,6 @@ func (v *Dumper) StmtTrait(n *ast.StmtTrait) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dumper) StmtTraitAdaptationList(n *ast.StmtTraitAdaptationList) {
-	v.print(0, "&ast.StmtTraitAdaptationList{\n")
-	v.indent++
-
-	v.dumpPosition(n.Position)
-	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
-	v.dumpVertexList("Adaptations", n.Adaptations)
-	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
-
-	v.indent--
-	v.print(v.indent, "},\n")
-}
-
 func (v *Dumper) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
 	v.print(0, "&ast.StmtTraitMethodRef{\n")
 	v.indent++
@@ -892,7 +879,10 @@ func (v *Dumper) StmtTraitUse(n *ast.StmtTraitUse) {
 	v.dumpToken("UseTkn", n.UseTkn)
 	v.dumpVertexList("Traits", n.Traits)
 	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
-	v.dumpVertex("Adaptations", n.Adaptations)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpVertexList("Adaptations", n.Adaptations)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
 
 	v.indent--
 	v.print(v.indent, "},\n")

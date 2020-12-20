@@ -886,21 +886,6 @@ func (f *formatter) StmtTrait(n *ast.StmtTrait) {
 	n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
 }
 
-func (f *formatter) StmtTraitAdaptationList(n *ast.StmtTraitAdaptationList) {
-	n.OpenCurlyBracketTkn = f.newToken('{', []byte("{"))
-
-	if len(n.Adaptations) > 0 {
-		f.indent++
-		f.formatStmts(&n.Adaptations)
-		f.indent--
-
-		f.addFreeFloating(token.T_WHITESPACE, []byte("\n"))
-		f.addIndent()
-	}
-
-	n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
-}
-
 func (f *formatter) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
 	if n.Trait != nil {
 		n.Trait.Accept(f)
@@ -916,11 +901,27 @@ func (f *formatter) StmtTraitUse(n *ast.StmtTraitUse) {
 
 	n.SeparatorTkns = f.formatList(n.Traits, ',')
 
-	if _, ok := n.Adaptations.(*ast.StmtTraitAdaptationList); ok {
-		f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
-	}
+	n.OpenCurlyBracketTkn = nil
+	n.CloseCurlyBracketTkn = nil
+	n.SemiColonTkn = nil
 
-	n.Adaptations.Accept(f)
+	if len(n.Adaptations) > 0 {
+		f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
+		n.OpenCurlyBracketTkn = f.newToken('{', []byte("{"))
+
+		if len(n.Adaptations) > 0 {
+			f.indent++
+			f.formatStmts(&n.Adaptations)
+			f.indent--
+
+			f.addFreeFloating(token.T_WHITESPACE, []byte("\n"))
+			f.addIndent()
+		}
+
+		n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
+	} else {
+		n.SemiColonTkn = f.newToken(';', []byte(";"))
+	}
 }
 
 func (f *formatter) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {

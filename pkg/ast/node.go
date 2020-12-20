@@ -945,22 +945,6 @@ func (n *StmtTrait) GetPosition() *position.Position {
 	return n.Position
 }
 
-// StmtTraitAdaptationList node
-type StmtTraitAdaptationList struct {
-	Position             *position.Position
-	OpenCurlyBracketTkn  *token.Token
-	Adaptations          []Vertex
-	CloseCurlyBracketTkn *token.Token
-}
-
-func (n *StmtTraitAdaptationList) Accept(v NodeVisitor) {
-	v.StmtTraitAdaptationList(n)
-}
-
-func (n *StmtTraitAdaptationList) GetPosition() *position.Position {
-	return n.Position
-}
-
 // StmtTraitMethodRef node
 type StmtTraitMethodRef struct {
 	Position       *position.Position
@@ -979,11 +963,14 @@ func (n *StmtTraitMethodRef) GetPosition() *position.Position {
 
 // StmtTraitUse node
 type StmtTraitUse struct {
-	Position      *position.Position
-	UseTkn        *token.Token
-	Traits        []Vertex
-	SeparatorTkns []*token.Token
-	Adaptations   Vertex
+	Position             *position.Position
+	UseTkn               *token.Token
+	Traits               []Vertex
+	SeparatorTkns        []*token.Token
+	OpenCurlyBracketTkn  *token.Token
+	Adaptations          []Vertex
+	CloseCurlyBracketTkn *token.Token
+	SemiColonTkn         *token.Token
 }
 
 func (n *StmtTraitUse) Accept(v NodeVisitor) {
@@ -2696,6 +2683,22 @@ func (n *ParserSeparatedList) Accept(v NodeVisitor) {
 }
 
 func (n *ParserSeparatedList) GetPosition() *position.Position {
+	return n.Position
+}
+
+// TraitAdaptationList node
+type TraitAdaptationList struct {
+	Position             *position.Position
+	OpenCurlyBracketTkn  *token.Token
+	Adaptations          []Vertex
+	CloseCurlyBracketTkn *token.Token
+}
+
+func (n *TraitAdaptationList) Accept(v NodeVisitor) {
+	// do nothing
+}
+
+func (n *TraitAdaptationList) GetPosition() *position.Position {
 	return n.Position
 }
 

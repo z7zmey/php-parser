@@ -812,20 +812,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			}
 			t.visitor.Leave("Stmts", false)
 		}
-	case *ast.StmtTraitAdaptationList:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Adaptations != nil {
-			t.visitor.Enter("Adaptations", false)
-			for _, c := range nn.Adaptations {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("Adaptations", false)
-		}
 	case *ast.StmtTraitMethodRef:
 		if nn == nil {
 			return
@@ -858,9 +844,11 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.visitor.Leave("Traits", false)
 		}
 		if nn.Adaptations != nil {
-			t.visitor.Enter("Adaptations", true)
-			t.Traverse(nn.Adaptations)
-			t.visitor.Leave("Adaptations", true)
+			t.visitor.Enter("Adaptations", false)
+			for _, c := range nn.Adaptations {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Adaptations", false)
 		}
 	case *ast.StmtTraitUseAlias:
 		if nn == nil {

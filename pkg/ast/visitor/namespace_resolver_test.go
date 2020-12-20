@@ -354,22 +354,20 @@ func TestResolveTraitUse(t *testing.T) {
 					nameB,
 					relativeNameB,
 				},
-				Adaptations: &ast.StmtTraitAdaptationList{
-					Adaptations: []ast.Vertex{
-						&ast.StmtTraitUsePrecedence{
-							Ref: &ast.StmtTraitMethodRef{
-								Trait:  fullyQualifiedNameB,
-								Method: &ast.Identifier{Value: []byte("foo")},
-							},
-							Insteadof: []ast.Vertex{fullyQualifiedNameBC},
+				Adaptations: []ast.Vertex{
+					&ast.StmtTraitUsePrecedence{
+						Ref: &ast.StmtTraitMethodRef{
+							Trait:  fullyQualifiedNameB,
+							Method: &ast.Identifier{Value: []byte("foo")},
 						},
-						&ast.StmtTraitUseAlias{
-							Ref: &ast.StmtTraitMethodRef{
-								Trait:  relativeNameBC,
-								Method: &ast.Identifier{Value: []byte("foo")},
-							},
-							Alias: &ast.Identifier{Value: []byte("bar")},
+						Insteadof: []ast.Vertex{fullyQualifiedNameBC},
+					},
+					&ast.StmtTraitUseAlias{
+						Ref: &ast.StmtTraitMethodRef{
+							Trait:  relativeNameBC,
+							Method: &ast.Identifier{Value: []byte("foo")},
 						},
+						Alias: &ast.Identifier{Value: []byte("bar")},
 					},
 				},
 			},

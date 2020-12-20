@@ -531,12 +531,6 @@ func (p *printer) StmtTrait(n *ast.StmtTrait) {
 	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
 }
 
-func (p *printer) StmtTraitAdaptationList(n *ast.StmtTraitAdaptationList) {
-	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
-	p.printList(n.Adaptations)
-	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
-}
-
 func (p *printer) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
 	p.printNode(n.Trait)
 	p.printToken(n.DoubleColonTkn, p.ifNode(n.Trait, []byte("::")))
@@ -546,7 +540,10 @@ func (p *printer) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
 func (p *printer) StmtTraitUse(n *ast.StmtTraitUse) {
 	p.printToken(n.UseTkn, []byte("use"))
 	p.printSeparatedList(n.Traits, n.SeparatorTkns, []byte(","))
-	p.printNode(n.Adaptations)
+	p.printToken(n.OpenCurlyBracketTkn, p.ifNodeList(n.Adaptations, []byte("{")))
+	p.printList(n.Adaptations)
+	p.printToken(n.CloseCurlyBracketTkn, p.ifNodeList(n.Adaptations, []byte("}")))
+	p.printToken(n.SemiColonTkn, p.ifNotToken(n.OpenCurlyBracketTkn, p.ifNotNodeList(n.Adaptations, []byte(";"))))
 }
 
 func (p *printer) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {

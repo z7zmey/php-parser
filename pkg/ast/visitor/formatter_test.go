@@ -2503,76 +2503,6 @@ func TestFormatter_StmtTrait_Implements(t *testing.T) {
 	}
 }
 
-func TestFormatter_StmtTraitAdaptationList(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.StmtTraitAdaptationList{}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `{}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestFormatter_StmtTraitAdaptationList_List(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.StmtTraitAdaptationList{
-		Adaptations: []ast.Vertex{
-			&ast.StmtTraitUseAlias{
-				Ref: &ast.StmtTraitMethodRef{
-					Method: &ast.Identifier{
-						Value: []byte("foo"),
-					},
-				},
-				Alias: &ast.Identifier{
-					Value: []byte("bar"),
-				},
-			},
-			&ast.StmtTraitUsePrecedence{
-				Ref: &ast.StmtTraitMethodRef{
-					Method: &ast.Identifier{
-						Value: []byte("foo"),
-					},
-				},
-				Insteadof: []ast.Vertex{
-					&ast.NameName{
-						Parts: []ast.Vertex{
-							&ast.NameNamePart{
-								Value: []byte("bar"),
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `{
-        foo as bar;
-        foo insteadof bar;
-    }`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestFormatter_StmtTraitMethodRef(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -2646,7 +2576,6 @@ func TestFormatter_StmtTraitUse(t *testing.T) {
 				},
 			},
 		},
-		Adaptations: &ast.StmtNop{},
 	}
 
 	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
@@ -2683,7 +2612,18 @@ func TestFormatter_StmtTraitUse_Adaptations(t *testing.T) {
 				},
 			},
 		},
-		Adaptations: &ast.StmtTraitAdaptationList{},
+		Adaptations: []ast.Vertex{
+			&ast.StmtTraitUseAlias{
+				Ref: &ast.StmtTraitMethodRef{
+					Method: &ast.Identifier{
+						Value: []byte("foo"),
+					},
+				},
+				Alias: &ast.Identifier{
+					Value: []byte("baz"),
+				},
+			},
+		},
 	}
 
 	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
@@ -2692,7 +2632,9 @@ func TestFormatter_StmtTraitUse_Adaptations(t *testing.T) {
 	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
 	n.Accept(p)
 
-	expected := `use foo, bar {}`
+	expected := `use foo, bar {
+        foo as baz;
+    }`
 	actual := o.String()
 
 	if expected != actual {

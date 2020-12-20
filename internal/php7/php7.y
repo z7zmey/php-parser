@@ -1970,13 +1970,23 @@ class_statement:
             }
     |   T_USE name_list trait_adaptations
             {
-                $$ = &ast.StmtTraitUse{
+                traitUse := &ast.StmtTraitUse{
                     Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                     UseTkn:        $1,
                     Traits:        $2.(*ast.ParserSeparatedList).Items,
                     SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
-                    Adaptations:   $3,
                 }
+
+                switch n := $3.(type) {
+                case *ast.TraitAdaptationList :
+                    traitUse.OpenCurlyBracketTkn = n.OpenCurlyBracketTkn
+                    traitUse.Adaptations = n.Adaptations
+                    traitUse.CloseCurlyBracketTkn = n.CloseCurlyBracketTkn
+                case *ast.StmtNop :
+                    traitUse.SemiColonTkn = n.SemiColonTkn
+                };
+
+                $$ = traitUse
             }
     |   method_modifiers T_FUNCTION returns_ref identifier backup_doc_comment '(' parameter_list ')' return_type method_body
             {
@@ -2032,7 +2042,7 @@ trait_adaptations:
             }
     |   '{' '}'
             {
-                $$ = &ast.StmtTraitAdaptationList{
+                $$ = &ast.TraitAdaptationList{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                     OpenCurlyBracketTkn:  $1,
                     CloseCurlyBracketTkn: $2,
@@ -2040,7 +2050,7 @@ trait_adaptations:
             }
     |   '{' trait_adaptation_list '}'
             {
-                $$ = &ast.StmtTraitAdaptationList{
+                $$ = &ast.TraitAdaptationList{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenCurlyBracketTkn:  $1,
                     Adaptations:          $2,
