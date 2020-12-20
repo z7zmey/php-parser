@@ -541,7 +541,9 @@ use_type:
 group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
-                $4.(*ast.ParserSeparatedList).SeparatorTkns = append($4.(*ast.ParserSeparatedList).SeparatorTkns, $5)
+                if $5 != nil {
+                    $4.(*ast.ParserSeparatedList).SeparatorTkns = append($4.(*ast.ParserSeparatedList).SeparatorTkns, $5)
+                }
 
                 $$ = &ast.StmtGroupUse{
                     Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $6),
@@ -559,7 +561,9 @@ group_use_declaration:
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
-                $5.(*ast.ParserSeparatedList).SeparatorTkns = append($5.(*ast.ParserSeparatedList).SeparatorTkns, $6)
+                if $6 != nil {
+                    $5.(*ast.ParserSeparatedList).SeparatorTkns = append($5.(*ast.ParserSeparatedList).SeparatorTkns, $6)
+                }
 
                 $$ = &ast.StmtGroupUse{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $7),
