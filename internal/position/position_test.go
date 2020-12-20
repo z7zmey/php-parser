@@ -21,7 +21,7 @@ func TestNewTokenPosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewTokenPosition(tkn)
+	pos := builder.NewBuilder().NewTokenPosition(tkn)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 1, EndPos: 3}, pos)
 }
@@ -46,7 +46,7 @@ func TestNewTokensPosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewTokensPosition(token1, token2)
+	pos := builder.NewBuilder().NewTokensPosition(token1, token2)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 2, EndPos: 6}, pos)
 }
@@ -61,7 +61,7 @@ func TestNewNodePosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodePosition(n)
+	pos := builder.NewBuilder().NewNodePosition(n)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 1, EndPos: 3}, pos)
 }
@@ -85,7 +85,7 @@ func TestNewTokenNodePosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewTokenNodePosition(tkn, n)
+	pos := builder.NewBuilder().NewTokenNodePosition(tkn, n)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 2, EndPos: 12}, pos)
 }
@@ -110,7 +110,7 @@ func TestNewNodeTokenPosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodeTokenPosition(n, tkn)
+	pos := builder.NewBuilder().NewNodeTokenPosition(n, tkn)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 2, EndPos: 12}, pos)
 }
@@ -134,7 +134,7 @@ func TestNewNodeListPosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodeListPosition([]ast.Vertex{n1, n2})
+	pos := builder.NewBuilder().NewNodeListPosition([]ast.Vertex{n1, n2})
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 2, EndPos: 19}, pos)
 }
@@ -158,7 +158,7 @@ func TestNewNodesPosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodesPosition(n1, n2)
+	pos := builder.NewBuilder().NewNodesPosition(n1, n2)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 2, EndPos: 19}, pos)
 }
@@ -192,7 +192,7 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodeListTokenPosition([]ast.Vertex{n1, n2}, tkn)
+	pos := builder.NewBuilder().NewNodeListTokenPosition([]ast.Vertex{n1, n2}, tkn)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 3, EndPos: 22}, pos)
 }
@@ -226,7 +226,7 @@ func TestNewTokenNodeListPosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewTokenNodeListPosition(tkn, []ast.Vertex{n1, n2})
+	pos := builder.NewBuilder().NewTokenNodeListPosition(tkn, []ast.Vertex{n1, n2})
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 3, EndPos: 20}, pos)
 }
@@ -259,7 +259,7 @@ func TestNewNodeNodeListPosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodeNodeListPosition(n1, []ast.Vertex{n2, n3})
+	pos := builder.NewBuilder().NewNodeNodeListPosition(n1, []ast.Vertex{n2, n3})
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 3, EndPos: 26}, pos)
 }
@@ -290,7 +290,7 @@ func TestNewNodeListNodePosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodeListNodePosition([]ast.Vertex{n1, n2}, n3)
+	pos := builder.NewBuilder().NewNodeListNodePosition([]ast.Vertex{n1, n2}, n3)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 3, EndPos: 26}, pos)
 }
@@ -315,7 +315,7 @@ func TestNewOptionalListTokensPosition(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewOptionalListTokensPosition(nil, token1, token2)
+	pos := builder.NewBuilder().NewOptionalListTokensPosition(nil, token1, token2)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: 2, EndPos: 6}, pos)
 }
@@ -357,13 +357,13 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewOptionalListTokensPosition([]ast.Vertex{n2, n3}, token1, token2)
+	pos := builder.NewBuilder().NewOptionalListTokensPosition([]ast.Vertex{n2, n3}, token1, token2)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 2, EndLine: 5, StartPos: 9, EndPos: 32}, pos)
 }
 
 func TestNilNodePos(t *testing.T) {
-	pos := builder.NewNodesPosition(nil, nil)
+	pos := builder.NewBuilder().NewNodesPosition(nil, nil)
 
 	assert.DeepEqual(t, &position.Position{StartLine: -1, EndLine: -1, StartPos: -1, EndPos: -1}, pos)
 }
@@ -378,7 +378,7 @@ func TestNilNodeListPos(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodeNodeListPosition(n1, nil)
+	pos := builder.NewBuilder().NewNodeNodeListPosition(n1, nil)
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: -1, EndPos: -1}, pos)
 }
@@ -394,7 +394,7 @@ func TestNilNodeListTokenPos(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodeListTokenPosition(nil, tkn)
+	pos := builder.NewBuilder().NewNodeListTokenPosition(nil, tkn)
 
 	assert.DeepEqual(t, &position.Position{StartLine: -1, EndLine: 1, StartPos: -1, EndPos: 3}, pos)
 }
@@ -409,7 +409,7 @@ func TestEmptyNodeListPos(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodeNodeListPosition(n1, []ast.Vertex{})
+	pos := builder.NewBuilder().NewNodeNodeListPosition(n1, []ast.Vertex{})
 
 	assert.DeepEqual(t, &position.Position{StartLine: 1, EndLine: -1, EndPos: -1}, pos)
 }
@@ -425,7 +425,7 @@ func TestEmptyNodeListTokenPos(t *testing.T) {
 		},
 	}
 
-	pos := builder.NewNodeListTokenPosition([]ast.Vertex{}, tkn)
+	pos := builder.NewBuilder().NewNodeListTokenPosition([]ast.Vertex{}, tkn)
 
 	assert.DeepEqual(t, &position.Position{StartLine: -1, EndLine: 1, StartPos: -1, EndPos: 3}, pos)
 }
