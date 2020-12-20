@@ -4744,7 +4744,7 @@ variable_properties:
 
 variable_property:
         T_OBJECT_OPERATOR object_property method_or_not
-            {println("FOOFOOFOOFOOFOOFOOFOOFOOFOO")
+            {
                 $2[0].(*ast.ExprPropertyFetch).ObjectOperatorTkn = $1
 
                 if $3 != nil {
