@@ -4855,6 +4855,54 @@ func TestFormatter_ExprUnaryPlus(t *testing.T) {
 	}
 }
 
+func TestFormatter_ExprVariable(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	n := &ast.ExprVariable{
+		VarName: &ast.Identifier{
+			Value: []byte("$foo"),
+		},
+	}
+
+	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	n.Accept(f)
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n.Accept(p)
+
+	expected := `$foo`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestFormatter_ExprVariable_Variable(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	n := &ast.ExprVariable{
+		VarName: &ast.ExprVariable{
+			VarName: &ast.Identifier{
+				Value: []byte("$foo"),
+			},
+		},
+	}
+
+	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	n.Accept(f)
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n.Accept(p)
+
+	expected := `$$foo`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestFormatter_ExprYield(t *testing.T) {
 	o := bytes.NewBufferString("")
 
