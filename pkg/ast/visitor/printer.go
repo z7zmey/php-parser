@@ -641,6 +641,7 @@ func (p *printer) ExprArrayItem(n *ast.ExprArrayItem) {
 	p.printToken(n.EllipsisTkn, nil)
 	p.printNode(n.Key)
 	p.printToken(n.DoubleArrowTkn, p.ifNode(n.Key, []byte("=>")))
+	p.printToken(n.AmpersandTkn, nil)
 	p.printNode(n.Val)
 }
 

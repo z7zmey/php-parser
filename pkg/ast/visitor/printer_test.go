@@ -1559,9 +1559,31 @@ func TestPrinterPrintExprArrayItem(t *testing.T) {
 
 	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
 	n := &ast.ExprArrayItem{
-		Val: &ast.ExprReference{Var: &ast.ExprVariable{
+		Val: &ast.ExprVariable{
 			VarName: &ast.Identifier{Value: []byte("$world")},
-		}},
+		},
+	}
+	n.Accept(p)
+
+	expected := `$world`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintExprArrayItem_Reference(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n := &ast.ExprArrayItem{
+		AmpersandTkn: &token.Token{
+			Value: []byte("&"),
+		},
+		Val: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$world")},
+		},
 	}
 	n.Accept(p)
 

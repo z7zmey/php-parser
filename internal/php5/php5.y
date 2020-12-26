@@ -5255,14 +5255,11 @@ non_empty_array_pair_list:
     |   non_empty_array_pair_list ',' expr T_DOUBLE_ARROW '&' w_variable
             {
                 arrayItem := &ast.ExprArrayItem{
-                    Position: yylex.(*Parser).builder.NewNodesPosition($3, $6),
+                    Position:       yylex.(*Parser).builder.NewNodesPosition($3, $6),
                     Key:            $3,
                     DoubleArrowTkn: $4,
-                    Val: &ast.ExprReference{
-                        Position: yylex.(*Parser).builder.NewTokenNodePosition($5, $6),
-                        AmpersandTkn: $5,
-                        Var:          $6,
-                    },
+                    AmpersandTkn:   $5,
+                    Val:            $6,
                 }
 
                 $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
@@ -5273,12 +5270,9 @@ non_empty_array_pair_list:
     |   non_empty_array_pair_list ',' '&' w_variable
             {
                 arrayItem := &ast.ExprArrayItem{
-                    Position: yylex.(*Parser).builder.NewTokenNodePosition($3, $4),
-                    Val: &ast.ExprReference{
-                        Position: yylex.(*Parser).builder.NewTokenNodePosition($3, $4),
-                        AmpersandTkn: $3,
-                        Var:          $4,
-                    },
+                    Position:     yylex.(*Parser).builder.NewTokenNodePosition($3, $4),
+                    AmpersandTkn: $3,
+                    Val:          $4,
                 }
 
                 $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
@@ -5291,14 +5285,11 @@ non_empty_array_pair_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
-                            Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
+                            Position:       yylex.(*Parser).builder.NewNodesPosition($1, $4),
                             Key:            $1,
                             DoubleArrowTkn: $2,
-                            Val: &ast.ExprReference{
-                                Position: yylex.(*Parser).builder.NewTokenNodePosition($3, $4),
-                                AmpersandTkn: $3,
-                                Var:          $4,
-                            },
+                            AmpersandTkn:   $3,
+                            Val:            $4,
                         },
                     },
                 }
@@ -5308,12 +5299,9 @@ non_empty_array_pair_list:
                 $$ = &ast.ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
-                            Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
-                            Val: &ast.ExprReference{
-                                Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
-                                AmpersandTkn: $1,
-                                Var:          $2,
-                            },
+                            Position:     yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
+                            AmpersandTkn: $1,
+                            Val:          $2,
                         },
                     },
                 }

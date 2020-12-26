@@ -1056,6 +1056,7 @@ func (v *Dumper) ExprArrayItem(n *ast.ExprArrayItem) {
 	v.dumpToken("EllipsisTkn", n.EllipsisTkn)
 	v.dumpVertex("Key", n.Key)
 	v.dumpToken("DoubleArrowTkn", n.DoubleArrowTkn)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
 	v.dumpVertex("Val", n.Val)
 
 	v.indent--

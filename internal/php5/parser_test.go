@@ -30786,61 +30786,53 @@ func TestExprArray_Items(t *testing.T) {
 								StartPos:  15,
 								EndPos:    18,
 							},
-							Val: &ast.ExprReference{
+							AmpersandTkn: &token.Token{
+								ID:    token.ID(38),
+								Value: []byte("&"),
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  15,
-									EndPos:    18,
+									EndPos:    16,
 								},
-								AmpersandTkn: &token.Token{
-									ID:    token.ID(38),
-									Value: []byte("&"),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  15,
-										EndPos:    16,
-									},
-									FreeFloating: []*token.Token{
-										{
-											ID:    token.T_WHITESPACE,
-											Value: []byte(" "),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  14,
-												EndPos:    15,
-											},
+								FreeFloating: []*token.Token{
+									{
+										ID:    token.T_WHITESPACE,
+										Value: []byte(" "),
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  14,
+											EndPos:    15,
 										},
 									},
 								},
-								Var: &ast.ExprVariable{
+							},
+							Val: &ast.ExprVariable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  16,
+									EndPos:    18,
+								},
+								VarName: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  16,
 										EndPos:    18,
 									},
-									VarName: &ast.Identifier{
+									IdentifierTkn: &token.Token{
+										ID:    token.T_VARIABLE,
+										Value: []byte("$b"),
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
 											StartPos:  16,
 											EndPos:    18,
 										},
-										IdentifierTkn: &token.Token{
-											ID:    token.T_VARIABLE,
-											Value: []byte("$b"),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  16,
-												EndPos:    18,
-											},
-										},
-										Value: []byte("$b"),
 									},
+									Value: []byte("$b"),
 								},
 							},
 						},
@@ -39025,61 +39017,53 @@ func TestExprShortArray_Items(t *testing.T) {
 								StartPos:  10,
 								EndPos:    13,
 							},
-							Val: &ast.ExprReference{
+							AmpersandTkn: &token.Token{
+								ID:    token.ID(38),
+								Value: []byte("&"),
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  10,
-									EndPos:    13,
+									EndPos:    11,
 								},
-								AmpersandTkn: &token.Token{
-									ID:    token.ID(38),
-									Value: []byte("&"),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  10,
-										EndPos:    11,
-									},
-									FreeFloating: []*token.Token{
-										{
-											ID:    token.T_WHITESPACE,
-											Value: []byte(" "),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  9,
-												EndPos:    10,
-											},
+								FreeFloating: []*token.Token{
+									{
+										ID:    token.T_WHITESPACE,
+										Value: []byte(" "),
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  9,
+											EndPos:    10,
 										},
 									},
 								},
-								Var: &ast.ExprVariable{
+							},
+							Val: &ast.ExprVariable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  11,
+									EndPos:    13,
+								},
+								VarName: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  11,
 										EndPos:    13,
 									},
-									VarName: &ast.Identifier{
+									IdentifierTkn: &token.Token{
+										ID:    token.T_VARIABLE,
+										Value: []byte("$b"),
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
 											StartPos:  11,
 											EndPos:    13,
 										},
-										IdentifierTkn: &token.Token{
-											ID:    token.T_VARIABLE,
-											Value: []byte("$b"),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  11,
-												EndPos:    13,
-											},
-										},
-										Value: []byte("$b"),
 									},
+									Value: []byte("$b"),
 								},
 							},
 						},

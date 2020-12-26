@@ -1177,6 +1177,7 @@ type ExprArrayItem struct {
 	EllipsisTkn    *token.Token
 	Key            Vertex
 	DoubleArrowTkn *token.Token
+	AmpersandTkn   *token.Token
 	Val            Vertex
 }
 

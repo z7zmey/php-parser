@@ -3994,25 +3994,19 @@ array_pair:
     |   expr T_DOUBLE_ARROW '&' variable
             {
                 $$ = &ast.ExprArrayItem{
-                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
+                    Position:       yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Key:            $1,
                     DoubleArrowTkn: $2,
-                    Val: &ast.ExprReference{
-                        Position: yylex.(*Parser).builder.NewTokenNodePosition($3, $4),
-                        AmpersandTkn: $3,
-                        Var:          $4,
-                    },
+                    AmpersandTkn:   $3,
+                    Val:            $4,
                 }
             }
     |   '&' variable
             {
                 $$ = &ast.ExprArrayItem{
-                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
-                    Val: &ast.ExprReference{
-                        Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
-                        AmpersandTkn: $1,
-                        Var:          $2,
-                    },
+                    Position:     yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
+                    AmpersandTkn: $1,
+                    Val:          $2,
                 }
             }
     |   T_ELLIPSIS expr
