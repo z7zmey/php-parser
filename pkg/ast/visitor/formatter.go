@@ -1230,7 +1230,7 @@ func (f *formatter) ExprEval(n *ast.ExprEval) {
 }
 
 func (f *formatter) ExprExit(n *ast.ExprExit) {
-	n.DieTkn = f.newToken(token.T_EVAL, []byte("exit"))
+	n.ExitTkn = f.newToken(token.T_EVAL, []byte("exit"))
 
 	n.OpenParenthesisTkn = nil
 	n.CloseParenthesisTkn = nil

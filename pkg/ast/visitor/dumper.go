@@ -1228,7 +1228,7 @@ func (v *Dumper) ExprExit(n *ast.ExprExit) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
-	v.dumpToken("DieTkn", n.DieTkn)
+	v.dumpToken("ExitTkn", n.ExitTkn)
 	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
 	v.dumpVertex("Expr", n.Expr)
 	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)

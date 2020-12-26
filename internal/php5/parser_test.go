@@ -33219,7 +33219,7 @@ func TestExprExit(t *testing.T) {
 						StartPos:  3,
 						EndPos:    7,
 					},
-					DieTkn: &token.Token{
+					ExitTkn: &token.Token{
 						ID:    token.T_EXIT,
 						Value: []byte("exit"),
 						Position: &position.Position{
@@ -33299,7 +33299,7 @@ func TestExprExit_Empty(t *testing.T) {
 						StartPos:  3,
 						EndPos:    9,
 					},
-					DieTkn: &token.Token{
+					ExitTkn: &token.Token{
 						ID:    token.T_EXIT,
 						Value: []byte("exit"),
 						Position: &position.Position{
@@ -33399,7 +33399,7 @@ func TestExprExit_Expr(t *testing.T) {
 						StartPos:  3,
 						EndPos:    11,
 					},
-					DieTkn: &token.Token{
+					ExitTkn: &token.Token{
 						ID:    token.T_EXIT,
 						Value: []byte("exit"),
 						Position: &position.Position{
@@ -33526,7 +33526,7 @@ func TestExprDie(t *testing.T) {
 						StartPos:  3,
 						EndPos:    6,
 					},
-					DieTkn: &token.Token{
+					ExitTkn: &token.Token{
 						ID:    token.T_EXIT,
 						Value: []byte("die"),
 						Position: &position.Position{
@@ -33606,7 +33606,7 @@ func TestExprDie_Empty(t *testing.T) {
 						StartPos:  3,
 						EndPos:    8,
 					},
-					DieTkn: &token.Token{
+					ExitTkn: &token.Token{
 						ID:    token.T_EXIT,
 						Value: []byte("die"),
 						Position: &position.Position{
@@ -33706,7 +33706,7 @@ func TestExprDie_Expr(t *testing.T) {
 						StartPos:  3,
 						EndPos:    10,
 					},
-					DieTkn: &token.Token{
+					ExitTkn: &token.Token{
 						ID:    token.T_EXIT,
 						Value: []byte("die"),
 						Position: &position.Position{

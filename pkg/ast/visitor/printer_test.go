@@ -1968,7 +1968,7 @@ func TestPrinterPrintDie(t *testing.T) {
 
 	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
 	n := &ast.ExprExit{
-		DieTkn: &token.Token{
+		ExitTkn: &token.Token{
 			Value: []byte("die"),
 		},
 		Expr: &ast.ExprVariable{

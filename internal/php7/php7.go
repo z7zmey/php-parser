@@ -5664,7 +5664,7 @@ yydefault:
 		// line internal/php7/php7.y:3095
 		{
 			exit := &ast.ExprExit{
-				DieTkn: yyDollar[1].token,
+				ExitTkn: yyDollar[1].token,
 			}
 
 			if yyDollar[2].node == nil {

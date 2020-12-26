@@ -1385,7 +1385,7 @@ func (n *ExprEval) GetPosition() *position.Position {
 // ExprExit node
 type ExprExit struct {
 	Position            *position.Position
-	DieTkn              *token.Token
+	ExitTkn             *token.Token
 	OpenParenthesisTkn  *token.Token
 	Expr                Vertex
 	CloseParenthesisTkn *token.Token

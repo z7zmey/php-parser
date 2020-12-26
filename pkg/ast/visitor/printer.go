@@ -726,7 +726,7 @@ func (p *printer) ExprEval(n *ast.ExprEval) {
 }
 
 func (p *printer) ExprExit(n *ast.ExprExit) {
-	p.printToken(n.DieTkn, []byte("exit"))
+	p.printToken(n.ExitTkn, []byte("exit"))
 	p.printToken(n.OpenParenthesisTkn, nil)
 	p.printNode(n.Expr)
 	p.printToken(n.CloseParenthesisTkn, p.ifToken(n.OpenParenthesisTkn, []byte(")"), nil))

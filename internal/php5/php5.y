@@ -3332,7 +3332,7 @@ expr_without_variable:
     |   T_EXIT exit_expr
             {
                 exit := &ast.ExprExit{
-                    DieTkn: $1,
+                    ExitTkn: $1,
                 }
 
                 if $2 == nil {
