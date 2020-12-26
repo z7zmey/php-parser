@@ -36268,7 +36268,7 @@ func TestExprClosure_Use(t *testing.T) {
 						EndPos:    36,
 					},
 					FunctionTkn: &token.Token{
-						ID:    token.T_FUNCTION,
+						ID: token.T_FUNCTION,
 						Value: []byte("function"),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36278,7 +36278,7 @@ func TestExprClosure_Use(t *testing.T) {
 						},
 						FreeFloating: []*token.Token{
 							{
-								ID:    token.T_OPEN_TAG,
+								ID: token.T_OPEN_TAG,
 								Value: []byte("<?"),
 								Position: &position.Position{
 									StartLine: 1,
@@ -36288,7 +36288,7 @@ func TestExprClosure_Use(t *testing.T) {
 								},
 							},
 							{
-								ID:    token.T_WHITESPACE,
+								ID: token.T_WHITESPACE,
 								Value: []byte(" "),
 								Position: &position.Position{
 									StartLine: 1,
@@ -36300,7 +36300,7 @@ func TestExprClosure_Use(t *testing.T) {
 						},
 					},
 					OpenParenthesisTkn: &token.Token{
-						ID:    token.ID(40),
+						ID: token.ID(40),
 						Value: []byte("("),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36332,7 +36332,7 @@ func TestExprClosure_Use(t *testing.T) {
 										EndPos:    14,
 									},
 									IdentifierTkn: &token.Token{
-										ID:    token.T_VARIABLE,
+										ID: token.T_VARIABLE,
 										Value: []byte("$a"),
 										Position: &position.Position{
 											StartLine: 1,
@@ -36367,7 +36367,7 @@ func TestExprClosure_Use(t *testing.T) {
 										EndPos:    18,
 									},
 									IdentifierTkn: &token.Token{
-										ID:    token.T_VARIABLE,
+										ID: token.T_VARIABLE,
 										Value: []byte("$b"),
 										Position: &position.Position{
 											StartLine: 1,
@@ -36377,7 +36377,7 @@ func TestExprClosure_Use(t *testing.T) {
 										},
 										FreeFloating: []*token.Token{
 											{
-												ID:    token.T_WHITESPACE,
+												ID: token.T_WHITESPACE,
 												Value: []byte(" "),
 												Position: &position.Position{
 													StartLine: 1,
@@ -36395,7 +36395,7 @@ func TestExprClosure_Use(t *testing.T) {
 					},
 					SeparatorTkns: []*token.Token{
 						{
-							ID:    token.ID(44),
+							ID: token.ID(44),
 							Value: []byte(","),
 							Position: &position.Position{
 								StartLine: 1,
@@ -36406,7 +36406,7 @@ func TestExprClosure_Use(t *testing.T) {
 						},
 					},
 					CloseParenthesisTkn: &token.Token{
-						ID:    token.ID(41),
+						ID: token.ID(41),
 						Value: []byte(")"),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36415,59 +36415,59 @@ func TestExprClosure_Use(t *testing.T) {
 							EndPos:    19,
 						},
 					},
-					ClosureUse: &ast.ExprClosureUse{
+					UseTkn: &token.Token{
+						ID: token.T_USE,
+						Value: []byte("use"),
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  20,
-							EndPos:    33,
+							EndPos:    23,
 						},
-						UseTkn: &token.Token{
-							ID:    token.T_USE,
-							Value: []byte("use"),
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  20,
-								EndPos:    23,
-							},
-							FreeFloating: []*token.Token{
-								{
-									ID:    token.T_WHITESPACE,
-									Value: []byte(" "),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  19,
-										EndPos:    20,
-									},
+						FreeFloating: []*token.Token{
+							{
+								ID: token.T_WHITESPACE,
+								Value: []byte(" "),
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  19,
+									EndPos:    20,
 								},
 							},
 						},
-						OpenParenthesisTkn: &token.Token{
-							ID:    token.ID(40),
-							Value: []byte("("),
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  24,
-								EndPos:    25,
-							},
-							FreeFloating: []*token.Token{
-								{
-									ID:    token.T_WHITESPACE,
-									Value: []byte(" "),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  23,
-										EndPos:    24,
-									},
+					},
+					UseOpenParenthesisTkn: &token.Token{
+						ID: token.ID(40),
+						Value: []byte("("),
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  24,
+							EndPos:    25,
+						},
+						FreeFloating: []*token.Token{
+							{
+								ID: token.T_WHITESPACE,
+								Value: []byte(" "),
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  23,
+									EndPos:    24,
 								},
 							},
 						},
-						Uses: []ast.Vertex{
-							&ast.ExprVariable{
+					},
+					Use: []ast.Vertex{
+						&ast.ExprClosureUse{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  25,
+								EndPos:    27,
+							},
+							Var: &ast.ExprVariable{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -36482,7 +36482,7 @@ func TestExprClosure_Use(t *testing.T) {
 										EndPos:    27,
 									},
 									IdentifierTkn: &token.Token{
-										ID:    token.T_VARIABLE,
+										ID: token.T_VARIABLE,
 										Value: []byte("$c"),
 										Position: &position.Position{
 											StartLine: 1,
@@ -36494,89 +36494,89 @@ func TestExprClosure_Use(t *testing.T) {
 									Value: []byte("$c"),
 								},
 							},
-							&ast.ExprReference{
+						},
+						&ast.ExprClosureUse{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  29,
+								EndPos:    32,
+							},
+							AmpersandTkn: &token.Token{
+								ID: token.ID(38),
+								Value: []byte("&"),
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  29,
-									EndPos:    32,
+									EndPos:    30,
 								},
-								AmpersandTkn: &token.Token{
-									ID:    token.ID(38),
-									Value: []byte("&"),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  29,
-										EndPos:    30,
-									},
-									FreeFloating: []*token.Token{
-										{
-											ID:    token.T_WHITESPACE,
-											Value: []byte(" "),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  28,
-												EndPos:    29,
-											},
+								FreeFloating: []*token.Token{
+									{
+										ID: token.T_WHITESPACE,
+										Value: []byte(" "),
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  28,
+											EndPos:    29,
 										},
 									},
 								},
-								Var: &ast.ExprVariable{
+							},
+							Var: &ast.ExprVariable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  30,
+									EndPos:    32,
+								},
+								VarName: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  30,
 										EndPos:    32,
 									},
-									VarName: &ast.Identifier{
+									IdentifierTkn: &token.Token{
+										ID: token.T_VARIABLE,
+										Value: []byte("$d"),
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
 											StartPos:  30,
 											EndPos:    32,
 										},
-										IdentifierTkn: &token.Token{
-											ID:    token.T_VARIABLE,
-											Value: []byte("$d"),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  30,
-												EndPos:    32,
-											},
-										},
-										Value: []byte("$d"),
 									},
+									Value: []byte("$d"),
 								},
-							},
-						},
-						SeparatorTkns: []*token.Token{
-							{
-								ID:    token.ID(44),
-								Value: []byte(","),
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  27,
-									EndPos:    28,
-								},
-							},
-						},
-						CloseParenthesisTkn: &token.Token{
-							ID:    token.ID(41),
-							Value: []byte(")"),
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  32,
-								EndPos:    33,
 							},
 						},
 					},
+					UseSeparatorTkns: []*token.Token{
+						{
+							ID: token.ID(44),
+							Value: []byte(","),
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  27,
+								EndPos:    28,
+							},
+						},
+					},
+					UseCloseParenthesisTkn: &token.Token{
+						ID: token.ID(41),
+						Value: []byte(")"),
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  32,
+							EndPos:    33,
+						},
+					},
 					OpenCurlyBracketTkn: &token.Token{
-						ID:    token.ID(123),
+						ID: token.ID(123),
 						Value: []byte("{"),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36586,7 +36586,7 @@ func TestExprClosure_Use(t *testing.T) {
 						},
 						FreeFloating: []*token.Token{
 							{
-								ID:    token.T_WHITESPACE,
+								ID: token.T_WHITESPACE,
 								Value: []byte(" "),
 								Position: &position.Position{
 									StartLine: 1,
@@ -36599,7 +36599,7 @@ func TestExprClosure_Use(t *testing.T) {
 					},
 					Stmts: []ast.Vertex{},
 					CloseCurlyBracketTkn: &token.Token{
-						ID:    token.ID(125),
+						ID: token.ID(125),
 						Value: []byte("}"),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36610,7 +36610,7 @@ func TestExprClosure_Use(t *testing.T) {
 					},
 				},
 				SemiColonTkn: &token.Token{
-					ID:    token.ID(59),
+					ID: token.ID(59),
 					Value: []byte(";"),
 					Position: &position.Position{
 						StartLine: 1,
@@ -36621,7 +36621,8 @@ func TestExprClosure_Use(t *testing.T) {
 				},
 			},
 		},
-		EndTkn: &token.Token{},
+		EndTkn: &token.Token{
+		},
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", nil)
@@ -36657,7 +36658,7 @@ func TestExprClosure_Use2(t *testing.T) {
 						EndPos:    36,
 					},
 					FunctionTkn: &token.Token{
-						ID:    token.T_FUNCTION,
+						ID: token.T_FUNCTION,
 						Value: []byte("function"),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36667,7 +36668,7 @@ func TestExprClosure_Use2(t *testing.T) {
 						},
 						FreeFloating: []*token.Token{
 							{
-								ID:    token.T_OPEN_TAG,
+								ID: token.T_OPEN_TAG,
 								Value: []byte("<?"),
 								Position: &position.Position{
 									StartLine: 1,
@@ -36677,7 +36678,7 @@ func TestExprClosure_Use2(t *testing.T) {
 								},
 							},
 							{
-								ID:    token.T_WHITESPACE,
+								ID: token.T_WHITESPACE,
 								Value: []byte(" "),
 								Position: &position.Position{
 									StartLine: 1,
@@ -36689,7 +36690,7 @@ func TestExprClosure_Use2(t *testing.T) {
 						},
 					},
 					OpenParenthesisTkn: &token.Token{
-						ID:    token.ID(40),
+						ID: token.ID(40),
 						Value: []byte("("),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36721,7 +36722,7 @@ func TestExprClosure_Use2(t *testing.T) {
 										EndPos:    14,
 									},
 									IdentifierTkn: &token.Token{
-										ID:    token.T_VARIABLE,
+										ID: token.T_VARIABLE,
 										Value: []byte("$a"),
 										Position: &position.Position{
 											StartLine: 1,
@@ -36756,7 +36757,7 @@ func TestExprClosure_Use2(t *testing.T) {
 										EndPos:    18,
 									},
 									IdentifierTkn: &token.Token{
-										ID:    token.T_VARIABLE,
+										ID: token.T_VARIABLE,
 										Value: []byte("$b"),
 										Position: &position.Position{
 											StartLine: 1,
@@ -36766,7 +36767,7 @@ func TestExprClosure_Use2(t *testing.T) {
 										},
 										FreeFloating: []*token.Token{
 											{
-												ID:    token.T_WHITESPACE,
+												ID: token.T_WHITESPACE,
 												Value: []byte(" "),
 												Position: &position.Position{
 													StartLine: 1,
@@ -36784,7 +36785,7 @@ func TestExprClosure_Use2(t *testing.T) {
 					},
 					SeparatorTkns: []*token.Token{
 						{
-							ID:    token.ID(44),
+							ID: token.ID(44),
 							Value: []byte(","),
 							Position: &position.Position{
 								StartLine: 1,
@@ -36795,7 +36796,7 @@ func TestExprClosure_Use2(t *testing.T) {
 						},
 					},
 					CloseParenthesisTkn: &token.Token{
-						ID:    token.ID(41),
+						ID: token.ID(41),
 						Value: []byte(")"),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36804,104 +36805,104 @@ func TestExprClosure_Use2(t *testing.T) {
 							EndPos:    19,
 						},
 					},
-					ClosureUse: &ast.ExprClosureUse{
+					UseTkn: &token.Token{
+						ID: token.T_USE,
+						Value: []byte("use"),
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  20,
-							EndPos:    33,
+							EndPos:    23,
 						},
-						UseTkn: &token.Token{
-							ID:    token.T_USE,
-							Value: []byte("use"),
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  20,
-								EndPos:    23,
-							},
-							FreeFloating: []*token.Token{
-								{
-									ID:    token.T_WHITESPACE,
-									Value: []byte(" "),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  19,
-										EndPos:    20,
-									},
+						FreeFloating: []*token.Token{
+							{
+								ID: token.T_WHITESPACE,
+								Value: []byte(" "),
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  19,
+									EndPos:    20,
 								},
 							},
 						},
-						OpenParenthesisTkn: &token.Token{
-							ID:    token.ID(40),
-							Value: []byte("("),
-							Position: &position.Position{
-								StartLine: 1,
-								EndLine:   1,
-								StartPos:  24,
-								EndPos:    25,
-							},
-							FreeFloating: []*token.Token{
-								{
-									ID:    token.T_WHITESPACE,
-									Value: []byte(" "),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  23,
-										EndPos:    24,
-									},
+					},
+					UseOpenParenthesisTkn: &token.Token{
+						ID: token.ID(40),
+						Value: []byte("("),
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  24,
+							EndPos:    25,
+						},
+						FreeFloating: []*token.Token{
+							{
+								ID: token.T_WHITESPACE,
+								Value: []byte(" "),
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  23,
+									EndPos:    24,
 								},
 							},
 						},
-						Uses: []ast.Vertex{
-							&ast.ExprReference{
+					},
+					Use: []ast.Vertex{
+						&ast.ExprClosureUse{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  25,
+								EndPos:    28,
+							},
+							AmpersandTkn: &token.Token{
+								ID: token.ID(38),
+								Value: []byte("&"),
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  25,
+									EndPos:    26,
+								},
+							},
+							Var: &ast.ExprVariable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  26,
 									EndPos:    28,
 								},
-								AmpersandTkn: &token.Token{
-									ID:    token.ID(38),
-									Value: []byte("&"),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  25,
-										EndPos:    26,
-									},
-								},
-								Var: &ast.ExprVariable{
+								VarName: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  26,
 										EndPos:    28,
 									},
-									VarName: &ast.Identifier{
+									IdentifierTkn: &token.Token{
+										ID: token.T_VARIABLE,
+										Value: []byte("$c"),
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
 											StartPos:  26,
 											EndPos:    28,
 										},
-										IdentifierTkn: &token.Token{
-											ID:    token.T_VARIABLE,
-											Value: []byte("$c"),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  26,
-												EndPos:    28,
-											},
-										},
-										Value: []byte("$c"),
 									},
+									Value: []byte("$c"),
 								},
 							},
-							&ast.ExprVariable{
+						},
+						&ast.ExprClosureUse{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  30,
+								EndPos:    32,
+							},
+							Var: &ast.ExprVariable{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -36916,7 +36917,7 @@ func TestExprClosure_Use2(t *testing.T) {
 										EndPos:    32,
 									},
 									IdentifierTkn: &token.Token{
-										ID:    token.T_VARIABLE,
+										ID: token.T_VARIABLE,
 										Value: []byte("$d"),
 										Position: &position.Position{
 											StartLine: 1,
@@ -36926,7 +36927,7 @@ func TestExprClosure_Use2(t *testing.T) {
 										},
 										FreeFloating: []*token.Token{
 											{
-												ID:    token.T_WHITESPACE,
+												ID: token.T_WHITESPACE,
 												Value: []byte(" "),
 												Position: &position.Position{
 													StartLine: 1,
@@ -36941,31 +36942,31 @@ func TestExprClosure_Use2(t *testing.T) {
 								},
 							},
 						},
-						SeparatorTkns: []*token.Token{
-							{
-								ID:    token.ID(44),
-								Value: []byte(","),
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  28,
-									EndPos:    29,
-								},
-							},
-						},
-						CloseParenthesisTkn: &token.Token{
-							ID:    token.ID(41),
-							Value: []byte(")"),
+					},
+					UseSeparatorTkns: []*token.Token{
+						{
+							ID: token.ID(44),
+							Value: []byte(","),
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  32,
-								EndPos:    33,
+								StartPos:  28,
+								EndPos:    29,
 							},
 						},
 					},
+					UseCloseParenthesisTkn: &token.Token{
+						ID: token.ID(41),
+						Value: []byte(")"),
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  32,
+							EndPos:    33,
+						},
+					},
 					OpenCurlyBracketTkn: &token.Token{
-						ID:    token.ID(123),
+						ID: token.ID(123),
 						Value: []byte("{"),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36975,7 +36976,7 @@ func TestExprClosure_Use2(t *testing.T) {
 						},
 						FreeFloating: []*token.Token{
 							{
-								ID:    token.T_WHITESPACE,
+								ID: token.T_WHITESPACE,
 								Value: []byte(" "),
 								Position: &position.Position{
 									StartLine: 1,
@@ -36988,7 +36989,7 @@ func TestExprClosure_Use2(t *testing.T) {
 					},
 					Stmts: []ast.Vertex{},
 					CloseCurlyBracketTkn: &token.Token{
-						ID:    token.ID(125),
+						ID: token.ID(125),
 						Value: []byte("}"),
 						Position: &position.Position{
 							StartLine: 1,
@@ -36999,7 +37000,7 @@ func TestExprClosure_Use2(t *testing.T) {
 					},
 				},
 				SemiColonTkn: &token.Token{
-					ID:    token.ID(59),
+					ID: token.ID(59),
 					Value: []byte(";"),
 					Position: &position.Position{
 						StartLine: 1,
@@ -37010,7 +37011,8 @@ func TestExprClosure_Use2(t *testing.T) {
 				},
 			},
 		},
-		EndTkn: &token.Token{},
+		EndTkn: &token.Token{
+		},
 	}
 
 	lexer := scanner.NewLexer([]byte(src), "7.4", nil)

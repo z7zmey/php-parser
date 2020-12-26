@@ -3178,21 +3178,22 @@ expr_without_variable:
 inline_function:
         T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = &ast.ExprClosure{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $11),
-                    FunctionTkn:          $1,
-                    AmpersandTkn:         $2,
-                    OpenParenthesisTkn:   $4,
-                    Params:               $5.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:        $5.(*ast.ParserSeparatedList).SeparatorTkns,
-                    CloseParenthesisTkn:  $6,
-                    ClosureUse:           $7,
-                    ColonTkn:             $8.(*ast.ReturnType).ColonTkn,
-                    ReturnType:           $8.(*ast.ReturnType).Type,
-                    OpenCurlyBracketTkn:  $9,
-                    Stmts:                $10,
-                    CloseCurlyBracketTkn: $11,
-                }
+                closure := $7.(*ast.ExprClosure)
+
+                closure.Position             = yylex.(*Parser).builder.NewTokensPosition($1, $11)
+                closure.FunctionTkn          = $1
+                closure.AmpersandTkn         = $2
+                closure.OpenParenthesisTkn   = $4
+                closure.Params               = $5.(*ast.ParserSeparatedList).Items
+                closure.SeparatorTkns        = $5.(*ast.ParserSeparatedList).SeparatorTkns
+                closure.CloseParenthesisTkn  = $6
+                closure.ColonTkn             = $8.(*ast.ReturnType).ColonTkn
+                closure.ReturnType           = $8.(*ast.ReturnType).Type
+                closure.OpenCurlyBracketTkn  = $9
+                closure.Stmts                = $10
+                closure.CloseCurlyBracketTkn = $11
+
+                $$ = closure
             }
     |   T_FN returns_ref '(' parameter_list ')' return_type backup_doc_comment T_DOUBLE_ARROW expr
             {
@@ -3230,17 +3231,16 @@ returns_ref:
 lexical_vars:
         /* empty */
             {
-                $$ = nil
+                $$ = &ast.ExprClosure{}
             }
     |   T_USE '(' lexical_var_list ')'
             {
-                $$ = &ast.ExprClosureUse{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    UseTkn:              $1,
-                    OpenParenthesisTkn:  $2,
-                    Uses:                $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:       $3.(*ast.ParserSeparatedList).SeparatorTkns,
-                    CloseParenthesisTkn: $4,
+                $$ = &ast.ExprClosure{
+                    UseTkn:                 $1,
+                    UseOpenParenthesisTkn:  $2,
+                    Use:                    $3.(*ast.ParserSeparatedList).Items,
+                    UseSeparatorTkns:       $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    UseCloseParenthesisTkn: $4,
                 }
             }
 ;
@@ -3264,18 +3264,21 @@ lexical_var_list:
 lexical_var:
     T_VARIABLE
             {
-                $$ = &ast.ExprVariable{
+                $$ = &ast.ExprClosureUse{
                     Position: yylex.(*Parser).builder.NewTokenPosition($1),
-                    VarName: &ast.Identifier{
+                    Var: &ast.ExprVariable{
                         Position: yylex.(*Parser).builder.NewTokenPosition($1),
-                        IdentifierTkn: $1,
-                        Value:         $1.Value,
+                        VarName: &ast.Identifier{
+                            Position: yylex.(*Parser).builder.NewTokenPosition($1),
+                            IdentifierTkn: $1,
+                            Value:         $1.Value,
+                        },
                     },
                 }
             }
     |   '&' T_VARIABLE
             {
-                $$ = &ast.ExprReference{
+                $$ = &ast.ExprClosureUse{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                     AmpersandTkn: $1,
                     Var: &ast.ExprVariable{

@@ -1717,18 +1717,35 @@ func TestPrinterPrintExprClosureUse(t *testing.T) {
 
 	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
 	n := &ast.ExprClosureUse{
-		Uses: []ast.Vertex{
-			&ast.ExprReference{Var: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$foo")},
-			}},
-			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$bar")},
-			},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$foo")},
 		},
 	}
 	n.Accept(p)
 
-	expected := `use(&$foo,$bar)`
+	expected := `$foo`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintExprClosureUse_Reference(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n := &ast.ExprClosureUse{
+		AmpersandTkn: &token.Token{
+			Value: []byte("&"),
+		},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$foo")},
+		},
+	}
+	n.Accept(p)
+
+	expected := `&$foo`
 	actual := o.String()
 
 	if expected != actual {
@@ -1754,12 +1771,17 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 				},
 			},
 		},
-		ClosureUse: &ast.ExprClosureUse{
-			Uses: []ast.Vertex{
-				&ast.ExprReference{Var: &ast.ExprVariable{
+		Use: []ast.Vertex{
+			&ast.ExprClosureUse{
+				AmpersandTkn: &token.Token{
+					Value: []byte("&"),
+				},
+				Var: &ast.ExprVariable{
 					VarName: &ast.Identifier{Value: []byte("$a")},
-				}},
-				&ast.ExprVariable{
+				},
+			},
+			&ast.ExprClosureUse{
+				Var: &ast.ExprVariable{
 					VarName: &ast.Identifier{Value: []byte("$b")},
 				},
 			},

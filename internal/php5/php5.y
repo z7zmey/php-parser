@@ -3367,36 +3367,38 @@ expr_without_variable:
             }
     |   function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = &ast.ExprClosure{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $9),
-                    FunctionTkn:          $1,
-                    AmpersandTkn:         $2,
-                    OpenParenthesisTkn:   $3,
-                    Params:               $4.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:        $4.(*ast.ParserSeparatedList).SeparatorTkns,
-                    CloseParenthesisTkn:  $5,
-                    ClosureUse:           $6,
-                    OpenCurlyBracketTkn:  $7,
-                    Stmts:                $8,
-                    CloseCurlyBracketTkn: $9,
-                }
+                closure := $6.(*ast.ExprClosure)
+
+                closure.Position             = yylex.(*Parser).builder.NewTokensPosition($1, $9)
+                closure.FunctionTkn          = $1
+                closure.AmpersandTkn         = $2
+                closure.OpenParenthesisTkn   = $3
+                closure.Params               = $4.(*ast.ParserSeparatedList).Items
+                closure.SeparatorTkns        = $4.(*ast.ParserSeparatedList).SeparatorTkns
+                closure.CloseParenthesisTkn  = $5
+                closure.OpenCurlyBracketTkn  = $7
+                closure.Stmts                = $8
+                closure.CloseCurlyBracketTkn = $9
+
+                $$ = closure
             }
     |   T_STATIC function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = &ast.ExprClosure{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $10),
-                    StaticTkn:            $1,
-                    FunctionTkn:          $2,
-                    AmpersandTkn:         $3,
-                    OpenParenthesisTkn:   $4,
-                    Params:               $5.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:        $5.(*ast.ParserSeparatedList).SeparatorTkns,
-                    CloseParenthesisTkn:  $6,
-                    ClosureUse:           $7,
-                    OpenCurlyBracketTkn:  $8,
-                    Stmts:                $9,
-                    CloseCurlyBracketTkn: $10,
-                }
+                closure := $7.(*ast.ExprClosure)
+                
+                closure.Position             = yylex.(*Parser).builder.NewTokensPosition($1, $10)
+                closure.StaticTkn            = $1
+                closure.FunctionTkn          = $2
+                closure.AmpersandTkn         = $3
+                closure.OpenParenthesisTkn   = $4
+                closure.Params               = $5.(*ast.ParserSeparatedList).Items
+                closure.SeparatorTkns        = $5.(*ast.ParserSeparatedList).SeparatorTkns
+                closure.CloseParenthesisTkn  = $6
+                closure.OpenCurlyBracketTkn  = $8
+                closure.Stmts                = $9
+                closure.CloseCurlyBracketTkn = $10
+
+                $$ = closure
             }
 ;
 
@@ -3520,17 +3522,16 @@ function:
 lexical_vars:
         /* empty */
             {
-                $$ = nil
+                $$ = &ast.ExprClosure{}
             }
     |   T_USE '(' lexical_var_list ')'
             {
-                $$ = &ast.ExprClosureUse{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    UseTkn:              $1,
-                    OpenParenthesisTkn:  $2,
-                    Uses:                $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:       $3.(*ast.ParserSeparatedList).SeparatorTkns,
-                    CloseParenthesisTkn: $4,
+                $$ = &ast.ExprClosure{
+                    UseTkn:                 $1,
+                    UseOpenParenthesisTkn:  $2,
+                    Use:                    $3.(*ast.ParserSeparatedList).Items,
+                    UseSeparatorTkns:       $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    UseCloseParenthesisTkn: $4,
                 }
             }
 ;
@@ -3538,12 +3539,15 @@ lexical_vars:
 lexical_var_list:
         lexical_var_list ',' T_VARIABLE
             {
-                variable := &ast.ExprVariable{
+                variable := &ast.ExprClosureUse{
                     Position: yylex.(*Parser).builder.NewTokenPosition($3),
-                    VarName: &ast.Identifier{
+                    Var: &ast.ExprVariable{
                         Position: yylex.(*Parser).builder.NewTokenPosition($3),
-                        IdentifierTkn: $3,
-                        Value:         $3.Value,
+                        VarName: &ast.Identifier{
+                            Position: yylex.(*Parser).builder.NewTokenPosition($3),
+                            IdentifierTkn: $3,
+                            Value:         $3.Value,
+                        },
                     },
                 }
 
@@ -3554,7 +3558,7 @@ lexical_var_list:
             }
     |   lexical_var_list ',' '&' T_VARIABLE
             {
-                reference := &ast.ExprReference{
+                variable := &ast.ExprClosureUse{
                     Position: yylex.(*Parser).builder.NewTokensPosition($3, $4),
                     AmpersandTkn: $3,
                     Var: &ast.ExprVariable{
@@ -3568,42 +3572,45 @@ lexical_var_list:
                 }
 
                 $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, reference)
+                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, variable)
 
                 $$ = $1
             }
     |   T_VARIABLE
             {
-                $$ = &ast.ParserSeparatedList{
-                    Items: []ast.Vertex{
-                        &ast.ExprVariable{
+                variable := &ast.ExprClosureUse{
+                    Position: yylex.(*Parser).builder.NewTokenPosition($1),
+                    Var: &ast.ExprVariable{
+                        Position: yylex.(*Parser).builder.NewTokenPosition($1),
+                        VarName: &ast.Identifier{
                             Position: yylex.(*Parser).builder.NewTokenPosition($1),
-                            VarName: &ast.Identifier{
-                                Position: yylex.(*Parser).builder.NewTokenPosition($1),
-                                IdentifierTkn: $1,
-                                Value:         $1.Value,
-                            },
+                            IdentifierTkn: $1,
+                            Value:         $1.Value,
                         },
                     },
+                }
+
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{ variable },
                 }
             }
     |   '&' T_VARIABLE
             {
-                $$ = &ast.ParserSeparatedList{
-                    Items: []ast.Vertex{
-                        &ast.ExprReference{
-                            Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
-                            AmpersandTkn: $1,
-                            Var: &ast.ExprVariable{
-                                Position: yylex.(*Parser).builder.NewTokenPosition($2),
-                                VarName: &ast.Identifier{
-                                    Position: yylex.(*Parser).builder.NewTokenPosition($2),
-                                    IdentifierTkn: $2,
-                                    Value:         $2.Value,
-                                },
-                            },
+                variable := &ast.ExprClosureUse{
+                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
+                    AmpersandTkn: $1,
+                    Var: &ast.ExprVariable{
+                        Position: yylex.(*Parser).builder.NewTokenPosition($2),
+                        VarName: &ast.Identifier{
+                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
+                            IdentifierTkn: $2,
+                            Value:         $2.Value,
                         },
                     },
+                }
+
+                $$ = &ast.ParserSeparatedList{
+                    Items: []ast.Vertex{ variable },
                 }
             }
 ;

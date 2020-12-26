@@ -1143,7 +1143,11 @@ func (v *Dumper) ExprClosure(n *ast.ExprClosure) {
 	v.dumpVertexList("Params", n.Params)
 	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
 	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
-	v.dumpVertex("ClosureUse", n.ClosureUse)
+	v.dumpToken("UseTkn", n.UseTkn)
+	v.dumpToken("UseOpenParenthesisTkn", n.UseOpenParenthesisTkn)
+	v.dumpVertexList("Use", n.Use)
+	v.dumpTokenList("UseSeparatorTkns", n.UseSeparatorTkns)
+	v.dumpToken("UseCloseParenthesisTkn", n.UseCloseParenthesisTkn)
 	v.dumpToken("ColonTkn", n.ColonTkn)
 	v.dumpVertex("ReturnType", n.ReturnType)
 	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
@@ -1159,11 +1163,8 @@ func (v *Dumper) ExprClosureUse(n *ast.ExprClosureUse) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
-	v.dumpToken("UseTkn", n.UseTkn)
-	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
-	v.dumpVertexList("Uses", n.Uses)
-	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
-	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
+	v.dumpVertex("Var", n.Var)
 
 	v.indent--
 	v.print(v.indent, "},\n")

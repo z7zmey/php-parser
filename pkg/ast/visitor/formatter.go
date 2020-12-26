@@ -1162,9 +1162,16 @@ func (f *formatter) ExprClosure(n *ast.ExprClosure) {
 	}
 	n.CloseParenthesisTkn = f.newToken(')', []byte(")"))
 
-	if n.ClosureUse != nil {
+	n.UseTkn = nil
+	n.UseOpenParenthesisTkn = nil
+	n.UseCloseParenthesisTkn = nil
+	n.UseSeparatorTkns = nil
+	if len(n.Use) > 0 {
 		f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
-		n.ClosureUse.Accept(f)
+		n.UseTkn = f.newToken(token.T_USE, []byte("use"))
+		n.OpenParenthesisTkn = f.newToken('(', []byte("("))
+		n.SeparatorTkns = f.formatList(n.Use, ',')
+		n.CloseParenthesisTkn = f.newToken(')', []byte(")"))
 	}
 
 	n.ColonTkn = nil
@@ -1189,10 +1196,11 @@ func (f *formatter) ExprClosure(n *ast.ExprClosure) {
 }
 
 func (f *formatter) ExprClosureUse(n *ast.ExprClosureUse) {
-	n.UseTkn = f.newToken(token.T_USE, []byte("use"))
-	n.OpenParenthesisTkn = f.newToken('(', []byte("("))
-	n.SeparatorTkns = f.formatList(n.Uses, ',')
-	n.CloseParenthesisTkn = f.newToken(')', []byte(")"))
+	if n.AmpersandTkn != nil {
+		n.AmpersandTkn = f.newToken('&', []byte("&"))
+	}
+
+	n.Var.Accept(f)
 }
 
 func (f *formatter) ExprConstFetch(n *ast.ExprConstFetch) {

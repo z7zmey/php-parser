@@ -562,7 +562,6 @@ func TestResolveClosureName(t *testing.T) {
 				Var:  &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
-		ClosureUse: nil,
 		ReturnType: &ast.Nullable{Expr: nameBC},
 		Stmts:      []ast.Vertex{},
 	}

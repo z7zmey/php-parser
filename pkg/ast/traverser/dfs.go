@@ -1152,10 +1152,12 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			}
 			t.visitor.Leave("Params", false)
 		}
-		if nn.ClosureUse != nil {
-			t.visitor.Enter("ClosureUse", true)
-			t.Traverse(nn.ClosureUse)
-			t.visitor.Leave("ClosureUse", true)
+		if nn.Use != nil {
+			t.visitor.Enter("Use", false)
+			for _, c := range nn.Use {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Use", false)
 		}
 		if nn.ReturnType != nil {
 			t.visitor.Enter("ReturnType", true)
@@ -1176,12 +1178,10 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
-		if nn.Uses != nil {
-			t.visitor.Enter("Uses", false)
-			for _, c := range nn.Uses {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("Uses", false)
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
 		}
 	case *ast.ExprConstFetch:
 		if nn == nil {

@@ -684,7 +684,10 @@ func (p *printer) ExprClosure(n *ast.ExprClosure) {
 	p.printToken(n.OpenParenthesisTkn, []byte("("))
 	p.printSeparatedList(n.Params, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
-	p.printNode(n.ClosureUse)
+	p.printToken(n.UseTkn, p.ifNodeList(n.Use, []byte("use")))
+	p.printToken(n.UseOpenParenthesisTkn, p.ifNodeList(n.Use, []byte("(")))
+	p.printSeparatedList(n.Use, n.UseSeparatorTkns, []byte(","))
+	p.printToken(n.UseCloseParenthesisTkn, p.ifNodeList(n.Use, []byte(")")))
 	p.printToken(n.ColonTkn, p.ifNode(n.ReturnType, []byte(":")))
 	p.printNode(n.ReturnType)
 	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
@@ -693,10 +696,8 @@ func (p *printer) ExprClosure(n *ast.ExprClosure) {
 }
 
 func (p *printer) ExprClosureUse(n *ast.ExprClosureUse) {
-	p.printToken(n.UseTkn, []byte("use"))
-	p.printToken(n.OpenParenthesisTkn, []byte("("))
-	p.printSeparatedList(n.Uses, n.SeparatorTkns, []byte(","))
-	p.printToken(n.CloseParenthesisTkn, []byte(")"))
+	p.printToken(n.AmpersandTkn, nil)
+	p.printNode(n.Var)
 }
 
 func (p *printer) ExprConstFetch(n *ast.ExprConstFetch) {

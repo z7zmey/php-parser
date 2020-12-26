@@ -3714,9 +3714,9 @@ func TestFormatter_ExprClosure_Use(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprClosure{
-		ClosureUse: &ast.ExprClosureUse{
-			Uses: []ast.Vertex{
-				&ast.ExprVariable{
+		Use: []ast.Vertex{
+			&ast.ExprClosureUse{
+				Var: &ast.ExprVariable{
 					VarName: &ast.Identifier{
 						Value: []byte("$foo"),
 					},
@@ -3748,16 +3748,9 @@ func TestFormatter_ExprClosureUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprClosureUse{
-		Uses: []ast.Vertex{
-			&ast.ExprVariable{
-				VarName: &ast.Identifier{
-					Value: []byte("$a"),
-				},
-			},
-			&ast.ExprVariable{
-				VarName: &ast.Identifier{
-					Value: []byte("$b"),
-				},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{
+				Value: []byte("$a"),
 			},
 		},
 	}
@@ -3768,7 +3761,33 @@ func TestFormatter_ExprClosureUse(t *testing.T) {
 	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
 	n.Accept(p)
 
-	expected := `use($a, $b)`
+	expected := `$a`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestFormatter_ExprClosureUse_Reference(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	n := &ast.ExprClosureUse{
+		AmpersandTkn: &token.Token{},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{
+				Value: []byte("$a"),
+			},
+		},
+	}
+
+	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	n.Accept(f)
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n.Accept(p)
+
+	expected := `&$a`
 	actual := o.String()
 
 	if expected != actual {

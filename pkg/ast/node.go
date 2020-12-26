@@ -1274,20 +1274,24 @@ func (n *ExprClone) GetPosition() *position.Position {
 
 // ExprClosure node
 type ExprClosure struct {
-	Position             *position.Position
-	StaticTkn            *token.Token
-	FunctionTkn          *token.Token
-	AmpersandTkn         *token.Token
-	OpenParenthesisTkn   *token.Token
-	Params               []Vertex
-	SeparatorTkns        []*token.Token
-	CloseParenthesisTkn  *token.Token
-	ClosureUse           Vertex
-	ColonTkn             *token.Token
-	ReturnType           Vertex
-	OpenCurlyBracketTkn  *token.Token
-	Stmts                []Vertex
-	CloseCurlyBracketTkn *token.Token
+	Position               *position.Position
+	StaticTkn              *token.Token
+	FunctionTkn            *token.Token
+	AmpersandTkn           *token.Token
+	OpenParenthesisTkn     *token.Token
+	Params                 []Vertex
+	SeparatorTkns          []*token.Token
+	CloseParenthesisTkn    *token.Token
+	UseTkn                 *token.Token
+	UseOpenParenthesisTkn  *token.Token
+	Use                    []Vertex
+	UseSeparatorTkns       []*token.Token
+	UseCloseParenthesisTkn *token.Token
+	ColonTkn               *token.Token
+	ReturnType             Vertex
+	OpenCurlyBracketTkn    *token.Token
+	Stmts                  []Vertex
+	CloseCurlyBracketTkn   *token.Token
 }
 
 func (n *ExprClosure) Accept(v NodeVisitor) {
@@ -1300,12 +1304,9 @@ func (n *ExprClosure) GetPosition() *position.Position {
 
 // ExprClosureUse node
 type ExprClosureUse struct {
-	Position            *position.Position
-	UseTkn              *token.Token
-	OpenParenthesisTkn  *token.Token
-	Uses                []Vertex
-	SeparatorTkns       []*token.Token
-	CloseParenthesisTkn *token.Token
+	Position     *position.Position
+	AmpersandTkn *token.Token
+	Var          Vertex
 }
 
 func (n *ExprClosureUse) Accept(v NodeVisitor) {
