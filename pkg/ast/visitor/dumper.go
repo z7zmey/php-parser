@@ -1257,7 +1257,7 @@ func (v *Dumper) ExprInclude(n *ast.ExprInclude) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
-	v.dumpToken("IncludeTkn", n.IncludeTkn)
+	v.dumpToken("IncludeOnceTkn", n.IncludeTkn)
 	v.dumpVertex("Expr", n.Expr)
 
 	v.indent--
@@ -1269,7 +1269,7 @@ func (v *Dumper) ExprIncludeOnce(n *ast.ExprIncludeOnce) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
-	v.dumpToken("IncludeTkn", n.IncludeTkn)
+	v.dumpToken("IncludeOnceTkn", n.IncludeOnceTkn)
 	v.dumpVertex("Expr", n.Expr)
 
 	v.indent--

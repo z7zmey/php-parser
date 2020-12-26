@@ -1434,9 +1434,9 @@ func (n *ExprInclude) GetPosition() *position.Position {
 
 // ExprIncludeOnce node
 type ExprIncludeOnce struct {
-	Position   *position.Position
-	IncludeTkn *token.Token
-	Expr       Vertex
+	Position       *position.Position
+	IncludeOnceTkn *token.Token
+	Expr           Vertex
 }
 
 func (n *ExprIncludeOnce) Accept(v NodeVisitor) {

@@ -4292,9 +4292,9 @@ internal_functions_in_yacc:
     |   T_INCLUDE_ONCE expr
             {
                 $$ = &ast.ExprIncludeOnce{
-                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
-                    IncludeTkn: $1,
-                    Expr:       $2,
+                    Position:       yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
+                    IncludeOnceTkn: $1,
+                    Expr:           $2,
                 }
             }
     |   T_EVAL '(' expr ')'

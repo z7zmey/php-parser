@@ -39864,7 +39864,7 @@ func TestExprInclude_Once(t *testing.T) {
 						StartPos:  3,
 						EndPos:    18,
 					},
-					IncludeTkn: &token.Token{
+					IncludeOnceTkn: &token.Token{
 						ID:    token.T_INCLUDE_ONCE,
 						Value: []byte("include_once"),
 						Position: &position.Position{

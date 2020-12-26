@@ -745,7 +745,7 @@ func (p *printer) ExprInclude(n *ast.ExprInclude) {
 }
 
 func (p *printer) ExprIncludeOnce(n *ast.ExprIncludeOnce) {
-	p.printToken(n.IncludeTkn, []byte("include_once"))
+	p.printToken(n.IncludeOnceTkn, []byte("include_once"))
 	p.printNode(n.Expr)
 }
 

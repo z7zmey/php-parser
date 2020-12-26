@@ -1258,7 +1258,7 @@ func (f *formatter) ExprInclude(n *ast.ExprInclude) {
 }
 
 func (f *formatter) ExprIncludeOnce(n *ast.ExprIncludeOnce) {
-	n.IncludeTkn = f.newToken(token.T_INCLUDE_ONCE, []byte("include_once"))
+	n.IncludeOnceTkn = f.newToken(token.T_INCLUDE_ONCE, []byte("include_once"))
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
 	n.Expr.Accept(f)
 }

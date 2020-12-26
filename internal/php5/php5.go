@@ -8132,9 +8132,9 @@ yydefault:
 		// line internal/php5/php5.y:5534
 		{
 			yyVAL.node = &ast.ExprIncludeOnce{
-				Position:   yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
-				IncludeTkn: yyDollar[1].token,
-				Expr:       yyDollar[2].node,
+				Position:       yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				IncludeOnceTkn: yyDollar[1].token,
+				Expr:           yyDollar[2].node,
 			}
 		}
 	case 510:
