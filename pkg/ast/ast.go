@@ -107,7 +107,6 @@ type NodeVisitor interface {
 	ExprPreInc(n *ExprPreInc)
 	ExprPrint(n *ExprPrint)
 	ExprPropertyFetch(n *ExprPropertyFetch)
-	ExprReference(n *ExprReference)
 	ExprRequire(n *ExprRequire)
 	ExprRequireOnce(n *ExprRequireOnce)
 	ExprShellExec(n *ExprShellExec)

@@ -972,7 +972,7 @@ statement:
                 foreach.Var                 = $5
                 foreach.CloseParenthesisTkn = $6
 
-                if val, ok := $5.(*ast.ExprReference); ok {
+                if val, ok := $5.(*ast.StmtForeach); ok {
                     foreach.AmpersandTkn    = val.AmpersandTkn
                     foreach.Var             = val.Var
                 }
@@ -993,7 +993,7 @@ statement:
                 foreach.Var                 = $7
                 foreach.CloseParenthesisTkn = $8
 
-                if val, ok := $7.(*ast.ExprReference); ok {
+                if val, ok := $7.(*ast.StmtForeach); ok {
                     foreach.AmpersandTkn    = val.AmpersandTkn
                     foreach.Var             = val.Var
                 }
@@ -1359,7 +1359,7 @@ foreach_variable:
             }
     |   '&' variable
             {
-                $$ = &ast.ExprReference{
+                $$ = &ast.StmtForeach{
                     Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     AmpersandTkn: $1,
                     Var:          $2,

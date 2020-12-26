@@ -1425,18 +1425,6 @@ func (v *Dumper) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dumper) ExprReference(n *ast.ExprReference) {
-	v.print(0, "&ast.ExprReference{\n")
-	v.indent++
-
-	v.dumpPosition(n.Position)
-	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
-	v.dumpVertex("Var", n.Var)
-
-	v.indent--
-	v.print(v.indent, "},\n")
-}
-
 func (v *Dumper) ExprRequire(n *ast.ExprRequire) {
 	v.print(0, "&ast.ExprRequire{\n")
 	v.indent++

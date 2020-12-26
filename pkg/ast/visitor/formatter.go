@@ -1349,11 +1349,6 @@ func (f *formatter) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	n.Property.Accept(f)
 }
 
-func (f *formatter) ExprReference(n *ast.ExprReference) {
-	n.AmpersandTkn = f.newToken('&', []byte("&"))
-	n.Var.Accept(f)
-}
-
 func (f *formatter) ExprRequire(n *ast.ExprRequire) {
 	n.RequireTkn = f.newToken(token.T_REQUIRE, []byte("require"))
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))

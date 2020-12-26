@@ -1451,18 +1451,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Property)
 			t.visitor.Leave("Property", true)
 		}
-	case *ast.ExprReference:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Var != nil {
-			t.visitor.Enter("Var", true)
-			t.Traverse(nn.Var)
-			t.visitor.Leave("Var", true)
-		}
 	case *ast.ExprRequire:
 		if nn == nil {
 			return

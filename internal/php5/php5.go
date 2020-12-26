@@ -3141,12 +3141,12 @@ yydefault:
 				foreach.Var = yyDollar[6].node.(*ast.StmtForeach).Var
 			}
 
-			if val, ok := foreach.Key.(*ast.ExprReference); ok {
+			if val, ok := foreach.Key.(*ast.StmtForeach); ok {
 				yylex.(*Parser).errHandlerFunc(errors.NewError("Key element cannot be a reference", val.AmpersandTkn.Position))
 				foreach.Key = val.Var
 			}
 
-			if val, ok := foreach.Var.(*ast.ExprReference); ok {
+			if val, ok := foreach.Var.(*ast.StmtForeach); ok {
 				foreach.AmpersandTkn = val.AmpersandTkn
 				foreach.Var = val.Var
 			}
@@ -3173,12 +3173,12 @@ yydefault:
 				foreach.Var = yyDollar[6].node.(*ast.StmtForeach).Var
 			}
 
-			if val, ok := foreach.Key.(*ast.ExprReference); ok {
+			if val, ok := foreach.Key.(*ast.StmtForeach); ok {
 				yylex.(*Parser).errHandlerFunc(errors.NewError("Key element cannot be a reference", val.AmpersandTkn.Position))
 				foreach.Key = val.Var
 			}
 
-			if val, ok := foreach.Var.(*ast.ExprReference); ok {
+			if val, ok := foreach.Var.(*ast.StmtForeach); ok {
 				foreach.AmpersandTkn = val.AmpersandTkn
 				foreach.Var = val.Var
 			}
@@ -3627,7 +3627,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		// line internal/php5/php5.y:1464
 		{
-			yyVAL.node = &ast.ExprReference{
+			yyVAL.node = &ast.StmtForeach{
 				Position:     yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 				AmpersandTkn: yyDollar[1].token,
 				Var:          yyDollar[2].node,

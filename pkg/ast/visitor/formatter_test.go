@@ -4483,31 +4483,6 @@ func TestFormatter_ExprPropertyFetch(t *testing.T) {
 	}
 }
 
-func TestFormatter_ExprReference(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.ExprReference{
-		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
-				Value: []byte("$foo"),
-			},
-		},
-	}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `&$foo`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestFormatter_ExprRequire(t *testing.T) {
 	o := bytes.NewBufferString("")
 

@@ -1000,12 +1000,12 @@ unticked_statement:
                     foreach.Var = $6.(*ast.StmtForeach).Var
                 }
 
-                if val, ok := foreach.Key.(*ast.ExprReference); ok {
+                if val, ok := foreach.Key.(*ast.StmtForeach); ok {
                     yylex.(*Parser).errHandlerFunc(errors.NewError("Key element cannot be a reference", val.AmpersandTkn.Position))
                     foreach.Key = val.Var
                 }
 
-                if val, ok := foreach.Var.(*ast.ExprReference); ok {
+                if val, ok := foreach.Var.(*ast.StmtForeach); ok {
                     foreach.AmpersandTkn    = val.AmpersandTkn
                     foreach.Var             = val.Var
                 }
@@ -1030,12 +1030,12 @@ unticked_statement:
                     foreach.Var = $6.(*ast.StmtForeach).Var
                 }
 
-                if val, ok := foreach.Key.(*ast.ExprReference); ok {
+                if val, ok := foreach.Key.(*ast.StmtForeach); ok {
                     yylex.(*Parser).errHandlerFunc(errors.NewError("Key element cannot be a reference", val.AmpersandTkn.Position))
                     foreach.Key = val.Var
                 }
 
-                if val, ok := foreach.Var.(*ast.ExprReference); ok {
+                if val, ok := foreach.Var.(*ast.StmtForeach); ok {
                     foreach.AmpersandTkn    = val.AmpersandTkn
                     foreach.Var             = val.Var
                 }
@@ -1462,7 +1462,7 @@ foreach_variable:
             }
     |   '&' variable
             {
-                $$ = &ast.ExprReference{
+                $$ = &ast.StmtForeach{
                     Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
                     AmpersandTkn: $1,
                     Var:          $2,

@@ -817,11 +817,6 @@ func (p *printer) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	p.printNode(n.Property)
 }
 
-func (p *printer) ExprReference(n *ast.ExprReference) {
-	p.printToken(n.AmpersandTkn, []byte("&"))
-	p.printNode(n.Var)
-}
-
 func (p *printer) ExprRequire(n *ast.ExprRequire) {
 	p.printToken(n.RequireTkn, []byte("require"))
 	p.printNode(n.Expr)

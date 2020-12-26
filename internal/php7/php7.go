@@ -3319,7 +3319,7 @@ yydefault:
 			foreach.Var = yyDollar[5].node
 			foreach.CloseParenthesisTkn = yyDollar[6].token
 
-			if val, ok := yyDollar[5].node.(*ast.ExprReference); ok {
+			if val, ok := yyDollar[5].node.(*ast.StmtForeach); ok {
 				foreach.AmpersandTkn = val.AmpersandTkn
 				foreach.Var = val.Var
 			}
@@ -3342,7 +3342,7 @@ yydefault:
 			foreach.Var = yyDollar[7].node
 			foreach.CloseParenthesisTkn = yyDollar[8].token
 
-			if val, ok := yyDollar[7].node.(*ast.ExprReference); ok {
+			if val, ok := yyDollar[7].node.(*ast.StmtForeach); ok {
 				foreach.AmpersandTkn = val.AmpersandTkn
 				foreach.Var = val.Var
 			}
@@ -3731,7 +3731,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		// line internal/php7/php7.y:1361
 		{
-			yyVAL.node = &ast.ExprReference{
+			yyVAL.node = &ast.StmtForeach{
 				Position:     yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 				AmpersandTkn: yyDollar[1].token,
 				Var:          yyDollar[2].node,

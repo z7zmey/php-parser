@@ -1629,21 +1629,6 @@ func (n *ExprPropertyFetch) GetPosition() *position.Position {
 	return n.Position
 }
 
-// ExprReference node
-type ExprReference struct {
-	Position     *position.Position
-	AmpersandTkn *token.Token
-	Var          Vertex
-}
-
-func (n *ExprReference) Accept(v NodeVisitor) {
-	v.ExprReference(n)
-}
-
-func (n *ExprReference) GetPosition() *position.Position {
-	return n.Position
-}
-
 // ExprRequire node
 type ExprRequire struct {
 	Position   *position.Position

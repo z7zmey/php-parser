@@ -1634,9 +1634,12 @@ func TestPrinterPrintExprArray(t *testing.T) {
 			},
 			&ast.ExprArrayItem{
 				Key: &ast.ScalarLnumber{Value: []byte("2")},
-				Val: &ast.ExprReference{Var: &ast.ExprVariable{
+				AmpersandTkn: &token.Token{
+					Value: []byte("&"),
+				},
+				Val: &ast.ExprVariable{
 					VarName: &ast.Identifier{Value: []byte("$var")},
-				}},
+				},
 			},
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
@@ -2323,25 +2326,6 @@ func TestPrinterPrintPropertyFetch(t *testing.T) {
 	}
 }
 
-func TestPrinterPrintExprReference(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n := &ast.ExprReference{
-		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$foo")},
-		},
-	}
-	n.Accept(p)
-
-	expected := `&$foo`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestPrinterPrintRequire(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -2413,9 +2397,12 @@ func TestPrinterPrintExprShortArray(t *testing.T) {
 			},
 			&ast.ExprArrayItem{
 				Key: &ast.ScalarLnumber{Value: []byte("2")},
-				Val: &ast.ExprReference{Var: &ast.ExprVariable{
+				AmpersandTkn: &token.Token{
+					Value: []byte("&"),
+				},
+				Val: &ast.ExprVariable{
 					VarName: &ast.Identifier{Value: []byte("$var")},
-				}},
+				},
 			},
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
@@ -2848,10 +2835,46 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 		Key: &ast.ExprVariable{
 			VarName: &ast.Identifier{Value: []byte("$key")},
 		},
-		Var: &ast.ExprReference{
-			Var: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$val")},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$val")},
+		},
+		ColonTkn: &token.Token{
+			Value: []byte(":"),
+		},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtExpression{Expr: &ast.ExprVariable{
+					VarName: &ast.Identifier{Value: []byte("$d")},
+				}},
 			},
+		},
+	}
+	n.Accept(p)
+
+	expected := `foreach($var as$key=>$val):$d;endforeach;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintAltForeach_Reference(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n := &ast.StmtForeach{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$var")},
+		},
+		Key: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$key")},
+		},
+		AmpersandTkn: &token.Token{
+			Value: []byte("&"),
+		},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$val")},
 		},
 		ColonTkn: &token.Token{
 			Value: []byte(":"),

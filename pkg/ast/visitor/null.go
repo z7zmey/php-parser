@@ -362,10 +362,6 @@ func (v *Null) ExprPropertyFetch(_ *ast.ExprPropertyFetch) {
 	// do nothing
 }
 
-func (v *Null) ExprReference(_ *ast.ExprReference) {
-	// do nothing
-}
-
 func (v *Null) ExprRequire(_ *ast.ExprRequire) {
 	// do nothing
 }
