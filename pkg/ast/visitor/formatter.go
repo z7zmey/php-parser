@@ -557,6 +557,9 @@ func (f *formatter) StmtForeach(n *ast.StmtForeach) {
 	}
 
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
+	if n.AmpersandTkn != nil {
+		n.AmpersandTkn = f.newToken('&', []byte("&"))
+	}
 	n.Var.Accept(f)
 
 	n.CloseParenthesisTkn = f.newToken(')', []byte(")"))

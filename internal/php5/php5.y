@@ -5,6 +5,7 @@ import (
     "strconv"
 
     "github.com/z7zmey/php-parser/pkg/ast"
+    "github.com/z7zmey/php-parser/pkg/errors"
     "github.com/z7zmey/php-parser/pkg/token"
 )
 
@@ -983,39 +984,63 @@ unticked_statement:
             }
     |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
-                $8.(*ast.StmtForeach).ForeachTkn = $1
-                $8.(*ast.StmtForeach).OpenParenthesisTkn = $2
-                $8.(*ast.StmtForeach).Expr = $3
-                $8.(*ast.StmtForeach).AsTkn = $4
-                if $6 == nil {
-                    $8.(*ast.StmtForeach).Var = $5
-                } else {
-                    $8.(*ast.StmtForeach).Key = $5
-                    $8.(*ast.StmtForeach).DoubleArrowTkn = $6.(*ast.StmtForeach).DoubleArrowTkn
-                    $8.(*ast.StmtForeach).Var = $6.(*ast.StmtForeach).Var
-                }
-                $8.(*ast.StmtForeach).CloseParenthesisTkn = $7
-                $8.(*ast.StmtForeach).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $8)
+                foreach := $8.(*ast.StmtForeach)
 
-                $$ = $8
+                foreach.Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $8)
+                foreach.ForeachTkn = $1
+                foreach.OpenParenthesisTkn = $2
+                foreach.Expr = $3
+                foreach.AsTkn = $4
+                foreach.Var = $5
+                foreach.CloseParenthesisTkn = $7
+
+                if $6 != nil {
+                    foreach.Key = foreach.Var
+                    foreach.DoubleArrowTkn = $6.(*ast.StmtForeach).DoubleArrowTkn
+                    foreach.Var = $6.(*ast.StmtForeach).Var
+                }
+
+                if val, ok := foreach.Key.(*ast.ExprReference); ok {
+                    yylex.(*Parser).errHandlerFunc(errors.NewError("Key element cannot be a reference", val.AmpersandTkn.Position))
+                    foreach.Key = val.Var
+                }
+
+                if val, ok := foreach.Var.(*ast.ExprReference); ok {
+                    foreach.AmpersandTkn    = val.AmpersandTkn
+                    foreach.Var             = val.Var
+                }
+
+                $$ = foreach
             }
     |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
-                $8.(*ast.StmtForeach).ForeachTkn = $1
-                $8.(*ast.StmtForeach).OpenParenthesisTkn = $2
-                $8.(*ast.StmtForeach).Expr = $3
-                $8.(*ast.StmtForeach).AsTkn = $4
-                if $6 == nil {
-                    $8.(*ast.StmtForeach).Var = $5
-                } else {
-                    $8.(*ast.StmtForeach).Key = $5
-                    $8.(*ast.StmtForeach).DoubleArrowTkn = $6.(*ast.StmtForeach).DoubleArrowTkn
-                    $8.(*ast.StmtForeach).Var = $6.(*ast.StmtForeach).Var
-                }
-                $8.(*ast.StmtForeach).CloseParenthesisTkn = $7
-                $8.(*ast.StmtForeach).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $8)
+                foreach := $8.(*ast.StmtForeach)
 
-                $$ = $8
+                foreach.Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $8)
+                foreach.ForeachTkn = $1
+                foreach.OpenParenthesisTkn = $2
+                foreach.Expr = $3
+                foreach.AsTkn = $4
+                foreach.Var = $5
+                foreach.CloseParenthesisTkn = $7
+
+                if $6 != nil {
+                    foreach.Key = foreach.Var
+                    foreach.DoubleArrowTkn = $6.(*ast.StmtForeach).DoubleArrowTkn
+                    foreach.Var = $6.(*ast.StmtForeach).Var
+                }
+
+                if val, ok := foreach.Key.(*ast.ExprReference); ok {
+                    yylex.(*Parser).errHandlerFunc(errors.NewError("Key element cannot be a reference", val.AmpersandTkn.Position))
+                    foreach.Key = val.Var
+                }
+
+                if val, ok := foreach.Var.(*ast.ExprReference); ok {
+                    foreach.AmpersandTkn    = val.AmpersandTkn
+                    foreach.Var             = val.Var
+                }
+
+                $$ = foreach
             }
     |   T_DECLARE '(' declare_list ')' declare_statement
             {

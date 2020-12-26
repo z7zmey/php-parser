@@ -574,6 +574,7 @@ type StmtForeach struct {
 	AsTkn               *token.Token
 	Key                 Vertex
 	DoubleArrowTkn      *token.Token
+	AmpersandTkn        *token.Token
 	Var                 Vertex
 	CloseParenthesisTkn *token.Token
 	ColonTkn            *token.Token

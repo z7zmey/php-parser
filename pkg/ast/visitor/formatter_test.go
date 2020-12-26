@@ -1372,6 +1372,44 @@ func TestFormatter_StmtForeach(t *testing.T) {
 	}
 }
 
+func TestFormatter_StmtForeach_Reference(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	n := &ast.StmtForeach{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{
+				Value: []byte("$foo"),
+			},
+		},
+		AmpersandTkn: &token.Token{},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{
+				Value: []byte("$val"),
+			},
+		},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtNop{},
+			},
+		},
+	}
+
+	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	n.Accept(f)
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n.Accept(p)
+
+	expected := `foreach($foo as &$val) {
+        ;
+    }`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestFormatter_StmtForeach_Key(t *testing.T) {
 	o := bytes.NewBufferString("")
 

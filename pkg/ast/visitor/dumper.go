@@ -552,6 +552,7 @@ func (v *Dumper) StmtForeach(n *ast.StmtForeach) {
 	v.dumpToken("AsTkn", n.AsTkn)
 	v.dumpVertex("Key", n.Key)
 	v.dumpToken("DoubleArrowTkn", n.DoubleArrowTkn)
+	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
 	v.dumpVertex("Var", n.Var)
 	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
 	v.dumpToken("ColonTkn", n.ColonTkn)

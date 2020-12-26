@@ -962,29 +962,43 @@ statement:
             }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
             {
-                $7.(*ast.StmtForeach).ForeachTkn = $1
-                $7.(*ast.StmtForeach).OpenParenthesisTkn = $2
-                $7.(*ast.StmtForeach).Expr = $3
-                $7.(*ast.StmtForeach).AsTkn = $4
-                $7.(*ast.StmtForeach).Var = $5
-                $7.(*ast.StmtForeach).CloseParenthesisTkn = $6
-                $7.(*ast.StmtForeach).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $7)
+                foreach := $7.(*ast.StmtForeach)
 
-                $$ = $7
+                foreach.Position            = yylex.(*Parser).builder.NewTokenNodePosition($1, $7)
+                foreach.ForeachTkn          = $1
+                foreach.OpenParenthesisTkn  = $2
+                foreach.Expr                = $3
+                foreach.AsTkn               = $4
+                foreach.Var                 = $5
+                foreach.CloseParenthesisTkn = $6
+
+                if val, ok := $5.(*ast.ExprReference); ok {
+                    foreach.AmpersandTkn    = val.AmpersandTkn
+                    foreach.Var             = val.Var
+                }
+
+                $$ = foreach
             }
     |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
             {
-                $9.(*ast.StmtForeach).ForeachTkn = $1
-                $9.(*ast.StmtForeach).OpenParenthesisTkn = $2
-                $9.(*ast.StmtForeach).Expr = $3
-                $9.(*ast.StmtForeach).AsTkn = $4
-                $9.(*ast.StmtForeach).Key = $5
-                $9.(*ast.StmtForeach).DoubleArrowTkn = $6
-                $9.(*ast.StmtForeach).Var = $7
-                $9.(*ast.StmtForeach).CloseParenthesisTkn = $8
-                $9.(*ast.StmtForeach).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $9)
+                foreach := $9.(*ast.StmtForeach)
 
-                $$ = $9
+                foreach.Position            = yylex.(*Parser).builder.NewTokenNodePosition($1, $9)
+                foreach.ForeachTkn          = $1
+                foreach.OpenParenthesisTkn  = $2
+                foreach.Expr                = $3
+                foreach.AsTkn               = $4
+                foreach.Key                 = $5
+                foreach.DoubleArrowTkn      = $6
+                foreach.Var                 = $7
+                foreach.CloseParenthesisTkn = $8
+
+                if val, ok := $7.(*ast.ExprReference); ok {
+                    foreach.AmpersandTkn    = val.AmpersandTkn
+                    foreach.Var             = val.Var
+                }
+
+                $$ = foreach
             }
     |   T_DECLARE '(' const_list ')' declare_statement
             {

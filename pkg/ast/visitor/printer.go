@@ -356,6 +356,7 @@ func (p *printer) StmtForeach(n *ast.StmtForeach) {
 	p.printToken(n.AsTkn, []byte("as"))
 	p.printNode(n.Key)
 	p.printToken(n.DoubleArrowTkn, p.ifNode(n.Key, []byte("=>")))
+	p.printToken(n.AmpersandTkn, nil)
 	p.printNode(n.Var)
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
 	p.printToken(n.ColonTkn, nil)

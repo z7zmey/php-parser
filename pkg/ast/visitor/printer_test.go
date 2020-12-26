@@ -3799,6 +3799,39 @@ func TestPrinterPrintStmtForeach(t *testing.T) {
 	}
 }
 
+func TestPrinterPrintStmtForeach_Reference(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n := &ast.StmtForeach{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$a")},
+		},
+		Key: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$k")},
+		},
+		AmpersandTkn: &token.Token{
+			Value: []byte("&"),
+		},
+		Var: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$v")},
+		},
+		Stmt: &ast.StmtStmtList{
+			Stmts: []ast.Vertex{
+				&ast.StmtNop{},
+			},
+		},
+	}
+	n.Accept(p)
+
+	expected := `foreach($a as$k=>&$v){;}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrinterPrintStmtFunction(t *testing.T) {
 	o := bytes.NewBufferString("")
 
