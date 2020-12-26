@@ -1152,7 +1152,7 @@ func (p *printer) ExprCastDouble(n *ast.ExprCastDouble) {
 }
 
 func (p *printer) ExprCastInt(n *ast.ExprCastInt) {
-	p.printToken(n.CastTkn, []byte("(integer)"))
+	p.printToken(n.CastTkn, []byte("(int)"))
 	p.printNode(n.Expr)
 }
 

@@ -1447,7 +1447,7 @@ func TestPrinterPrintInt(t *testing.T) {
 	}
 	n.Accept(p)
 
-	expected := `(integer)$var`
+	expected := `(int)$var`
 	actual := o.String()
 
 	if expected != actual {

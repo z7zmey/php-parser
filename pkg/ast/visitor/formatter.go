@@ -1878,7 +1878,7 @@ func (f *formatter) ExprCastDouble(n *ast.ExprCastDouble) {
 }
 
 func (f *formatter) ExprCastInt(n *ast.ExprCastInt) {
-	n.CastTkn = f.newToken(token.T_INT_CAST, []byte("(integer)"))
+	n.CastTkn = f.newToken(token.T_INT_CAST, []byte("(int)"))
 	n.Expr.Accept(f)
 }
 

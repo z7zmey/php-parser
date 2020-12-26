@@ -6309,7 +6309,7 @@ func TestFormatter_ExprCastInt(t *testing.T) {
 	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
 	n.Accept(p)
 
-	expected := `(integer)$foo`
+	expected := `(int)$foo`
 	actual := o.String()
 
 	if expected != actual {
