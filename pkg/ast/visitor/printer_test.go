@@ -2609,13 +2609,19 @@ func TestPrinterPrintVariable(t *testing.T) {
 		DollarTkn: &token.Token{
 			Value: []byte("$"),
 		},
+		OpenCurlyBracketTkn: &token.Token{
+			Value: []byte("{"),
+		},
 		VarName: &ast.ExprVariable{
 			VarName: &ast.Identifier{Value: []byte("$var")},
+		},
+		CloseCurlyBracketTkn: &token.Token{
+			Value: []byte("}"),
 		},
 	}
 	n.Accept(p)
 
-	expected := `$$var`
+	expected := `${$var}`
 	actual := o.String()
 
 	if expected != actual {

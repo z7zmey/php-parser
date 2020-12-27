@@ -1537,7 +1537,9 @@ func (v *Dumper) ExprVariable(n *ast.ExprVariable) {
 
 	v.dumpPosition(n.Position)
 	v.dumpToken("DollarTkn", n.DollarTkn)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertex("VarName", n.VarName)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
 
 	v.indent--
 	v.print(v.indent, "},\n")

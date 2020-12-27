@@ -16726,89 +16726,81 @@ func TestStmtGlobal_Vars(t *testing.T) {
 								},
 							},
 						},
-						VarName: &ast.ParserBrackets{
+						OpenCurlyBracketTkn: &token.Token{
+							ID:    token.ID(123),
+							Value: []byte("{"),
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  24,
-								EndPos:    31,
+								EndPos:    25,
 							},
-							OpenBracketTkn: &token.Token{
-								ID:    token.ID(123),
-								Value: []byte("{"),
-								Position: &position.Position{
-									StartLine: 1,
-									EndLine:   1,
-									StartPos:  24,
-									EndPos:    25,
-								},
+						},
+						VarName: &ast.ExprFunctionCall{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  25,
+								EndPos:    30,
 							},
-							Child: &ast.ExprFunctionCall{
+							Function: &ast.NameName{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  25,
-									EndPos:    30,
+									EndPos:    28,
 								},
-								Function: &ast.NameName{
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  25,
-										EndPos:    28,
-									},
-									Parts: []ast.Vertex{
-										&ast.NameNamePart{
+								Parts: []ast.Vertex{
+									&ast.NameNamePart{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  25,
+											EndPos:    28,
+										},
+										StringTkn: &token.Token{
+											ID:    token.T_STRING,
+											Value: []byte("foo"),
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
 												StartPos:  25,
 												EndPos:    28,
 											},
-											StringTkn: &token.Token{
-												ID:    token.T_STRING,
-												Value: []byte("foo"),
-												Position: &position.Position{
-													StartLine: 1,
-													EndLine:   1,
-													StartPos:  25,
-													EndPos:    28,
-												},
-											},
-											Value: []byte("foo"),
 										},
-									},
-								},
-								OpenParenthesisTkn: &token.Token{
-									ID:    token.ID(40),
-									Value: []byte("("),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  28,
-										EndPos:    29,
-									},
-								},
-								CloseParenthesisTkn: &token.Token{
-									ID:    token.ID(41),
-									Value: []byte(")"),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  29,
-										EndPos:    30,
+										Value: []byte("foo"),
 									},
 								},
 							},
-							CloseBracketTkn: &token.Token{
-								ID:    token.ID(125),
-								Value: []byte("}"),
+							OpenParenthesisTkn: &token.Token{
+								ID:    token.ID(40),
+								Value: []byte("("),
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  30,
-									EndPos:    31,
+									StartPos:  28,
+									EndPos:    29,
 								},
+							},
+							CloseParenthesisTkn: &token.Token{
+								ID:    token.ID(41),
+								Value: []byte(")"),
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  29,
+									EndPos:    30,
+								},
+							},
+						},
+						CloseCurlyBracketTkn: &token.Token{
+							ID:    token.ID(125),
+							Value: []byte("}"),
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  30,
+								EndPos:    31,
 							},
 						},
 					},

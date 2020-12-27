@@ -868,7 +868,9 @@ func (p *printer) ExprUnaryPlus(n *ast.ExprUnaryPlus) {
 
 func (p *printer) ExprVariable(n *ast.ExprVariable) {
 	p.printToken(n.DollarTkn, nil)
+	p.printToken(n.OpenCurlyBracketTkn, nil)
 	p.printNode(n.VarName)
+	p.printToken(n.CloseCurlyBracketTkn, nil)
 }
 
 func (p *printer) ExprYield(n *ast.ExprYield) {

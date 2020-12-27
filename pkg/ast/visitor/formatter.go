@@ -1417,6 +1417,16 @@ func (f *formatter) ExprVariable(n *ast.ExprVariable) {
 		n.DollarTkn = f.newToken('$', []byte("$"))
 	}
 
+	n.OpenCurlyBracketTkn = nil
+	n.CloseCurlyBracketTkn = nil
+	switch n.VarName.(type) {
+	case *ast.Identifier:
+	case *ast.ExprVariable:
+	default:
+		n.OpenCurlyBracketTkn = f.newToken('{', []byte("{"))
+		n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
+	}
+
 	n.VarName.Accept(f)
 }
 

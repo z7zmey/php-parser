@@ -3790,14 +3790,11 @@ simple_variable:
     |   '$' '{' expr '}'
             {
                 $$ = &ast.ExprVariable{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
-                    DollarTkn: $1,
-                    VarName: &ast.ParserBrackets{
-                        Position: yylex.(*Parser).builder.NewTokensPosition($2, $4),
-                        OpenBracketTkn:  $2,
-                        Child:           $3,
-                        CloseBracketTkn: $4,
-                    },
+                    Position:             yylex.(*Parser).builder.NewTokensPosition($1, $4),
+                    DollarTkn:            $1,
+                    OpenCurlyBracketTkn:  $2,
+                    VarName:              $3,
+                    CloseCurlyBracketTkn: $4,
                 }
             }
     |   '$' simple_variable

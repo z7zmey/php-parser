@@ -1761,9 +1761,11 @@ func (n *ExprUnaryPlus) GetPosition() *position.Position {
 
 // ExprVariable node
 type ExprVariable struct {
-	Position  *position.Position
-	DollarTkn *token.Token
-	VarName   Vertex
+	Position             *position.Position
+	DollarTkn            *token.Token
+	OpenCurlyBracketTkn  *token.Token
+	VarName              Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *ExprVariable) Accept(v NodeVisitor) {
