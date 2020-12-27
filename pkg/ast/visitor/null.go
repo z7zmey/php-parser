@@ -618,6 +618,10 @@ func (v *Null) ScalarEncapsedStringPart(_ *ast.ScalarEncapsedStringPart) {
 	// do nothing
 }
 
+func (v *Null) ScalarEncapsedStringBrackets(_ *ast.ScalarEncapsedStringBrackets) {
+	// do nothing
+}
+
 func (v *Null) ScalarEncapsedStringVar(_ *ast.ScalarEncapsedStringVar) {
 	// do nothing
 }
@@ -651,9 +655,5 @@ func (v *Null) NameRelative(_ *ast.NameRelative) {
 }
 
 func (v *Null) NameNamePart(_ *ast.NameNamePart) {
-	// do nothing
-}
-
-func (v *Null) ParserBrackets(_ *ast.ParserBrackets) {
 	// do nothing
 }

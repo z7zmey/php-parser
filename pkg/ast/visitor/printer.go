@@ -1208,6 +1208,12 @@ func (p *printer) ScalarEncapsedStringVar(n *ast.ScalarEncapsedStringVar) {
 	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
 }
 
+func (p *printer) ScalarEncapsedStringBrackets(n *ast.ScalarEncapsedStringBrackets) {
+	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
+	p.printNode(n.Var)
+	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
+}
+
 func (p *printer) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	p.printToken(n.OpenHeredocTkn, []byte("<<<EOT\n"))
 	p.printList(n.Parts)
@@ -1244,10 +1250,4 @@ func (p *printer) NameRelative(n *ast.NameRelative) {
 
 func (p *printer) NameNamePart(n *ast.NameNamePart) {
 	p.printToken(n.StringTkn, n.Value)
-}
-
-func (p *printer) ParserBrackets(n *ast.ParserBrackets) {
-	p.printToken(n.OpenBracketTkn, nil)
-	p.printNode(n.Child)
-	p.printToken(n.CloseBracketTkn, nil)
 }

@@ -1985,6 +1985,12 @@ func (f *formatter) ScalarEncapsedStringVar(n *ast.ScalarEncapsedStringVar) {
 	n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
 }
 
+func (f *formatter) ScalarEncapsedStringBrackets(n *ast.ScalarEncapsedStringBrackets) {
+	n.OpenCurlyBracketTkn = f.newToken('{', []byte("{"))
+	n.Var.Accept(f)
+	n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
+}
+
 func (f *formatter) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	n.OpenHeredocTkn = f.newToken(token.T_START_HEREDOC, []byte("<<<EOT\n"))
 	for _, p := range n.Parts {
@@ -2061,8 +2067,4 @@ func (f *formatter) NameNamePart(n *ast.NameNamePart) {
 	} else {
 		n.StringTkn.FreeFloating = f.getFreeFloating()
 	}
-}
-
-func (f *formatter) ParserBrackets(n *ast.ParserBrackets) {
-	// TODO
 }

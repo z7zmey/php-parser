@@ -4208,11 +4208,11 @@ encaps_var:
             }
     |   T_CURLY_OPEN variable '}'
             {
-                $$ = &ast.ParserBrackets{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn:  $1,
-                    Child:           $2,
-                    CloseBracketTkn: $3,
+                $$ = &ast.ScalarEncapsedStringBrackets{
+                    Position:             yylex.(*Parser).builder.NewTokensPosition($1, $3),
+                    OpenCurlyBracketTkn:  $1,
+                    Var:                  $2,
+                    CloseCurlyBracketTkn: $3,
                 }
             }
 ;

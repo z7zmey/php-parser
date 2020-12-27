@@ -6912,11 +6912,11 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:4210
 		{
-			yyVAL.node = &ast.ParserBrackets{
-				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
-				OpenBracketTkn:  yyDollar[1].token,
-				Child:           yyDollar[2].node,
-				CloseBracketTkn: yyDollar[3].token,
+			yyVAL.node = &ast.ScalarEncapsedStringBrackets{
+				Position:             yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				OpenCurlyBracketTkn:  yyDollar[1].token,
+				Var:                  yyDollar[2].node,
+				CloseCurlyBracketTkn: yyDollar[3].token,
 			}
 		}
 	case 481:

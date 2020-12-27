@@ -150,6 +150,22 @@ func (n *ScalarEncapsedStringVar) GetPosition() *position.Position {
 	return n.Position
 }
 
+// ScalarEncapsedStringVar node
+type ScalarEncapsedStringBrackets struct {
+	Position             *position.Position
+	OpenCurlyBracketTkn  *token.Token
+	Var                  Vertex
+	CloseCurlyBracketTkn *token.Token
+}
+
+func (n *ScalarEncapsedStringBrackets) Accept(v NodeVisitor) {
+	v.ScalarEncapsedStringBrackets(n)
+}
+
+func (n *ScalarEncapsedStringBrackets) GetPosition() *position.Position {
+	return n.Position
+}
+
 // ScalarHeredoc node
 type ScalarHeredoc struct {
 	Position        *position.Position
@@ -2695,7 +2711,7 @@ type ParserBrackets struct {
 }
 
 func (n *ParserBrackets) Accept(v NodeVisitor) {
-	v.ParserBrackets(n)
+	// do nothing
 }
 
 func (n *ParserBrackets) GetPosition() *position.Position {

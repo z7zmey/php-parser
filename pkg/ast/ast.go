@@ -176,6 +176,7 @@ type NodeVisitor interface {
 	ScalarEncapsed(n *ScalarEncapsed)
 	ScalarEncapsedStringPart(n *ScalarEncapsedStringPart)
 	ScalarEncapsedStringVar(n *ScalarEncapsedStringVar)
+	ScalarEncapsedStringBrackets(n *ScalarEncapsedStringBrackets)
 	ScalarHeredoc(n *ScalarHeredoc)
 	ScalarLnumber(n *ScalarLnumber)
 	ScalarMagicConstant(n *ScalarMagicConstant)
@@ -185,6 +186,4 @@ type NodeVisitor interface {
 	NameFullyQualified(n *NameFullyQualified)
 	NameRelative(n *NameRelative)
 	NameNamePart(n *NameNamePart)
-
-	ParserBrackets(n *ParserBrackets)
 }

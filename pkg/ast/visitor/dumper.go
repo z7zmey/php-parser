@@ -2274,6 +2274,19 @@ func (v *Dumper) ScalarEncapsedStringVar(n *ast.ScalarEncapsedStringVar) {
 	v.print(v.indent, "},\n")
 }
 
+func (v *Dumper) ScalarEncapsedStringBrackets(n *ast.ScalarEncapsedStringBrackets) {
+	v.print(0, "&ast.ScalarEncapsedStringBrackets{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
+	v.dumpVertex("Var", n.Var)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
+}
+
 func (v *Dumper) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	v.print(0, "&ast.ScalarHeredoc{\n")
 	v.indent++
@@ -2370,19 +2383,6 @@ func (v *Dumper) NameNamePart(n *ast.NameNamePart) {
 	v.dumpPosition(n.Position)
 	v.dumpToken("StringTkn", n.StringTkn)
 	v.dumpValue("Value", n.Value)
-
-	v.indent--
-	v.print(v.indent, "},\n")
-}
-
-func (v *Dumper) ParserBrackets(n *ast.ParserBrackets) {
-	v.print(0, "&ast.ParserBrackets{\n")
-	v.indent++
-
-	v.dumpPosition(n.Position)
-	v.dumpToken("OpenBracketTkn", n.OpenBracketTkn)
-	v.dumpVertex("Child", n.Child)
-	v.dumpToken("CloseBracketTkn", n.CloseBracketTkn)
 
 	v.indent--
 	v.print(v.indent, "},\n")

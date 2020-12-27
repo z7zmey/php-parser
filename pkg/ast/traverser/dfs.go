@@ -2472,6 +2472,18 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Dim)
 			t.visitor.Leave("Dim", true)
 		}
+	case *ast.ScalarEncapsedStringBrackets:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Var != nil {
+			t.visitor.Enter("Var", true)
+			t.Traverse(nn.Var)
+			t.visitor.Leave("Var", true)
+		}
 	case *ast.ScalarHeredoc:
 		if nn == nil {
 			return
@@ -2555,18 +2567,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		}
 		if !t.visitor.EnterNode(nn) {
 			return
-		}
-	case *ast.ParserBrackets:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Child != nil {
-			t.visitor.Enter("Child", true)
-			t.Traverse(nn.Child)
-			t.visitor.Leave("Child", true)
 		}
 	default:
 		panic("unexpected type of node")

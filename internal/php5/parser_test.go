@@ -3975,14 +3975,14 @@ func TestScalarEncapsed_StringVarCurveOpen(t *testing.T) {
 								Value: []byte("$a"),
 							},
 						},
-						&ast.ParserBrackets{
+						&ast.ScalarEncapsedStringBrackets{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  7,
 								EndPos:    11,
 							},
-							OpenBracketTkn: &token.Token{
+							OpenCurlyBracketTkn: &token.Token{
 								ID:    token.T_CURLY_OPEN,
 								Value: []byte("{"),
 								Position: &position.Position{
@@ -3992,7 +3992,7 @@ func TestScalarEncapsed_StringVarCurveOpen(t *testing.T) {
 									EndPos:    8,
 								},
 							},
-							Child: &ast.ExprVariable{
+							Var: &ast.ExprVariable{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -4019,7 +4019,7 @@ func TestScalarEncapsed_StringVarCurveOpen(t *testing.T) {
 									Value: []byte("$b"),
 								},
 							},
-							CloseBracketTkn: &token.Token{
+							CloseCurlyBracketTkn: &token.Token{
 								ID:    token.ID(125),
 								Value: []byte("}"),
 								Position: &position.Position{
@@ -4690,14 +4690,14 @@ func TestScalarEncapsed_CurlyOpenMethodCall(t *testing.T) {
 							},
 							Value: []byte("test "),
 						},
-						&ast.ParserBrackets{
+						&ast.ScalarEncapsedStringBrackets{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  9,
 								EndPos:    22,
 							},
-							OpenBracketTkn: &token.Token{
+							OpenCurlyBracketTkn: &token.Token{
 								ID:    token.T_CURLY_OPEN,
 								Value: []byte("{"),
 								Position: &position.Position{
@@ -4707,7 +4707,7 @@ func TestScalarEncapsed_CurlyOpenMethodCall(t *testing.T) {
 									EndPos:    10,
 								},
 							},
-							Child: &ast.ExprMethodCall{
+							Var: &ast.ExprMethodCall{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -4791,7 +4791,7 @@ func TestScalarEncapsed_CurlyOpenMethodCall(t *testing.T) {
 									},
 								},
 							},
-							CloseBracketTkn: &token.Token{
+							CloseCurlyBracketTkn: &token.Token{
 								ID:    token.ID(125),
 								Value: []byte("}"),
 								Position: &position.Position{
