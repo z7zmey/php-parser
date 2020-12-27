@@ -131,6 +131,25 @@ func (n *ScalarEncapsedStringPart) GetPosition() *position.Position {
 	return n.Position
 }
 
+// ScalarEncapsedStringVar node
+type ScalarEncapsedStringVar struct {
+	Position                  *position.Position
+	DollarOpenCurlyBracketTkn *token.Token
+	VarName                   Vertex
+	OpenSquareBracketTkn      *token.Token
+	Dim                       Vertex
+	CloseSquareBracketTkn     *token.Token
+	CloseCurlyBracketTkn      *token.Token
+}
+
+func (n *ScalarEncapsedStringVar) Accept(v NodeVisitor) {
+	v.ScalarEncapsedStringVar(n)
+}
+
+func (n *ScalarEncapsedStringVar) GetPosition() *position.Position {
+	return n.Position
+}
+
 // ScalarHeredoc node
 type ScalarHeredoc struct {
 	Position        *position.Position

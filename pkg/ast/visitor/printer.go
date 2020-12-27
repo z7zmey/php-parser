@@ -1199,6 +1199,15 @@ func (p *printer) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 	p.printToken(n.EncapsedStrTkn, n.Value)
 }
 
+func (p *printer) ScalarEncapsedStringVar(n *ast.ScalarEncapsedStringVar) {
+	p.printToken(n.DollarOpenCurlyBracketTkn, []byte("${"))
+	p.printNode(n.VarName)
+	p.printToken(n.OpenSquareBracketTkn, p.ifNode(n.Dim, []byte("[")))
+	p.printNode(n.Dim)
+	p.printToken(n.CloseSquareBracketTkn, p.ifNode(n.Dim, []byte("]")))
+	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
+}
+
 func (p *printer) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	p.printToken(n.OpenHeredocTkn, []byte("<<<EOT\n"))
 	p.printList(n.Parts)

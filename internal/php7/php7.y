@@ -4170,52 +4170,40 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
-                $$ = &ast.ParserBrackets{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn: $1,
-                    Child: &ast.ExprVariable{
-                        Position: yylex.(*Parser).builder.NewNodePosition($2),
-                        VarName: $2,
-                    },
-                    CloseBracketTkn: $3,
+                $$ = &ast.ScalarEncapsedStringVar{
+                    Position:                  yylex.(*Parser).builder.NewTokensPosition($1, $3),
+                    DollarOpenCurlyBracketTkn: $1,
+                    VarName:                   $2,
+                    CloseCurlyBracketTkn:      $3,
                 }
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}'
             {
-                $$ = &ast.ParserBrackets{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn: $1,
-                    Child: &ast.ExprVariable{
+                $$ = &ast.ScalarEncapsedStringVar{
+                    Position:                  yylex.(*Parser).builder.NewTokensPosition($1, $3),
+                    DollarOpenCurlyBracketTkn: $1,
+                    VarName: &ast.Identifier{
                         Position: yylex.(*Parser).builder.NewTokenPosition($2),
-                        VarName: &ast.Identifier{
-                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
-                            IdentifierTkn: $2,
-                            Value:         $2.Value,
-                        },
+                        IdentifierTkn: $2,
+                        Value:         $2.Value,
                     },
-                    CloseBracketTkn: $3,
+                    CloseCurlyBracketTkn: $3,
                 }
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
-                $$ = &ast.ParserBrackets{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $6),
-                    OpenBracketTkn: $1,
-                    Child: &ast.ExprArrayDimFetch{
-                        Position: yylex.(*Parser).builder.NewTokensPosition($2, $5),
-                        Var: &ast.ExprVariable{
-                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
-                            VarName: &ast.Identifier{
-                                Position: yylex.(*Parser).builder.NewTokenPosition($2),
-                                IdentifierTkn: $2,
-                                Value:         $2.Value,
-                            },
-                        },
-                        OpenBracketTkn:       $3,
-                        Dim:                  $4,
-                        CloseBracketTkn:      $5,
+                $$ = &ast.ScalarEncapsedStringVar{
+                    Position:                  yylex.(*Parser).builder.NewTokensPosition($1, $3),
+                    DollarOpenCurlyBracketTkn: $1,
+                    VarName: &ast.Identifier{
+                        Position: yylex.(*Parser).builder.NewTokenPosition($2),
+                        IdentifierTkn: $2,
+                        Value:         $2.Value,
                     },
-                    CloseBracketTkn: $6,
+                    OpenSquareBracketTkn:  $3,
+                    Dim:                   $4,
+                    CloseSquareBracketTkn: $5,
+                    CloseCurlyBracketTkn:  $6,
                 }
             }
     |   T_CURLY_OPEN variable '}'

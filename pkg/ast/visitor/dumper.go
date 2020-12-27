@@ -2258,6 +2258,22 @@ func (v *Dumper) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 	v.print(v.indent, "},\n")
 }
 
+func (v *Dumper) ScalarEncapsedStringVar(n *ast.ScalarEncapsedStringVar) {
+	v.print(0, "&ast.ScalarEncapsedStringVar{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("DollarOpenCurlyBracketTkn", n.DollarOpenCurlyBracketTkn)
+	v.dumpVertex("VarName", n.VarName)
+	v.dumpToken("OpenSquareBracketTkn", n.OpenSquareBracketTkn)
+	v.dumpVertex("Dim", n.Dim)
+	v.dumpToken("CloseSquareBracketTkn", n.CloseSquareBracketTkn)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
+}
+
 func (v *Dumper) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	v.print(0, "&ast.ScalarHeredoc{\n")
 	v.indent++

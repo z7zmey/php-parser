@@ -1970,6 +1970,21 @@ func (f *formatter) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 	}
 }
 
+func (f *formatter) ScalarEncapsedStringVar(n *ast.ScalarEncapsedStringVar) {
+	n.DollarOpenCurlyBracketTkn = f.newToken(token.T_DOLLAR_OPEN_CURLY_BRACES, []byte("${"))
+	n.VarName.Accept(f)
+
+	n.OpenSquareBracketTkn = nil
+	n.CloseSquareBracketTkn = nil
+	if n.Dim != nil {
+		n.OpenSquareBracketTkn = f.newToken('[', []byte("["))
+		n.Dim.Accept(f)
+		n.CloseSquareBracketTkn = f.newToken(']', []byte("]"))
+	}
+
+	n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
+}
+
 func (f *formatter) ScalarHeredoc(n *ast.ScalarHeredoc) {
 	n.OpenHeredocTkn = f.newToken(token.T_START_HEREDOC, []byte("<<<EOT\n"))
 	for _, p := range n.Parts {

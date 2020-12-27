@@ -2455,6 +2455,23 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
+	case *ast.ScalarEncapsedStringVar:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.VarName != nil {
+			t.visitor.Enter("VarName", true)
+			t.Traverse(nn.VarName)
+			t.visitor.Leave("VarName", true)
+		}
+		if nn.Dim != nil {
+			t.visitor.Enter("Dim", true)
+			t.Traverse(nn.Dim)
+			t.visitor.Leave("Dim", true)
+		}
 	case *ast.ScalarHeredoc:
 		if nn == nil {
 			return

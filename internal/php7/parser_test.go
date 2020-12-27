@@ -4692,14 +4692,14 @@ func TestScalarEncapsed_DollarOpenCurlyBraces(t *testing.T) {
 							},
 							Value: []byte("test "),
 						},
-						&ast.ParserBrackets{
+						&ast.ScalarEncapsedStringVar{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  9,
 								EndPos:    15,
 							},
-							OpenBracketTkn: &token.Token{
+							DollarOpenCurlyBracketTkn: &token.Token{
 								ID:    token.T_DOLLAR_OPEN_CURLY_BRACES,
 								Value: []byte("${"),
 								Position: &position.Position{
@@ -4709,34 +4709,26 @@ func TestScalarEncapsed_DollarOpenCurlyBraces(t *testing.T) {
 									EndPos:    11,
 								},
 							},
-							Child: &ast.ExprVariable{
+							VarName: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  11,
 									EndPos:    14,
 								},
-								VarName: &ast.Identifier{
+								IdentifierTkn: &token.Token{
+									ID:    token.T_STRING_VARNAME,
+									Value: []byte("foo"),
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  11,
 										EndPos:    14,
 									},
-									IdentifierTkn: &token.Token{
-										ID:    token.T_STRING_VARNAME,
-										Value: []byte("foo"),
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  11,
-											EndPos:    14,
-										},
-									},
-									Value: []byte("foo"),
 								},
+								Value: []byte("foo"),
 							},
-							CloseBracketTkn: &token.Token{
+							CloseCurlyBracketTkn: &token.Token{
 								ID:    token.ID(125),
 								Value: []byte("}"),
 								Position: &position.Position{
@@ -4858,14 +4850,14 @@ func TestScalarEncapsed_DollarOpenCurlyBracesDimNumber(t *testing.T) {
 							},
 							Value: []byte("test "),
 						},
-						&ast.ParserBrackets{
+						&ast.ScalarEncapsedStringVar{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  9,
-								EndPos:    18,
+								EndPos:    15,
 							},
-							OpenBracketTkn: &token.Token{
+							DollarOpenCurlyBracketTkn: &token.Token{
 								ID:    token.T_DOLLAR_OPEN_CURLY_BRACES,
 								Value: []byte("${"),
 								Position: &position.Position{
@@ -4875,81 +4867,65 @@ func TestScalarEncapsed_DollarOpenCurlyBracesDimNumber(t *testing.T) {
 									EndPos:    11,
 								},
 							},
-							Child: &ast.ExprArrayDimFetch{
+							VarName: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  11,
-									EndPos:    17,
+									EndPos:    14,
 								},
-								Var: &ast.ExprVariable{
+								IdentifierTkn: &token.Token{
+									ID:    token.T_STRING_VARNAME,
+									Value: []byte("foo"),
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  11,
 										EndPos:    14,
 									},
-									VarName: &ast.Identifier{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  11,
-											EndPos:    14,
-										},
-										IdentifierTkn: &token.Token{
-											ID:    token.T_STRING_VARNAME,
-											Value: []byte("foo"),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  11,
-												EndPos:    14,
-											},
-										},
-										Value: []byte("foo"),
-									},
 								},
-								OpenBracketTkn: &token.Token{
-									ID:    token.ID(91),
-									Value: []byte("["),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  14,
-										EndPos:    15,
-									},
+								Value: []byte("foo"),
+							},
+							OpenSquareBracketTkn: &token.Token{
+								ID:    token.ID(91),
+								Value: []byte("["),
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  14,
+									EndPos:    15,
 								},
-								Dim: &ast.ScalarLnumber{
+							},
+							Dim: &ast.ScalarLnumber{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  15,
+									EndPos:    16,
+								},
+								NumberTkn: &token.Token{
+									ID:    token.T_LNUMBER,
+									Value: []byte("0"),
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  15,
 										EndPos:    16,
 									},
-									NumberTkn: &token.Token{
-										ID:    token.T_LNUMBER,
-										Value: []byte("0"),
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  15,
-											EndPos:    16,
-										},
-									},
-									Value: []byte("0"),
 								},
-								CloseBracketTkn: &token.Token{
-									ID:    token.ID(93),
-									Value: []byte("]"),
-									Position: &position.Position{
-										StartLine: 1,
-										EndLine:   1,
-										StartPos:  16,
-										EndPos:    17,
-									},
+								Value: []byte("0"),
+							},
+							CloseSquareBracketTkn: &token.Token{
+								ID:    token.ID(93),
+								Value: []byte("]"),
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  16,
+									EndPos:    17,
 								},
 							},
-							CloseBracketTkn: &token.Token{
+							CloseCurlyBracketTkn: &token.Token{
 								ID:    token.ID(125),
 								Value: []byte("}"),
 								Position: &position.Position{

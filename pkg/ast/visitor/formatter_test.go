@@ -6645,6 +6645,55 @@ func TestFormatter_ScalarEncapsedStringPart(t *testing.T) {
 	}
 }
 
+func TestFormatter_ScalarEncapsedStringVar(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	n := &ast.ScalarEncapsedStringVar{
+		VarName: &ast.Identifier{
+			Value: []byte("foo"),
+		},
+	}
+
+	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	n.Accept(f)
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n.Accept(p)
+
+	expected := `${foo}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestFormatter_ScalarEncapsedStringVar_Dim(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	n := &ast.ScalarEncapsedStringVar{
+		VarName: &ast.Identifier{
+			Value: []byte("foo"),
+		},
+		Dim: &ast.ScalarString{
+			Value: []byte("'bar'"),
+		},
+	}
+
+	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	n.Accept(f)
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n.Accept(p)
+
+	expected := `${foo['bar']}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestFormatter_ScalarHeredoc(t *testing.T) {
 	o := bytes.NewBufferString("")
 

@@ -618,6 +618,10 @@ func (v *Null) ScalarEncapsedStringPart(_ *ast.ScalarEncapsedStringPart) {
 	// do nothing
 }
 
+func (v *Null) ScalarEncapsedStringVar(_ *ast.ScalarEncapsedStringVar) {
+	// do nothing
+}
+
 func (v *Null) ScalarHeredoc(_ *ast.ScalarHeredoc) {
 	// do nothing
 }

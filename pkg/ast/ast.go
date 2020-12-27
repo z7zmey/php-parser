@@ -175,6 +175,7 @@ type NodeVisitor interface {
 	ScalarDnumber(n *ScalarDnumber)
 	ScalarEncapsed(n *ScalarEncapsed)
 	ScalarEncapsedStringPart(n *ScalarEncapsedStringPart)
+	ScalarEncapsedStringVar(n *ScalarEncapsedStringVar)
 	ScalarHeredoc(n *ScalarHeredoc)
 	ScalarLnumber(n *ScalarLnumber)
 	ScalarMagicConstant(n *ScalarMagicConstant)
