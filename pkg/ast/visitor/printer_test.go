@@ -1696,6 +1696,25 @@ func TestPrinterPrintExprBooleanNot(t *testing.T) {
 	}
 }
 
+func TestPrinterPrintExprBracket(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n := &ast.ExprBooleanNot{
+		Expr: &ast.ExprVariable{
+			VarName: &ast.Identifier{Value: []byte("$var")},
+		},
+	}
+	n.Accept(p)
+
+	expected := `!$var`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrinterPrintExprClassConstFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 

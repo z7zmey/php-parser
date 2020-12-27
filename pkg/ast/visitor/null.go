@@ -270,6 +270,10 @@ func (v *Null) ExprBooleanNot(_ *ast.ExprBooleanNot) {
 	// do nothing
 }
 
+func (v *Null) ExprBrackets(_ *ast.ExprBrackets) {
+	// do nothing
+}
+
 func (v *Null) ExprClassConstFetch(_ *ast.ExprClassConstFetch) {
 	// do nothing
 }

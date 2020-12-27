@@ -82,6 +82,7 @@ type NodeVisitor interface {
 	ExprArrayDimFetch(n *ExprArrayDimFetch)
 	ExprArrayItem(n *ExprArrayItem)
 	ExprArrowFunction(n *ExprArrowFunction)
+	ExprBrackets(n *ExprBrackets)
 	ExprBitwiseNot(n *ExprBitwiseNot)
 	ExprBooleanNot(n *ExprBooleanNot)
 	ExprClassConstFetch(n *ExprClassConstFetch)

@@ -1109,6 +1109,18 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.Traverse(nn.Expr)
 			t.visitor.Leave("Expr", true)
 		}
+	case *ast.ExprBrackets:
+		if nn == nil {
+			return
+		}
+		if !t.visitor.EnterNode(nn) {
+			return
+		}
+		if nn.Expr != nil {
+			t.visitor.Enter("Expr", true)
+			t.Traverse(nn.Expr)
+			t.visitor.Leave("Expr", true)
+		}
 	case *ast.ExprClassConstFetch:
 		if nn == nil {
 			return

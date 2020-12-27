@@ -1243,6 +1243,21 @@ func (n *ExprBooleanNot) GetPosition() *position.Position {
 	return n.Position
 }
 
+type ExprBrackets struct {
+	Position            *position.Position
+	OpenParenthesisTkn  *token.Token
+	Expr                Vertex
+	CloseParenthesisTkn *token.Token
+}
+
+func (n *ExprBrackets) Accept(v NodeVisitor) {
+	v.ExprBrackets(n)
+}
+
+func (n *ExprBrackets) GetPosition() *position.Position {
+	return n.Position
+}
+
 // ExprClassConstFetch node
 type ExprClassConstFetch struct {
 	Position       *position.Position

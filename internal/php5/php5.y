@@ -787,9 +787,9 @@ unticked_statement:
                 $$ = &ast.StmtIf{
                     Position: pos,
                     IfTkn:               $1,
-                    OpenParenthesisTkn:  $2.(*ast.ParserBrackets).OpenBracketTkn,
-                    Cond:                $2.(*ast.ParserBrackets).Child,
-                    CloseParenthesisTkn: $2.(*ast.ParserBrackets).CloseBracketTkn,
+                    OpenParenthesisTkn:  $2.(*ast.ExprBrackets).OpenParenthesisTkn,
+                    Cond:                $2.(*ast.ExprBrackets).Expr,
+                    CloseParenthesisTkn: $2.(*ast.ExprBrackets).CloseParenthesisTkn,
                     Stmt:                $3,
                     ElseIf:              $4,
                     Else:                $5,
@@ -800,9 +800,9 @@ unticked_statement:
                 $$ = &ast.StmtIf{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $8),
                     IfTkn:               $1,
-                    OpenParenthesisTkn:  $2.(*ast.ParserBrackets).OpenBracketTkn,
-                    Cond:                $2.(*ast.ParserBrackets).Child,
-                    CloseParenthesisTkn: $2.(*ast.ParserBrackets).CloseBracketTkn,
+                    OpenParenthesisTkn:  $2.(*ast.ExprBrackets).OpenParenthesisTkn,
+                    Cond:                $2.(*ast.ExprBrackets).Expr,
+                    CloseParenthesisTkn: $2.(*ast.ExprBrackets).CloseParenthesisTkn,
                     ColonTkn:            $3,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($4),
@@ -817,9 +817,9 @@ unticked_statement:
     |   T_WHILE parenthesis_expr while_statement
             {
                 $3.(*ast.StmtWhile).WhileTkn = $1
-                $3.(*ast.StmtWhile).OpenParenthesisTkn = $2.(*ast.ParserBrackets).OpenBracketTkn
-                $3.(*ast.StmtWhile).Cond = $2.(*ast.ParserBrackets).Child
-                $3.(*ast.StmtWhile).CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
+                $3.(*ast.StmtWhile).OpenParenthesisTkn = $2.(*ast.ExprBrackets).OpenParenthesisTkn
+                $3.(*ast.StmtWhile).Cond = $2.(*ast.ExprBrackets).Expr
+                $3.(*ast.StmtWhile).CloseParenthesisTkn = $2.(*ast.ExprBrackets).CloseParenthesisTkn
                 $3.(*ast.StmtWhile).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $3)
 
                 $$ = $3
@@ -831,9 +831,9 @@ unticked_statement:
                     DoTkn:               $1,
                     Stmt:                $2,
                     WhileTkn:            $3,
-                    OpenParenthesisTkn:  $4.(*ast.ParserBrackets).OpenBracketTkn,
-                    Cond:                $4.(*ast.ParserBrackets).Child,
-                    CloseParenthesisTkn: $4.(*ast.ParserBrackets).CloseBracketTkn,
+                    OpenParenthesisTkn:  $4.(*ast.ExprBrackets).OpenParenthesisTkn,
+                    Cond:                $4.(*ast.ExprBrackets).Expr,
+                    CloseParenthesisTkn: $4.(*ast.ExprBrackets).CloseParenthesisTkn,
                     SemiColonTkn:        $5,
                 }
             }
@@ -857,9 +857,9 @@ unticked_statement:
     |   T_SWITCH parenthesis_expr switch_case_list
             {
                 $3.(*ast.StmtSwitch).SwitchTkn = $1
-                $3.(*ast.StmtSwitch).OpenParenthesisTkn = $2.(*ast.ParserBrackets).OpenBracketTkn
-                $3.(*ast.StmtSwitch).Cond = $2.(*ast.ParserBrackets).Child
-                $3.(*ast.StmtSwitch).CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
+                $3.(*ast.StmtSwitch).OpenParenthesisTkn = $2.(*ast.ExprBrackets).OpenParenthesisTkn
+                $3.(*ast.StmtSwitch).Cond = $2.(*ast.ExprBrackets).Expr
+                $3.(*ast.StmtSwitch).CloseParenthesisTkn = $2.(*ast.ExprBrackets).CloseParenthesisTkn
                 $3.(*ast.StmtSwitch).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $3)
 
                 $$ = $3
@@ -1717,9 +1717,9 @@ elseif_list:
                 $$ = append($1, &ast.StmtElseIf{
                     Position: yylex.(*Parser).builder.NewTokenNodePosition($2, $4),
                     ElseIfTkn:           $2,
-                    OpenParenthesisTkn:  $3.(*ast.ParserBrackets).OpenBracketTkn,
-                    Cond:                $3.(*ast.ParserBrackets).Child,
-                    CloseParenthesisTkn: $3.(*ast.ParserBrackets).CloseBracketTkn,
+                    OpenParenthesisTkn:  $3.(*ast.ExprBrackets).OpenParenthesisTkn,
+                    Cond:                $3.(*ast.ExprBrackets).Expr,
+                    CloseParenthesisTkn: $3.(*ast.ExprBrackets).CloseParenthesisTkn,
                     Stmt:                $4,
                 })
             }
@@ -1736,9 +1736,9 @@ new_elseif_list:
                 $$ = append($1, &ast.StmtElseIf{
                     Position: yylex.(*Parser).builder.NewTokenNodeListPosition($2, $5),
                     ElseIfTkn:           $2,
-                    OpenParenthesisTkn:  $3.(*ast.ParserBrackets).OpenBracketTkn,
-                    Cond:                $3.(*ast.ParserBrackets).Child,
-                    CloseParenthesisTkn: $3.(*ast.ParserBrackets).CloseBracketTkn,
+                    OpenParenthesisTkn:  $3.(*ast.ExprBrackets).OpenParenthesisTkn,
+                    Cond:                $3.(*ast.ExprBrackets).Expr,
+                    CloseParenthesisTkn: $3.(*ast.ExprBrackets).CloseParenthesisTkn,
                     ColonTkn:            $4,
                     Stmt: &ast.StmtStmtList{
                         Position: yylex.(*Parser).builder.NewNodeListPosition($5),
@@ -3214,11 +3214,11 @@ expr_without_variable:
             }
     |   '(' new_expr ')' instance_call
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ast.ExprBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn:  $1,
-                    Child:           $2,
-                    CloseBracketTkn: $3,
+                    OpenParenthesisTkn:  $1,
+                    Expr:                $2,
+                    CloseParenthesisTkn: $3,
                 }
 
                 for _, n := range($4) {
@@ -3336,9 +3336,9 @@ expr_without_variable:
                     exit.Position = yylex.(*Parser).builder.NewTokenPosition($1)
                 } else {
                     exit.Position       = yylex.(*Parser).builder.NewTokenNodePosition($1, $2)
-                    exit.OpenParenthesisTkn  = $2.(*ast.ParserBrackets).OpenBracketTkn
-                    exit.Expr                = $2.(*ast.ParserBrackets).Child
-                    exit.CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
+                    exit.OpenParenthesisTkn  = $2.(*ast.ExprBrackets).OpenParenthesisTkn
+                    exit.Expr                = $2.(*ast.ExprBrackets).Expr
+                    exit.CloseParenthesisTkn = $2.(*ast.ExprBrackets).CloseParenthesisTkn
                 }
 
                 $$ = exit
@@ -3916,10 +3916,10 @@ exit_expr:
             }
     |   '(' ')'
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ast.ExprBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
-                    OpenBracketTkn:  $1,
-                    CloseBracketTkn: $2,
+                    OpenParenthesisTkn:  $1,
+                    CloseParenthesisTkn: $2,
                 }
             }
     |   parenthesis_expr
@@ -4464,11 +4464,11 @@ static_operation:
             }
     |   '(' static_scalar_value ')'
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ast.ExprBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn:  $1,
-                    Child:           $2,
-                    CloseBracketTkn: $3,
+                    OpenParenthesisTkn:  $1,
+                    Expr:                $2,
+                    CloseParenthesisTkn: $3,
                 }
             }
 ;
@@ -4662,20 +4662,20 @@ expr:
 parenthesis_expr:
         '(' expr ')'
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ast.ExprBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn:  $1,
-                    Child:           $2,
-                    CloseBracketTkn: $3,
+                    OpenParenthesisTkn:  $1,
+                    Expr:                $2,
+                    CloseParenthesisTkn: $3,
                 }
             }
     |   '(' yield_expr ')'
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ast.ExprBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn:  $1,
-                    Child:           $2,
-                    CloseBracketTkn: $3,
+                    OpenParenthesisTkn:  $1,
+                    Expr:                $2,
+                    CloseParenthesisTkn: $3,
                 }
             }
 ;

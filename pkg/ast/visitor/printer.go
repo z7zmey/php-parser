@@ -668,6 +668,12 @@ func (p *printer) ExprBooleanNot(n *ast.ExprBooleanNot) {
 	p.printNode(n.Expr)
 }
 
+func (p *printer) ExprBrackets(n *ast.ExprBrackets) {
+	p.printToken(n.OpenParenthesisTkn, nil)
+	p.printNode(n.Expr)
+	p.printToken(n.CloseParenthesisTkn, nil)
+}
+
 func (p *printer) ExprClassConstFetch(n *ast.ExprClassConstFetch) {
 	p.printNode(n.Class)
 	p.printToken(n.DoubleColonTkn, []byte("::"))

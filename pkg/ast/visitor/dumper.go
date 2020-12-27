@@ -1108,6 +1108,19 @@ func (v *Dumper) ExprBooleanNot(n *ast.ExprBooleanNot) {
 	v.print(v.indent, "},\n")
 }
 
+func (v *Dumper) ExprBrackets(n *ast.ExprBrackets) {
+	v.print(0, "&ast.ExprBrackets{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertex("Expr", n.Expr)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
+}
+
 func (v *Dumper) ExprClassConstFetch(n *ast.ExprClassConstFetch) {
 	v.print(0, "&ast.ExprClassConstFetch{\n")
 	v.indent++

@@ -2990,11 +2990,11 @@ expr_without_variable:
             }
     |   '(' expr ')'
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ast.ExprBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn:  $1,
-                    Child:           $2,
-                    CloseBracketTkn: $3,
+                    OpenParenthesisTkn:  $1,
+                    Expr:                $2,
+                    CloseParenthesisTkn: $3,
                 }
             }
     |   new_expr
@@ -3101,9 +3101,9 @@ expr_without_variable:
                     exit.Position = yylex.(*Parser).builder.NewTokenPosition($1)
                 } else {
                     exit.Position       = yylex.(*Parser).builder.NewTokenNodePosition($1, $2)
-                    exit.OpenParenthesisTkn  = $2.(*ast.ParserBrackets).OpenBracketTkn
-                    exit.Expr                = $2.(*ast.ParserBrackets).Child
-                    exit.CloseParenthesisTkn = $2.(*ast.ParserBrackets).CloseBracketTkn
+                    exit.OpenParenthesisTkn  = $2.(*ast.ExprBrackets).OpenParenthesisTkn
+                    exit.Expr                = $2.(*ast.ExprBrackets).Expr
+                    exit.CloseParenthesisTkn = $2.(*ast.ExprBrackets).CloseParenthesisTkn
                 }
 
                 $$ = exit
@@ -3407,11 +3407,11 @@ exit_expr:
             }
     |   '(' optional_expr ')'
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ast.ExprBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn:  $1,
-                    Child:           $2,
-                    CloseBracketTkn: $3,
+                    OpenParenthesisTkn:  $1,
+                    Expr:                $2,
+                    CloseParenthesisTkn: $3,
                 }
             }
 ;
@@ -3684,11 +3684,11 @@ dereferencable:
             }
     |   '(' expr ')'
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ast.ExprBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn:  $1,
-                    Child:           $2,
-                    CloseBracketTkn: $3,
+                    OpenParenthesisTkn:  $1,
+                    Expr:                $2,
+                    CloseParenthesisTkn: $3,
                 }
             }
     |   dereferencable_scalar
@@ -3704,11 +3704,11 @@ callable_expr:
             }
     |   '(' expr ')'
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ast.ExprBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
-                    OpenBracketTkn:  $1,
-                    Child:           $2,
-                    CloseBracketTkn: $3,
+                    OpenParenthesisTkn:  $1,
+                    Expr:                $2,
+                    CloseParenthesisTkn: $3,
                 }
             }
     |   dereferencable_scalar

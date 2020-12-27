@@ -1134,6 +1134,12 @@ func (f *formatter) ExprBooleanNot(n *ast.ExprBooleanNot) {
 	n.Expr.Accept(f)
 }
 
+func (f *formatter) ExprBrackets(n *ast.ExprBrackets) {
+	n.OpenParenthesisTkn = f.newToken('(', []byte("("))
+	n.Expr.Accept(f)
+	n.CloseParenthesisTkn = f.newToken(')', []byte(")"))
+}
+
 func (f *formatter) ExprClassConstFetch(n *ast.ExprClassConstFetch) {
 	n.Class.Accept(f)
 	n.DoubleColonTkn = f.newToken(token.T_PAAMAYIM_NEKUDOTAYIM, []byte("::"))

@@ -13048,14 +13048,14 @@ func TestStmtContinue(t *testing.T) {
 									},
 								},
 							},
-							Expr: &ast.ParserBrackets{
+							Expr: &ast.ExprBrackets{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  23,
 									EndPos:    26,
 								},
-								OpenBracketTkn: &token.Token{
+								OpenParenthesisTkn: &token.Token{
 									ID:    token.ID(40),
 									Value: []byte("("),
 									Position: &position.Position{
@@ -13065,7 +13065,7 @@ func TestStmtContinue(t *testing.T) {
 										EndPos:    24,
 									},
 								},
-								Child: &ast.ScalarLnumber{
+								Expr: &ast.ScalarLnumber{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -13084,7 +13084,7 @@ func TestStmtContinue(t *testing.T) {
 									},
 									Value: []byte("3"),
 								},
-								CloseBracketTkn: &token.Token{
+								CloseParenthesisTkn: &token.Token{
 									ID:    token.ID(41),
 									Value: []byte(")"),
 									Position: &position.Position{
@@ -14133,14 +14133,14 @@ func TestStmtEcho_Parenthesis(t *testing.T) {
 					},
 				},
 				Exprs: []ast.Vertex{
-					&ast.ParserBrackets{
+					&ast.ExprBrackets{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
 							EndPos:    11,
 						},
-						OpenBracketTkn: &token.Token{
+						OpenParenthesisTkn: &token.Token{
 							ID:    token.ID(40),
 							Value: []byte("("),
 							Position: &position.Position{
@@ -14150,7 +14150,7 @@ func TestStmtEcho_Parenthesis(t *testing.T) {
 								EndPos:    8,
 							},
 						},
-						Child: &ast.ExprVariable{
+						Expr: &ast.ExprVariable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -14177,7 +14177,7 @@ func TestStmtEcho_Parenthesis(t *testing.T) {
 								Value: []byte("$a"),
 							},
 						},
-						CloseBracketTkn: &token.Token{
+						CloseParenthesisTkn: &token.Token{
 							ID:    token.ID(41),
 							Value: []byte(")"),
 							Position: &position.Position{
@@ -33925,14 +33925,14 @@ func TestStmtBreak(t *testing.T) {
 									},
 								},
 							},
-							Expr: &ast.ParserBrackets{
+							Expr: &ast.ExprBrackets{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
 									StartPos:  20,
 									EndPos:    23,
 								},
-								OpenBracketTkn: &token.Token{
+								OpenParenthesisTkn: &token.Token{
 									ID:    token.ID(40),
 									Value: []byte("("),
 									Position: &position.Position{
@@ -33942,7 +33942,7 @@ func TestStmtBreak(t *testing.T) {
 										EndPos:    21,
 									},
 								},
-								Child: &ast.ScalarLnumber{
+								Expr: &ast.ScalarLnumber{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -33961,7 +33961,7 @@ func TestStmtBreak(t *testing.T) {
 									},
 									Value: []byte("3"),
 								},
-								CloseBracketTkn: &token.Token{
+								CloseParenthesisTkn: &token.Token{
 									ID:    token.ID(41),
 									Value: []byte(")"),
 									Position: &position.Position{
@@ -35900,14 +35900,14 @@ func TestExprClone_Brackets(t *testing.T) {
 							},
 						},
 					},
-					Expr: &ast.ParserBrackets{
+					Expr: &ast.ExprBrackets{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  8,
 							EndPos:    12,
 						},
-						OpenBracketTkn: &token.Token{
+						OpenParenthesisTkn: &token.Token{
 							ID:    token.ID(40),
 							Value: []byte("("),
 							Position: &position.Position{
@@ -35917,7 +35917,7 @@ func TestExprClone_Brackets(t *testing.T) {
 								EndPos:    9,
 							},
 						},
-						Child: &ast.ExprVariable{
+						Expr: &ast.ExprVariable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -35944,7 +35944,7 @@ func TestExprClone_Brackets(t *testing.T) {
 								Value: []byte("$a"),
 							},
 						},
-						CloseBracketTkn: &token.Token{
+						CloseParenthesisTkn: &token.Token{
 							ID:    token.ID(41),
 							Value: []byte(")"),
 							Position: &position.Position{
@@ -43295,14 +43295,14 @@ func TestExprPrint(t *testing.T) {
 							},
 						},
 					},
-					Expr: &ast.ParserBrackets{
+					Expr: &ast.ExprBrackets{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  8,
 							EndPos:    12,
 						},
-						OpenBracketTkn: &token.Token{
+						OpenParenthesisTkn: &token.Token{
 							ID:    token.ID(40),
 							Value: []byte("("),
 							Position: &position.Position{
@@ -43312,7 +43312,7 @@ func TestExprPrint(t *testing.T) {
 								EndPos:    9,
 							},
 						},
-						Child: &ast.ExprVariable{
+						Expr: &ast.ExprVariable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -43339,7 +43339,7 @@ func TestExprPrint(t *testing.T) {
 								Value: []byte("$a"),
 							},
 						},
-						CloseBracketTkn: &token.Token{
+						CloseParenthesisTkn: &token.Token{
 							ID:    token.ID(41),
 							Value: []byte(")"),
 							Position: &position.Position{
