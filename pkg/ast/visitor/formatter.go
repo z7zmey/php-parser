@@ -1290,6 +1290,17 @@ func (f *formatter) ExprList(n *ast.ExprList) {
 func (f *formatter) ExprMethodCall(n *ast.ExprMethodCall) {
 	n.Var.Accept(f)
 	n.ObjectOperatorTkn = f.newToken(token.T_OBJECT_OPERATOR, []byte("->"))
+
+	n.OpenCurlyBracketTkn = nil
+	n.CloseCurlyBracketTkn = nil
+	switch n.Method.(type) {
+	case *ast.Identifier:
+	case *ast.ExprVariable:
+	default:
+		n.OpenCurlyBracketTkn = f.newToken('{', []byte("{"))
+		n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
+	}
+
 	n.Method.Accept(f)
 
 	n.OpenParenthesisTkn = f.newToken('(', []byte("("))
@@ -1346,6 +1357,17 @@ func (f *formatter) ExprPrint(n *ast.ExprPrint) {
 func (f *formatter) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	n.Var.Accept(f)
 	n.ObjectOperatorTkn = f.newToken(token.T_OBJECT_OPERATOR, []byte("->"))
+
+	n.OpenCurlyBracketTkn = nil
+	n.CloseCurlyBracketTkn = nil
+	switch n.Property.(type) {
+	case *ast.Identifier:
+	case *ast.ExprVariable:
+	default:
+		n.OpenCurlyBracketTkn = f.newToken('{', []byte("{"))
+		n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
+	}
+
 	n.Property.Accept(f)
 }
 

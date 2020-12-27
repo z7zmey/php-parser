@@ -3738,7 +3738,7 @@ callable_variable:
             }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
             {
-                $$ = &ast.ExprMethodCall{
+                methodCall := &ast.ExprMethodCall{
                     Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Var:                 $1,
                     ObjectOperatorTkn:   $2,
@@ -3748,6 +3748,14 @@ callable_variable:
                     SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
                 }
+
+                if brackets, ok := $3.(*ast.ParserBrackets); ok {
+                    methodCall.OpenCurlyBracketTkn  = brackets.OpenBracketTkn
+                    methodCall.Method               = brackets.Child
+                    methodCall.CloseCurlyBracketTkn = brackets.CloseBracketTkn
+                }
+
+                $$ = methodCall
             }
     |   function_call
             {
@@ -3766,12 +3774,20 @@ variable:
             }
     |   dereferencable T_OBJECT_OPERATOR property_name
             {
-                $$ = &ast.ExprPropertyFetch{
+                propertyFetch := &ast.ExprPropertyFetch{
                     Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:               $1,
                     ObjectOperatorTkn: $2,
                     Property:          $3,
                 }
+
+                if brackets, ok := $3.(*ast.ParserBrackets); ok {
+                    propertyFetch.OpenCurlyBracketTkn  = brackets.OpenBracketTkn
+                    propertyFetch.Property             = brackets.Child
+                    propertyFetch.CloseCurlyBracketTkn = brackets.CloseBracketTkn
+                }
+
+                $$ = propertyFetch
             }
 ;
 
@@ -3855,12 +3871,20 @@ new_variable:
             }
     |   new_variable T_OBJECT_OPERATOR property_name
             {
-                $$ = &ast.ExprPropertyFetch{
+                propertyFetch := &ast.ExprPropertyFetch{
                     Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
                     Var:               $1,
                     ObjectOperatorTkn: $2,
                     Property:          $3,
                 }
+
+                if brackets, ok := $3.(*ast.ParserBrackets); ok {
+                    propertyFetch.OpenCurlyBracketTkn  = brackets.OpenBracketTkn
+                    propertyFetch.Property             = brackets.Child
+                    propertyFetch.CloseCurlyBracketTkn = brackets.CloseBracketTkn
+                }
+
+                $$ = propertyFetch
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {

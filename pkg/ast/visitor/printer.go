@@ -772,7 +772,9 @@ func (p *printer) ExprList(n *ast.ExprList) {
 func (p *printer) ExprMethodCall(n *ast.ExprMethodCall) {
 	p.printNode(n.Var)
 	p.printToken(n.ObjectOperatorTkn, []byte("->"))
+	p.printToken(n.OpenCurlyBracketTkn, nil)
 	p.printNode(n.Method)
+	p.printToken(n.CloseCurlyBracketTkn, nil)
 	p.printToken(n.OpenParenthesisTkn, []byte("("))
 	p.printSeparatedList(n.Arguments, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
@@ -814,7 +816,9 @@ func (p *printer) ExprPrint(n *ast.ExprPrint) {
 func (p *printer) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	p.printNode(n.Var)
 	p.printToken(n.ObjectOperatorTkn, []byte("->"))
+	p.printToken(n.OpenCurlyBracketTkn, nil)
 	p.printNode(n.Property)
+	p.printToken(n.CloseCurlyBracketTkn, nil)
 }
 
 func (p *printer) ExprRequire(n *ast.ExprRequire) {

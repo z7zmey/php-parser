@@ -4709,7 +4709,9 @@ variable:
                             )
                             $3 = append($3, $4[1:len($4)]...)
                         case *ast.ExprPropertyFetch:
+                            $4[0].(*ast.ExprMethodCall).OpenCurlyBracketTkn = l.OpenCurlyBracketTkn
                             $4[0].(*ast.ExprMethodCall).Method = l.Property
+                            $4[0].(*ast.ExprMethodCall).CloseCurlyBracketTkn = l.CloseCurlyBracketTkn
                             $4[0].(*ast.ExprMethodCall).ObjectOperatorTkn = l.ObjectOperatorTkn
                             $3 = append($3[:len($3)-1], $4...)
                     }
@@ -4801,7 +4803,9 @@ variable_property:
                             )
                             $2 = append($2, $3[1:len($3)]...)
                         case *ast.ExprPropertyFetch:
+                            $3[0].(*ast.ExprMethodCall).OpenCurlyBracketTkn = l.OpenCurlyBracketTkn
                             $3[0].(*ast.ExprMethodCall).Method = l.Property
+                            $3[0].(*ast.ExprMethodCall).CloseCurlyBracketTkn = l.CloseCurlyBracketTkn
                             $3[0].(*ast.ExprMethodCall).ObjectOperatorTkn = l.ObjectOperatorTkn
                             $2 = append($2[:len($2)-1], $3...)
                     }
@@ -5078,12 +5082,18 @@ object_dim_list:
             }
     |   variable_name
             {
-                $$ = []ast.Vertex{
-                    &ast.ExprPropertyFetch{
-                        Position: yylex.(*Parser).builder.NewNodePosition($1),
-                        Property: $1,
-                    },
+                property := &ast.ExprPropertyFetch{
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
+                    Property: $1,
                 }
+
+                if brackets, ok := $1.(*ast.ParserBrackets); ok {
+                    property.OpenCurlyBracketTkn  = brackets.OpenBracketTkn
+                    property.Property             = brackets.Child
+                    property.CloseCurlyBracketTkn = brackets.CloseBracketTkn
+                }
+
+                $$ = []ast.Vertex{ property }
             }
 ;
 

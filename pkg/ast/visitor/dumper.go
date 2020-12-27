@@ -1326,7 +1326,9 @@ func (v *Dumper) ExprMethodCall(n *ast.ExprMethodCall) {
 	v.dumpPosition(n.Position)
 	v.dumpVertex("Var", n.Var)
 	v.dumpToken("ObjectOperatorTkn", n.ObjectOperatorTkn)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertex("Method", n.Method)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
 	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
 	v.dumpVertexList("Arguments", n.Arguments)
 	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
@@ -1419,7 +1421,9 @@ func (v *Dumper) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	v.dumpPosition(n.Position)
 	v.dumpVertex("Var", n.Var)
 	v.dumpToken("ObjectOperatorTkn", n.ObjectOperatorTkn)
+	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertex("Property", n.Property)
+	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
 
 	v.indent--
 	v.print(v.indent, "},\n")

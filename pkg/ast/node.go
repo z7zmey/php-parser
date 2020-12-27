@@ -1501,14 +1501,16 @@ func (n *ExprList) GetPosition() *position.Position {
 
 // ExprMethodCall node
 type ExprMethodCall struct {
-	Position            *position.Position
-	Var                 Vertex
-	ObjectOperatorTkn   *token.Token
-	Method              Vertex
-	OpenParenthesisTkn  *token.Token
-	Arguments           []Vertex
-	SeparatorTkns       []*token.Token
-	CloseParenthesisTkn *token.Token
+	Position             *position.Position
+	Var                  Vertex
+	ObjectOperatorTkn    *token.Token
+	OpenCurlyBracketTkn  *token.Token
+	Method               Vertex
+	CloseCurlyBracketTkn *token.Token
+	OpenParenthesisTkn   *token.Token
+	Arguments            []Vertex
+	SeparatorTkns        []*token.Token
+	CloseParenthesisTkn  *token.Token
 }
 
 func (n *ExprMethodCall) Accept(v NodeVisitor) {
@@ -1615,10 +1617,12 @@ func (n *ExprPrint) GetPosition() *position.Position {
 
 // ExprPropertyFetch node
 type ExprPropertyFetch struct {
-	Position          *position.Position
-	Var               Vertex
-	ObjectOperatorTkn *token.Token
-	Property          Vertex
+	Position             *position.Position
+	Var                  Vertex
+	ObjectOperatorTkn    *token.Token
+	OpenCurlyBracketTkn  *token.Token
+	Property             Vertex
+	CloseCurlyBracketTkn *token.Token
 }
 
 func (n *ExprPropertyFetch) Accept(v NodeVisitor) {
