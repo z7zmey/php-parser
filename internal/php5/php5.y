@@ -3688,7 +3688,7 @@ function_call:
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
-                $$ = &ast.ExprStaticCall{
+                staticCall := &ast.ExprStaticCall{
                     Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Class:               $1,
                     DoubleColonTkn:      $2,
@@ -3698,6 +3698,14 @@ function_call:
                     SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
                 }
+
+                if brackets, ok := $3.(*ast.ParserBrackets); ok {
+                    staticCall.OpenCurlyBracketTkn  = brackets.OpenBracketTkn
+                    staticCall.Call                 = brackets.Child
+                    staticCall.CloseCurlyBracketTkn = brackets.CloseBracketTkn
+                }
+
+                $$ = staticCall
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
@@ -3714,7 +3722,7 @@ function_call:
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
-                $$ = &ast.ExprStaticCall{
+                staticCall := &ast.ExprStaticCall{
                     Position: yylex.(*Parser).builder.NewNodesPosition($1, $4),
                     Class:               $1,
                     DoubleColonTkn:      $2,
@@ -3724,6 +3732,14 @@ function_call:
                     SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
                 }
+
+                if brackets, ok := $3.(*ast.ParserBrackets); ok {
+                    staticCall.OpenCurlyBracketTkn  = brackets.OpenBracketTkn
+                    staticCall.Call                 = brackets.Child
+                    staticCall.CloseCurlyBracketTkn = brackets.CloseBracketTkn
+                }
+
+                $$ = staticCall
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {

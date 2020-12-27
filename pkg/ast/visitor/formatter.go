@@ -1394,6 +1394,17 @@ func (f *formatter) ExprShellExec(n *ast.ExprShellExec) {
 func (f *formatter) ExprStaticCall(n *ast.ExprStaticCall) {
 	n.Class.Accept(f)
 	n.DoubleColonTkn = f.newToken(token.T_PAAMAYIM_NEKUDOTAYIM, []byte("::"))
+
+	n.OpenCurlyBracketTkn = nil
+	n.CloseCurlyBracketTkn = nil
+	switch n.Call.(type) {
+	case *ast.Identifier:
+	case *ast.ExprVariable:
+	default:
+		n.OpenCurlyBracketTkn = f.newToken('{', []byte("{"))
+		n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
+	}
+
 	n.Call.Accept(f)
 
 	n.OpenParenthesisTkn = f.newToken('(', []byte("("))

@@ -840,7 +840,9 @@ func (p *printer) ExprShellExec(n *ast.ExprShellExec) {
 func (p *printer) ExprStaticCall(n *ast.ExprStaticCall) {
 	p.printNode(n.Class)
 	p.printToken(n.DoubleColonTkn, []byte("::"))
+	p.printToken(n.OpenCurlyBracketTkn, nil)
 	p.printNode(n.Call)
+	p.printToken(n.CloseCurlyBracketTkn, nil)
 	p.printToken(n.OpenParenthesisTkn, p.ifNodeList(n.Arguments, []byte("(")))
 	p.printSeparatedList(n.Arguments, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseParenthesisTkn, p.ifNodeList(n.Arguments, []byte(")")))

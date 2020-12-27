@@ -4692,6 +4692,36 @@ func TestFormatter_ExprStaticCall(t *testing.T) {
 	}
 }
 
+func TestFormatter_ExprStaticCall_Expr(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	n := &ast.ExprStaticCall{
+		Class: &ast.NameName{
+			Parts: []ast.Vertex{
+				&ast.NameNamePart{
+					Value: []byte("foo"),
+				},
+			},
+		},
+		Call: &ast.ScalarString{
+			Value: []byte("'bar'"),
+		},
+	}
+
+	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	n.Accept(f)
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n.Accept(p)
+
+	expected := `foo::{'bar'}()`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestFormatter_ExprStaticCall_Arguments(t *testing.T) {
 	o := bytes.NewBufferString("")
 

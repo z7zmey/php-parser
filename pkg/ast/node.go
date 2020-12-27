@@ -1681,14 +1681,16 @@ func (n *ExprShellExec) GetPosition() *position.Position {
 
 // ExprStaticCall node
 type ExprStaticCall struct {
-	Position            *position.Position
-	Class               Vertex
-	DoubleColonTkn      *token.Token
-	Call                Vertex
-	OpenParenthesisTkn  *token.Token
-	Arguments           []Vertex
-	SeparatorTkns       []*token.Token
-	CloseParenthesisTkn *token.Token
+	Position             *position.Position
+	Class                Vertex
+	DoubleColonTkn       *token.Token
+	OpenCurlyBracketTkn  *token.Token
+	Call                 Vertex
+	CloseCurlyBracketTkn *token.Token
+	OpenParenthesisTkn   *token.Token
+	Arguments            []Vertex
+	SeparatorTkns        []*token.Token
+	CloseParenthesisTkn  *token.Token
 }
 
 func (n *ExprStaticCall) Accept(v NodeVisitor) {
