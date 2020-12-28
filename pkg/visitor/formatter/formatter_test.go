@@ -63,7 +63,7 @@ func TestFormatter_Parameter(t *testing.T) {
 
 	n := &ast.Parameter{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -89,7 +89,7 @@ func TestFormatter_Parameter_Ref(t *testing.T) {
 	n := &ast.Parameter{
 		AmpersandTkn: &token.Token{},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -115,7 +115,7 @@ func TestFormatter_Parameter_Variadic(t *testing.T) {
 	n := &ast.Parameter{
 		VariadicTkn: &token.Token{},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -143,7 +143,7 @@ func TestFormatter_Parameter_Type(t *testing.T) {
 			Value: []byte("array"),
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -168,7 +168,7 @@ func TestFormatter_Parameter_Default(t *testing.T) {
 
 	n := &ast.Parameter{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -217,7 +217,7 @@ func TestFormatter_Argument(t *testing.T) {
 
 	n := &ast.Argument{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -243,7 +243,7 @@ func TestFormatter_Argument_Ref(t *testing.T) {
 	n := &ast.Argument{
 		AmpersandTkn: &token.Token{},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -269,7 +269,7 @@ func TestFormatter_Argument_Variadic(t *testing.T) {
 	n := &ast.Argument{
 		VariadicTkn: &token.Token{},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -313,7 +313,7 @@ func TestFormatter_StmtBreak_Expr(t *testing.T) {
 
 	n := &ast.StmtBreak{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -338,7 +338,7 @@ func TestFormatter_Case(t *testing.T) {
 
 	n := &ast.StmtCase{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -367,23 +367,23 @@ func TestFormatter_Catch(t *testing.T) {
 
 	n := &ast.StmtCatch{
 		Types: []ast.Vertex{
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("foo"),
 					},
 				},
 			},
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("bar"),
 					},
 				},
 			},
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$baz"),
 			},
 		},
@@ -412,7 +412,7 @@ func TestFormatter_Class(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtClass{
-		ClassName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Stmts: []ast.Vertex{
@@ -445,7 +445,7 @@ func TestFormatter_Class_Modifier(t *testing.T) {
 				Value: []byte("final"),
 			},
 		},
-		ClassName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Stmts: []ast.Vertex{
@@ -473,20 +473,20 @@ func TestFormatter_Class_Anonymous(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtClass{
-		ClassName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -517,12 +517,12 @@ func TestFormatter_Class_Extends(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtClass{
-		ClassName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
-		Extends: &ast.NameName{
+		Extends: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("bar"),
 				},
 			},
@@ -552,13 +552,13 @@ func TestFormatter_Class_Implements(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtClass{
-		ClassName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Implements: []ast.Vertex{
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("bar"),
 					},
 				},
@@ -670,7 +670,7 @@ func TestFormatter_ClassMethod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtClassMethod{
-		MethodName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Stmt: &ast.StmtNop{},
@@ -699,7 +699,7 @@ func TestFormatter_ClassMethod_Modifier(t *testing.T) {
 				Value: []byte("public"),
 			},
 		},
-		MethodName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Stmt: &ast.StmtStmtList{
@@ -730,7 +730,7 @@ func TestFormatter_ClassMethod_Ref(t *testing.T) {
 
 	n := &ast.StmtClassMethod{
 		AmpersandTkn: &token.Token{},
-		MethodName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Stmt: &ast.StmtStmtList{
@@ -760,20 +760,20 @@ func TestFormatter_ClassMethod_Params(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtClassMethod{
-		MethodName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.Parameter{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -806,12 +806,12 @@ func TestFormatter_ClassMethod_ReturnType(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtClassMethod{
-		MethodName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
-		ReturnType: &ast.NameName{
+		ReturnType: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("bar"),
 				},
 			},
@@ -927,7 +927,7 @@ func TestFormatter_StmtContinue_Expr(t *testing.T) {
 
 	n := &ast.StmtContinue{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -1047,7 +1047,7 @@ func TestFormatter_StmtDo(t *testing.T) {
 			},
 		},
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -1129,7 +1129,7 @@ func TestFormatter_StmtElseIf(t *testing.T) {
 
 	n := &ast.StmtElseIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -1161,7 +1161,7 @@ func TestFormatter_StmtExpression(t *testing.T) {
 
 	n := &ast.StmtExpression{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$var"),
 			},
 		},
@@ -1212,36 +1212,36 @@ func TestFormatter_StmtFor(t *testing.T) {
 	n := &ast.StmtFor{
 		Init: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$foo"),
 				},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$bar"),
 				},
 			},
 		},
 		Cond: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$foo"),
 				},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$bar"),
 				},
 			},
 		},
 		Loop: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$foo"),
 				},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$bar"),
 				},
 			},
@@ -1274,12 +1274,12 @@ func TestFormatter_StmtForeach(t *testing.T) {
 
 	n := &ast.StmtForeach{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$val"),
 			},
 		},
@@ -1311,13 +1311,13 @@ func TestFormatter_StmtForeach_Reference(t *testing.T) {
 
 	n := &ast.StmtForeach{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		AmpersandTkn: &token.Token{},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$val"),
 			},
 		},
@@ -1349,17 +1349,17 @@ func TestFormatter_StmtForeach_Key(t *testing.T) {
 
 	n := &ast.StmtForeach{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Key: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$key"),
 			},
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$val"),
 			},
 		},
@@ -1390,7 +1390,7 @@ func TestFormatter_StmtFunction(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtFunction{
-		FunctionName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Stmts: []ast.Vertex{
@@ -1419,7 +1419,7 @@ func TestFormatter_StmtFunction_Ref(t *testing.T) {
 
 	n := &ast.StmtFunction{
 		AmpersandTkn: &token.Token{},
-		FunctionName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Stmts: []ast.Vertex{
@@ -1447,20 +1447,20 @@ func TestFormatter_StmtFunction_Params(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtFunction{
-		FunctionName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.Parameter{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -1491,12 +1491,12 @@ func TestFormatter_StmtFunction_ReturnType(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtFunction{
-		FunctionName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
-		ReturnType: &ast.NameName{
+		ReturnType: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("bar"),
 				},
 			},
@@ -1528,12 +1528,12 @@ func TestFormatter_StmtGlobal(t *testing.T) {
 	n := &ast.StmtGlobal{
 		Vars: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$a"),
 				},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$b"),
 				},
 			},
@@ -1601,7 +1601,7 @@ func TestFormatter_StmtIf(t *testing.T) {
 
 	n := &ast.StmtIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -1633,7 +1633,7 @@ func TestFormatter_StmtIf_ElseIf(t *testing.T) {
 
 	n := &ast.StmtIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -1645,7 +1645,7 @@ func TestFormatter_StmtIf_ElseIf(t *testing.T) {
 		ElseIf: []ast.Vertex{
 			&ast.StmtElseIf{
 				Cond: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$bar"),
 					},
 				},
@@ -1657,7 +1657,7 @@ func TestFormatter_StmtIf_ElseIf(t *testing.T) {
 			},
 			&ast.StmtElseIf{
 				Cond: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$baz"),
 					},
 				},
@@ -1695,7 +1695,7 @@ func TestFormatter_StmtIf_Else(t *testing.T) {
 
 	n := &ast.StmtIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -1745,7 +1745,7 @@ func TestFormatter_StmtInlineHtml(t *testing.T) {
 					&ast.StmtEcho{
 						Exprs: []ast.Vertex{
 							&ast.ExprVariable{
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Value: []byte("$foo"),
 								},
 							},
@@ -1784,7 +1784,7 @@ func TestFormatter_StmtInterface(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtInterface{
-		InterfaceName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Stmts: []ast.Vertex{
@@ -1812,13 +1812,13 @@ func TestFormatter_StmtInterface_Extends(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtInterface{
-		InterfaceName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Extends: []ast.Vertex{
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("bar"),
 					},
 				},
@@ -1849,7 +1849,7 @@ func TestFormatter_StmtLabel(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtLabel{
-		LabelName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("FOO"),
 		},
 	}
@@ -1872,9 +1872,9 @@ func TestFormatter_StmtNamespace_Name(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtNamespace{
-		Name: &ast.NameName{
+		Name: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -1992,7 +1992,7 @@ func TestFormatter_StmtPropertyList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtPropertyList{
-		Properties: []ast.Vertex{
+		Props: []ast.Vertex{
 			&ast.StmtProperty{
 				Var: &ast.Identifier{
 					Value: []byte("$foo"),
@@ -2032,7 +2032,7 @@ func TestFormatter_StmtPropertyList_Modifiers(t *testing.T) {
 				Value: []byte("static"),
 			},
 		},
-		Properties: []ast.Vertex{
+		Props: []ast.Vertex{
 			&ast.StmtProperty{
 				Var: &ast.Identifier{
 					Value: []byte("$foo"),
@@ -2067,7 +2067,7 @@ func TestFormatter_StmtPropertyList_Type(t *testing.T) {
 		Type: &ast.Identifier{
 			Value: []byte("array"),
 		},
-		Properties: []ast.Vertex{
+		Props: []ast.Vertex{
 			&ast.StmtProperty{
 				Var: &ast.Identifier{
 					Value: []byte("$foo"),
@@ -2144,14 +2144,14 @@ func TestFormatter_StmtStatic(t *testing.T) {
 		Vars: []ast.Vertex{
 			&ast.StmtStaticVar{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.StmtStaticVar{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -2178,7 +2178,7 @@ func TestFormatter_StmtStaticVar(t *testing.T) {
 
 	n := &ast.StmtStaticVar{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -2203,7 +2203,7 @@ func TestFormatter_StmtStaticVar_Expr(t *testing.T) {
 
 	n := &ast.StmtStaticVar{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -2268,11 +2268,11 @@ func TestFormatter_StmtSwitch(t *testing.T) {
 
 	n := &ast.StmtSwitch{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
-		CaseList: []ast.Vertex{
+		Cases: []ast.Vertex{
 			&ast.StmtCase{
 				Cond: &ast.ScalarString{
 					Value: []byte("'bar'"),
@@ -2313,7 +2313,7 @@ func TestFormatter_StmtThrow(t *testing.T) {
 
 	n := &ast.StmtThrow{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -2337,7 +2337,7 @@ func TestFormatter_StmtTrait(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtTrait{
-		TraitName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Stmts: []ast.Vertex{
@@ -2366,16 +2366,16 @@ func TestFormatter_StmtTraitUse(t *testing.T) {
 
 	n := &ast.StmtTraitUse{
 		Traits: []ast.Vertex{
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("foo"),
 					},
 				},
 			},
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("bar"),
 					},
 				},
@@ -2402,16 +2402,16 @@ func TestFormatter_StmtTraitUse_Adaptations(t *testing.T) {
 
 	n := &ast.StmtTraitUse{
 		Traits: []ast.Vertex{
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("foo"),
 					},
 				},
 			},
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("bar"),
 					},
 				},
@@ -2478,9 +2478,9 @@ func TestFormatter_StmtTraitUseAlias_Trait(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtTraitUseAlias{
-		Trait: &ast.NameName{
+		Trait: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -2570,16 +2570,16 @@ func TestFormatter_StmtTraitUsePrecedence(t *testing.T) {
 			Value: []byte("foo"),
 		},
 		Insteadof: []ast.Vertex{
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("bar"),
 					},
 				},
 			},
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("baz"),
 					},
 				},
@@ -2605,9 +2605,9 @@ func TestFormatter_StmtTraitUsePrecedence_Trait(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtTraitUsePrecedence{
-		Trait: &ast.NameName{
+		Trait: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -2616,9 +2616,9 @@ func TestFormatter_StmtTraitUsePrecedence_Trait(t *testing.T) {
 			Value: []byte("bar"),
 		},
 		Insteadof: []ast.Vertex{
-			&ast.NameName{
+			&ast.Name{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("baz"),
 					},
 				},
@@ -2675,16 +2675,16 @@ func TestFormatter_StmtTry_Catch(t *testing.T) {
 		Catches: []ast.Vertex{
 			&ast.StmtCatch{
 				Types: []ast.Vertex{
-					&ast.NameName{
+					&ast.Name{
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Value: []byte("foo"),
 							},
 						},
 					},
 				},
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$bar"),
 					},
 				},
@@ -2694,16 +2694,16 @@ func TestFormatter_StmtTry_Catch(t *testing.T) {
 			},
 			&ast.StmtCatch{
 				Types: []ast.Vertex{
-					&ast.NameName{
+					&ast.Name{
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Value: []byte("foo"),
 							},
 						},
 					},
 				},
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$bar"),
 					},
 				},
@@ -2772,12 +2772,12 @@ func TestFormatter_StmtUnset(t *testing.T) {
 	n := &ast.StmtUnset{
 		Vars: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$a"),
 				},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$b"),
 				},
 			},
@@ -2801,21 +2801,21 @@ func TestFormatter_StmtUnset(t *testing.T) {
 func TestFormatter_StmtUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	n := &ast.StmtUse{
-		UseDeclarations: []ast.Vertex{
-			&ast.StmtUseDeclaration{
-				Use: &ast.NameName{
+	n := &ast.StmtUseList{
+		Uses: []ast.Vertex{
+			&ast.StmtUse{
+				Use: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Value: []byte("foo"),
 						},
 					},
 				},
 			},
-			&ast.StmtUseDeclaration{
-				Use: &ast.NameName{
+			&ast.StmtUse{
+				Use: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Value: []byte("bar"),
 						},
 					},
@@ -2841,15 +2841,15 @@ func TestFormatter_StmtUse(t *testing.T) {
 func TestFormatter_StmtUse_Type(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	n := &ast.StmtUse{
+	n := &ast.StmtUseList{
 		Type: &ast.Identifier{
 			Value: []byte("function"),
 		},
-		UseDeclarations: []ast.Vertex{
-			&ast.StmtUseDeclaration{
-				Use: &ast.NameName{
+		Uses: []ast.Vertex{
+			&ast.StmtUse{
+				Use: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Value: []byte("foo"),
 						},
 					},
@@ -2875,28 +2875,28 @@ func TestFormatter_StmtUse_Type(t *testing.T) {
 func TestFormatter_StmtGroupUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	n := &ast.StmtGroupUse{
-		Prefix: &ast.NameName{
+	n := &ast.StmtGroupUseList{
+		Prefix: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
 		},
-		UseDeclarations: []ast.Vertex{
-			&ast.StmtUseDeclaration{
-				Use: &ast.NameName{
+		Uses: []ast.Vertex{
+			&ast.StmtUse{
+				Use: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Value: []byte("bar"),
 						},
 					},
 				},
 			},
-			&ast.StmtUseDeclaration{
-				Use: &ast.NameName{
+			&ast.StmtUse{
+				Use: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Value: []byte("baz"),
 						},
 					},
@@ -2922,31 +2922,31 @@ func TestFormatter_StmtGroupUse(t *testing.T) {
 func TestFormatter_StmtGroupUse_Type(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	n := &ast.StmtGroupUse{
+	n := &ast.StmtGroupUseList{
 		Type: &ast.Identifier{
 			Value: []byte("function"),
 		},
-		Prefix: &ast.NameName{
+		Prefix: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
 		},
-		UseDeclarations: []ast.Vertex{
-			&ast.StmtUseDeclaration{
-				Use: &ast.NameName{
+		Uses: []ast.Vertex{
+			&ast.StmtUse{
+				Use: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Value: []byte("bar"),
 						},
 					},
 				},
 			},
-			&ast.StmtUseDeclaration{
-				Use: &ast.NameName{
+			&ast.StmtUse{
+				Use: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Value: []byte("baz"),
 						},
 					},
@@ -2972,10 +2972,10 @@ func TestFormatter_StmtGroupUse_Type(t *testing.T) {
 func TestFormatter_StmtUseDeclaration(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	n := &ast.StmtUseDeclaration{
-		Use: &ast.NameName{
+	n := &ast.StmtUse{
+		Use: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -2999,13 +2999,13 @@ func TestFormatter_StmtUseDeclaration(t *testing.T) {
 func TestFormatter_StmtUseDeclaration_Type(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	n := &ast.StmtUseDeclaration{
+	n := &ast.StmtUse{
 		Type: &ast.Identifier{
 			Value: []byte("function"),
 		},
-		Use: &ast.NameName{
+		Use: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -3029,10 +3029,10 @@ func TestFormatter_StmtUseDeclaration_Type(t *testing.T) {
 func TestFormatter_StmtUseDeclaration_Alias(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	n := &ast.StmtUseDeclaration{
-		Use: &ast.NameName{
+	n := &ast.StmtUse{
+		Use: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -3061,7 +3061,7 @@ func TestFormatter_StmtWhile(t *testing.T) {
 
 	n := &ast.StmtWhile{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3089,14 +3089,14 @@ func TestFormatter_ExprArray(t *testing.T) {
 		Items: []ast.Vertex{
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -3123,12 +3123,12 @@ func TestFormatter_ExprArrayDimFetch(t *testing.T) {
 
 	n := &ast.ExprArrayDimFetch{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Dim: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -3153,7 +3153,7 @@ func TestFormatter_ExprArrayItem(t *testing.T) {
 
 	n := &ast.ExprArrayItem{
 		Val: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3178,12 +3178,12 @@ func TestFormatter_ExprArrayItem_Key(t *testing.T) {
 
 	n := &ast.ExprArrayItem{
 		Key: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Val: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -3209,7 +3209,7 @@ func TestFormatter_ExprArrayItem_Variadic(t *testing.T) {
 	n := &ast.ExprArrayItem{
 		EllipsisTkn: &token.Token{},
 		Val: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3234,7 +3234,7 @@ func TestFormatter_ExprArrowFunction(t *testing.T) {
 
 	n := &ast.ExprArrowFunction{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3260,7 +3260,7 @@ func TestFormatter_ExprArrowFunction_Ref(t *testing.T) {
 	n := &ast.ExprArrowFunction{
 		AmpersandTkn: &token.Token{},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3287,21 +3287,21 @@ func TestFormatter_ExprArrowFunction_Params(t *testing.T) {
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.Parameter{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3325,15 +3325,15 @@ func TestFormatter_ExprArrowFunction_ReturnType(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprArrowFunction{
-		ReturnType: &ast.NameName{
+		ReturnType: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -3358,7 +3358,7 @@ func TestFormatter_ExprBitwiseNot(t *testing.T) {
 
 	n := &ast.ExprBitwiseNot{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3383,7 +3383,7 @@ func TestFormatter_ExprBooleanNot(t *testing.T) {
 
 	n := &ast.ExprBooleanNot{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3408,7 +3408,7 @@ func TestFormatter_ExprBrackets(t *testing.T) {
 
 	n := &ast.ExprBrackets{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3433,11 +3433,11 @@ func TestFormatter_ExprClassConstFetch(t *testing.T) {
 
 	n := &ast.ExprClassConstFetch{
 		Class: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
-		ConstantName: &ast.Identifier{
+		Const: &ast.Identifier{
 			Value: []byte("bar"),
 		},
 	}
@@ -3461,7 +3461,7 @@ func TestFormatter_ExprClone(t *testing.T) {
 
 	n := &ast.ExprClone{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3539,14 +3539,14 @@ func TestFormatter_ExprClosure_Params(t *testing.T) {
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.Parameter{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -3577,9 +3577,9 @@ func TestFormatter_ExprClosure_ReturnType(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprClosure{
-		ReturnType: &ast.NameName{
+		ReturnType: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -3609,10 +3609,10 @@ func TestFormatter_ExprClosure_Use(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprClosure{
-		Use: []ast.Vertex{
+		Uses: []ast.Vertex{
 			&ast.ExprClosureUse{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$foo"),
 					},
 				},
@@ -3644,7 +3644,7 @@ func TestFormatter_ExprClosureUse(t *testing.T) {
 
 	n := &ast.ExprClosureUse{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$a"),
 			},
 		},
@@ -3670,7 +3670,7 @@ func TestFormatter_ExprClosureUse_Reference(t *testing.T) {
 	n := &ast.ExprClosureUse{
 		AmpersandTkn: &token.Token{},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$a"),
 			},
 		},
@@ -3694,9 +3694,9 @@ func TestFormatter_ExprConstFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprConstFetch{
-		Const: &ast.NameName{
+		Const: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("FOO"),
 				},
 			},
@@ -3722,7 +3722,7 @@ func TestFormatter_ExprEmpty(t *testing.T) {
 
 	n := &ast.ExprEmpty{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3747,7 +3747,7 @@ func TestFormatter_ExprErrorSuppress(t *testing.T) {
 
 	n := &ast.ExprErrorSuppress{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3772,7 +3772,7 @@ func TestFormatter_ExprEval(t *testing.T) {
 
 	n := &ast.ExprEval{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3816,7 +3816,7 @@ func TestFormatter_ExprExit_Expr(t *testing.T) {
 
 	n := &ast.ExprExit{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -3840,9 +3840,9 @@ func TestFormatter_ExprFunctionCall(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprFunctionCall{
-		Function: &ast.NameName{
+		Function: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -3867,17 +3867,17 @@ func TestFormatter_ExprFunctionCall_Arguments(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprFunctionCall{
-		Function: &ast.NameName{
+		Function: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
 		},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$bar"),
 					},
 				},
@@ -3950,13 +3950,13 @@ func TestFormatter_ExprInstanceOf(t *testing.T) {
 
 	n := &ast.ExprInstanceOf{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
-		Class: &ast.NameName{
+		Class: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("bar"),
 				},
 			},
@@ -3983,12 +3983,12 @@ func TestFormatter_ExprIsset(t *testing.T) {
 	n := &ast.ExprIsset{
 		Vars: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$a"),
 				},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$b"),
 				},
 			},
@@ -4016,14 +4016,14 @@ func TestFormatter_ExprList(t *testing.T) {
 		Items: []ast.Vertex{
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -4050,7 +4050,7 @@ func TestFormatter_ExprMethodCall(t *testing.T) {
 
 	n := &ast.ExprMethodCall{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4078,7 +4078,7 @@ func TestFormatter_ExprMethodCall_Expr(t *testing.T) {
 
 	n := &ast.ExprMethodCall{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4106,24 +4106,24 @@ func TestFormatter_ExprMethodCall_Arguments(t *testing.T) {
 
 	n := &ast.ExprMethodCall{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Method: &ast.Identifier{
 			Value: []byte("bar"),
 		},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -4149,9 +4149,9 @@ func TestFormatter_ExprNew(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprNew{
-		Class: &ast.NameName{
+		Class: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -4176,24 +4176,24 @@ func TestFormatter_ExprNew_Arguments(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprNew{
-		Class: &ast.NameName{
+		Class: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
 		},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -4220,7 +4220,7 @@ func TestFormatter_ExprPreDec(t *testing.T) {
 
 	n := &ast.ExprPreDec{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4245,7 +4245,7 @@ func TestFormatter_ExprPreInc(t *testing.T) {
 
 	n := &ast.ExprPreInc{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4270,7 +4270,7 @@ func TestFormatter_ExprPostDec(t *testing.T) {
 
 	n := &ast.ExprPostDec{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4295,7 +4295,7 @@ func TestFormatter_ExprPostInc(t *testing.T) {
 
 	n := &ast.ExprPostInc{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4320,7 +4320,7 @@ func TestFormatter_ExprPrint(t *testing.T) {
 
 	n := &ast.ExprPrint{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4345,11 +4345,11 @@ func TestFormatter_ExprPropertyFetch(t *testing.T) {
 
 	n := &ast.ExprPropertyFetch{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
-		Property: &ast.Identifier{
+		Prop: &ast.Identifier{
 			Value: []byte("bar"),
 		},
 	}
@@ -4373,11 +4373,11 @@ func TestFormatter_ExprPropertyFetch_Expr(t *testing.T) {
 
 	n := &ast.ExprPropertyFetch{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
-		Property: &ast.ScalarString{
+		Prop: &ast.ScalarString{
 			Value: []byte("'bar'"),
 		},
 	}
@@ -4495,7 +4495,7 @@ func TestFormatter_ExprShellExec_Parts(t *testing.T) {
 				Value: []byte("foo "),
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$bar"),
 				},
 			},
@@ -4523,9 +4523,9 @@ func TestFormatter_ExprStaticCall(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprStaticCall{
-		Class: &ast.NameName{
+		Class: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -4553,9 +4553,9 @@ func TestFormatter_ExprStaticCall_Expr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprStaticCall{
-		Class: &ast.NameName{
+		Class: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -4583,9 +4583,9 @@ func TestFormatter_ExprStaticCall_Arguments(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprStaticCall{
-		Class: &ast.NameName{
+		Class: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
@@ -4593,17 +4593,17 @@ func TestFormatter_ExprStaticCall_Arguments(t *testing.T) {
 		Call: &ast.Identifier{
 			Value: []byte("bar"),
 		},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$a"),
 					},
 				},
 			},
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Value: []byte("$b"),
 					},
 				},
@@ -4629,15 +4629,15 @@ func TestFormatter_ExprStaticPropertyFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprStaticPropertyFetch{
-		Class: &ast.NameName{
+		Class: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("foo"),
 				},
 			},
 		},
-		Property: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+		Prop: &ast.ExprVariable{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -4661,18 +4661,18 @@ func TestFormatter_ExprTernary(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprTernary{
-		Condition: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+		Cond: &ast.ExprVariable{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		IfTrue: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
 		IfFalse: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$baz"),
 			},
 		},
@@ -4696,13 +4696,13 @@ func TestFormatter_ExprTernary_short(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprTernary{
-		Condition: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+		Cond: &ast.ExprVariable{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		IfFalse: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -4727,7 +4727,7 @@ func TestFormatter_ExprUnaryMinus(t *testing.T) {
 
 	n := &ast.ExprUnaryMinus{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4752,7 +4752,7 @@ func TestFormatter_ExprUnaryPlus(t *testing.T) {
 
 	n := &ast.ExprUnaryPlus{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4776,7 +4776,7 @@ func TestFormatter_ExprVariable(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprVariable{
-		VarName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("$foo"),
 		},
 	}
@@ -4799,8 +4799,8 @@ func TestFormatter_ExprVariable_Variable(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprVariable{
-		VarName: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+		Name: &ast.ExprVariable{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4824,7 +4824,7 @@ func TestFormatter_ExprVariable_Expression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprVariable{
-		VarName: &ast.ScalarString{
+		Name: &ast.ScalarString{
 			Value: []byte("'foo'"),
 		},
 	}
@@ -4847,8 +4847,8 @@ func TestFormatter_ExprYield(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ExprYield{
-		Value: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+		Val: &ast.ExprVariable{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4873,12 +4873,12 @@ func TestFormatter_ExprYield_Key(t *testing.T) {
 
 	n := &ast.ExprYield{
 		Key: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
-		Value: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+		Val: &ast.ExprVariable{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -4903,7 +4903,7 @@ func TestFormatter_ExprYieldFrom(t *testing.T) {
 
 	n := &ast.ExprYieldFrom{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -4928,12 +4928,12 @@ func TestFormatter_ExprAssign(t *testing.T) {
 
 	n := &ast.ExprAssign{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -4958,12 +4958,12 @@ func TestFormatter_ExprAssignReference(t *testing.T) {
 
 	n := &ast.ExprAssignReference{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -4988,12 +4988,12 @@ func TestFormatter_ExprAssignBitwiseAnd(t *testing.T) {
 
 	n := &ast.ExprAssignBitwiseAnd{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5018,12 +5018,12 @@ func TestFormatter_ExprAssignBitwiseOr(t *testing.T) {
 
 	n := &ast.ExprAssignBitwiseOr{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5048,12 +5048,12 @@ func TestFormatter_ExprAssignBitwiseXor(t *testing.T) {
 
 	n := &ast.ExprAssignBitwiseXor{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5078,12 +5078,12 @@ func TestFormatter_ExprAssignCoalesce(t *testing.T) {
 
 	n := &ast.ExprAssignCoalesce{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5108,12 +5108,12 @@ func TestFormatter_ExprAssignConcat(t *testing.T) {
 
 	n := &ast.ExprAssignConcat{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5138,12 +5138,12 @@ func TestFormatter_ExprAssignDiv(t *testing.T) {
 
 	n := &ast.ExprAssignDiv{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5168,12 +5168,12 @@ func TestFormatter_ExprAssignMinus(t *testing.T) {
 
 	n := &ast.ExprAssignMinus{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5198,12 +5198,12 @@ func TestFormatter_ExprAssignMod(t *testing.T) {
 
 	n := &ast.ExprAssignMod{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5228,12 +5228,12 @@ func TestFormatter_ExprAssignMul(t *testing.T) {
 
 	n := &ast.ExprAssignMul{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5258,12 +5258,12 @@ func TestFormatter_ExprAssignPlus(t *testing.T) {
 
 	n := &ast.ExprAssignPlus{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5288,12 +5288,12 @@ func TestFormatter_ExprAssignPow(t *testing.T) {
 
 	n := &ast.ExprAssignPow{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5318,12 +5318,12 @@ func TestFormatter_ExprAssignShiftLeft(t *testing.T) {
 
 	n := &ast.ExprAssignShiftLeft{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5348,12 +5348,12 @@ func TestFormatter_ExprAssignShiftRight(t *testing.T) {
 
 	n := &ast.ExprAssignShiftRight{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5378,12 +5378,12 @@ func TestFormatter_ExprBinaryBitwiseAnd(t *testing.T) {
 
 	n := &ast.ExprBinaryBitwiseAnd{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5408,12 +5408,12 @@ func TestFormatter_ExprBinaryBitwiseOr(t *testing.T) {
 
 	n := &ast.ExprBinaryBitwiseOr{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5438,12 +5438,12 @@ func TestFormatter_ExprBinaryBitwiseXor(t *testing.T) {
 
 	n := &ast.ExprBinaryBitwiseXor{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5468,12 +5468,12 @@ func TestFormatter_ExprBinaryBooleanAnd(t *testing.T) {
 
 	n := &ast.ExprBinaryBooleanAnd{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5498,12 +5498,12 @@ func TestFormatter_ExprBinaryBooleanOr(t *testing.T) {
 
 	n := &ast.ExprBinaryBooleanOr{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5528,12 +5528,12 @@ func TestFormatter_ExprBinaryCoalesce(t *testing.T) {
 
 	n := &ast.ExprBinaryCoalesce{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5558,12 +5558,12 @@ func TestFormatter_ExprBinaryConcat(t *testing.T) {
 
 	n := &ast.ExprBinaryConcat{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5588,12 +5588,12 @@ func TestFormatter_ExprBinaryDiv(t *testing.T) {
 
 	n := &ast.ExprBinaryDiv{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5618,12 +5618,12 @@ func TestFormatter_ExprBinaryEqual(t *testing.T) {
 
 	n := &ast.ExprBinaryEqual{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5648,12 +5648,12 @@ func TestFormatter_ExprBinaryGreater(t *testing.T) {
 
 	n := &ast.ExprBinaryGreater{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5678,12 +5678,12 @@ func TestFormatter_ExprBinaryGreaterOrEqual(t *testing.T) {
 
 	n := &ast.ExprBinaryGreaterOrEqual{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5708,12 +5708,12 @@ func TestFormatter_ExprBinaryIdentical(t *testing.T) {
 
 	n := &ast.ExprBinaryIdentical{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5738,12 +5738,12 @@ func TestFormatter_ExprBinaryLogicalAnd(t *testing.T) {
 
 	n := &ast.ExprBinaryLogicalAnd{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5768,12 +5768,12 @@ func TestFormatter_ExprBinaryLogicalOr(t *testing.T) {
 
 	n := &ast.ExprBinaryLogicalOr{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5798,12 +5798,12 @@ func TestFormatter_ExprBinaryLogicalXor(t *testing.T) {
 
 	n := &ast.ExprBinaryLogicalXor{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5828,12 +5828,12 @@ func TestFormatter_ExprBinaryMinus(t *testing.T) {
 
 	n := &ast.ExprBinaryMinus{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5858,12 +5858,12 @@ func TestFormatter_ExprBinaryMod(t *testing.T) {
 
 	n := &ast.ExprBinaryMod{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5888,12 +5888,12 @@ func TestFormatter_ExprBinaryMul(t *testing.T) {
 
 	n := &ast.ExprBinaryMul{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5918,12 +5918,12 @@ func TestFormatter_ExprBinaryNotEqual(t *testing.T) {
 
 	n := &ast.ExprBinaryNotEqual{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5948,12 +5948,12 @@ func TestFormatter_ExprBinaryNotIdentical(t *testing.T) {
 
 	n := &ast.ExprBinaryNotIdentical{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -5978,12 +5978,12 @@ func TestFormatter_ExprBinaryPlus(t *testing.T) {
 
 	n := &ast.ExprBinaryPlus{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -6008,12 +6008,12 @@ func TestFormatter_ExprBinaryPow(t *testing.T) {
 
 	n := &ast.ExprBinaryPow{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -6038,12 +6038,12 @@ func TestFormatter_ExprBinaryShiftLeft(t *testing.T) {
 
 	n := &ast.ExprBinaryShiftLeft{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -6068,12 +6068,12 @@ func TestFormatter_ExprBinaryShiftRight(t *testing.T) {
 
 	n := &ast.ExprBinaryShiftRight{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -6098,12 +6098,12 @@ func TestFormatter_ExprBinarySmaller(t *testing.T) {
 
 	n := &ast.ExprBinarySmaller{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -6128,12 +6128,12 @@ func TestFormatter_ExprBinarySmallerOrEqual(t *testing.T) {
 
 	n := &ast.ExprBinarySmallerOrEqual{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -6158,12 +6158,12 @@ func TestFormatter_ExprBinarySpaceship(t *testing.T) {
 
 	n := &ast.ExprBinarySpaceship{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$bar"),
 			},
 		},
@@ -6188,7 +6188,7 @@ func TestFormatter_ExprCastArray(t *testing.T) {
 
 	n := &ast.ExprCastArray{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -6213,7 +6213,7 @@ func TestFormatter_ExprCastBool(t *testing.T) {
 
 	n := &ast.ExprCastBool{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -6238,7 +6238,7 @@ func TestFormatter_ExprCastDouble(t *testing.T) {
 
 	n := &ast.ExprCastDouble{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -6263,7 +6263,7 @@ func TestFormatter_ExprCastInt(t *testing.T) {
 
 	n := &ast.ExprCastInt{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -6288,7 +6288,7 @@ func TestFormatter_ExprCastObject(t *testing.T) {
 
 	n := &ast.ExprCastObject{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -6313,7 +6313,7 @@ func TestFormatter_ExprCastString(t *testing.T) {
 
 	n := &ast.ExprCastString{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -6338,7 +6338,7 @@ func TestFormatter_ExprCastUnset(t *testing.T) {
 
 	n := &ast.ExprCastUnset{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -6432,7 +6432,7 @@ func TestFormatter_ScalarEncapsed_Parts(t *testing.T) {
 				Value: []byte("foo "),
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$bar"),
 				},
 			},
@@ -6481,7 +6481,7 @@ func TestFormatter_ScalarEncapsedStringVar(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ScalarEncapsedStringVar{
-		VarName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 	}
@@ -6504,7 +6504,7 @@ func TestFormatter_ScalarEncapsedStringVar_Dim(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.ScalarEncapsedStringVar{
-		VarName: &ast.Identifier{
+		Name: &ast.Identifier{
 			Value: []byte("foo"),
 		},
 		Dim: &ast.ScalarString{
@@ -6531,7 +6531,7 @@ func TestFormatter_ScalarEncapsedStringBrackets(t *testing.T) {
 
 	n := &ast.ScalarEncapsedStringBrackets{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{
+			Name: &ast.Identifier{
 				Value: []byte("$foo"),
 			},
 		},
@@ -6607,7 +6607,7 @@ func TestFormatter_ScalarHeredoc_Parts(t *testing.T) {
 				Value: []byte("foo "),
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Value: []byte("$bar"),
 				},
 			},
@@ -6699,12 +6699,12 @@ func TestFormatter_ScalarString(t *testing.T) {
 func TestFormatter_NameName(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	n := &ast.NameName{
+	n := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("foo"),
 			},
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("bar"),
 			},
 		},
@@ -6729,10 +6729,10 @@ func TestFormatter_NameFullyQualified(t *testing.T) {
 
 	n := &ast.NameFullyQualified{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("foo"),
 			},
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("bar"),
 			},
 		},
@@ -6757,10 +6757,10 @@ func TestFormatter_NameRelative(t *testing.T) {
 
 	n := &ast.NameRelative{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("foo"),
 			},
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("bar"),
 			},
 		},
@@ -6783,7 +6783,7 @@ func TestFormatter_NameRelative(t *testing.T) {
 func TestFormatter_NameNamePart(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	n := &ast.NameNamePart{
+	n := &ast.NamePart{
 		Value: []byte("foo"),
 	}
 

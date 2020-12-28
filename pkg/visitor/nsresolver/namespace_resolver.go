@@ -41,32 +41,32 @@ func (nsr *NamespaceResolver) StmtNamespace(n *ast.StmtNamespace) {
 	if n.Name == nil {
 		nsr.Namespace = NewNamespace("")
 	} else {
-		NSParts := n.Name.(*ast.NameName).Parts
+		NSParts := n.Name.(*ast.Name).Parts
 		nsr.Namespace = NewNamespace(concatNameParts(NSParts))
 	}
 }
 
-func (nsr *NamespaceResolver) StmtUse(n *ast.StmtUse) {
+func (nsr *NamespaceResolver) StmtUse(n *ast.StmtUseList) {
 	useType := ""
 	if n.Type != nil {
 		useType = string(n.Type.(*ast.Identifier).Value)
 	}
 
-	for _, nn := range n.UseDeclarations {
+	for _, nn := range n.Uses {
 		nsr.AddAlias(useType, nn, nil)
 	}
 
 	nsr.goDeep = false
 }
 
-func (nsr *NamespaceResolver) StmtGroupUse(n *ast.StmtGroupUse) {
+func (nsr *NamespaceResolver) StmtGroupUse(n *ast.StmtGroupUseList) {
 	useType := ""
 	if n.Type != nil {
 		useType = string(n.Type.(*ast.Identifier).Value)
 	}
 
-	for _, nn := range n.UseDeclarations {
-		nsr.AddAlias(useType, nn, n.Prefix.(*ast.NameName).Parts)
+	for _, nn := range n.Uses {
+		nsr.AddAlias(useType, nn, n.Prefix.(*ast.Name).Parts)
 	}
 
 	nsr.goDeep = false
@@ -83,8 +83,8 @@ func (nsr *NamespaceResolver) StmtClass(n *ast.StmtClass) {
 		}
 	}
 
-	if n.ClassName != nil {
-		nsr.AddNamespacedName(n, string(n.ClassName.(*ast.Identifier).Value))
+	if n.Name != nil {
+		nsr.AddNamespacedName(n, string(n.Name.(*ast.Identifier).Value))
 	}
 }
 
@@ -95,15 +95,15 @@ func (nsr *NamespaceResolver) StmtInterface(n *ast.StmtInterface) {
 		}
 	}
 
-	nsr.AddNamespacedName(n, string(n.InterfaceName.(*ast.Identifier).Value))
+	nsr.AddNamespacedName(n, string(n.Name.(*ast.Identifier).Value))
 }
 
 func (nsr *NamespaceResolver) StmtTrait(n *ast.StmtTrait) {
-	nsr.AddNamespacedName(n, string(n.TraitName.(*ast.Identifier).Value))
+	nsr.AddNamespacedName(n, string(n.Name.(*ast.Identifier).Value))
 }
 
 func (nsr *NamespaceResolver) StmtFunction(n *ast.StmtFunction) {
-	nsr.AddNamespacedName(n, string(n.FunctionName.(*ast.Identifier).Value))
+	nsr.AddNamespacedName(n, string(n.Name.(*ast.Identifier).Value))
 
 	for _, parameter := range n.Params {
 		nsr.ResolveType(parameter.(*ast.Parameter).Type)
@@ -218,15 +218,15 @@ func (nsr *NamespaceResolver) LeaveNode(n ast.Vertex) {
 // AddAlias adds a new alias
 func (nsr *NamespaceResolver) AddAlias(useType string, nn ast.Vertex, prefix []ast.Vertex) {
 	switch use := nn.(type) {
-	case *ast.StmtUseDeclaration:
+	case *ast.StmtUse:
 		if use.Type != nil {
 			useType = string(use.Type.(*ast.Identifier).Value)
 		}
 
-		useNameParts := use.Use.(*ast.NameName).Parts
+		useNameParts := use.Use.(*ast.Name).Parts
 		var alias string
 		if use.Alias == nil {
-			alias = string(useNameParts[len(useNameParts)-1].(*ast.NameNamePart).Value)
+			alias = string(useNameParts[len(useNameParts)-1].(*ast.NamePart).Value)
 		} else {
 			alias = string(use.Alias.(*ast.Identifier).Value)
 		}
@@ -257,7 +257,7 @@ func (nsr *NamespaceResolver) ResolveType(n ast.Vertex) {
 	switch nn := n.(type) {
 	case *ast.Nullable:
 		nsr.ResolveType(nn.Expr)
-	case *ast.NameName:
+	case *ast.Name:
 		nsr.ResolveName(n, "")
 	case *ast.NameRelative:
 		nsr.ResolveName(n, "")
@@ -308,16 +308,16 @@ func (ns *Namespace) ResolveName(nameNode ast.Vertex, aliasType string) (string,
 		}
 		return ns.Namespace + "\\" + concatNameParts(n.Parts), nil
 
-	case *ast.NameName:
+	case *ast.Name:
 		if aliasType == "const" && len(n.Parts) == 1 {
-			part := strings.ToLower(string(n.Parts[0].(*ast.NameNamePart).Value))
+			part := strings.ToLower(string(n.Parts[0].(*ast.NamePart).Value))
 			if part == "true" || part == "false" || part == "null" {
 				return part, nil
 			}
 		}
 
 		if aliasType == "" && len(n.Parts) == 1 {
-			part := strings.ToLower(string(n.Parts[0].(*ast.NameNamePart).Value))
+			part := strings.ToLower(string(n.Parts[0].(*ast.NamePart).Value))
 
 			switch part {
 			case "self":
@@ -366,9 +366,9 @@ func (ns *Namespace) ResolveName(nameNode ast.Vertex, aliasType string) (string,
 // ResolveAlias returns alias or error if not found
 func (ns *Namespace) ResolveAlias(nameNode ast.Vertex, aliasType string) (string, error) {
 	aliasType = strings.ToLower(aliasType)
-	nameParts := nameNode.(*ast.NameName).Parts
+	nameParts := nameNode.(*ast.Name).Parts
 
-	firstPartStr := string(nameParts[0].(*ast.NameNamePart).Value)
+	firstPartStr := string(nameParts[0].(*ast.NamePart).Value)
 
 	if len(nameParts) > 1 { // resolve aliases for qualified names, always against class alias type
 		firstPartStr = strings.ToLower(firstPartStr)
@@ -393,9 +393,9 @@ func concatNameParts(parts ...[]ast.Vertex) string {
 	for _, p := range parts {
 		for _, n := range p {
 			if str == "" {
-				str = string(n.(*ast.NameNamePart).Value)
+				str = string(n.(*ast.NamePart).Value)
 			} else {
-				str = str + "\\" + string(n.(*ast.NameNamePart).Value)
+				str = str + "\\" + string(n.(*ast.NamePart).Value)
 			}
 		}
 	}

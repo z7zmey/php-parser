@@ -190,10 +190,10 @@ func (p *printer) StmtCatch(n *ast.StmtCatch) {
 func (p *printer) StmtClass(n *ast.StmtClass) {
 	p.printList(n.Modifiers)
 	p.printToken(n.ClassTkn, []byte("class"))
-	p.printNode(n.ClassName)
-	p.printToken(n.OpenParenthesisTkn, p.ifNodeList(n.Arguments, []byte("(")))
-	p.printSeparatedList(n.Arguments, n.SeparatorTkns, []byte(","))
-	p.printToken(n.CloseParenthesisTkn, p.ifNodeList(n.Arguments, []byte(")")))
+	p.printNode(n.Name)
+	p.printToken(n.OpenParenthesisTkn, p.ifNodeList(n.Args, []byte("(")))
+	p.printSeparatedList(n.Args, n.SeparatorTkns, []byte(","))
+	p.printToken(n.CloseParenthesisTkn, p.ifNodeList(n.Args, []byte(")")))
 	p.printToken(n.ExtendsTkn, p.ifNode(n.Extends, []byte("extends")))
 	p.printNode(n.Extends)
 	p.printToken(n.ImplementsTkn, p.ifNodeList(n.Implements, []byte("implements")))
@@ -214,7 +214,7 @@ func (p *printer) StmtClassMethod(n *ast.StmtClassMethod) {
 	p.printList(n.Modifiers)
 	p.printToken(n.FunctionTkn, []byte("function"))
 	p.printToken(n.AmpersandTkn, nil)
-	p.printNode(n.MethodName)
+	p.printNode(n.Name)
 	p.printToken(n.OpenParenthesisTkn, []byte("("))
 	p.printSeparatedList(n.Params, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
@@ -366,7 +366,7 @@ func (p *printer) StmtForeach(n *ast.StmtForeach) {
 func (p *printer) StmtFunction(n *ast.StmtFunction) {
 	p.printToken(n.FunctionTkn, []byte("function"))
 	p.printToken(n.AmpersandTkn, nil)
-	p.printNode(n.FunctionName)
+	p.printNode(n.Name)
 	p.printToken(n.OpenParenthesisTkn, []byte("("))
 	p.printSeparatedList(n.Params, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
@@ -427,7 +427,7 @@ func (p *printer) StmtInlineHtml(n *ast.StmtInlineHtml) {
 
 func (p *printer) StmtInterface(n *ast.StmtInterface) {
 	p.printToken(n.InterfaceTkn, []byte("interface"))
-	p.printNode(n.InterfaceName)
+	p.printNode(n.Name)
 	p.printToken(n.ExtendsTkn, p.ifNodeList(n.Extends, []byte("extends")))
 	p.printSeparatedList(n.Extends, n.ExtendsSeparatorTkns, []byte(","))
 	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
@@ -436,7 +436,7 @@ func (p *printer) StmtInterface(n *ast.StmtInterface) {
 }
 
 func (p *printer) StmtLabel(n *ast.StmtLabel) {
-	p.printNode(n.LabelName)
+	p.printNode(n.Name)
 	p.printToken(n.ColonTkn, []byte(":"))
 }
 
@@ -462,7 +462,7 @@ func (p *printer) StmtProperty(n *ast.StmtProperty) {
 func (p *printer) StmtPropertyList(n *ast.StmtPropertyList) {
 	p.printList(n.Modifiers)
 	p.printNode(n.Type)
-	p.printSeparatedList(n.Properties, n.SeparatorTkns, []byte(","))
+	p.printSeparatedList(n.Props, n.SeparatorTkns, []byte(","))
 	p.printToken(n.SemiColonTkn, []byte(";"))
 }
 
@@ -498,7 +498,7 @@ func (p *printer) StmtSwitch(n *ast.StmtSwitch) {
 	p.printToken(n.ColonTkn, nil)
 	p.printToken(n.OpenCurlyBracketTkn, p.ifNotToken(n.ColonTkn, []byte("{")))
 	p.printToken(n.CaseSeparatorTkn, nil)
-	p.printList(n.CaseList)
+	p.printList(n.Cases)
 	p.printToken(n.CloseCurlyBracketTkn, p.ifNotToken(n.ColonTkn, []byte("}")))
 	p.printToken(n.EndSwitchTkn, p.ifToken(n.ColonTkn, []byte("endswitch"), nil))
 	p.printToken(n.SemiColonTkn, p.ifToken(n.ColonTkn, []byte(";"), nil))
@@ -512,7 +512,7 @@ func (p *printer) StmtThrow(n *ast.StmtThrow) {
 
 func (p *printer) StmtTrait(n *ast.StmtTrait) {
 	p.printToken(n.TraitTkn, []byte("trait"))
-	p.printNode(n.TraitName)
+	p.printNode(n.Name)
 	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
 	p.printList(n.Stmts)
 	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
@@ -563,26 +563,26 @@ func (p *printer) StmtUnset(n *ast.StmtUnset) {
 	p.printToken(n.SemiColonTkn, []byte(";"))
 }
 
-func (p *printer) StmtUse(n *ast.StmtUse) {
+func (p *printer) StmtUse(n *ast.StmtUseList) {
 	p.printToken(n.UseTkn, []byte("use"))
 	p.printNode(n.Type)
-	p.printSeparatedList(n.UseDeclarations, n.SeparatorTkns, []byte(","))
+	p.printSeparatedList(n.Uses, n.SeparatorTkns, []byte(","))
 	p.printToken(n.SemiColonTkn, []byte(";"))
 }
 
-func (p *printer) StmtGroupUse(n *ast.StmtGroupUse) {
+func (p *printer) StmtGroupUse(n *ast.StmtGroupUseList) {
 	p.printToken(n.UseTkn, []byte("use"))
 	p.printNode(n.Type)
 	p.printToken(n.LeadingNsSeparatorTkn, nil)
 	p.printNode(n.Prefix)
 	p.printToken(n.NsSeparatorTkn, []byte("\\"))
 	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
-	p.printSeparatedList(n.UseDeclarations, n.SeparatorTkns, []byte(","))
+	p.printSeparatedList(n.Uses, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
 	p.printToken(n.SemiColonTkn, []byte(";"))
 }
 
-func (p *printer) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
+func (p *printer) StmtUseDeclaration(n *ast.StmtUse) {
 	p.printNode(n.Type)
 	p.printToken(n.NsSeparatorTkn, nil)
 	p.printNode(n.Use)
@@ -661,7 +661,7 @@ func (p *printer) ExprBrackets(n *ast.ExprBrackets) {
 func (p *printer) ExprClassConstFetch(n *ast.ExprClassConstFetch) {
 	p.printNode(n.Class)
 	p.printToken(n.DoubleColonTkn, []byte("::"))
-	p.printNode(n.ConstantName)
+	p.printNode(n.Const)
 }
 
 func (p *printer) ExprClone(n *ast.ExprClone) {
@@ -676,10 +676,10 @@ func (p *printer) ExprClosure(n *ast.ExprClosure) {
 	p.printToken(n.OpenParenthesisTkn, []byte("("))
 	p.printSeparatedList(n.Params, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
-	p.printToken(n.UseTkn, p.ifNodeList(n.Use, []byte("use")))
-	p.printToken(n.UseOpenParenthesisTkn, p.ifNodeList(n.Use, []byte("(")))
-	p.printSeparatedList(n.Use, n.UseSeparatorTkns, []byte(","))
-	p.printToken(n.UseCloseParenthesisTkn, p.ifNodeList(n.Use, []byte(")")))
+	p.printToken(n.UseTkn, p.ifNodeList(n.Uses, []byte("use")))
+	p.printToken(n.UseOpenParenthesisTkn, p.ifNodeList(n.Uses, []byte("(")))
+	p.printSeparatedList(n.Uses, n.UseSeparatorTkns, []byte(","))
+	p.printToken(n.UseCloseParenthesisTkn, p.ifNodeList(n.Uses, []byte(")")))
 	p.printToken(n.ColonTkn, p.ifNode(n.ReturnType, []byte(":")))
 	p.printNode(n.ReturnType)
 	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
@@ -725,7 +725,7 @@ func (p *printer) ExprExit(n *ast.ExprExit) {
 func (p *printer) ExprFunctionCall(n *ast.ExprFunctionCall) {
 	p.printNode(n.Function)
 	p.printToken(n.OpenParenthesisTkn, []byte("("))
-	p.printSeparatedList(n.Arguments, n.SeparatorTkns, []byte(","))
+	p.printSeparatedList(n.Args, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
 }
 
@@ -766,16 +766,16 @@ func (p *printer) ExprMethodCall(n *ast.ExprMethodCall) {
 	p.printNode(n.Method)
 	p.printToken(n.CloseCurlyBracketTkn, nil)
 	p.printToken(n.OpenParenthesisTkn, []byte("("))
-	p.printSeparatedList(n.Arguments, n.SeparatorTkns, []byte(","))
+	p.printSeparatedList(n.Args, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseParenthesisTkn, []byte(")"))
 }
 
 func (p *printer) ExprNew(n *ast.ExprNew) {
 	p.printToken(n.NewTkn, []byte("new"))
 	p.printNode(n.Class)
-	p.printToken(n.OpenParenthesisTkn, p.ifNodeList(n.Arguments, []byte("(")))
-	p.printSeparatedList(n.Arguments, n.SeparatorTkns, []byte(","))
-	p.printToken(n.CloseParenthesisTkn, p.ifNodeList(n.Arguments, []byte(")")))
+	p.printToken(n.OpenParenthesisTkn, p.ifNodeList(n.Args, []byte("(")))
+	p.printSeparatedList(n.Args, n.SeparatorTkns, []byte(","))
+	p.printToken(n.CloseParenthesisTkn, p.ifNodeList(n.Args, []byte(")")))
 }
 
 func (p *printer) ExprPostDec(n *ast.ExprPostDec) {
@@ -807,7 +807,7 @@ func (p *printer) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	p.printNode(n.Var)
 	p.printToken(n.ObjectOperatorTkn, []byte("->"))
 	p.printToken(n.OpenCurlyBracketTkn, nil)
-	p.printNode(n.Property)
+	p.printNode(n.Prop)
 	p.printToken(n.CloseCurlyBracketTkn, nil)
 }
 
@@ -833,19 +833,19 @@ func (p *printer) ExprStaticCall(n *ast.ExprStaticCall) {
 	p.printToken(n.OpenCurlyBracketTkn, nil)
 	p.printNode(n.Call)
 	p.printToken(n.CloseCurlyBracketTkn, nil)
-	p.printToken(n.OpenParenthesisTkn, p.ifNodeList(n.Arguments, []byte("(")))
-	p.printSeparatedList(n.Arguments, n.SeparatorTkns, []byte(","))
-	p.printToken(n.CloseParenthesisTkn, p.ifNodeList(n.Arguments, []byte(")")))
+	p.printToken(n.OpenParenthesisTkn, p.ifNodeList(n.Args, []byte("(")))
+	p.printSeparatedList(n.Args, n.SeparatorTkns, []byte(","))
+	p.printToken(n.CloseParenthesisTkn, p.ifNodeList(n.Args, []byte(")")))
 }
 
 func (p *printer) ExprStaticPropertyFetch(n *ast.ExprStaticPropertyFetch) {
 	p.printNode(n.Class)
 	p.printToken(n.DoubleColonTkn, []byte("::"))
-	p.printNode(n.Property)
+	p.printNode(n.Prop)
 }
 
 func (p *printer) ExprTernary(n *ast.ExprTernary) {
-	p.printNode(n.Condition)
+	p.printNode(n.Cond)
 	p.printToken(n.QuestionTkn, []byte("?"))
 	p.printNode(n.IfTrue)
 	p.printToken(n.ColonTkn, []byte(":"))
@@ -865,7 +865,7 @@ func (p *printer) ExprUnaryPlus(n *ast.ExprUnaryPlus) {
 func (p *printer) ExprVariable(n *ast.ExprVariable) {
 	p.printToken(n.DollarTkn, nil)
 	p.printToken(n.OpenCurlyBracketTkn, nil)
-	p.printNode(n.VarName)
+	p.printNode(n.Name)
 	p.printToken(n.CloseCurlyBracketTkn, nil)
 }
 
@@ -873,7 +873,7 @@ func (p *printer) ExprYield(n *ast.ExprYield) {
 	p.printToken(n.YieldTkn, []byte("yield"))
 	p.printNode(n.Key)
 	p.printToken(n.DoubleArrowTkn, p.ifNode(n.Key, []byte("=>")))
-	p.printNode(n.Value)
+	p.printNode(n.Val)
 }
 
 func (p *printer) ExprYieldFrom(n *ast.ExprYieldFrom) {
@@ -1185,7 +1185,7 @@ func (p *printer) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 
 func (p *printer) ScalarEncapsedStringVar(n *ast.ScalarEncapsedStringVar) {
 	p.printToken(n.DollarOpenCurlyBracketTkn, []byte("${"))
-	p.printNode(n.VarName)
+	p.printNode(n.Name)
 	p.printToken(n.OpenSquareBracketTkn, p.ifNode(n.Dim, []byte("[")))
 	p.printNode(n.Dim)
 	p.printToken(n.CloseSquareBracketTkn, p.ifNode(n.Dim, []byte("]")))
@@ -1217,7 +1217,7 @@ func (p *printer) ScalarString(n *ast.ScalarString) {
 	p.printToken(n.StringTkn, n.Value)
 }
 
-func (p *printer) NameName(n *ast.NameName) {
+func (p *printer) NameName(n *ast.Name) {
 	p.printSeparatedList(n.Parts, n.SeparatorTkns, []byte("\\"))
 }
 
@@ -1232,6 +1232,6 @@ func (p *printer) NameRelative(n *ast.NameRelative) {
 	p.printSeparatedList(n.Parts, n.SeparatorTkns, []byte("\\"))
 }
 
-func (p *printer) NameNamePart(n *ast.NameNamePart) {
+func (p *printer) NameNamePart(n *ast.NamePart) {
 	p.printToken(n.StringTkn, n.Value)
 }

@@ -38,7 +38,7 @@ func TestIdentifier(t *testing.T) {
 						StartPos:  3,
 						EndPos:    7,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -135,7 +135,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 						StartPos:  5,
 						EndPos:    19,
 					},
-					Function: &ast.NameName{
+					Function: &ast.Name{
 						Position: &position.Position{
 							StartLine: 2,
 							EndLine:   2,
@@ -143,7 +143,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							EndPos:    8,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -196,7 +196,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							EndPos:    9,
 						},
 					},
-					Arguments: []ast.Vertex{
+					Args: []ast.Vertex{
 						&ast.Argument{
 							Position: &position.Position{
 								StartLine: 2,
@@ -211,7 +211,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  9,
 									EndPos:    11,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 2,
 										EndLine:   2,
@@ -268,7 +268,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  16,
 									EndPos:    18,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 2,
 										EndLine:   2,
@@ -345,7 +345,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							StartPos:  23,
 							EndPos:    27,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 3,
 								EndLine:   3,
@@ -387,7 +387,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							EndPos:    28,
 						},
 					},
-					Arguments: []ast.Vertex{
+					Args: []ast.Vertex{
 						&ast.Argument{
 							Position: &position.Position{
 								StartLine: 3,
@@ -402,7 +402,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  28,
 									EndPos:    30,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 3,
 										EndLine:   3,
@@ -459,7 +459,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  35,
 									EndPos:    37,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 3,
 										EndLine:   3,
@@ -536,7 +536,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							StartPos:  42,
 							EndPos:    46,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 4,
 								EndLine:   4,
@@ -607,7 +607,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							EndPos:    52,
 						},
 					},
-					Arguments: []ast.Vertex{
+					Args: []ast.Vertex{
 						&ast.Argument{
 							Position: &position.Position{
 								StartLine: 4,
@@ -622,7 +622,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  52,
 									EndPos:    54,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
@@ -679,7 +679,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  59,
 									EndPos:    61,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
@@ -749,7 +749,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 						StartPos:  66,
 						EndPos:    85,
 					},
-					Class: &ast.NameName{
+					Class: &ast.Name{
 						Position: &position.Position{
 							StartLine: 5,
 							EndLine:   5,
@@ -757,7 +757,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							EndPos:    69,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 5,
 									EndLine:   5,
@@ -829,7 +829,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							EndPos:    75,
 						},
 					},
-					Arguments: []ast.Vertex{
+					Args: []ast.Vertex{
 						&ast.Argument{
 							Position: &position.Position{
 								StartLine: 5,
@@ -844,7 +844,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  75,
 									EndPos:    77,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
@@ -901,7 +901,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  82,
 									EndPos:    84,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
@@ -978,7 +978,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							StartPos:  89,
 							EndPos:    93,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 6,
 								EndLine:   6,
@@ -1049,7 +1049,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							EndPos:    99,
 						},
 					},
-					Arguments: []ast.Vertex{
+					Args: []ast.Vertex{
 						&ast.Argument{
 							Position: &position.Position{
 								StartLine: 6,
@@ -1064,7 +1064,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  99,
 									EndPos:    101,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 6,
 										EndLine:   6,
@@ -1121,7 +1121,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  106,
 									EndPos:    108,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 6,
 										EndLine:   6,
@@ -1213,7 +1213,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							},
 						},
 					},
-					Class: &ast.NameName{
+					Class: &ast.Name{
 						Position: &position.Position{
 							StartLine: 7,
 							EndLine:   7,
@@ -1221,7 +1221,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							EndPos:    120,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 7,
 									EndLine:   7,
@@ -1264,7 +1264,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 							EndPos:    121,
 						},
 					},
-					Arguments: []ast.Vertex{
+					Args: []ast.Vertex{
 						&ast.Argument{
 							Position: &position.Position{
 								StartLine: 7,
@@ -1279,7 +1279,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  121,
 									EndPos:    123,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 7,
 										EndLine:   7,
@@ -1336,7 +1336,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  128,
 									EndPos:    130,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 7,
 										EndLine:   7,
@@ -1499,7 +1499,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 								},
 							},
 						},
-						Arguments: []ast.Vertex{
+						Args: []ast.Vertex{
 							&ast.Argument{
 								Position: &position.Position{
 									StartLine: 9,
@@ -1514,7 +1514,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 										StartPos:  171,
 										EndPos:    173,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 9,
 											EndLine:   9,
@@ -1571,7 +1571,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 										StartPos:  178,
 										EndPos:    180,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 9,
 											EndLine:   9,
@@ -1727,7 +1727,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 						},
 					},
 				},
-				FunctionName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 2,
 						EndLine:   2,
@@ -1793,7 +1793,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									EndPos:    19,
 								},
 							},
-							Expr: &ast.NameName{
+							Expr: &ast.Name{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -1801,7 +1801,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									EndPos:    22,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 2,
 											EndLine:   2,
@@ -1830,7 +1830,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 								StartPos:  23,
 								EndPos:    27,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -1879,7 +1879,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 								StartPos:  28,
 								EndPos:    32,
 							},
-							Const: &ast.NameName{
+							Const: &ast.Name{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -1887,7 +1887,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									EndPos:    32,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 2,
 											EndLine:   2,
@@ -1917,7 +1917,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 							StartPos:  34,
 							EndPos:    46,
 						},
-						Type: &ast.NameName{
+						Type: &ast.Name{
 							Position: &position.Position{
 								StartLine: 2,
 								EndLine:   2,
@@ -1925,7 +1925,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 								EndPos:    37,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 2,
 										EndLine:   2,
@@ -1997,7 +1997,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 								StartPos:  42,
 								EndPos:    46,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -2104,7 +2104,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 3,
 						EndLine:   3,
@@ -2208,7 +2208,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 								},
 							},
 						},
-						MethodName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 3,
 								EndLine:   3,
@@ -2274,7 +2274,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 											EndPos:    85,
 										},
 									},
-									Expr: &ast.NameName{
+									Expr: &ast.Name{
 										Position: &position.Position{
 											StartLine: 3,
 											EndLine:   3,
@@ -2282,7 +2282,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 											EndPos:    88,
 										},
 										Parts: []ast.Vertex{
-											&ast.NameNamePart{
+											&ast.NamePart{
 												Position: &position.Position{
 													StartLine: 3,
 													EndLine:   3,
@@ -2311,7 +2311,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										StartPos:  89,
 										EndPos:    93,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 3,
 											EndLine:   3,
@@ -2360,7 +2360,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										StartPos:  94,
 										EndPos:    98,
 									},
-									Const: &ast.NameName{
+									Const: &ast.Name{
 										Position: &position.Position{
 											StartLine: 3,
 											EndLine:   3,
@@ -2368,7 +2368,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 											EndPos:    98,
 										},
 										Parts: []ast.Vertex{
-											&ast.NameNamePart{
+											&ast.NamePart{
 												Position: &position.Position{
 													StartLine: 3,
 													EndLine:   3,
@@ -2398,7 +2398,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									StartPos:  100,
 									EndPos:    112,
 								},
-								Type: &ast.NameName{
+								Type: &ast.Name{
 									Position: &position.Position{
 										StartLine: 3,
 										EndLine:   3,
@@ -2406,7 +2406,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										EndPos:    103,
 									},
 									Parts: []ast.Vertex{
-										&ast.NameNamePart{
+										&ast.NamePart{
 											Position: &position.Position{
 												StartLine: 3,
 												EndLine:   3,
@@ -2478,7 +2478,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										StartPos:  108,
 										EndPos:    112,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 3,
 											EndLine:   3,
@@ -2647,7 +2647,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										EndPos:    130,
 									},
 								},
-								Expr: &ast.NameName{
+								Expr: &ast.Name{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
@@ -2655,7 +2655,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										EndPos:    133,
 									},
 									Parts: []ast.Vertex{
-										&ast.NameNamePart{
+										&ast.NamePart{
 											Position: &position.Position{
 												StartLine: 4,
 												EndLine:   4,
@@ -2684,7 +2684,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									StartPos:  134,
 									EndPos:    138,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
@@ -2733,7 +2733,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									StartPos:  139,
 									EndPos:    143,
 								},
-								Const: &ast.NameName{
+								Const: &ast.Name{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
@@ -2741,7 +2741,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										EndPos:    143,
 									},
 									Parts: []ast.Vertex{
-										&ast.NameNamePart{
+										&ast.NamePart{
 											Position: &position.Position{
 												StartLine: 4,
 												EndLine:   4,
@@ -2771,7 +2771,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 								StartPos:  145,
 								EndPos:    157,
 							},
-							Type: &ast.NameName{
+							Type: &ast.Name{
 								Position: &position.Position{
 									StartLine: 4,
 									EndLine:   4,
@@ -2779,7 +2779,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									EndPos:    148,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 4,
 											EndLine:   4,
@@ -2851,7 +2851,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									StartPos:  153,
 									EndPos:    157,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
@@ -3033,7 +3033,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										EndPos:    182,
 									},
 								},
-								Expr: &ast.NameName{
+								Expr: &ast.Name{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
@@ -3041,7 +3041,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										EndPos:    185,
 									},
 									Parts: []ast.Vertex{
-										&ast.NameNamePart{
+										&ast.NamePart{
 											Position: &position.Position{
 												StartLine: 5,
 												EndLine:   5,
@@ -3070,7 +3070,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									StartPos:  186,
 									EndPos:    190,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
@@ -3119,7 +3119,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									StartPos:  191,
 									EndPos:    195,
 								},
-								Const: &ast.NameName{
+								Const: &ast.Name{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
@@ -3127,7 +3127,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 										EndPos:    195,
 									},
 									Parts: []ast.Vertex{
-										&ast.NameNamePart{
+										&ast.NamePart{
 											Position: &position.Position{
 												StartLine: 5,
 												EndLine:   5,
@@ -3157,7 +3157,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 								StartPos:  197,
 								EndPos:    209,
 							},
-							Type: &ast.NameName{
+							Type: &ast.Name{
 								Position: &position.Position{
 									StartLine: 5,
 									EndLine:   5,
@@ -3165,7 +3165,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									EndPos:    200,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 5,
 											EndLine:   5,
@@ -3237,7 +3237,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 									StartPos:  205,
 									EndPos:    209,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
@@ -3431,7 +3431,7 @@ func TestName(t *testing.T) {
 						StartPos:  3,
 						EndPos:    8,
 					},
-					Function: &ast.NameName{
+					Function: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -3439,7 +3439,7 @@ func TestName(t *testing.T) {
 							EndPos:    6,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -3590,7 +3590,7 @@ func TestFullyQualified(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -3729,7 +3729,7 @@ func TestRelative(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -3879,7 +3879,7 @@ func TestScalarEncapsed_SimpleVar(t *testing.T) {
 								StartPos:  9,
 								EndPos:    13,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -4017,7 +4017,7 @@ func TestScalarEncapsed_SimpleVarOneChar(t *testing.T) {
 								StartPos:  9,
 								EndPos:    11,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -4155,7 +4155,7 @@ func TestScalarEncapsed_SimpleVarEndsEcapsed(t *testing.T) {
 								StartPos:  9,
 								EndPos:    13,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -4312,7 +4312,7 @@ func TestScalarEncapsed_StringVarCurveOpen(t *testing.T) {
 								StartPos:  5,
 								EndPos:    7,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -4356,7 +4356,7 @@ func TestScalarEncapsed_StringVarCurveOpen(t *testing.T) {
 									StartPos:  8,
 									EndPos:    10,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -4512,7 +4512,7 @@ func TestScalarEncapsed_SimpleVarPropertyFetch(t *testing.T) {
 									StartPos:  9,
 									EndPos:    13,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -4542,7 +4542,7 @@ func TestScalarEncapsed_SimpleVarPropertyFetch(t *testing.T) {
 									EndPos:    15,
 								},
 							},
-							Property: &ast.Identifier{
+							Prop: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -4709,7 +4709,7 @@ func TestScalarEncapsed_DollarOpenCurlyBraces(t *testing.T) {
 									EndPos:    11,
 								},
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -4867,7 +4867,7 @@ func TestScalarEncapsed_DollarOpenCurlyBracesDimNumber(t *testing.T) {
 									EndPos:    11,
 								},
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -5078,7 +5078,7 @@ func TestScalarEncapsed_CurlyOpenMethodCall(t *testing.T) {
 										StartPos:  10,
 										EndPos:    14,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -5280,7 +5280,7 @@ LBL;
 								StartPos:  15,
 								EndPos:    19,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -5453,7 +5453,7 @@ LBL;
 								StartPos:  17,
 								EndPos:    21,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -7040,7 +7040,7 @@ func TestStmtAltIf_AltIf(t *testing.T) {
 						StartPos:  9,
 						EndPos:    11,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 2,
 							EndLine:   2,
@@ -7241,7 +7241,7 @@ func TestStmtAltIf_AltElseIf(t *testing.T) {
 						StartPos:  9,
 						EndPos:    11,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 2,
 							EndLine:   2,
@@ -7361,7 +7361,7 @@ func TestStmtAltIf_AltElseIf(t *testing.T) {
 								StartPos:  25,
 								EndPos:    27,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 3,
 									EndLine:   3,
@@ -7552,7 +7552,7 @@ func TestStmtAltIf_AltElse(t *testing.T) {
 						StartPos:  9,
 						EndPos:    11,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 2,
 							EndLine:   2,
@@ -7804,7 +7804,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 						StartPos:  9,
 						EndPos:    11,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 2,
 							EndLine:   2,
@@ -7924,7 +7924,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 								StartPos:  25,
 								EndPos:    27,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 3,
 									EndLine:   3,
@@ -8032,7 +8032,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 								StartPos:  40,
 								EndPos:    42,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 4,
 									EndLine:   4,
@@ -8239,7 +8239,7 @@ func TestStmtClassConstList(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -8637,7 +8637,7 @@ func TestStmtClassConstList_WithoutModifiers(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -9002,7 +9002,7 @@ func TestStmtClassMethod_SimpleClassMethod(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -9073,7 +9073,7 @@ func TestStmtClassMethod_SimpleClassMethod(t *testing.T) {
 								},
 							},
 						},
-						MethodName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -9251,7 +9251,7 @@ func TestStmtClassMethod_PrivateProtectedClassMethod(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -9386,7 +9386,7 @@ func TestStmtClassMethod_PrivateProtectedClassMethod(t *testing.T) {
 								},
 							},
 						},
-						MethodName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -9541,7 +9541,7 @@ func TestStmtClassMethod_PrivateProtectedClassMethod(t *testing.T) {
 								},
 							},
 						},
-						MethodName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -9719,7 +9719,7 @@ func TestStmtClassMethod_Php7ClassMethod(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -9876,7 +9876,7 @@ func TestStmtClassMethod_Php7ClassMethod(t *testing.T) {
 								},
 							},
 						},
-						MethodName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -9925,7 +9925,7 @@ func TestStmtClassMethod_Php7ClassMethod(t *testing.T) {
 								EndPos:    44,
 							},
 						},
-						ReturnType: &ast.NameName{
+						ReturnType: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -9933,7 +9933,7 @@ func TestStmtClassMethod_Php7ClassMethod(t *testing.T) {
 								EndPos:    49,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -10126,7 +10126,7 @@ func TestStmtClassMethod_AbstractClassMethod(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -10261,7 +10261,7 @@ func TestStmtClassMethod_AbstractClassMethod(t *testing.T) {
 								},
 							},
 						},
-						MethodName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -10449,7 +10449,7 @@ func TestStmtClassMethod_Php7AbstractClassMethod(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -10553,7 +10553,7 @@ func TestStmtClassMethod_Php7AbstractClassMethod(t *testing.T) {
 								},
 							},
 						},
-						MethodName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -10614,7 +10614,7 @@ func TestStmtClassMethod_Php7AbstractClassMethod(t *testing.T) {
 								EndPos:    45,
 							},
 						},
-						ReturnType: &ast.NameName{
+						ReturnType: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -10622,7 +10622,7 @@ func TestStmtClassMethod_Php7AbstractClassMethod(t *testing.T) {
 								EndPos:    50,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -10759,7 +10759,7 @@ func TestStmtClass_SimpleClass(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -10918,7 +10918,7 @@ func TestStmtClass_AbstractClass(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -11077,7 +11077,7 @@ func TestStmtClass_ClassExtends(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -11130,7 +11130,7 @@ func TestStmtClass_ClassExtends(t *testing.T) {
 						},
 					},
 				},
-				Extends: &ast.NameName{
+				Extends: &ast.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -11138,7 +11138,7 @@ func TestStmtClass_ClassExtends(t *testing.T) {
 						EndPos:    30,
 					},
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -11311,7 +11311,7 @@ func TestStmtClass_ClassImplement(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -11365,7 +11365,7 @@ func TestStmtClass_ClassImplement(t *testing.T) {
 					},
 				},
 				Implements: []ast.Vertex{
-					&ast.NameName{
+					&ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -11373,7 +11373,7 @@ func TestStmtClass_ClassImplement(t *testing.T) {
 							EndPos:    33,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -11547,7 +11547,7 @@ func TestStmtClass_ClassImplements(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -11601,7 +11601,7 @@ func TestStmtClass_ClassImplements(t *testing.T) {
 					},
 				},
 				Implements: []ast.Vertex{
-					&ast.NameName{
+					&ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -11609,7 +11609,7 @@ func TestStmtClass_ClassImplements(t *testing.T) {
 							EndPos:    33,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -11642,7 +11642,7 @@ func TestStmtClass_ClassImplements(t *testing.T) {
 							},
 						},
 					},
-					&ast.NameName{
+					&ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -11650,7 +11650,7 @@ func TestStmtClass_ClassImplements(t *testing.T) {
 							EndPos:    38,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -11881,7 +11881,7 @@ func TestStmtClass_AnonimousClass(t *testing.T) {
 								},
 							},
 						},
-						Extends: &ast.NameName{
+						Extends: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -11889,7 +11889,7 @@ func TestStmtClass_AnonimousClass(t *testing.T) {
 								EndPos:    26,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -11945,7 +11945,7 @@ func TestStmtClass_AnonimousClass(t *testing.T) {
 							},
 						},
 						Implements: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -11953,7 +11953,7 @@ func TestStmtClass_AnonimousClass(t *testing.T) {
 									EndPos:    41,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -11986,7 +11986,7 @@ func TestStmtClass_AnonimousClass(t *testing.T) {
 									},
 								},
 							},
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -11994,7 +11994,7 @@ func TestStmtClass_AnonimousClass(t *testing.T) {
 									EndPos:    46,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -13920,7 +13920,7 @@ func TestStmtEcho(t *testing.T) {
 							StartPos:  8,
 							EndPos:    10,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -14093,7 +14093,7 @@ func TestStmtEcho_Parenthesis(t *testing.T) {
 								StartPos:  8,
 								EndPos:    10,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -14303,7 +14303,7 @@ func TestStmtFor(t *testing.T) {
 								StartPos:  7,
 								EndPos:    9,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -14403,7 +14403,7 @@ func TestStmtFor(t *testing.T) {
 								StartPos:  15,
 								EndPos:    17,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -14515,7 +14515,7 @@ func TestStmtFor(t *testing.T) {
 								StartPos:  24,
 								EndPos:    26,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -14572,7 +14572,7 @@ func TestStmtFor(t *testing.T) {
 								StartPos:  30,
 								EndPos:    32,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -14776,7 +14776,7 @@ func TestStmtFor_Alt(t *testing.T) {
 								StartPos:  9,
 								EndPos:    11,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -14888,7 +14888,7 @@ func TestStmtFor_Alt(t *testing.T) {
 								StartPos:  18,
 								EndPos:    20,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -15096,7 +15096,7 @@ func TestStmtForeach(t *testing.T) {
 						StartPos:  12,
 						EndPos:    14,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -15145,7 +15145,7 @@ func TestStmtForeach(t *testing.T) {
 						StartPos:  18,
 						EndPos:    20,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -15369,7 +15369,7 @@ func TestStmtForeach_Expr(t *testing.T) {
 						StartPos:  18,
 						EndPos:    20,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -15543,7 +15543,7 @@ func TestStmtForeach_Alt(t *testing.T) {
 						StartPos:  12,
 						EndPos:    14,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -15592,7 +15592,7 @@ func TestStmtForeach_Alt(t *testing.T) {
 						StartPos:  18,
 						EndPos:    20,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -15788,7 +15788,7 @@ func TestStmtForeach_WithKey(t *testing.T) {
 						StartPos:  12,
 						EndPos:    14,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -15837,7 +15837,7 @@ func TestStmtForeach_WithKey(t *testing.T) {
 						StartPos:  18,
 						EndPos:    20,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -15898,7 +15898,7 @@ func TestStmtForeach_WithKey(t *testing.T) {
 						StartPos:  24,
 						EndPos:    26,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -16122,7 +16122,7 @@ func TestStmtForeach_ExprWithKey(t *testing.T) {
 						StartPos:  18,
 						EndPos:    20,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -16183,7 +16183,7 @@ func TestStmtForeach_ExprWithKey(t *testing.T) {
 						StartPos:  24,
 						EndPos:    26,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -16357,7 +16357,7 @@ func TestStmtForeach_WithRef(t *testing.T) {
 						StartPos:  12,
 						EndPos:    14,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -16406,7 +16406,7 @@ func TestStmtForeach_WithRef(t *testing.T) {
 						StartPos:  18,
 						EndPos:    20,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -16489,7 +16489,7 @@ func TestStmtForeach_WithRef(t *testing.T) {
 						StartPos:  25,
 						EndPos:    27,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -16651,7 +16651,7 @@ func TestStmtForeach_WithList(t *testing.T) {
 						StartPos:  12,
 						EndPos:    14,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -16700,7 +16700,7 @@ func TestStmtForeach_WithList(t *testing.T) {
 						StartPos:  18,
 						EndPos:    20,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -16808,7 +16808,7 @@ func TestStmtForeach_WithList(t *testing.T) {
 									StartPos:  29,
 									EndPos:    31,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -16954,7 +16954,7 @@ func TestStmtFunction(t *testing.T) {
 						},
 					},
 				},
-				FunctionName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -17100,7 +17100,7 @@ func TestStmtFunction_Return(t *testing.T) {
 						},
 					},
 				},
-				FunctionName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -17275,7 +17275,7 @@ func TestStmtFunction_ReturnVar(t *testing.T) {
 						},
 					},
 				},
-				FunctionName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -17350,7 +17350,7 @@ func TestStmtFunction_ReturnVar(t *testing.T) {
 								StartPos:  22,
 								EndPos:    24,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -17428,7 +17428,7 @@ func TestStmtFunction_ReturnVar(t *testing.T) {
 								StartPos:  35,
 								EndPos:    37,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -17531,7 +17531,7 @@ func TestStmtFunction_ReturnVar(t *testing.T) {
 								StartPos:  47,
 								EndPos:    49,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -17669,7 +17669,7 @@ func TestStmtFunction_Ref(t *testing.T) {
 						},
 					},
 				},
-				FunctionName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -17885,7 +17885,7 @@ func TestStmtFunction_ReturnType(t *testing.T) {
 						},
 					},
 				},
-				FunctionName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -17934,7 +17934,7 @@ func TestStmtFunction_ReturnType(t *testing.T) {
 						EndPos:    19,
 					},
 				},
-				ReturnType: &ast.NameName{
+				ReturnType: &ast.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -17942,7 +17942,7 @@ func TestStmtFunction_ReturnType(t *testing.T) {
 						EndPos:    24,
 					},
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -18078,7 +18078,7 @@ func TestStmtGlobal(t *testing.T) {
 							StartPos:  10,
 							EndPos:    12,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -18191,7 +18191,7 @@ func TestStmtGlobal_Vars(t *testing.T) {
 							StartPos:  10,
 							EndPos:    12,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -18230,7 +18230,7 @@ func TestStmtGlobal_Vars(t *testing.T) {
 							StartPos:  14,
 							EndPos:    16,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -18291,14 +18291,14 @@ func TestStmtGlobal_Vars(t *testing.T) {
 								},
 							},
 						},
-						VarName: &ast.ExprVariable{
+						Name: &ast.ExprVariable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  19,
 								EndPos:    21,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -18358,14 +18358,14 @@ func TestStmtGlobal_Vars(t *testing.T) {
 								EndPos:    25,
 							},
 						},
-						VarName: &ast.ExprFunctionCall{
+						Name: &ast.ExprFunctionCall{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  25,
 								EndPos:    30,
 							},
-							Function: &ast.NameName{
+							Function: &ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -18373,7 +18373,7 @@ func TestStmtGlobal_Vars(t *testing.T) {
 									EndPos:    28,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -18499,7 +18499,7 @@ func TestStmtGotoLabel(t *testing.T) {
 					StartPos:  3,
 					EndPos:    5,
 				},
-				LabelName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -18804,7 +18804,7 @@ func TestStmtIf(t *testing.T) {
 						StartPos:  7,
 						EndPos:    9,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -18966,7 +18966,7 @@ func TestStmtIf_ElseIf(t *testing.T) {
 						StartPos:  7,
 						EndPos:    9,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -19096,7 +19096,7 @@ func TestStmtIf_ElseIf(t *testing.T) {
 								StartPos:  22,
 								EndPos:    24,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -19260,7 +19260,7 @@ func TestStmtIf_Else(t *testing.T) {
 						StartPos:  7,
 						EndPos:    9,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -19493,7 +19493,7 @@ func TestStmtIf_ElseElseIf(t *testing.T) {
 						StartPos:  7,
 						EndPos:    9,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -19623,7 +19623,7 @@ func TestStmtIf_ElseElseIf(t *testing.T) {
 								StartPos:  22,
 								EndPos:    24,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -19753,7 +19753,7 @@ func TestStmtIf_ElseElseIf(t *testing.T) {
 								StartPos:  37,
 								EndPos:    39,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -19988,7 +19988,7 @@ func TestStmtIf_ElseIfElseIfElse(t *testing.T) {
 						StartPos:  7,
 						EndPos:    9,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -20118,7 +20118,7 @@ func TestStmtIf_ElseIfElseIfElse(t *testing.T) {
 								StartPos:  22,
 								EndPos:    24,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -20278,7 +20278,7 @@ func TestStmtIf_ElseIfElseIfElse(t *testing.T) {
 								StartPos:  38,
 								EndPos:    40,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -20565,7 +20565,7 @@ func TestStmtInterface(t *testing.T) {
 						},
 					},
 				},
-				InterfaceName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -20691,7 +20691,7 @@ func TestStmtInterface_Extend(t *testing.T) {
 						},
 					},
 				},
-				InterfaceName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -20745,7 +20745,7 @@ func TestStmtInterface_Extend(t *testing.T) {
 					},
 				},
 				Extends: []ast.Vertex{
-					&ast.NameName{
+					&ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -20753,7 +20753,7 @@ func TestStmtInterface_Extend(t *testing.T) {
 							EndPos:    28,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -20882,7 +20882,7 @@ func TestStmtInterface_Extends(t *testing.T) {
 						},
 					},
 				},
-				InterfaceName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -20936,7 +20936,7 @@ func TestStmtInterface_Extends(t *testing.T) {
 					},
 				},
 				Extends: []ast.Vertex{
-					&ast.NameName{
+					&ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -20944,7 +20944,7 @@ func TestStmtInterface_Extends(t *testing.T) {
 							EndPos:    28,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -20977,7 +20977,7 @@ func TestStmtInterface_Extends(t *testing.T) {
 							},
 						},
 					},
-					&ast.NameName{
+					&ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -20985,7 +20985,7 @@ func TestStmtInterface_Extends(t *testing.T) {
 							EndPos:    33,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -21126,7 +21126,7 @@ func TestStmtNamespace(t *testing.T) {
 						},
 					},
 				},
-				Name: &ast.NameName{
+				Name: &ast.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -21134,7 +21134,7 @@ func TestStmtNamespace(t *testing.T) {
 						EndPos:    16,
 					},
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -21239,7 +21239,7 @@ func TestStmtNamespace_Stmts(t *testing.T) {
 						},
 					},
 				},
-				Name: &ast.NameName{
+				Name: &ast.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -21247,7 +21247,7 @@ func TestStmtNamespace_Stmts(t *testing.T) {
 						EndPos:    16,
 					},
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -21470,7 +21470,7 @@ func TestStmtProperty(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -21552,7 +21552,7 @@ func TestStmtProperty(t *testing.T) {
 								Value: []byte("var"),
 							},
 						},
-						Properties: []ast.Vertex{
+						Props: []ast.Vertex{
 							&ast.StmtProperty{
 								Position: &position.Position{
 									StartLine: 1,
@@ -21567,7 +21567,7 @@ func TestStmtProperty(t *testing.T) {
 										StartPos:  18,
 										EndPos:    20,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -21685,7 +21685,7 @@ func TestStmtProperty_Properties(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -21798,7 +21798,7 @@ func TestStmtProperty_Properties(t *testing.T) {
 								Value: []byte("static"),
 							},
 						},
-						Properties: []ast.Vertex{
+						Props: []ast.Vertex{
 							&ast.StmtProperty{
 								Position: &position.Position{
 									StartLine: 1,
@@ -21813,7 +21813,7 @@ func TestStmtProperty_Properties(t *testing.T) {
 										StartPos:  28,
 										EndPos:    30,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -21860,7 +21860,7 @@ func TestStmtProperty_Properties(t *testing.T) {
 										StartPos:  32,
 										EndPos:    34,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -22043,7 +22043,7 @@ func TestStmtProperty_Properties2(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -22156,7 +22156,7 @@ func TestStmtProperty_Properties2(t *testing.T) {
 								Value: []byte("static"),
 							},
 						},
-						Properties: []ast.Vertex{
+						Props: []ast.Vertex{
 							&ast.StmtProperty{
 								Position: &position.Position{
 									StartLine: 1,
@@ -22171,7 +22171,7 @@ func TestStmtProperty_Properties2(t *testing.T) {
 										StartPos:  28,
 										EndPos:    30,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -22271,7 +22271,7 @@ func TestStmtProperty_Properties2(t *testing.T) {
 										StartPos:  36,
 										EndPos:    38,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -22401,7 +22401,7 @@ func TestStmtProperty_PropertyType(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -22483,7 +22483,7 @@ func TestStmtProperty_PropertyType(t *testing.T) {
 								Value: []byte("var"),
 							},
 						},
-						Type: &ast.NameName{
+						Type: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -22491,7 +22491,7 @@ func TestStmtProperty_PropertyType(t *testing.T) {
 								EndPos:    21,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -22524,7 +22524,7 @@ func TestStmtProperty_PropertyType(t *testing.T) {
 								},
 							},
 						},
-						Properties: []ast.Vertex{
+						Props: []ast.Vertex{
 							&ast.StmtProperty{
 								Position: &position.Position{
 									StartLine: 1,
@@ -22539,7 +22539,7 @@ func TestStmtProperty_PropertyType(t *testing.T) {
 										StartPos:  22,
 										EndPos:    24,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -22672,7 +22672,7 @@ func TestStmtStaticVar(t *testing.T) {
 								StartPos:  10,
 								EndPos:    12,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -22793,7 +22793,7 @@ func TestStmtStaticVar_Vars(t *testing.T) {
 								StartPos:  10,
 								EndPos:    12,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -22840,7 +22840,7 @@ func TestStmtStaticVar_Vars(t *testing.T) {
 								StartPos:  14,
 								EndPos:    16,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -23026,7 +23026,7 @@ func TestStmtStaticVar_Vars2(t *testing.T) {
 								StartPos:  10,
 								EndPos:    12,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -23126,7 +23126,7 @@ func TestStmtStaticVar_Vars2(t *testing.T) {
 								StartPos:  18,
 								EndPos:    20,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -23322,7 +23322,7 @@ func TestStmtSwitch(t *testing.T) {
 						},
 					},
 				},
-				CaseList: []ast.Vertex{
+				Cases: []ast.Vertex{
 					&ast.StmtCase{
 						Position: &position.Position{
 							StartLine: 3,
@@ -23735,7 +23735,7 @@ func TestStmtSwitch_Semicolon(t *testing.T) {
 						EndPos:    18,
 					},
 				},
-				CaseList: []ast.Vertex{
+				Cases: []ast.Vertex{
 					&ast.StmtCase{
 						Position: &position.Position{
 							StartLine: 3,
@@ -24139,7 +24139,7 @@ func TestStmtSwitch_Alt(t *testing.T) {
 						},
 					},
 				},
-				CaseList: []ast.Vertex{
+				Cases: []ast.Vertex{
 					&ast.StmtCase{
 						Position: &position.Position{
 							StartLine: 3,
@@ -24520,7 +24520,7 @@ func TestStmtSwitch_AltSemicolon(t *testing.T) {
 						EndPos:    18,
 					},
 				},
-				CaseList: []ast.Vertex{
+				Cases: []ast.Vertex{
 					&ast.StmtCase{
 						Position: &position.Position{
 							StartLine: 3,
@@ -24767,7 +24767,7 @@ func TestStmtThrow(t *testing.T) {
 						StartPos:  9,
 						EndPos:    11,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -24871,7 +24871,7 @@ func TestStmtTrait(t *testing.T) {
 						},
 					},
 				},
-				TraitName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -24997,7 +24997,7 @@ func TestStmtTraitUse(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -25081,7 +25081,7 @@ func TestStmtTraitUse(t *testing.T) {
 							},
 						},
 						Traits: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -25089,7 +25089,7 @@ func TestStmtTraitUse(t *testing.T) {
 									EndPos:    22,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -25219,7 +25219,7 @@ func TestStmtTraitUse_Uses(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -25303,7 +25303,7 @@ func TestStmtTraitUse_Uses(t *testing.T) {
 							},
 						},
 						Traits: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -25311,7 +25311,7 @@ func TestStmtTraitUse_Uses(t *testing.T) {
 									EndPos:    22,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -25344,7 +25344,7 @@ func TestStmtTraitUse_Uses(t *testing.T) {
 									},
 								},
 							},
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -25352,7 +25352,7 @@ func TestStmtTraitUse_Uses(t *testing.T) {
 									EndPos:    27,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -25494,7 +25494,7 @@ func TestStmtTraitUse_EmptyAdaptations(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -25578,7 +25578,7 @@ func TestStmtTraitUse_EmptyAdaptations(t *testing.T) {
 							},
 						},
 						Traits: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -25586,7 +25586,7 @@ func TestStmtTraitUse_EmptyAdaptations(t *testing.T) {
 									EndPos:    22,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -25619,7 +25619,7 @@ func TestStmtTraitUse_EmptyAdaptations(t *testing.T) {
 									},
 								},
 							},
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -25627,7 +25627,7 @@ func TestStmtTraitUse_EmptyAdaptations(t *testing.T) {
 									EndPos:    27,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -25791,7 +25791,7 @@ func TestStmtTraitUse_Modifier(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -25875,7 +25875,7 @@ func TestStmtTraitUse_Modifier(t *testing.T) {
 							},
 						},
 						Traits: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -25883,7 +25883,7 @@ func TestStmtTraitUse_Modifier(t *testing.T) {
 									EndPos:    22,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -25916,7 +25916,7 @@ func TestStmtTraitUse_Modifier(t *testing.T) {
 									},
 								},
 							},
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -25924,7 +25924,7 @@ func TestStmtTraitUse_Modifier(t *testing.T) {
 									EndPos:    27,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -26204,7 +26204,7 @@ func TestStmtTraitUse_AliasModifier(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -26288,7 +26288,7 @@ func TestStmtTraitUse_AliasModifier(t *testing.T) {
 							},
 						},
 						Traits: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -26296,7 +26296,7 @@ func TestStmtTraitUse_AliasModifier(t *testing.T) {
 									EndPos:    22,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -26329,7 +26329,7 @@ func TestStmtTraitUse_AliasModifier(t *testing.T) {
 									},
 								},
 							},
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -26337,7 +26337,7 @@ func TestStmtTraitUse_AliasModifier(t *testing.T) {
 									EndPos:    27,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -26648,7 +26648,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 						},
 					},
 				},
-				ClassName: &ast.Identifier{
+				Name: &ast.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -26732,7 +26732,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 							},
 						},
 						Traits: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -26740,7 +26740,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 									EndPos:    22,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -26773,7 +26773,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 									},
 								},
 							},
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -26781,7 +26781,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 									EndPos:    27,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -26857,7 +26857,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 									StartPos:  30,
 									EndPos:    58,
 								},
-								Trait: &ast.NameName{
+								Trait: &ast.Name{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -26865,7 +26865,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 										EndPos:    33,
 									},
 									Parts: []ast.Vertex{
-										&ast.NameNamePart{
+										&ast.NamePart{
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
@@ -26950,7 +26950,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 									},
 								},
 								Insteadof: []ast.Vertex{
-									&ast.NameName{
+									&ast.Name{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -26958,7 +26958,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 											EndPos:    52,
 										},
 										Parts: []ast.Vertex{
-											&ast.NameNamePart{
+											&ast.NamePart{
 												Position: &position.Position{
 													StartLine: 1,
 													EndLine:   1,
@@ -26991,7 +26991,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 											},
 										},
 									},
-									&ast.NameName{
+									&ast.Name{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -26999,7 +26999,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 											EndPos:    58,
 										},
 										Parts: []ast.Vertex{
-											&ast.NameNamePart{
+											&ast.NamePart{
 												Position: &position.Position{
 													StartLine: 1,
 													EndLine:   1,
@@ -27063,7 +27063,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 									StartPos:  60,
 									EndPos:    75,
 								},
-								Trait: &ast.NameName{
+								Trait: &ast.Name{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -27071,7 +27071,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 										EndPos:    63,
 									},
 									Parts: []ast.Vertex{
-										&ast.NameNamePart{
+										&ast.NamePart{
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
@@ -27505,7 +27505,7 @@ func TestStmtTry_TryCatch(t *testing.T) {
 							},
 						},
 						Types: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -27513,7 +27513,7 @@ func TestStmtTry_TryCatch(t *testing.T) {
 									EndPos:    28,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 2,
 											EndLine:   2,
@@ -27542,7 +27542,7 @@ func TestStmtTry_TryCatch(t *testing.T) {
 								StartPos:  29,
 								EndPos:    31,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -27782,7 +27782,7 @@ func TestStmtTry_Php7TryCatch(t *testing.T) {
 							},
 						},
 						Types: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -27790,7 +27790,7 @@ func TestStmtTry_Php7TryCatch(t *testing.T) {
 									EndPos:    28,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 2,
 											EndLine:   2,
@@ -27811,7 +27811,7 @@ func TestStmtTry_Php7TryCatch(t *testing.T) {
 									},
 								},
 							},
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -27819,7 +27819,7 @@ func TestStmtTry_Php7TryCatch(t *testing.T) {
 									EndPos:    45,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 2,
 											EndLine:   2,
@@ -27860,7 +27860,7 @@ func TestStmtTry_Php7TryCatch(t *testing.T) {
 								StartPos:  46,
 								EndPos:    48,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -28100,7 +28100,7 @@ func TestStmtTry_TryCatchCatch(t *testing.T) {
 							},
 						},
 						Types: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -28108,7 +28108,7 @@ func TestStmtTry_TryCatchCatch(t *testing.T) {
 									EndPos:    28,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 2,
 											EndLine:   2,
@@ -28137,7 +28137,7 @@ func TestStmtTry_TryCatchCatch(t *testing.T) {
 								StartPos:  29,
 								EndPos:    31,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -28265,7 +28265,7 @@ func TestStmtTry_TryCatchCatch(t *testing.T) {
 							},
 						},
 						Types: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -28273,7 +28273,7 @@ func TestStmtTry_TryCatchCatch(t *testing.T) {
 									EndPos:    59,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 2,
 											EndLine:   2,
@@ -28302,7 +28302,7 @@ func TestStmtTry_TryCatchCatch(t *testing.T) {
 								StartPos:  60,
 								EndPos:    62,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -28542,7 +28542,7 @@ func TestStmtTry_TryCatchFinally(t *testing.T) {
 							},
 						},
 						Types: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -28550,7 +28550,7 @@ func TestStmtTry_TryCatchFinally(t *testing.T) {
 									EndPos:    28,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 2,
 											EndLine:   2,
@@ -28579,7 +28579,7 @@ func TestStmtTry_TryCatchFinally(t *testing.T) {
 								StartPos:  29,
 								EndPos:    31,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 2,
 									EndLine:   2,
@@ -28880,7 +28880,7 @@ func TestStmtTry_TryCatchCatchCatch(t *testing.T) {
 							},
 						},
 						Types: []ast.Vertex{
-							&ast.NameName{
+							&ast.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -28888,7 +28888,7 @@ func TestStmtTry_TryCatchCatchCatch(t *testing.T) {
 									EndPos:    26,
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -28917,7 +28917,7 @@ func TestStmtTry_TryCatchCatchCatch(t *testing.T) {
 								StartPos:  27,
 								EndPos:    29,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -29063,7 +29063,7 @@ func TestStmtTry_TryCatchCatchCatch(t *testing.T) {
 									},
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -29092,7 +29092,7 @@ func TestStmtTry_TryCatchCatchCatch(t *testing.T) {
 								StartPos:  59,
 								EndPos:    61,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -29248,7 +29248,7 @@ func TestStmtTry_TryCatchCatchCatch(t *testing.T) {
 									},
 								},
 								Parts: []ast.Vertex{
-									&ast.NameNamePart{
+									&ast.NamePart{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -29277,7 +29277,7 @@ func TestStmtTry_TryCatchCatchCatch(t *testing.T) {
 								StartPos:  101,
 								EndPos:    103,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -29434,7 +29434,7 @@ func TestStmtUnset(t *testing.T) {
 							StartPos:  9,
 							EndPos:    11,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -29555,7 +29555,7 @@ func TestStmtUnset_Vars(t *testing.T) {
 							StartPos:  9,
 							EndPos:    11,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -29582,7 +29582,7 @@ func TestStmtUnset_Vars(t *testing.T) {
 							StartPos:  13,
 							EndPos:    15,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -29727,7 +29727,7 @@ func TestStmtUnset_TrailingComma(t *testing.T) {
 							StartPos:  9,
 							EndPos:    11,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -29754,7 +29754,7 @@ func TestStmtUnset_TrailingComma(t *testing.T) {
 							StartPos:  13,
 							EndPos:    15,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -29852,7 +29852,7 @@ func TestStmtUse(t *testing.T) {
 			EndPos:    11,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -29891,15 +29891,15 @@ func TestStmtUse(t *testing.T) {
 						},
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
 							EndPos:    10,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -29907,7 +29907,7 @@ func TestStmtUse(t *testing.T) {
 								EndPos:    10,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -29975,7 +29975,7 @@ func TestStmtUse_FullyQualified(t *testing.T) {
 			EndPos:    12,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -30014,8 +30014,8 @@ func TestStmtUse_FullyQualified(t *testing.T) {
 						},
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -30044,7 +30044,7 @@ func TestStmtUse_FullyQualified(t *testing.T) {
 								},
 							},
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -30052,7 +30052,7 @@ func TestStmtUse_FullyQualified(t *testing.T) {
 								EndPos:    11,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -30108,7 +30108,7 @@ func TestStmtUse_FullyQualifiedAlias(t *testing.T) {
 			EndPos:    19,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -30147,8 +30147,8 @@ func TestStmtUse_FullyQualifiedAlias(t *testing.T) {
 						},
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -30177,7 +30177,7 @@ func TestStmtUse_FullyQualifiedAlias(t *testing.T) {
 								},
 							},
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -30185,7 +30185,7 @@ func TestStmtUse_FullyQualifiedAlias(t *testing.T) {
 								EndPos:    11,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -30294,7 +30294,7 @@ func TestStmtUse_List(t *testing.T) {
 			EndPos:    16,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -30333,15 +30333,15 @@ func TestStmtUse_List(t *testing.T) {
 						},
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
 							EndPos:    10,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -30349,7 +30349,7 @@ func TestStmtUse_List(t *testing.T) {
 								EndPos:    10,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -30383,14 +30383,14 @@ func TestStmtUse_List(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  12,
 							EndPos:    15,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -30398,7 +30398,7 @@ func TestStmtUse_List(t *testing.T) {
 								EndPos:    15,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -30478,7 +30478,7 @@ func TestStmtUse_ListAlias(t *testing.T) {
 			EndPos:    23,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -30517,15 +30517,15 @@ func TestStmtUse_ListAlias(t *testing.T) {
 						},
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  7,
 							EndPos:    10,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -30533,7 +30533,7 @@ func TestStmtUse_ListAlias(t *testing.T) {
 								EndPos:    10,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -30567,14 +30567,14 @@ func TestStmtUse_ListAlias(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  12,
 							EndPos:    22,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -30582,7 +30582,7 @@ func TestStmtUse_ListAlias(t *testing.T) {
 								EndPos:    15,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -30715,7 +30715,7 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 			EndPos:    26,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -30785,15 +30785,15 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 					},
 					Value: []byte("function"),
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  16,
 							EndPos:    19,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -30801,7 +30801,7 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 								EndPos:    19,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -30835,7 +30835,7 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -30864,7 +30864,7 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 								},
 							},
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -30872,7 +30872,7 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 								EndPos:    25,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -30940,7 +30940,7 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 			EndPos:    40,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -31010,15 +31010,15 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 					},
 					Value: []byte("function"),
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  16,
 							EndPos:    26,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -31026,7 +31026,7 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 								EndPos:    19,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -31113,7 +31113,7 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 							Value: []byte("foo"),
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -31142,7 +31142,7 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 								},
 							},
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -31150,7 +31150,7 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 								EndPos:    32,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -31271,7 +31271,7 @@ func TestStmtUse_ListConstType(t *testing.T) {
 			EndPos:    23,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -31341,15 +31341,15 @@ func TestStmtUse_ListConstType(t *testing.T) {
 					},
 					Value: []byte("const"),
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  13,
 							EndPos:    16,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -31357,7 +31357,7 @@ func TestStmtUse_ListConstType(t *testing.T) {
 								EndPos:    16,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -31391,7 +31391,7 @@ func TestStmtUse_ListConstType(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -31420,7 +31420,7 @@ func TestStmtUse_ListConstType(t *testing.T) {
 								},
 							},
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -31428,7 +31428,7 @@ func TestStmtUse_ListConstType(t *testing.T) {
 								EndPos:    22,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -31496,7 +31496,7 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 			EndPos:    37,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -31566,15 +31566,15 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 					},
 					Value: []byte("const"),
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  13,
 							EndPos:    23,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -31582,7 +31582,7 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 								EndPos:    16,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -31669,7 +31669,7 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 							Value: []byte("foo"),
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -31698,7 +31698,7 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 								},
 							},
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -31706,7 +31706,7 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 								EndPos:    29,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -31827,7 +31827,7 @@ func TestStmtUse_GroupUse(t *testing.T) {
 			EndPos:    22,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtGroupUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -31866,7 +31866,7 @@ func TestStmtUse_GroupUse(t *testing.T) {
 						},
 					},
 				},
-				Prefix: &ast.NameName{
+				Prefix: &ast.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -31874,7 +31874,7 @@ func TestStmtUse_GroupUse(t *testing.T) {
 						EndPos:    10,
 					},
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -31927,15 +31927,15 @@ func TestStmtUse_GroupUse(t *testing.T) {
 						EndPos:    12,
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  12,
 							EndPos:    15,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -31943,7 +31943,7 @@ func TestStmtUse_GroupUse(t *testing.T) {
 								EndPos:    15,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -31965,14 +31965,14 @@ func TestStmtUse_GroupUse(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  17,
 							EndPos:    20,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -31980,7 +31980,7 @@ func TestStmtUse_GroupUse(t *testing.T) {
 								EndPos:    20,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -32070,7 +32070,7 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 			EndPos:    30,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtGroupUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -32109,7 +32109,7 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 						},
 					},
 				},
-				Prefix: &ast.NameName{
+				Prefix: &ast.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -32117,7 +32117,7 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 						EndPos:    10,
 					},
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -32170,15 +32170,15 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 						EndPos:    12,
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  12,
 							EndPos:    15,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -32186,7 +32186,7 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 								EndPos:    15,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -32208,14 +32208,14 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  17,
 							EndPos:    28,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -32223,7 +32223,7 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 								EndPos:    20,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -32366,7 +32366,7 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 			EndPos:    31,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtGroupUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -32436,7 +32436,7 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 					},
 					Value: []byte("function"),
 				},
-				Prefix: &ast.NameName{
+				Prefix: &ast.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -32444,7 +32444,7 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 						EndPos:    19,
 					},
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -32497,15 +32497,15 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 						EndPos:    21,
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  21,
 							EndPos:    24,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -32513,7 +32513,7 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 								EndPos:    24,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -32535,14 +32535,14 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  26,
 							EndPos:    29,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -32550,7 +32550,7 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 								EndPos:    29,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -32640,7 +32640,7 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 			EndPos:    28,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtGroupUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -32710,7 +32710,7 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 					},
 					Value: []byte("const"),
 				},
-				Prefix: &ast.NameName{
+				Prefix: &ast.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -32718,7 +32718,7 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 						EndPos:    16,
 					},
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -32771,15 +32771,15 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 						EndPos:    18,
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  18,
 							EndPos:    21,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -32787,7 +32787,7 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 								EndPos:    21,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -32809,14 +32809,14 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  23,
 							EndPos:    26,
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -32824,7 +32824,7 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 								EndPos:    26,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -32914,7 +32914,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 			EndPos:    37,
 		},
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtGroupUseList{
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
@@ -32953,7 +32953,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 						},
 					},
 				},
-				Prefix: &ast.NameName{
+				Prefix: &ast.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -32961,7 +32961,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 						EndPos:    10,
 					},
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{
+						&ast.NamePart{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -33014,8 +33014,8 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 						EndPos:    12,
 					},
 				},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -33041,7 +33041,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 							},
 							Value: []byte("const"),
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -33049,7 +33049,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 								EndPos:    21,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -33083,7 +33083,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 							},
 						},
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -33121,7 +33121,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 							},
 							Value: []byte("function"),
 						},
-						Use: &ast.NameName{
+						Use: &ast.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -33129,7 +33129,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 								EndPos:    35,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -33951,7 +33951,7 @@ func TestExprArrayDimFetch(t *testing.T) {
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -34094,7 +34094,7 @@ func TestExprArrayDimFetch_Nested(t *testing.T) {
 								StartPos:  3,
 								EndPos:    5,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -34627,7 +34627,7 @@ func TestExprArray_Items(t *testing.T) {
 									StartPos:  16,
 									EndPos:    18,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -34797,7 +34797,7 @@ func TestExprArray_ItemUnpack(t *testing.T) {
 									StartPos:  12,
 									EndPos:    14,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -34958,7 +34958,7 @@ func TestExprArrowFunction(t *testing.T) {
 							StartPos:  11,
 							EndPos:    13,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -35146,7 +35146,7 @@ func TestExprArrowFunction_ReturnType(t *testing.T) {
 							},
 						},
 					},
-					ReturnType: &ast.NameName{
+					ReturnType: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -35154,7 +35154,7 @@ func TestExprArrowFunction_ReturnType(t *testing.T) {
 							EndPos:    16,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -35216,7 +35216,7 @@ func TestExprArrowFunction_ReturnType(t *testing.T) {
 							StartPos:  20,
 							EndPos:    22,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -35335,7 +35335,7 @@ func TestExprBitwiseNot(t *testing.T) {
 							StartPos:  4,
 							EndPos:    6,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -35442,7 +35442,7 @@ func TestExprBooleanNot(t *testing.T) {
 							StartPos:  4,
 							EndPos:    6,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -35510,7 +35510,7 @@ func TestExprClassConstFetch(t *testing.T) {
 						StartPos:  3,
 						EndPos:    11,
 					},
-					Class: &ast.NameName{
+					Class: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -35518,7 +35518,7 @@ func TestExprClassConstFetch(t *testing.T) {
 							EndPos:    6,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -35571,7 +35571,7 @@ func TestExprClassConstFetch(t *testing.T) {
 							EndPos:    8,
 						},
 					},
-					ConstantName: &ast.Identifier{
+					Const: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -35689,7 +35689,7 @@ func TestExprClassConstFetch_Static(t *testing.T) {
 							EndPos:    11,
 						},
 					},
-					ConstantName: &ast.Identifier{
+					Const: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -35812,7 +35812,7 @@ func TestExprClone_Brackets(t *testing.T) {
 								StartPos:  9,
 								EndPos:    11,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -35930,7 +35930,7 @@ func TestExprClone(t *testing.T) {
 							StartPos:  9,
 							EndPos:    11,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -36188,7 +36188,7 @@ func TestExprClosure_Use(t *testing.T) {
 									StartPos:  12,
 									EndPos:    14,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -36223,7 +36223,7 @@ func TestExprClosure_Use(t *testing.T) {
 									StartPos:  16,
 									EndPos:    18,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -36323,7 +36323,7 @@ func TestExprClosure_Use(t *testing.T) {
 							},
 						},
 					},
-					Use: []ast.Vertex{
+					Uses: []ast.Vertex{
 						&ast.ExprClosureUse{
 							Position: &position.Position{
 								StartLine: 1,
@@ -36338,7 +36338,7 @@ func TestExprClosure_Use(t *testing.T) {
 									StartPos:  25,
 									EndPos:    27,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -36395,7 +36395,7 @@ func TestExprClosure_Use(t *testing.T) {
 									StartPos:  30,
 									EndPos:    32,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -36577,7 +36577,7 @@ func TestExprClosure_Use2(t *testing.T) {
 									StartPos:  12,
 									EndPos:    14,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -36612,7 +36612,7 @@ func TestExprClosure_Use2(t *testing.T) {
 									StartPos:  16,
 									EndPos:    18,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -36712,7 +36712,7 @@ func TestExprClosure_Use2(t *testing.T) {
 							},
 						},
 					},
-					Use: []ast.Vertex{
+					Uses: []ast.Vertex{
 						&ast.ExprClosureUse{
 							Position: &position.Position{
 								StartLine: 1,
@@ -36737,7 +36737,7 @@ func TestExprClosure_Use2(t *testing.T) {
 									StartPos:  26,
 									EndPos:    28,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -36772,7 +36772,7 @@ func TestExprClosure_Use2(t *testing.T) {
 									StartPos:  30,
 									EndPos:    32,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -36971,7 +36971,7 @@ func TestExprClosure_ReturnType(t *testing.T) {
 							EndPos:    14,
 						},
 					},
-					ReturnType: &ast.NameName{
+					ReturnType: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -36979,7 +36979,7 @@ func TestExprClosure_ReturnType(t *testing.T) {
 							EndPos:    19,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -37093,7 +37093,7 @@ func TestExprConstFetch(t *testing.T) {
 						StartPos:  3,
 						EndPos:    6,
 					},
-					Const: &ast.NameName{
+					Const: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -37101,7 +37101,7 @@ func TestExprConstFetch(t *testing.T) {
 							EndPos:    6,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -37242,7 +37242,7 @@ func TestExprConstFetch_Relative(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -37351,7 +37351,7 @@ func TestExprConstFetch_FullyQualified(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -37469,7 +37469,7 @@ func TestExprEmpty(t *testing.T) {
 							StartPos:  9,
 							EndPos:    11,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -37586,7 +37586,7 @@ func TestExprErrorSuppress(t *testing.T) {
 							StartPos:  4,
 							EndPos:    6,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -37703,7 +37703,7 @@ func TestExprEval(t *testing.T) {
 							StartPos:  8,
 							EndPos:    10,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -38010,7 +38010,7 @@ func TestExprExit_Expr(t *testing.T) {
 							StartPos:  8,
 							EndPos:    10,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -38317,7 +38317,7 @@ func TestExprDie_Expr(t *testing.T) {
 							StartPos:  7,
 							EndPos:    9,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -38395,7 +38395,7 @@ func TestExprFunctionCall(t *testing.T) {
 						StartPos:  3,
 						EndPos:    8,
 					},
-					Function: &ast.NameName{
+					Function: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -38403,7 +38403,7 @@ func TestExprFunctionCall(t *testing.T) {
 							EndPos:    6,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -38564,7 +38564,7 @@ func TestExprFunctionCall_Relative(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -38693,7 +38693,7 @@ func TestExprFunctionCall_FullyQualified(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -38724,7 +38724,7 @@ func TestExprFunctionCall_FullyQualified(t *testing.T) {
 							EndPos:    8,
 						},
 					},
-					Arguments: []ast.Vertex{
+					Args: []ast.Vertex{
 						&ast.Argument{
 							Position: &position.Position{
 								StartLine: 1,
@@ -38827,7 +38827,7 @@ func TestExprFunctionCall_Var(t *testing.T) {
 							StartPos:  3,
 							EndPos:    7,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -38879,7 +38879,7 @@ func TestExprFunctionCall_Var(t *testing.T) {
 							EndPos:    8,
 						},
 					},
-					Arguments: []ast.Vertex{
+					Args: []ast.Vertex{
 						&ast.Argument{
 							Position: &position.Position{
 								StartLine: 1,
@@ -38904,14 +38904,14 @@ func TestExprFunctionCall_Var(t *testing.T) {
 										EndPos:    13,
 									},
 								},
-								Value: &ast.ExprVariable{
+								Val: &ast.ExprVariable{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  14,
 										EndPos:    16,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -39004,7 +39004,7 @@ func TestExprFunctionCall_ExprArg(t *testing.T) {
 						StartPos:  3,
 						EndPos:    15,
 					},
-					Function: &ast.NameName{
+					Function: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -39012,7 +39012,7 @@ func TestExprFunctionCall_ExprArg(t *testing.T) {
 							EndPos:    7,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -39065,7 +39065,7 @@ func TestExprFunctionCall_ExprArg(t *testing.T) {
 							EndPos:    8,
 						},
 					},
-					Arguments: []ast.Vertex{
+					Args: []ast.Vertex{
 						&ast.Argument{
 							Position: &position.Position{
 								StartLine: 1,
@@ -39087,7 +39087,7 @@ func TestExprFunctionCall_ExprArg(t *testing.T) {
 										StartPos:  8,
 										EndPos:    12,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -39204,7 +39204,7 @@ func TestExprPostDec(t *testing.T) {
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -39311,7 +39311,7 @@ func TestExprPostInc(t *testing.T) {
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -39450,7 +39450,7 @@ func TestExprPreDec(t *testing.T) {
 							StartPos:  5,
 							EndPos:    7,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -39557,7 +39557,7 @@ func TestExprPreInc(t *testing.T) {
 							StartPos:  5,
 							EndPos:    7,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -39664,7 +39664,7 @@ func TestExprInclude(t *testing.T) {
 							StartPos:  11,
 							EndPos:    13,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -39783,7 +39783,7 @@ func TestExprInclude_Once(t *testing.T) {
 							StartPos:  16,
 							EndPos:    18,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -39902,7 +39902,7 @@ func TestExprRequire(t *testing.T) {
 							StartPos:  11,
 							EndPos:    13,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -40021,7 +40021,7 @@ func TestExprRequire_Once(t *testing.T) {
 							StartPos:  16,
 							EndPos:    18,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -40108,7 +40108,7 @@ func TestExprInstanceOf(t *testing.T) {
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -40172,7 +40172,7 @@ func TestExprInstanceOf(t *testing.T) {
 							},
 						},
 					},
-					Class: &ast.NameName{
+					Class: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -40180,7 +40180,7 @@ func TestExprInstanceOf(t *testing.T) {
 							EndPos:    20,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -40268,7 +40268,7 @@ func TestExprInstanceOf_Relative(t *testing.T) {
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -40372,7 +40372,7 @@ func TestExprInstanceOf_Relative(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -40448,7 +40448,7 @@ func TestExprInstanceOf_FullyQualified(t *testing.T) {
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -40542,7 +40542,7 @@ func TestExprInstanceOf_FullyQualified(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -40661,7 +40661,7 @@ func TestExprIsset(t *testing.T) {
 								StartPos:  9,
 								EndPos:    11,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -40790,7 +40790,7 @@ func TestExprIsset_Variables(t *testing.T) {
 								StartPos:  9,
 								EndPos:    11,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -40817,7 +40817,7 @@ func TestExprIsset_Variables(t *testing.T) {
 								StartPos:  13,
 								EndPos:    15,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -41009,7 +41009,7 @@ func TestExprList_Empty(t *testing.T) {
 							StartPos:  12,
 							EndPos:    14,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -41153,7 +41153,7 @@ func TestExprList(t *testing.T) {
 										StartPos:  8,
 										EndPos:    10,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -41215,7 +41215,7 @@ func TestExprList(t *testing.T) {
 							StartPos:  14,
 							EndPos:    16,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -41366,7 +41366,7 @@ func TestExprList_ArrayIndex(t *testing.T) {
 											StartPos:  8,
 											EndPos:    10,
 										},
-										VarName: &ast.Identifier{
+										Name: &ast.Identifier{
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
@@ -41449,7 +41449,7 @@ func TestExprList_ArrayIndex(t *testing.T) {
 							StartPos:  16,
 							EndPos:    18,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -41628,7 +41628,7 @@ func TestExprList_List(t *testing.T) {
 													StartPos:  13,
 													EndPos:    15,
 												},
-												VarName: &ast.Identifier{
+												Name: &ast.Identifier{
 													Position: &position.Position{
 														StartLine: 1,
 														EndLine:   1,
@@ -41703,7 +41703,7 @@ func TestExprList_List(t *testing.T) {
 							StartPos:  20,
 							EndPos:    22,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -41848,7 +41848,7 @@ func TestExprList_EmptyItem(t *testing.T) {
 										StartPos:  10,
 										EndPos:    12,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -41934,7 +41934,7 @@ func TestExprList_EmptyItem(t *testing.T) {
 							StartPos:  16,
 							EndPos:    18,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -42080,7 +42080,7 @@ func TestExprList_EmptyItems(t *testing.T) {
 										StartPos:  12,
 										EndPos:    14,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -42211,7 +42211,7 @@ func TestExprList_EmptyItems(t *testing.T) {
 							StartPos:  20,
 							EndPos:    22,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -42298,7 +42298,7 @@ func TestExprMethodCall(t *testing.T) {
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -42469,7 +42469,7 @@ func TestExprNew(t *testing.T) {
 							},
 						},
 					},
-					Class: &ast.NameName{
+					Class: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -42477,7 +42477,7 @@ func TestExprNew(t *testing.T) {
 							EndPos:    10,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -42630,7 +42630,7 @@ func TestExprNew_Relative(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -42781,7 +42781,7 @@ func TestExprNew_FullyQualified(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -42953,7 +42953,7 @@ func TestExprNew_Anonymous(t *testing.T) {
 								},
 							},
 						},
-						Arguments: []ast.Vertex{
+						Args: []ast.Vertex{
 							&ast.Argument{
 								Position: &position.Position{
 									StartLine: 1,
@@ -42968,7 +42968,7 @@ func TestExprNew_Anonymous(t *testing.T) {
 										StartPos:  14,
 										EndPos:    16,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -43025,7 +43025,7 @@ func TestExprNew_Anonymous(t *testing.T) {
 										StartPos:  21,
 										EndPos:    23,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -43207,7 +43207,7 @@ func TestExprPrint(t *testing.T) {
 								StartPos:  9,
 								EndPos:    11,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -43293,7 +43293,7 @@ func TestExprPropertyFetch(t *testing.T) {
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -43345,7 +43345,7 @@ func TestExprPropertyFetch(t *testing.T) {
 							EndPos:    7,
 						},
 					},
-					Property: &ast.Identifier{
+					Prop: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -43471,7 +43471,7 @@ func TestExprShellExec(t *testing.T) {
 								StartPos:  8,
 								EndPos:    10,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -43884,7 +43884,7 @@ func TestExprShortArray_Items(t *testing.T) {
 									StartPos:  11,
 									EndPos:    13,
 								},
-								VarName: &ast.Identifier{
+								Name: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
@@ -44041,7 +44041,7 @@ func TestExprShortList(t *testing.T) {
 										StartPos:  4,
 										EndPos:    6,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
@@ -44103,7 +44103,7 @@ func TestExprShortList(t *testing.T) {
 							StartPos:  10,
 							EndPos:    12,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -44244,7 +44244,7 @@ func TestExprShortList_ArrayIndex(t *testing.T) {
 											StartPos:  4,
 											EndPos:    6,
 										},
-										VarName: &ast.Identifier{
+										Name: &ast.Identifier{
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
@@ -44327,7 +44327,7 @@ func TestExprShortList_ArrayIndex(t *testing.T) {
 							StartPos:  12,
 							EndPos:    14,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -44496,7 +44496,7 @@ func TestExprShortList_List(t *testing.T) {
 													StartPos:  9,
 													EndPos:    11,
 												},
-												VarName: &ast.Identifier{
+												Name: &ast.Identifier{
 													Position: &position.Position{
 														StartLine: 1,
 														EndLine:   1,
@@ -44571,7 +44571,7 @@ func TestExprShortList_List(t *testing.T) {
 							StartPos:  16,
 							EndPos:    18,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -44651,7 +44651,7 @@ func TestExprStaticCall(t *testing.T) {
 						StartPos:  3,
 						EndPos:    13,
 					},
-					Class: &ast.NameName{
+					Class: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -44659,7 +44659,7 @@ func TestExprStaticCall(t *testing.T) {
 							EndPos:    6,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -44849,7 +44849,7 @@ func TestExprStaticCall_Relative(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -45007,7 +45007,7 @@ func TestExprStaticCall_FullyQualified(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -45125,7 +45125,7 @@ func TestExprStaticCall_Var(t *testing.T) {
 						StartPos:  3,
 						EndPos:    14,
 					},
-					Class: &ast.NameName{
+					Class: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -45133,7 +45133,7 @@ func TestExprStaticCall_Var(t *testing.T) {
 							EndPos:    6,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -45193,7 +45193,7 @@ func TestExprStaticCall_Var(t *testing.T) {
 							StartPos:  8,
 							EndPos:    12,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -45288,7 +45288,7 @@ func TestExprStaticCall_VarVar(t *testing.T) {
 							StartPos:  3,
 							EndPos:    7,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -45347,7 +45347,7 @@ func TestExprStaticCall_VarVar(t *testing.T) {
 							StartPos:  9,
 							EndPos:    13,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -45435,7 +45435,7 @@ func TestExprStaticPropertyFetch(t *testing.T) {
 						StartPos:  3,
 						EndPos:    12,
 					},
-					Class: &ast.NameName{
+					Class: &ast.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -45443,7 +45443,7 @@ func TestExprStaticPropertyFetch(t *testing.T) {
 							EndPos:    6,
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -45496,14 +45496,14 @@ func TestExprStaticPropertyFetch(t *testing.T) {
 							EndPos:    8,
 						},
 					},
-					Property: &ast.ExprVariable{
+					Prop: &ast.ExprVariable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  8,
 							EndPos:    12,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -45621,7 +45621,7 @@ func TestExprStaticPropertyFetch_Relative(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -45652,14 +45652,14 @@ func TestExprStaticPropertyFetch_Relative(t *testing.T) {
 							EndPos:    18,
 						},
 					},
-					Property: &ast.ExprVariable{
+					Prop: &ast.ExprVariable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  18,
 							EndPos:    22,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -45767,7 +45767,7 @@ func TestExprStaticPropertyFetch_FullyQualified(t *testing.T) {
 							},
 						},
 						Parts: []ast.Vertex{
-							&ast.NameNamePart{
+							&ast.NamePart{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -45798,14 +45798,14 @@ func TestExprStaticPropertyFetch_FullyQualified(t *testing.T) {
 							EndPos:    9,
 						},
 					},
-					Property: &ast.ExprVariable{
+					Prop: &ast.ExprVariable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  9,
 							EndPos:    13,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -45873,14 +45873,14 @@ func TestExprTernary(t *testing.T) {
 						StartPos:  3,
 						EndPos:    15,
 					},
-					Condition: &ast.ExprVariable{
+					Cond: &ast.ExprVariable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -45951,7 +45951,7 @@ func TestExprTernary(t *testing.T) {
 							StartPos:  8,
 							EndPos:    10,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -46012,7 +46012,7 @@ func TestExprTernary(t *testing.T) {
 							StartPos:  13,
 							EndPos:    15,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -46092,14 +46092,14 @@ func TestExprTernary_Simple(t *testing.T) {
 						StartPos:  3,
 						EndPos:    12,
 					},
-					Condition: &ast.ExprVariable{
+					Cond: &ast.ExprVariable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -46192,7 +46192,7 @@ func TestExprTernary_Simple(t *testing.T) {
 							StartPos:  10,
 							EndPos:    12,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -46272,14 +46272,14 @@ func TestExprTernary_NestedTrue(t *testing.T) {
 						StartPos:  3,
 						EndPos:    25,
 					},
-					Condition: &ast.ExprVariable{
+					Cond: &ast.ExprVariable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  3,
 							EndPos:    5,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -46350,14 +46350,14 @@ func TestExprTernary_NestedTrue(t *testing.T) {
 							StartPos:  8,
 							EndPos:    20,
 						},
-						Condition: &ast.ExprVariable{
+						Cond: &ast.ExprVariable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  8,
 								EndPos:    10,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -46418,7 +46418,7 @@ func TestExprTernary_NestedTrue(t *testing.T) {
 								StartPos:  13,
 								EndPos:    15,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -46479,7 +46479,7 @@ func TestExprTernary_NestedTrue(t *testing.T) {
 								StartPos:  18,
 								EndPos:    20,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -46541,7 +46541,7 @@ func TestExprTernary_NestedTrue(t *testing.T) {
 							StartPos:  23,
 							EndPos:    25,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -46621,21 +46621,21 @@ func TestExprTernary_NestedCond(t *testing.T) {
 						StartPos:  3,
 						EndPos:    25,
 					},
-					Condition: &ast.ExprTernary{
+					Cond: &ast.ExprTernary{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  3,
 							EndPos:    15,
 						},
-						Condition: &ast.ExprVariable{
+						Cond: &ast.ExprVariable{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
 								StartPos:  3,
 								EndPos:    5,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -46706,7 +46706,7 @@ func TestExprTernary_NestedCond(t *testing.T) {
 								StartPos:  8,
 								EndPos:    10,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -46767,7 +46767,7 @@ func TestExprTernary_NestedCond(t *testing.T) {
 								StartPos:  13,
 								EndPos:    15,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
@@ -46829,7 +46829,7 @@ func TestExprTernary_NestedCond(t *testing.T) {
 							StartPos:  18,
 							EndPos:    20,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -46890,7 +46890,7 @@ func TestExprTernary_NestedCond(t *testing.T) {
 							StartPos:  23,
 							EndPos:    25,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -47009,7 +47009,7 @@ func TestExprUnaryMinus(t *testing.T) {
 							StartPos:  4,
 							EndPos:    6,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -47116,7 +47116,7 @@ func TestExprUnaryPlus(t *testing.T) {
 							StartPos:  4,
 							EndPos:    6,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -47184,7 +47184,7 @@ func TestExprVariable(t *testing.T) {
 						StartPos:  3,
 						EndPos:    5,
 					},
-					VarName: &ast.Identifier{
+					Name: &ast.Identifier{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -47305,14 +47305,14 @@ func TestExprVariable_Variable(t *testing.T) {
 							},
 						},
 					},
-					VarName: &ast.ExprVariable{
+					Name: &ast.ExprVariable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  4,
 							EndPos:    6,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -47492,14 +47492,14 @@ func TestExprYield_Val(t *testing.T) {
 							},
 						},
 					},
-					Value: &ast.ExprVariable{
+					Val: &ast.ExprVariable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  9,
 							EndPos:    11,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -47618,7 +47618,7 @@ func TestExprYield_KeyVal(t *testing.T) {
 							StartPos:  9,
 							EndPos:    11,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -47672,14 +47672,14 @@ func TestExprYield_KeyVal(t *testing.T) {
 							},
 						},
 					},
-					Value: &ast.ExprVariable{
+					Val: &ast.ExprVariable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
 							StartPos:  15,
 							EndPos:    17,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -47791,7 +47791,7 @@ func TestExprYield_Expr(t *testing.T) {
 							},
 						},
 					},
-					Value: &ast.ScalarLnumber{
+					Val: &ast.ScalarLnumber{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -47909,7 +47909,7 @@ func TestExprYield_KeyExpr(t *testing.T) {
 							StartPos:  9,
 							EndPos:    11,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -47963,7 +47963,7 @@ func TestExprYield_KeyExpr(t *testing.T) {
 							},
 						},
 					},
-					Value: &ast.ScalarLnumber{
+					Val: &ast.ScalarLnumber{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
@@ -48081,7 +48081,7 @@ func TestExprYieldFrom(t *testing.T) {
 							StartPos:  14,
 							EndPos:    16,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
@@ -48187,7 +48187,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  5,
 							EndPos:    7,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 2,
 								EndLine:   2,
@@ -48258,7 +48258,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  10,
 							EndPos:    12,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 2,
 								EndLine:   2,
@@ -48323,7 +48323,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  16,
 							EndPos:    18,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 3,
 								EndLine:   3,
@@ -48394,7 +48394,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  22,
 							EndPos:    24,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 3,
 								EndLine:   3,
@@ -48459,7 +48459,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  28,
 							EndPos:    30,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 4,
 								EndLine:   4,
@@ -48552,7 +48552,7 @@ func TestExprAssign_Assign(t *testing.T) {
 								},
 							},
 						},
-						Class: &ast.NameName{
+						Class: &ast.Name{
 							Position: &position.Position{
 								StartLine: 4,
 								EndLine:   4,
@@ -48560,7 +48560,7 @@ func TestExprAssign_Assign(t *testing.T) {
 								EndPos:    41,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 4,
 										EndLine:   4,
@@ -48627,7 +48627,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  45,
 							EndPos:    47,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 5,
 								EndLine:   5,
@@ -48720,7 +48720,7 @@ func TestExprAssign_Assign(t *testing.T) {
 								},
 							},
 						},
-						Class: &ast.NameName{
+						Class: &ast.Name{
 							Position: &position.Position{
 								StartLine: 5,
 								EndLine:   5,
@@ -48728,7 +48728,7 @@ func TestExprAssign_Assign(t *testing.T) {
 								EndPos:    58,
 							},
 							Parts: []ast.Vertex{
-								&ast.NameNamePart{
+								&ast.NamePart{
 									Position: &position.Position{
 										StartLine: 5,
 										EndLine:   5,
@@ -48771,7 +48771,7 @@ func TestExprAssign_Assign(t *testing.T) {
 								EndPos:    59,
 							},
 						},
-						Arguments: []ast.Vertex{
+						Args: []ast.Vertex{
 							&ast.Argument{
 								Position: &position.Position{
 									StartLine: 5,
@@ -48786,7 +48786,7 @@ func TestExprAssign_Assign(t *testing.T) {
 										StartPos:  59,
 										EndPos:    61,
 									},
-									VarName: &ast.Identifier{
+									Name: &ast.Identifier{
 										Position: &position.Position{
 											StartLine: 5,
 											EndLine:   5,
@@ -48852,7 +48852,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  66,
 							EndPos:    68,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 6,
 								EndLine:   6,
@@ -48913,7 +48913,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  72,
 							EndPos:    74,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 6,
 								EndLine:   6,
@@ -48978,7 +48978,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  78,
 							EndPos:    80,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 7,
 								EndLine:   7,
@@ -49039,7 +49039,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  84,
 							EndPos:    86,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 7,
 								EndLine:   7,
@@ -49104,7 +49104,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  90,
 							EndPos:    92,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 8,
 								EndLine:   8,
@@ -49165,7 +49165,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  96,
 							EndPos:    98,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 8,
 								EndLine:   8,
@@ -49230,7 +49230,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  102,
 							EndPos:    104,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 9,
 								EndLine:   9,
@@ -49291,7 +49291,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  108,
 							EndPos:    110,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 9,
 								EndLine:   9,
@@ -49356,7 +49356,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  114,
 							EndPos:    116,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 10,
 								EndLine:   10,
@@ -49417,7 +49417,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  120,
 							EndPos:    122,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 10,
 								EndLine:   10,
@@ -49482,7 +49482,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  126,
 							EndPos:    128,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 11,
 								EndLine:   11,
@@ -49543,7 +49543,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  132,
 							EndPos:    134,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 11,
 								EndLine:   11,
@@ -49608,7 +49608,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  138,
 							EndPos:    140,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 12,
 								EndLine:   12,
@@ -49669,7 +49669,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  144,
 							EndPos:    146,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 12,
 								EndLine:   12,
@@ -49734,7 +49734,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  150,
 							EndPos:    152,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 13,
 								EndLine:   13,
@@ -49795,7 +49795,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  156,
 							EndPos:    158,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 13,
 								EndLine:   13,
@@ -49860,7 +49860,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  162,
 							EndPos:    164,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 14,
 								EndLine:   14,
@@ -49921,7 +49921,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  168,
 							EndPos:    170,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 14,
 								EndLine:   14,
@@ -49986,7 +49986,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  174,
 							EndPos:    176,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 15,
 								EndLine:   15,
@@ -50047,7 +50047,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  181,
 							EndPos:    183,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 15,
 								EndLine:   15,
@@ -50112,7 +50112,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  187,
 							EndPos:    189,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 16,
 								EndLine:   16,
@@ -50173,7 +50173,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  194,
 							EndPos:    196,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 16,
 								EndLine:   16,
@@ -50238,7 +50238,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  200,
 							EndPos:    202,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 17,
 								EndLine:   17,
@@ -50299,7 +50299,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  207,
 							EndPos:    209,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 17,
 								EndLine:   17,
@@ -50364,7 +50364,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  213,
 							EndPos:    215,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 18,
 								EndLine:   18,
@@ -50425,7 +50425,7 @@ func TestExprAssign_Assign(t *testing.T) {
 							StartPos:  220,
 							EndPos:    222,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 18,
 								EndLine:   18,
@@ -50541,7 +50541,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  5,
 							EndPos:    7,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 2,
 								EndLine:   2,
@@ -50612,7 +50612,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  10,
 							EndPos:    12,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 2,
 								EndLine:   2,
@@ -50677,7 +50677,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  16,
 							EndPos:    18,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 3,
 								EndLine:   3,
@@ -50738,7 +50738,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  21,
 							EndPos:    23,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 3,
 								EndLine:   3,
@@ -50803,7 +50803,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  27,
 							EndPos:    29,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 4,
 								EndLine:   4,
@@ -50864,7 +50864,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  32,
 							EndPos:    34,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 4,
 								EndLine:   4,
@@ -50929,7 +50929,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  38,
 							EndPos:    40,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 5,
 								EndLine:   5,
@@ -50990,7 +50990,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  44,
 							EndPos:    46,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 5,
 								EndLine:   5,
@@ -51055,7 +51055,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  50,
 							EndPos:    52,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 6,
 								EndLine:   6,
@@ -51116,7 +51116,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  56,
 							EndPos:    58,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 6,
 								EndLine:   6,
@@ -51181,7 +51181,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  62,
 							EndPos:    64,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 7,
 								EndLine:   7,
@@ -51242,7 +51242,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  68,
 							EndPos:    70,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 7,
 								EndLine:   7,
@@ -51307,7 +51307,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  74,
 							EndPos:    76,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 8,
 								EndLine:   8,
@@ -51368,7 +51368,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  79,
 							EndPos:    81,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 8,
 								EndLine:   8,
@@ -51433,7 +51433,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  85,
 							EndPos:    87,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 9,
 								EndLine:   9,
@@ -51494,7 +51494,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  90,
 							EndPos:    92,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 9,
 								EndLine:   9,
@@ -51559,7 +51559,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  96,
 							EndPos:    98,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 10,
 								EndLine:   10,
@@ -51620,7 +51620,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  102,
 							EndPos:    104,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 10,
 								EndLine:   10,
@@ -51685,7 +51685,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  108,
 							EndPos:    110,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 11,
 								EndLine:   11,
@@ -51746,7 +51746,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  114,
 							EndPos:    116,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 11,
 								EndLine:   11,
@@ -51811,7 +51811,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  120,
 							EndPos:    122,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 12,
 								EndLine:   12,
@@ -51872,7 +51872,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  125,
 							EndPos:    127,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 12,
 								EndLine:   12,
@@ -51937,7 +51937,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  131,
 							EndPos:    133,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 13,
 								EndLine:   13,
@@ -51998,7 +51998,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  138,
 							EndPos:    140,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 13,
 								EndLine:   13,
@@ -52063,7 +52063,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  144,
 							EndPos:    146,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 14,
 								EndLine:   14,
@@ -52124,7 +52124,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  151,
 							EndPos:    153,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 14,
 								EndLine:   14,
@@ -52189,7 +52189,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  157,
 							EndPos:    159,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 15,
 								EndLine:   15,
@@ -52250,7 +52250,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  163,
 							EndPos:    165,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 15,
 								EndLine:   15,
@@ -52315,7 +52315,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  169,
 							EndPos:    171,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 16,
 								EndLine:   16,
@@ -52376,7 +52376,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  176,
 							EndPos:    178,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 16,
 								EndLine:   16,
@@ -52441,7 +52441,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  182,
 							EndPos:    184,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 17,
 								EndLine:   17,
@@ -52502,7 +52502,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  187,
 							EndPos:    189,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 17,
 								EndLine:   17,
@@ -52567,7 +52567,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  193,
 							EndPos:    195,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 18,
 								EndLine:   18,
@@ -52628,7 +52628,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  198,
 							EndPos:    200,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 18,
 								EndLine:   18,
@@ -52693,7 +52693,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  204,
 							EndPos:    206,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 19,
 								EndLine:   19,
@@ -52754,7 +52754,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  209,
 							EndPos:    211,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 19,
 								EndLine:   19,
@@ -52819,7 +52819,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  215,
 							EndPos:    217,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 20,
 								EndLine:   20,
@@ -52880,7 +52880,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  221,
 							EndPos:    223,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 20,
 								EndLine:   20,
@@ -52945,7 +52945,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  227,
 							EndPos:    229,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 21,
 								EndLine:   21,
@@ -53006,7 +53006,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  234,
 							EndPos:    236,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 21,
 								EndLine:   21,
@@ -53071,7 +53071,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  240,
 							EndPos:    242,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 22,
 								EndLine:   22,
@@ -53132,7 +53132,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  245,
 							EndPos:    247,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 22,
 								EndLine:   22,
@@ -53197,7 +53197,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  251,
 							EndPos:    253,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 23,
 								EndLine:   23,
@@ -53258,7 +53258,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  257,
 							EndPos:    259,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 23,
 								EndLine:   23,
@@ -53323,7 +53323,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  263,
 							EndPos:    265,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 24,
 								EndLine:   24,
@@ -53384,7 +53384,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  269,
 							EndPos:    271,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 24,
 								EndLine:   24,
@@ -53449,7 +53449,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  275,
 							EndPos:    277,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 25,
 								EndLine:   25,
@@ -53510,7 +53510,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  281,
 							EndPos:    283,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 25,
 								EndLine:   25,
@@ -53575,7 +53575,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  287,
 							EndPos:    289,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 26,
 								EndLine:   26,
@@ -53636,7 +53636,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  293,
 							EndPos:    295,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 26,
 								EndLine:   26,
@@ -53701,7 +53701,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  299,
 							EndPos:    301,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 27,
 								EndLine:   27,
@@ -53762,7 +53762,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  304,
 							EndPos:    306,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 27,
 								EndLine:   27,
@@ -53827,7 +53827,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  310,
 							EndPos:    312,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 28,
 								EndLine:   28,
@@ -53888,7 +53888,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 							StartPos:  317,
 							EndPos:    319,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 28,
 								EndLine:   28,
@@ -54020,7 +54020,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  12,
 							EndPos:    14,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 2,
 								EndLine:   2,
@@ -54095,7 +54095,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  27,
 							EndPos:    29,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 3,
 								EndLine:   3,
@@ -54170,7 +54170,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  39,
 							EndPos:    41,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 4,
 								EndLine:   4,
@@ -54245,7 +54245,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  53,
 							EndPos:    55,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 5,
 								EndLine:   5,
@@ -54320,7 +54320,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  66,
 							EndPos:    68,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 6,
 								EndLine:   6,
@@ -54395,7 +54395,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  81,
 							EndPos:    83,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 7,
 								EndLine:   7,
@@ -54470,7 +54470,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  92,
 							EndPos:    94,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 8,
 								EndLine:   8,
@@ -54545,7 +54545,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  106,
 							EndPos:    108,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 9,
 								EndLine:   9,
@@ -54620,7 +54620,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  120,
 							EndPos:    122,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 10,
 								EndLine:   10,
@@ -54695,7 +54695,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  134,
 							EndPos:    136,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 11,
 								EndLine:   11,
@@ -54770,7 +54770,7 @@ func TestExprCast_Array(t *testing.T) {
 							StartPos:  147,
 							EndPos:    149,
 						},
-						VarName: &ast.Identifier{
+						Name: &ast.Identifier{
 							Position: &position.Position{
 								StartLine: 12,
 								EndLine:   12,
@@ -55428,7 +55428,7 @@ CAD;
 								StartPos:  79,
 								EndPos:    85,
 							},
-							VarName: &ast.Identifier{
+							Name: &ast.Identifier{
 								Position: &position.Position{
 									StartLine: 11,
 									EndLine:   11,

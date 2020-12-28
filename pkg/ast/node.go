@@ -135,7 +135,7 @@ func (n *ScalarEncapsedStringPart) GetPosition() *position.Position {
 type ScalarEncapsedStringVar struct {
 	Position                  *position.Position
 	DollarOpenCurlyBracketTkn *token.Token
-	VarName                   Vertex
+	Name                      Vertex
 	OpenSquareBracketTkn      *token.Token
 	Dim                       Vertex
 	CloseSquareBracketTkn     *token.Token
@@ -288,9 +288,9 @@ type StmtClass struct {
 	Position                *position.Position
 	Modifiers               []Vertex
 	ClassTkn                *token.Token
-	ClassName               Vertex
+	Name                    Vertex
 	OpenParenthesisTkn      *token.Token
-	Arguments               []Vertex
+	Args                    []Vertex
 	SeparatorTkns           []*token.Token
 	CloseParenthesisTkn     *token.Token
 	ExtendsTkn              *token.Token
@@ -335,7 +335,7 @@ type StmtClassMethod struct {
 	Modifiers           []Vertex
 	FunctionTkn         *token.Token
 	AmpersandTkn        *token.Token
-	MethodName          Vertex
+	Name                Vertex
 	OpenParenthesisTkn  *token.Token
 	Params              []Vertex
 	SeparatorTkns       []*token.Token
@@ -603,7 +603,7 @@ type StmtFunction struct {
 	Position             *position.Position
 	FunctionTkn          *token.Token
 	AmpersandTkn         *token.Token
-	FunctionName         Vertex
+	Name                 Vertex
 	OpenParenthesisTkn   *token.Token
 	Params               []Vertex
 	SeparatorTkns        []*token.Token
@@ -715,7 +715,7 @@ func (n *StmtInlineHtml) GetPosition() *position.Position {
 type StmtInterface struct {
 	Position             *position.Position
 	InterfaceTkn         *token.Token
-	InterfaceName        Vertex
+	Name                 Vertex
 	ExtendsTkn           *token.Token
 	Extends              []Vertex
 	ExtendsSeparatorTkns []*token.Token
@@ -734,9 +734,9 @@ func (n *StmtInterface) GetPosition() *position.Position {
 
 // StmtLabel node
 type StmtLabel struct {
-	Position  *position.Position
-	LabelName Vertex
-	ColonTkn  *token.Token
+	Position *position.Position
+	Name     Vertex
+	ColonTkn *token.Token
 }
 
 func (n *StmtLabel) Accept(v Visitor) {
@@ -801,7 +801,7 @@ type StmtPropertyList struct {
 	Position      *position.Position
 	Modifiers     []Vertex
 	Type          Vertex
-	Properties    []Vertex
+	Props         []Vertex
 	SeparatorTkns []*token.Token
 	SemiColonTkn  *token.Token
 }
@@ -889,7 +889,7 @@ type StmtSwitch struct {
 	ColonTkn             *token.Token
 	OpenCurlyBracketTkn  *token.Token
 	CaseSeparatorTkn     *token.Token
-	CaseList             []Vertex
+	Cases                []Vertex
 	CloseCurlyBracketTkn *token.Token
 	EndSwitchTkn         *token.Token
 	SemiColonTkn         *token.Token
@@ -923,7 +923,7 @@ func (n *StmtThrow) GetPosition() *position.Position {
 type StmtTrait struct {
 	Position             *position.Position
 	TraitTkn             *token.Token
-	TraitName            Vertex
+	Name                 Vertex
 	OpenCurlyBracketTkn  *token.Token
 	Stmts                []Vertex
 	CloseCurlyBracketTkn *token.Token
@@ -1035,26 +1035,26 @@ func (n *StmtUnset) GetPosition() *position.Position {
 	return n.Position
 }
 
-// StmtUse node
-type StmtUse struct {
-	Position        *position.Position
-	UseTkn          *token.Token
-	Type            Vertex
-	UseDeclarations []Vertex
-	SeparatorTkns   []*token.Token
-	SemiColonTkn    *token.Token
+// StmtUseList node
+type StmtUseList struct {
+	Position      *position.Position
+	UseTkn        *token.Token
+	Type          Vertex
+	Uses          []Vertex
+	SeparatorTkns []*token.Token
+	SemiColonTkn  *token.Token
 }
 
-func (n *StmtUse) Accept(v Visitor) {
+func (n *StmtUseList) Accept(v Visitor) {
 	v.StmtUse(n)
 }
 
-func (n *StmtUse) GetPosition() *position.Position {
+func (n *StmtUseList) GetPosition() *position.Position {
 	return n.Position
 }
 
-// StmtGroupUse node
-type StmtGroupUse struct {
+// StmtGroupUseList node
+type StmtGroupUseList struct {
 	Position              *position.Position
 	UseTkn                *token.Token
 	Type                  Vertex
@@ -1062,22 +1062,22 @@ type StmtGroupUse struct {
 	Prefix                Vertex
 	NsSeparatorTkn        *token.Token
 	OpenCurlyBracketTkn   *token.Token
-	UseDeclarations       []Vertex
+	Uses                  []Vertex
 	SeparatorTkns         []*token.Token
 	CloseCurlyBracketTkn  *token.Token
 	SemiColonTkn          *token.Token
 }
 
-func (n *StmtGroupUse) Accept(v Visitor) {
+func (n *StmtGroupUseList) Accept(v Visitor) {
 	v.StmtGroupUse(n)
 }
 
-func (n *StmtGroupUse) GetPosition() *position.Position {
+func (n *StmtGroupUseList) GetPosition() *position.Position {
 	return n.Position
 }
 
-// StmtUseDeclaration node
-type StmtUseDeclaration struct {
+// StmtUse node
+type StmtUse struct {
 	Position       *position.Position
 	Type           Vertex
 	NsSeparatorTkn *token.Token
@@ -1086,11 +1086,11 @@ type StmtUseDeclaration struct {
 	Alias          Vertex
 }
 
-func (n *StmtUseDeclaration) Accept(v Visitor) {
+func (n *StmtUse) Accept(v Visitor) {
 	v.StmtUseDeclaration(n)
 }
 
-func (n *StmtUseDeclaration) GetPosition() *position.Position {
+func (n *StmtUse) GetPosition() *position.Position {
 	return n.Position
 }
 
@@ -1242,7 +1242,7 @@ type ExprClassConstFetch struct {
 	Position       *position.Position
 	Class          Vertex
 	DoubleColonTkn *token.Token
-	ConstantName   Vertex
+	Const          Vertex
 }
 
 func (n *ExprClassConstFetch) Accept(v Visitor) {
@@ -1280,7 +1280,7 @@ type ExprClosure struct {
 	CloseParenthesisTkn    *token.Token
 	UseTkn                 *token.Token
 	UseOpenParenthesisTkn  *token.Token
-	Use                    []Vertex
+	Uses                   []Vertex
 	UseSeparatorTkns       []*token.Token
 	UseCloseParenthesisTkn *token.Token
 	ColonTkn               *token.Token
@@ -1398,7 +1398,7 @@ type ExprFunctionCall struct {
 	Position            *position.Position
 	Function            Vertex
 	OpenParenthesisTkn  *token.Token
-	Arguments           []Vertex
+	Args                []Vertex
 	SeparatorTkns       []*token.Token
 	CloseParenthesisTkn *token.Token
 }
@@ -1502,7 +1502,7 @@ type ExprMethodCall struct {
 	Method               Vertex
 	CloseCurlyBracketTkn *token.Token
 	OpenParenthesisTkn   *token.Token
-	Arguments            []Vertex
+	Args                 []Vertex
 	SeparatorTkns        []*token.Token
 	CloseParenthesisTkn  *token.Token
 }
@@ -1521,7 +1521,7 @@ type ExprNew struct {
 	NewTkn              *token.Token
 	Class               Vertex
 	OpenParenthesisTkn  *token.Token
-	Arguments           []Vertex
+	Args                []Vertex
 	SeparatorTkns       []*token.Token
 	CloseParenthesisTkn *token.Token
 }
@@ -1615,7 +1615,7 @@ type ExprPropertyFetch struct {
 	Var                  Vertex
 	ObjectOperatorTkn    *token.Token
 	OpenCurlyBracketTkn  *token.Token
-	Property             Vertex
+	Prop                 Vertex
 	CloseCurlyBracketTkn *token.Token
 }
 
@@ -1682,7 +1682,7 @@ type ExprStaticCall struct {
 	Call                 Vertex
 	CloseCurlyBracketTkn *token.Token
 	OpenParenthesisTkn   *token.Token
-	Arguments            []Vertex
+	Args                 []Vertex
 	SeparatorTkns        []*token.Token
 	CloseParenthesisTkn  *token.Token
 }
@@ -1700,7 +1700,7 @@ type ExprStaticPropertyFetch struct {
 	Position       *position.Position
 	Class          Vertex
 	DoubleColonTkn *token.Token
-	Property       Vertex
+	Prop           Vertex
 }
 
 func (n *ExprStaticPropertyFetch) Accept(v Visitor) {
@@ -1714,7 +1714,7 @@ func (n *ExprStaticPropertyFetch) GetPosition() *position.Position {
 // ExprTernary node
 type ExprTernary struct {
 	Position    *position.Position
-	Condition   Vertex
+	Cond        Vertex
 	QuestionTkn *token.Token
 	IfTrue      Vertex
 	ColonTkn    *token.Token
@@ -1764,7 +1764,7 @@ type ExprVariable struct {
 	Position             *position.Position
 	DollarTkn            *token.Token
 	OpenCurlyBracketTkn  *token.Token
-	VarName              Vertex
+	Name                 Vertex
 	CloseCurlyBracketTkn *token.Token
 }
 
@@ -1782,7 +1782,7 @@ type ExprYield struct {
 	YieldTkn       *token.Token
 	Key            Vertex
 	DoubleArrowTkn *token.Token
-	Value          Vertex
+	Val            Vertex
 }
 
 func (n *ExprYield) Accept(v Visitor) {
@@ -2586,17 +2586,17 @@ func (n *ExprBinarySpaceship) GetPosition() *position.Position {
 	return n.Position
 }
 
-type NameName struct {
+type Name struct {
 	Position      *position.Position
 	Parts         []Vertex
 	SeparatorTkns []*token.Token
 }
 
-func (n *NameName) Accept(v Visitor) {
+func (n *Name) Accept(v Visitor) {
 	v.NameName(n)
 }
 
-func (n *NameName) GetPosition() *position.Position {
+func (n *Name) GetPosition() *position.Position {
 	return n.Position
 }
 
@@ -2631,16 +2631,16 @@ func (n *NameRelative) GetPosition() *position.Position {
 	return n.Position
 }
 
-type NameNamePart struct {
+type NamePart struct {
 	Position  *position.Position
 	StringTkn *token.Token
 	Value     []byte
 }
 
-func (n *NameNamePart) Accept(v Visitor) {
+func (n *NamePart) Accept(v Visitor) {
 	v.NameNamePart(n)
 }
 
-func (n *NameNamePart) GetPosition() *position.Position {
+func (n *NamePart) GetPosition() *position.Position {
 	return n.Position
 }

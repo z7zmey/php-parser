@@ -36,8 +36,8 @@ abstract class Bar extends Baz
 
 	// change namespace
 
-	parts := &rootNode.(*ast.Root).Stmts[0].(*ast.StmtNamespace).Name.(*ast.NameName).Parts
-	*parts = append(*parts, &ast.NameNamePart{Value: []byte("Quuz")})
+	parts := &rootNode.(*ast.Root).Stmts[0].(*ast.StmtNamespace).Name.(*ast.Name).Parts
+	*parts = append(*parts, &ast.NamePart{Value: []byte("Quuz")})
 
 	// print
 

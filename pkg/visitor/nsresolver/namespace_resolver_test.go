@@ -11,14 +11,14 @@ import (
 )
 
 func TestResolveStaticCall(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+			&ast.StmtUseList{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameAB,
 					},
 				},
@@ -41,21 +41,21 @@ func TestResolveStaticCall(t *testing.T) {
 }
 
 func TestResolveStaticPropertyFetch(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+			&ast.StmtUseList{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameAB,
 					},
 				},
 			},
 			&ast.ExprStaticPropertyFetch{
-				Class:    nameBC,
-				Property: &ast.Identifier{Value: []byte("foo")},
+				Class: nameBC,
+				Prop:  &ast.Identifier{Value: []byte("foo")},
 			},
 		},
 	}
@@ -71,21 +71,21 @@ func TestResolveStaticPropertyFetch(t *testing.T) {
 }
 
 func TestResolveClassConstFetch(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+			&ast.StmtUseList{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameAB,
 					},
 				},
 			},
 			&ast.ExprClassConstFetch{
-				Class:        nameBC,
-				ConstantName: &ast.Identifier{Value: []byte("FOO")},
+				Class: nameBC,
+				Const: &ast.Identifier{Value: []byte("FOO")},
 			},
 		},
 	}
@@ -101,14 +101,14 @@ func TestResolveClassConstFetch(t *testing.T) {
 }
 
 func TestResolveNew(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+			&ast.StmtUseList{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameAB,
 					},
 				},
@@ -130,20 +130,20 @@ func TestResolveNew(t *testing.T) {
 }
 
 func TestResolveInstanceOf(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+			&ast.StmtUseList{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameAB,
 					},
 				},
 			},
 			&ast.ExprInstanceOf{
-				Expr:  &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				Expr:  &ast.ExprVariable{Name: &ast.Identifier{Value: []byte("foo")}},
 				Class: nameBC,
 			},
 		},
@@ -160,20 +160,20 @@ func TestResolveInstanceOf(t *testing.T) {
 }
 
 func TestResolveInstanceCatch(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
-	nameDE := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("D")}, &ast.NameNamePart{Value: []byte("E")}}}
-	nameF := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("F")}}}
+	nameDE := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("D")}, &ast.NamePart{Value: []byte("E")}}}
+	nameF := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("F")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+			&ast.StmtUseList{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameAB,
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Use:   nameDE,
 						Alias: &ast.Identifier{Value: []byte("F")},
 					},
@@ -187,7 +187,7 @@ func TestResolveInstanceCatch(t *testing.T) {
 							nameBC,
 							nameF,
 						},
-						Var:   &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+						Var:   &ast.ExprVariable{Name: &ast.Identifier{Value: []byte("foo")}},
 						Stmts: []ast.Vertex{},
 					},
 				},
@@ -207,15 +207,15 @@ func TestResolveInstanceCatch(t *testing.T) {
 }
 
 func TestResolveFunctionCall(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Type: &ast.Identifier{Value: []byte("function")},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameAB,
 					},
 				},
@@ -237,15 +237,15 @@ func TestResolveFunctionCall(t *testing.T) {
 }
 
 func TestResolveConstFetch(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
+			&ast.StmtUseList{
 				Type: &ast.Identifier{Value: []byte("const")},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameAB,
 					},
 				},
@@ -267,32 +267,32 @@ func TestResolveConstFetch(t *testing.T) {
 }
 
 func TestResolveGroupUse(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBD := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("D")}}}
-	nameE := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("E")}}}
-	nameC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("C")}}}
-	nameF := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("F")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBD := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("D")}}}
+	nameE := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("E")}}}
+	nameC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("C")}}}
+	nameF := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("F")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtGroupUse{
+			&ast.StmtGroupUseList{
 				Prefix: nameAB,
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Type: &ast.Identifier{Value: []byte("Function")},
 						Use:  nameF,
 					},
-					&ast.StmtUseDeclaration{
+					&ast.StmtUse{
 						Type: &ast.Identifier{Value: []byte("const")},
 						Use:  nameC,
 					},
 				},
 			},
-			&ast.StmtGroupUse{
+			&ast.StmtGroupUseList{
 				Prefix: nameBD,
 				Type:   &ast.Identifier{Value: []byte("Function")},
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameE,
 					},
 				},
@@ -322,20 +322,20 @@ func TestResolveGroupUse(t *testing.T) {
 }
 
 func TestResolveTraitUse(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}}}
-	nameD := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("D")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}}}
+	nameD := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("D")}}}
 
-	fullyQualifiedNameB := &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}}}
-	fullyQualifiedNameBC := &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
-	relativeNameB := &ast.NameRelative{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}}}
-	relativeNameBC := &ast.NameRelative{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	fullyQualifiedNameB := &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}}}
+	fullyQualifiedNameBC := &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
+	relativeNameB := &ast.NameRelative{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}}}
+	relativeNameBC := &ast.NameRelative{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
-			&ast.StmtUse{
-				UseDeclarations: []ast.Vertex{
-					&ast.StmtUseDeclaration{
+			&ast.StmtUseList{
+				Uses: []ast.Vertex{
+					&ast.StmtUse{
 						Use: nameAB,
 					},
 				},
@@ -382,12 +382,12 @@ func TestResolveTraitUse(t *testing.T) {
 }
 
 func TestResolveClassName(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	class := &ast.StmtClass{
-		ClassName: &ast.Identifier{Value: []byte("A")},
-		Extends:   nameAB,
+		Name:    &ast.Identifier{Value: []byte("A")},
+		Extends: nameAB,
 		Implements: []ast.Vertex{
 			nameBC,
 		},
@@ -412,11 +412,11 @@ func TestResolveClassName(t *testing.T) {
 }
 
 func TestResolveInterfaceName(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	interfaceNode := &ast.StmtInterface{
-		InterfaceName: &ast.Identifier{Value: []byte("A")},
+		Name: &ast.Identifier{Value: []byte("A")},
 		Extends: []ast.Vertex{
 			nameAB,
 			nameBC,
@@ -443,8 +443,8 @@ func TestResolveInterfaceName(t *testing.T) {
 
 func TestResolveTraitName(t *testing.T) {
 	traitNode := &ast.StmtTrait{
-		TraitName: &ast.Identifier{Value: []byte("A")},
-		Stmts:     []ast.Vertex{},
+		Name:  &ast.Identifier{Value: []byte("A")},
+		Stmts: []ast.Vertex{},
 	}
 
 	stxTree := &ast.StmtStmtList{
@@ -464,15 +464,15 @@ func TestResolveTraitName(t *testing.T) {
 }
 
 func TestResolveFunctionName(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	functionNode := &ast.StmtFunction{
-		FunctionName: &ast.Identifier{Value: []byte("A")},
+		Name: &ast.Identifier{Value: []byte("A")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Type: nameAB,
-				Var:  &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				Var:  &ast.ExprVariable{Name: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
 		ReturnType: &ast.Nullable{Expr: nameBC},
@@ -498,15 +498,15 @@ func TestResolveFunctionName(t *testing.T) {
 }
 
 func TestResolveMethodName(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	methodNode := &ast.StmtClassMethod{
-		MethodName: &ast.Identifier{Value: []byte("A")},
+		Name: &ast.Identifier{Value: []byte("A")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Type: nameAB,
-				Var:  &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				Var:  &ast.ExprVariable{Name: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
 		ReturnType: &ast.Nullable{Expr: nameBC},
@@ -527,14 +527,14 @@ func TestResolveMethodName(t *testing.T) {
 }
 
 func TestResolveClosureName(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameBC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("B")}, &ast.NameNamePart{Value: []byte("C")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameBC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("B")}, &ast.NamePart{Value: []byte("C")}}}
 
 	closureNode := &ast.ExprClosure{
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Type: nameAB,
-				Var:  &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				Var:  &ast.ExprVariable{Name: &ast.Identifier{Value: []byte("foo")}},
 			},
 		},
 		ReturnType: &ast.Nullable{Expr: nameBC},
@@ -553,7 +553,7 @@ func TestResolveClosureName(t *testing.T) {
 }
 
 func TestResolveConstantsName(t *testing.T) {
-	nameAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
+	nameAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
 
 	constantB := &ast.StmtConstant{
 		Name: &ast.Identifier{Value: []byte("B")},
@@ -590,13 +590,13 @@ func TestResolveConstantsName(t *testing.T) {
 }
 
 func TestResolveNamespaces(t *testing.T) {
-	namespaceAB := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	namespaceCD := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("C")}, &ast.NameNamePart{Value: []byte("D")}}}
+	namespaceAB := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	namespaceCD := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("C")}, &ast.NamePart{Value: []byte("D")}}}
 
-	nameAC := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("C")}}}
-	nameCF := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("C")}, &ast.NameNamePart{Value: []byte("F")}}}
-	nameFG := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("F")}, &ast.NameNamePart{Value: []byte("G")}}}
-	relativeNameCE := &ast.NameRelative{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("C")}, &ast.NameNamePart{Value: []byte("E")}}}
+	nameAC := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("C")}}}
+	nameCF := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("C")}, &ast.NamePart{Value: []byte("F")}}}
+	nameFG := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("F")}, &ast.NamePart{Value: []byte("G")}}}
+	relativeNameCE := &ast.NameRelative{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("C")}, &ast.NamePart{Value: []byte("E")}}}
 
 	constantB := &ast.StmtConstant{
 		Name: &ast.Identifier{Value: []byte("B")},
@@ -628,9 +628,9 @@ func TestResolveNamespaces(t *testing.T) {
 			&ast.StmtNamespace{
 				Name: namespaceCD,
 				Stmts: []ast.Vertex{
-					&ast.StmtUse{
-						UseDeclarations: []ast.Vertex{
-							&ast.StmtUseDeclaration{
+					&ast.StmtUseList{
+						Uses: []ast.Vertex{
+							&ast.StmtUse{
 								Use: nameAC,
 							},
 						},
@@ -666,7 +666,7 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.ExprStaticCall{
-				Class: &ast.ExprVariable{VarName: &ast.Identifier{Value: []byte("foo")}},
+				Class: &ast.ExprVariable{Name: &ast.Identifier{Value: []byte("foo")}},
 				Call:  &ast.Identifier{Value: []byte("foo")},
 			},
 		},
@@ -681,23 +681,23 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 }
 
 func TestDoNotResolveReservedConstants(t *testing.T) {
-	namespaceName := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}}
+	namespaceName := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}}
 
-	constantTrue := &ast.NameName{
+	constantTrue := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("True")},
+			&ast.NamePart{Value: []byte("True")},
 		},
 	}
 
-	constantFalse := &ast.NameName{
+	constantFalse := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("False")},
+			&ast.NamePart{Value: []byte("False")},
 		},
 	}
 
-	constantNull := &ast.NameName{
+	constantNull := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("NULL")},
+			&ast.NamePart{Value: []byte("NULL")},
 		},
 	}
 
@@ -738,91 +738,91 @@ func TestDoNotResolveReservedConstants(t *testing.T) {
 
 func TestDoNotResolveReservedNames(t *testing.T) {
 
-	nameInt := &ast.NameName{
+	nameInt := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("int")},
+			&ast.NamePart{Value: []byte("int")},
 		},
 	}
 
-	nameFloat := &ast.NameName{
+	nameFloat := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("float")},
+			&ast.NamePart{Value: []byte("float")},
 		},
 	}
 
-	nameBool := &ast.NameName{
+	nameBool := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("bool")},
+			&ast.NamePart{Value: []byte("bool")},
 		},
 	}
 
-	nameString := &ast.NameName{
+	nameString := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("string")},
+			&ast.NamePart{Value: []byte("string")},
 		},
 	}
 
-	nameVoid := &ast.NameName{
+	nameVoid := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("void")},
+			&ast.NamePart{Value: []byte("void")},
 		},
 	}
 
-	nameIterable := &ast.NameName{
+	nameIterable := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("iterable")},
+			&ast.NamePart{Value: []byte("iterable")},
 		},
 	}
 
-	nameObject := &ast.NameName{
+	nameObject := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("object")},
+			&ast.NamePart{Value: []byte("object")},
 		},
 	}
 
 	function := &ast.StmtFunction{
-		FunctionName: &ast.Identifier{Value: []byte("bar")},
+		Name: &ast.Identifier{Value: []byte("bar")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Type: nameInt,
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("Int")},
+					Name: &ast.Identifier{Value: []byte("Int")},
 				},
 			},
 			&ast.Parameter{
 				Type: nameFloat,
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("Float")},
+					Name: &ast.Identifier{Value: []byte("Float")},
 				},
 			},
 			&ast.Parameter{
 				Type: nameBool,
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("Bool")},
+					Name: &ast.Identifier{Value: []byte("Bool")},
 				},
 			},
 			&ast.Parameter{
 				Type: nameString,
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("String")},
+					Name: &ast.Identifier{Value: []byte("String")},
 				},
 			},
 			&ast.Parameter{
 				Type: nameVoid,
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("Void")},
+					Name: &ast.Identifier{Value: []byte("Void")},
 				},
 			},
 			&ast.Parameter{
 				Type: nameIterable,
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("Iterable")},
+					Name: &ast.Identifier{Value: []byte("Iterable")},
 				},
 			},
 			&ast.Parameter{
 				Type: nameObject,
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("Object")},
+					Name: &ast.Identifier{Value: []byte("Object")},
 				},
 			},
 		},
@@ -831,9 +831,9 @@ func TestDoNotResolveReservedNames(t *testing.T) {
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				Name: &ast.NameName{
+				Name: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{Value: []byte("Foo")},
+						&ast.NamePart{Value: []byte("Foo")},
 					},
 				},
 			},
@@ -860,26 +860,26 @@ func TestDoNotResolveReservedNames(t *testing.T) {
 
 func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 
-	nameSelf := &ast.NameName{
+	nameSelf := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("Self")},
+			&ast.NamePart{Value: []byte("Self")},
 		},
 	}
 
-	nameStatic := &ast.NameName{
+	nameStatic := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("Static")},
+			&ast.NamePart{Value: []byte("Static")},
 		},
 	}
 
-	nameParent := &ast.NameName{
+	nameParent := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{Value: []byte("Parent")},
+			&ast.NamePart{Value: []byte("Parent")},
 		},
 	}
 
 	cls := &ast.StmtClass{
-		ClassName: &ast.Identifier{Value: []byte("Bar")},
+		Name: &ast.Identifier{Value: []byte("Bar")},
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{
 				Expr: &ast.ExprStaticCall{
@@ -905,9 +905,9 @@ func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 	stxTree := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				Name: &ast.NameName{
+				Name: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{Value: []byte("Foo")},
+						&ast.NamePart{Value: []byte("Foo")},
 					},
 				},
 			},
@@ -928,9 +928,9 @@ func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 func TestResolvePropertyTypeName(t *testing.T) {
-	nameSimple := &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameRelative := &ast.NameRelative{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
-	nameFullyQualified := &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("A")}, &ast.NameNamePart{Value: []byte("B")}}}
+	nameSimple := &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameRelative := &ast.NameRelative{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
+	nameFullyQualified := &ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("A")}, &ast.NamePart{Value: []byte("B")}}}
 
 	propertyNodeSimple := &ast.StmtPropertyList{
 		Type: nameSimple,
@@ -945,7 +945,7 @@ func TestResolvePropertyTypeName(t *testing.T) {
 	}
 
 	classNode := &ast.StmtClass{
-		ClassName: &ast.Identifier{Value: []byte("Bar")},
+		Name: &ast.Identifier{Value: []byte("Bar")},
 		Stmts: []ast.Vertex{
 			propertyNodeSimple,
 			propertyNodeRelative,
@@ -956,9 +956,9 @@ func TestResolvePropertyTypeName(t *testing.T) {
 	stmts := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				Name: &ast.NameName{
+				Name: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{Value: []byte("Foo")},
+						&ast.NamePart{Value: []byte("Foo")},
 					},
 				},
 			},

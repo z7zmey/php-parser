@@ -214,15 +214,15 @@ func (v *Null) StmtUnset(_ *ast.StmtUnset) {
 	// do nothing
 }
 
-func (v *Null) StmtUse(_ *ast.StmtUse) {
+func (v *Null) StmtUse(_ *ast.StmtUseList) {
 	// do nothing
 }
 
-func (v *Null) StmtGroupUse(_ *ast.StmtGroupUse) {
+func (v *Null) StmtGroupUse(_ *ast.StmtGroupUseList) {
 	// do nothing
 }
 
-func (v *Null) StmtUseDeclaration(_ *ast.StmtUseDeclaration) {
+func (v *Null) StmtUseDeclaration(_ *ast.StmtUse) {
 	// do nothing
 }
 
@@ -626,7 +626,7 @@ func (v *Null) ScalarString(_ *ast.ScalarString) {
 	// do nothing
 }
 
-func (v *Null) NameName(_ *ast.NameName) {
+func (v *Null) NameName(_ *ast.Name) {
 	// do nothing
 }
 
@@ -638,6 +638,6 @@ func (v *Null) NameRelative(_ *ast.NameRelative) {
 	// do nothing
 }
 
-func (v *Null) NameNamePart(_ *ast.NameNamePart) {
+func (v *Null) NameNamePart(_ *ast.NamePart) {
 	// do nothing
 }

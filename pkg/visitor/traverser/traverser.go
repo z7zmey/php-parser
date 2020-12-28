@@ -85,8 +85,8 @@ func (t *Traverser) StmtClass(n *ast.StmtClass) {
 	for _, nn := range n.Modifiers {
 		nn.Accept(t)
 	}
-	t.Traverse(n.ClassName)
-	for _, nn := range n.Arguments {
+	t.Traverse(n.Name)
+	for _, nn := range n.Args {
 		nn.Accept(t)
 	}
 	t.Traverse(n.Extends)
@@ -115,7 +115,7 @@ func (t *Traverser) StmtClassMethod(n *ast.StmtClassMethod) {
 	for _, nn := range n.Modifiers {
 		nn.Accept(t)
 	}
-	t.Traverse(n.MethodName)
+	t.Traverse(n.Name)
 	for _, nn := range n.Params {
 		nn.Accept(t)
 	}
@@ -230,7 +230,7 @@ func (t *Traverser) StmtForeach(n *ast.StmtForeach) {
 func (t *Traverser) StmtFunction(n *ast.StmtFunction) {
 	n.Accept(t.v)
 
-	t.Traverse(n.FunctionName)
+	t.Traverse(n.Name)
 	for _, nn := range n.Params {
 		nn.Accept(t)
 	}
@@ -276,7 +276,7 @@ func (t *Traverser) StmtInlineHtml(n *ast.StmtInlineHtml) {
 func (t *Traverser) StmtInterface(n *ast.StmtInterface) {
 	n.Accept(t.v)
 
-	t.Traverse(n.InterfaceName)
+	t.Traverse(n.Name)
 	for _, nn := range n.Extends {
 		nn.Accept(t)
 	}
@@ -288,7 +288,7 @@ func (t *Traverser) StmtInterface(n *ast.StmtInterface) {
 func (t *Traverser) StmtLabel(n *ast.StmtLabel) {
 	n.Accept(t.v)
 
-	t.Traverse(n.LabelName)
+	t.Traverse(n.Name)
 }
 
 func (t *Traverser) StmtNamespace(n *ast.StmtNamespace) {
@@ -318,7 +318,7 @@ func (t *Traverser) StmtPropertyList(n *ast.StmtPropertyList) {
 		nn.Accept(t)
 	}
 	t.Traverse(n.Type)
-	for _, nn := range n.Properties {
+	for _, nn := range n.Props {
 		nn.Accept(t)
 	}
 }
@@ -356,7 +356,7 @@ func (t *Traverser) StmtSwitch(n *ast.StmtSwitch) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Cond)
-	for _, nn := range n.CaseList {
+	for _, nn := range n.Cases {
 		nn.Accept(t)
 	}
 }
@@ -370,7 +370,7 @@ func (t *Traverser) StmtThrow(n *ast.StmtThrow) {
 func (t *Traverser) StmtTrait(n *ast.StmtTrait) {
 	n.Accept(t.v)
 
-	t.Traverse(n.TraitName)
+	t.Traverse(n.Name)
 	for _, nn := range n.Stmts {
 		nn.Accept(t)
 	}
@@ -426,26 +426,26 @@ func (t *Traverser) StmtUnset(n *ast.StmtUnset) {
 	}
 }
 
-func (t *Traverser) StmtUse(n *ast.StmtUse) {
+func (t *Traverser) StmtUse(n *ast.StmtUseList) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Type)
-	for _, nn := range n.UseDeclarations {
+	for _, nn := range n.Uses {
 		nn.Accept(t)
 	}
 }
 
-func (t *Traverser) StmtGroupUse(n *ast.StmtGroupUse) {
+func (t *Traverser) StmtGroupUse(n *ast.StmtGroupUseList) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Type)
 	t.Traverse(n.Prefix)
-	for _, nn := range n.UseDeclarations {
+	for _, nn := range n.Uses {
 		nn.Accept(t)
 	}
 }
 
-func (t *Traverser) StmtUseDeclaration(n *ast.StmtUseDeclaration) {
+func (t *Traverser) StmtUseDeclaration(n *ast.StmtUse) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Type)
@@ -514,7 +514,7 @@ func (t *Traverser) ExprClassConstFetch(n *ast.ExprClassConstFetch) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Class)
-	t.Traverse(n.ConstantName)
+	t.Traverse(n.Const)
 }
 
 func (t *Traverser) ExprClone(n *ast.ExprClone) {
@@ -529,7 +529,7 @@ func (t *Traverser) ExprClosure(n *ast.ExprClosure) {
 	for _, nn := range n.Params {
 		nn.Accept(t)
 	}
-	for _, nn := range n.Use {
+	for _, nn := range n.Uses {
 		nn.Accept(t)
 	}
 	t.Traverse(n.ReturnType)
@@ -578,7 +578,7 @@ func (t *Traverser) ExprFunctionCall(n *ast.ExprFunctionCall) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Function)
-	for _, nn := range n.Arguments {
+	for _, nn := range n.Args {
 		nn.Accept(t)
 	}
 }
@@ -623,7 +623,7 @@ func (t *Traverser) ExprMethodCall(n *ast.ExprMethodCall) {
 
 	t.Traverse(n.Var)
 	t.Traverse(n.Method)
-	for _, nn := range n.Arguments {
+	for _, nn := range n.Args {
 		nn.Accept(t)
 	}
 }
@@ -632,7 +632,7 @@ func (t *Traverser) ExprNew(n *ast.ExprNew) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Class)
-	for _, nn := range n.Arguments {
+	for _, nn := range n.Args {
 		nn.Accept(t)
 	}
 }
@@ -671,7 +671,7 @@ func (t *Traverser) ExprPropertyFetch(n *ast.ExprPropertyFetch) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Var)
-	t.Traverse(n.Property)
+	t.Traverse(n.Prop)
 }
 
 func (t *Traverser) ExprRequire(n *ast.ExprRequire) {
@@ -699,7 +699,7 @@ func (t *Traverser) ExprStaticCall(n *ast.ExprStaticCall) {
 
 	t.Traverse(n.Class)
 	t.Traverse(n.Call)
-	for _, nn := range n.Arguments {
+	for _, nn := range n.Args {
 		nn.Accept(t)
 	}
 }
@@ -708,13 +708,13 @@ func (t *Traverser) ExprStaticPropertyFetch(n *ast.ExprStaticPropertyFetch) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Class)
-	t.Traverse(n.Property)
+	t.Traverse(n.Prop)
 }
 
 func (t *Traverser) ExprTernary(n *ast.ExprTernary) {
 	n.Accept(t.v)
 
-	t.Traverse(n.Condition)
+	t.Traverse(n.Cond)
 	t.Traverse(n.IfTrue)
 	t.Traverse(n.IfFalse)
 }
@@ -734,14 +734,14 @@ func (t *Traverser) ExprUnaryPlus(n *ast.ExprUnaryPlus) {
 func (t *Traverser) ExprVariable(n *ast.ExprVariable) {
 	n.Accept(t.v)
 
-	t.Traverse(n.VarName)
+	t.Traverse(n.Name)
 }
 
 func (t *Traverser) ExprYield(n *ast.ExprYield) {
 	n.Accept(t.v)
 
 	t.Traverse(n.Key)
-	t.Traverse(n.Value)
+	t.Traverse(n.Val)
 }
 
 func (t *Traverser) ExprYieldFrom(n *ast.ExprYieldFrom) {
@@ -1105,7 +1105,7 @@ func (t *Traverser) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 func (t *Traverser) ScalarEncapsedStringVar(n *ast.ScalarEncapsedStringVar) {
 	n.Accept(t.v)
 
-	t.Traverse(n.VarName)
+	t.Traverse(n.Name)
 	t.Traverse(n.Dim)
 }
 
@@ -1135,7 +1135,7 @@ func (t *Traverser) ScalarString(n *ast.ScalarString) {
 	n.Accept(t.v)
 }
 
-func (t *Traverser) NameName(n *ast.NameName) {
+func (t *Traverser) NameName(n *ast.Name) {
 	n.Accept(t.v)
 
 	for _, nn := range n.Parts {
@@ -1159,6 +1159,6 @@ func (t *Traverser) NameRelative(n *ast.NameRelative) {
 	}
 }
 
-func (t *Traverser) NameNamePart(n *ast.NameNamePart) {
+func (t *Traverser) NameNamePart(n *ast.NamePart) {
 	n.Accept(t.v)
 }

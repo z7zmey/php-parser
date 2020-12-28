@@ -16,28 +16,28 @@ func TestPrinterPrintFile(t *testing.T) {
 	n := &ast.Root{
 		Stmts: []ast.Vertex{
 			&ast.StmtNamespace{
-				Name: &ast.NameName{
+				Name: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{Value: []byte("Foo")},
+						&ast.NamePart{Value: []byte("Foo")},
 					},
 				},
 			},
 			&ast.StmtClass{
 				Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("abstract")}},
-				ClassName: &ast.NameName{
+				Name: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{Value: []byte("Bar")},
+						&ast.NamePart{Value: []byte("Bar")},
 					},
 				},
-				Extends: &ast.NameName{
+				Extends: &ast.Name{
 					Parts: []ast.Vertex{
-						&ast.NameNamePart{Value: []byte("Baz")},
+						&ast.NamePart{Value: []byte("Baz")},
 					},
 				},
 				Stmts: []ast.Vertex{
 					&ast.StmtClassMethod{
-						Modifiers:  []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
-						MethodName: &ast.Identifier{Value: []byte("greet")},
+						Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
+						Name:      &ast.Identifier{Value: []byte("greet")},
 						Stmt: &ast.StmtStmtList{
 							Stmts: []ast.Vertex{
 								&ast.StmtEcho{
@@ -122,7 +122,7 @@ func TestPrinterPrintParameter(t *testing.T) {
 	n := &ast.Parameter{
 		Type: &ast.NameFullyQualified{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("Foo"),
 				},
 			},
@@ -131,7 +131,7 @@ func TestPrinterPrintParameter(t *testing.T) {
 			Value: []byte("..."),
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 		DefaultValue: &ast.ScalarString{
 			Value: []byte("'default'"),
@@ -155,7 +155,7 @@ func TestPrinterPrintNullable(t *testing.T) {
 		Expr: &ast.Parameter{
 			Type: &ast.NameFullyQualified{
 				Parts: []ast.Vertex{
-					&ast.NameNamePart{
+					&ast.NamePart{
 						Value: []byte("Foo"),
 					},
 				},
@@ -164,7 +164,7 @@ func TestPrinterPrintNullable(t *testing.T) {
 				Value: []byte("&"),
 			},
 			Var: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$var")},
+				Name: &ast.Identifier{Value: []byte("$var")},
 			},
 			DefaultValue: &ast.ScalarString{
 				Value: []byte("'default'"),
@@ -190,7 +190,7 @@ func TestPrinterPrintArgument(t *testing.T) {
 			Value: []byte("..."),
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -211,7 +211,7 @@ func TestPrinterPrintArgumentByRef(t *testing.T) {
 			Value: []byte("&"),
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -230,7 +230,7 @@ func TestPrinterPrintNameNamePart(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
-	n := &ast.NameNamePart{
+	n := &ast.NamePart{
 		Value: []byte("foo"),
 	}
 	n.Accept(p)
@@ -247,12 +247,12 @@ func TestPrinterPrintNameName(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
-	n := &ast.NameName{
+	n := &ast.Name{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("Foo"),
 			},
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("Bar"),
 			},
 		},
@@ -273,10 +273,10 @@ func TestPrinterPrintNameFullyQualified(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.NameFullyQualified{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("Foo"),
 			},
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("Bar"),
 			},
 		},
@@ -297,10 +297,10 @@ func TestPrinterPrintNameRelative(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.NameRelative{
 		Parts: []ast.Vertex{
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("Foo"),
 			},
-			&ast.NameNamePart{
+			&ast.NamePart{
 				Value: []byte("Bar"),
 			},
 		},
@@ -393,7 +393,7 @@ func TestPrinterPrintScalarEncapsed(t *testing.T) {
 		Parts: []ast.Vertex{
 			&ast.ScalarEncapsedStringPart{Value: []byte("hello ")},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$var")},
+				Name: &ast.Identifier{Value: []byte("$var")},
 			},
 			&ast.ScalarEncapsedStringPart{Value: []byte(" world")},
 		},
@@ -416,7 +416,7 @@ func TestPrinterPrintScalarHeredoc(t *testing.T) {
 		Parts: []ast.Vertex{
 			&ast.ScalarEncapsedStringPart{Value: []byte("hello ")},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$var")},
+				Name: &ast.Identifier{Value: []byte("$var")},
 			},
 			&ast.ScalarEncapsedStringPart{Value: []byte(" world\n")},
 		},
@@ -455,10 +455,10 @@ func TestPrinterPrintAssign(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssign{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -477,10 +477,10 @@ func TestPrinterPrintReference(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignReference{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -499,10 +499,10 @@ func TestPrinterPrintAssignBitwiseAnd(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignBitwiseAnd{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -521,10 +521,10 @@ func TestPrinterPrintAssignBitwiseOr(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignBitwiseOr{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -543,10 +543,10 @@ func TestPrinterPrintAssignBitwiseXor(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignBitwiseXor{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -565,10 +565,10 @@ func TestPrinterPrintAssignCoalesce(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignCoalesce{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -587,10 +587,10 @@ func TestPrinterPrintAssignConcat(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignConcat{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -609,10 +609,10 @@ func TestPrinterPrintAssignDiv(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignDiv{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -631,10 +631,10 @@ func TestPrinterPrintAssignMinus(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignMinus{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -653,10 +653,10 @@ func TestPrinterPrintAssignMod(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignMod{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -675,10 +675,10 @@ func TestPrinterPrintAssignMul(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignMul{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -697,10 +697,10 @@ func TestPrinterPrintAssignPlus(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignPlus{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -719,10 +719,10 @@ func TestPrinterPrintAssignPow(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignPow{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -741,10 +741,10 @@ func TestPrinterPrintAssignShiftLeft(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignShiftLeft{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -763,10 +763,10 @@ func TestPrinterPrintAssignShiftRight(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprAssignShiftRight{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -787,10 +787,10 @@ func TestPrinterPrintBinaryBitwiseAnd(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryBitwiseAnd{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -809,10 +809,10 @@ func TestPrinterPrintBinaryBitwiseOr(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryBitwiseOr{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -831,10 +831,10 @@ func TestPrinterPrintBinaryBitwiseXor(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryBitwiseXor{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -853,10 +853,10 @@ func TestPrinterPrintBinaryBooleanAnd(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryBooleanAnd{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -875,10 +875,10 @@ func TestPrinterPrintBinaryBooleanOr(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryBooleanOr{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -897,10 +897,10 @@ func TestPrinterPrintBinaryCoalesce(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryCoalesce{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -919,10 +919,10 @@ func TestPrinterPrintBinaryConcat(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryConcat{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -941,10 +941,10 @@ func TestPrinterPrintBinaryDiv(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryDiv{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -963,10 +963,10 @@ func TestPrinterPrintBinaryEqual(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryEqual{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -985,10 +985,10 @@ func TestPrinterPrintBinaryGreaterOrEqual(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryGreaterOrEqual{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1007,10 +1007,10 @@ func TestPrinterPrintBinaryGreater(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryGreater{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1029,10 +1029,10 @@ func TestPrinterPrintBinaryIdentical(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryIdentical{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1051,10 +1051,10 @@ func TestPrinterPrintBinaryLogicalAnd(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryLogicalAnd{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1073,10 +1073,10 @@ func TestPrinterPrintBinaryLogicalOr(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryLogicalOr{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1095,10 +1095,10 @@ func TestPrinterPrintBinaryLogicalXor(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryLogicalXor{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1117,10 +1117,10 @@ func TestPrinterPrintBinaryMinus(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryMinus{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1139,10 +1139,10 @@ func TestPrinterPrintBinaryMod(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryMod{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1161,10 +1161,10 @@ func TestPrinterPrintBinaryMul(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryMul{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1183,10 +1183,10 @@ func TestPrinterPrintBinaryNotEqual(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryNotEqual{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1205,10 +1205,10 @@ func TestPrinterPrintBinaryNotIdentical(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryNotIdentical{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1227,10 +1227,10 @@ func TestPrinterPrintBinaryPlus(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryPlus{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1249,10 +1249,10 @@ func TestPrinterPrintBinaryPow(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryPow{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1271,10 +1271,10 @@ func TestPrinterPrintBinaryShiftLeft(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryShiftLeft{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1293,10 +1293,10 @@ func TestPrinterPrintBinaryShiftRight(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinaryShiftRight{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1315,10 +1315,10 @@ func TestPrinterPrintBinarySmallerOrEqual(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinarySmallerOrEqual{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1337,10 +1337,10 @@ func TestPrinterPrintBinarySmaller(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinarySmaller{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1359,10 +1359,10 @@ func TestPrinterPrintBinarySpaceship(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBinarySpaceship{
 		Left: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Right: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -1383,7 +1383,7 @@ func TestPrinterPrintArray(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprCastArray{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1402,7 +1402,7 @@ func TestPrinterPrintBool(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprCastBool{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1421,7 +1421,7 @@ func TestPrinterPrintDouble(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprCastDouble{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1440,7 +1440,7 @@ func TestPrinterPrintInt(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprCastInt{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1459,7 +1459,7 @@ func TestPrinterPrintObject(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprCastObject{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1478,7 +1478,7 @@ func TestPrinterPrintString(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprCastString{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1497,7 +1497,7 @@ func TestPrinterPrintUnset(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprCastUnset{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1518,7 +1518,7 @@ func TestPrinterPrintExprArrayDimFetch(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprArrayDimFetch{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 		Dim: &ast.ScalarLnumber{Value: []byte("1")},
 	}
@@ -1539,7 +1539,7 @@ func TestPrinterPrintExprArrayItemWithKey(t *testing.T) {
 	n := &ast.ExprArrayItem{
 		Key: &ast.ScalarString{Value: []byte("'Hello'")},
 		Val: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$world")},
+			Name: &ast.Identifier{Value: []byte("$world")},
 		},
 	}
 	n.Accept(p)
@@ -1558,7 +1558,7 @@ func TestPrinterPrintExprArrayItem(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprArrayItem{
 		Val: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$world")},
+			Name: &ast.Identifier{Value: []byte("$world")},
 		},
 	}
 	n.Accept(p)
@@ -1580,7 +1580,7 @@ func TestPrinterPrintExprArrayItem_Reference(t *testing.T) {
 			Value: []byte("&"),
 		},
 		Val: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$world")},
+			Name: &ast.Identifier{Value: []byte("$world")},
 		},
 	}
 	n.Accept(p)
@@ -1602,7 +1602,7 @@ func TestPrinterPrintExprArrayItemUnpack(t *testing.T) {
 			Value: []byte("..."),
 		},
 		Val: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$world")},
+			Name: &ast.Identifier{Value: []byte("$world")},
 		},
 	}
 	n.Accept(p)
@@ -1627,7 +1627,7 @@ func TestPrinterPrintExprArray(t *testing.T) {
 			&ast.ExprArrayItem{
 				Key: &ast.ScalarString{Value: []byte("'Hello'")},
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$world")},
+					Name: &ast.Identifier{Value: []byte("$world")},
 				},
 			},
 			&ast.ExprArrayItem{
@@ -1636,12 +1636,12 @@ func TestPrinterPrintExprArray(t *testing.T) {
 					Value: []byte("&"),
 				},
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$var")},
+					Name: &ast.Identifier{Value: []byte("$var")},
 				},
 			},
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$var")},
+					Name: &ast.Identifier{Value: []byte("$var")},
 				},
 			},
 		},
@@ -1662,7 +1662,7 @@ func TestPrinterPrintExprBitwiseNot(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBitwiseNot{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1681,7 +1681,7 @@ func TestPrinterPrintExprBooleanNot(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBooleanNot{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1700,7 +1700,7 @@ func TestPrinterPrintExprBracket(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprBooleanNot{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1719,9 +1719,9 @@ func TestPrinterPrintExprClassConstFetch(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprClassConstFetch{
 		Class: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
-		ConstantName: &ast.Identifier{
+		Const: &ast.Identifier{
 			Value: []byte("CONST"),
 		},
 	}
@@ -1741,7 +1741,7 @@ func TestPrinterPrintExprClone(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprClone{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1760,7 +1760,7 @@ func TestPrinterPrintExprClosureUse(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprClosureUse{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$foo")},
+			Name: &ast.Identifier{Value: []byte("$foo")},
 		},
 	}
 	n.Accept(p)
@@ -1782,7 +1782,7 @@ func TestPrinterPrintExprClosureUse_Reference(t *testing.T) {
 			Value: []byte("&"),
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$foo")},
+			Name: &ast.Identifier{Value: []byte("$foo")},
 		},
 	}
 	n.Accept(p)
@@ -1809,31 +1809,31 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$var")},
+					Name: &ast.Identifier{Value: []byte("$var")},
 				},
 			},
 		},
-		Use: []ast.Vertex{
+		Uses: []ast.Vertex{
 			&ast.ExprClosureUse{
 				AmpersandTkn: &token.Token{
 					Value: []byte("&"),
 				},
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 			},
 			&ast.ExprClosureUse{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 		},
 		ReturnType: &ast.NameFullyQualified{
-			Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}},
+			Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			}},
 		},
 	}
@@ -1865,15 +1865,15 @@ func TestPrinterPrintExprArrowFunction(t *testing.T) {
 						Value: []byte("&"),
 					},
 					Var: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$var")},
+						Name: &ast.Identifier{Value: []byte("$var")},
 					},
 				},
 			},
 			ReturnType: &ast.NameFullyQualified{
-				Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}},
+				Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}},
 			},
 			Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			},
 		},
 	}
@@ -1892,7 +1892,7 @@ func TestPrinterPrintExprConstFetch(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprConstFetch{
-		Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}},
+		Const: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("null")}}},
 	}
 	n.Accept(p)
 
@@ -1910,7 +1910,7 @@ func TestPrinterPrintEmpty(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprEmpty{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1929,7 +1929,7 @@ func TestPrinterPrettyPrinterrorSuppress(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprErrorSuppress{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1948,7 +1948,7 @@ func TestPrinterPrintEval(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprEval{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1967,7 +1967,7 @@ func TestPrinterPrintExit(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprExit{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -1989,7 +1989,7 @@ func TestPrinterPrintDie(t *testing.T) {
 			Value: []byte("die"),
 		},
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2008,15 +2008,15 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprFunctionCall{
 		Function: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				AmpersandTkn: &token.Token{
 					Value: []byte("&"),
 				},
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 			},
 			&ast.Argument{
@@ -2024,12 +2024,12 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 					Value: []byte("..."),
 				},
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$c")},
+					Name: &ast.Identifier{Value: []byte("$c")},
 				},
 			},
 		},
@@ -2084,9 +2084,9 @@ func TestPrinterPrintInstanceOf(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprInstanceOf{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
-		Class: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Class: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 	}
 	n.Accept(p)
 
@@ -2105,10 +2105,10 @@ func TestPrinterPrintIsset(t *testing.T) {
 	n := &ast.ExprIsset{
 		Vars: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$b")},
+				Name: &ast.Identifier{Value: []byte("$b")},
 			},
 		},
 	}
@@ -2130,7 +2130,7 @@ func TestPrinterPrintList(t *testing.T) {
 		Items: []ast.Vertex{
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 			},
 			&ast.ExprArrayItem{
@@ -2138,12 +2138,12 @@ func TestPrinterPrintList(t *testing.T) {
 					Items: []ast.Vertex{
 						&ast.ExprArrayItem{
 							Val: &ast.ExprVariable{
-								VarName: &ast.Identifier{Value: []byte("$b")},
+								Name: &ast.Identifier{Value: []byte("$b")},
 							},
 						},
 						&ast.ExprArrayItem{
 							Val: &ast.ExprVariable{
-								VarName: &ast.Identifier{Value: []byte("$c")},
+								Name: &ast.Identifier{Value: []byte("$c")},
 							},
 						},
 					},
@@ -2167,18 +2167,18 @@ func TestPrinterPrintMethodCall(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprMethodCall{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$foo")},
+			Name: &ast.Identifier{Value: []byte("$foo")},
 		},
 		Method: &ast.Identifier{Value: []byte("bar")},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 			},
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 		},
@@ -2198,22 +2198,22 @@ func TestPrinterPrintNew(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprNew{
-		Class: &ast.NameName{
+		Class: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("Foo"),
 				},
 			},
 		},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 			},
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 		},
@@ -2234,7 +2234,7 @@ func TestPrinterPrintPostDec(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprPostDec{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2253,7 +2253,7 @@ func TestPrinterPrintPostInc(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprPostInc{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2272,7 +2272,7 @@ func TestPrinterPrintPreDec(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprPreDec{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2291,7 +2291,7 @@ func TestPrinterPrintPreInc(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprPreInc{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2310,7 +2310,7 @@ func TestPrinterPrintPrint(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprPrint{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2329,9 +2329,9 @@ func TestPrinterPrintPropertyFetch(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprPropertyFetch{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$foo")},
+			Name: &ast.Identifier{Value: []byte("$foo")},
 		},
-		Property: &ast.Identifier{Value: []byte("bar")},
+		Prop: &ast.Identifier{Value: []byte("bar")},
 	}
 	n.Accept(p)
 
@@ -2385,7 +2385,7 @@ func TestPrinterPrintShellExec(t *testing.T) {
 		Parts: []ast.Vertex{
 			&ast.ScalarEncapsedStringPart{Value: []byte("hello ")},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$world")},
+				Name: &ast.Identifier{Value: []byte("$world")},
 			},
 			&ast.ScalarEncapsedStringPart{Value: []byte("!")},
 		},
@@ -2409,7 +2409,7 @@ func TestPrinterPrintExprShortArray(t *testing.T) {
 			&ast.ExprArrayItem{
 				Key: &ast.ScalarString{Value: []byte("'Hello'")},
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$world")},
+					Name: &ast.Identifier{Value: []byte("$world")},
 				},
 			},
 			&ast.ExprArrayItem{
@@ -2418,12 +2418,12 @@ func TestPrinterPrintExprShortArray(t *testing.T) {
 					Value: []byte("&"),
 				},
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$var")},
+					Name: &ast.Identifier{Value: []byte("$var")},
 				},
 			},
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$var")},
+					Name: &ast.Identifier{Value: []byte("$var")},
 				},
 			},
 		},
@@ -2449,7 +2449,7 @@ func TestPrinterPrintShortList(t *testing.T) {
 		Items: []ast.Vertex{
 			&ast.ExprArrayItem{
 				Val: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 			},
 			&ast.ExprArrayItem{
@@ -2457,12 +2457,12 @@ func TestPrinterPrintShortList(t *testing.T) {
 					Items: []ast.Vertex{
 						&ast.ExprArrayItem{
 							Val: &ast.ExprVariable{
-								VarName: &ast.Identifier{Value: []byte("$b")},
+								Name: &ast.Identifier{Value: []byte("$b")},
 							},
 						},
 						&ast.ExprArrayItem{
 							Val: &ast.ExprVariable{
-								VarName: &ast.Identifier{Value: []byte("$c")},
+								Name: &ast.Identifier{Value: []byte("$c")},
 							},
 						},
 					},
@@ -2490,15 +2490,15 @@ func TestPrinterPrintStaticCall(t *testing.T) {
 	n := &ast.ExprStaticCall{
 		Class: &ast.Identifier{Value: []byte("Foo")},
 		Call:  &ast.Identifier{Value: []byte("bar")},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 			},
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 		},
@@ -2519,8 +2519,8 @@ func TestPrinterPrintStaticPropertyFetch(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprStaticPropertyFetch{
 		Class: &ast.Identifier{Value: []byte("Foo")},
-		Property: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$bar")},
+		Prop: &ast.ExprVariable{
+			Name: &ast.Identifier{Value: []byte("$bar")},
 		},
 	}
 	n.Accept(p)
@@ -2538,11 +2538,11 @@ func TestPrinterPrintTernary(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprTernary{
-		Condition: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+		Cond: &ast.ExprVariable{
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		IfFalse: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 	}
 	n.Accept(p)
@@ -2560,14 +2560,14 @@ func TestPrinterPrintTernaryFull(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprTernary{
-		Condition: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+		Cond: &ast.ExprVariable{
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		IfTrue: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$b")},
+			Name: &ast.Identifier{Value: []byte("$b")},
 		},
 		IfFalse: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$c")},
+			Name: &ast.Identifier{Value: []byte("$c")},
 		},
 	}
 	n.Accept(p)
@@ -2586,7 +2586,7 @@ func TestPrinterPrintUnaryMinus(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprUnaryMinus{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2605,7 +2605,7 @@ func TestPrinterPrintUnaryPlus(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprUnaryPlus{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2629,8 +2629,8 @@ func TestPrinterPrintVariable(t *testing.T) {
 		OpenCurlyBracketTkn: &token.Token{
 			Value: []byte("{"),
 		},
-		VarName: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+		Name: &ast.ExprVariable{
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 		CloseCurlyBracketTkn: &token.Token{
 			Value: []byte("}"),
@@ -2652,7 +2652,7 @@ func TestPrinterPrintYieldFrom(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprYieldFrom{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2670,8 +2670,8 @@ func TestPrinterPrintYield(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprYield{
-		Value: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+		Val: &ast.ExprVariable{
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2690,10 +2690,10 @@ func TestPrinterPrintYieldFull(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.ExprYield{
 		Key: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$k")},
+			Name: &ast.Identifier{Value: []byte("$k")},
 		},
-		Value: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+		Val: &ast.ExprVariable{
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -2714,7 +2714,7 @@ func TestPrinterPrintAltElseIf(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtElseIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		ColonTkn: &token.Token{
 			Value: []byte(":"),
@@ -2722,7 +2722,7 @@ func TestPrinterPrintAltElseIf(t *testing.T) {
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				}},
 			},
 		},
@@ -2743,7 +2743,7 @@ func TestPrinterPrintAltElseIfEmpty(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtElseIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		ColonTkn: &token.Token{
 			Value: []byte(":"),
@@ -2771,7 +2771,7 @@ func TestPrinterPrintAltElse(t *testing.T) {
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				}},
 			},
 		},
@@ -2813,17 +2813,17 @@ func TestPrinterPrintAltFor(t *testing.T) {
 	n := &ast.StmtFor{
 		Init: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			},
 		},
 		Cond: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$b")},
+				Name: &ast.Identifier{Value: []byte("$b")},
 			},
 		},
 		Loop: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$c")},
+				Name: &ast.Identifier{Value: []byte("$c")},
 			},
 		},
 		ColonTkn: &token.Token{
@@ -2832,7 +2832,7 @@ func TestPrinterPrintAltFor(t *testing.T) {
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$d")},
+					Name: &ast.Identifier{Value: []byte("$d")},
 				}},
 			},
 		},
@@ -2853,13 +2853,13 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtForeach{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 		Key: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$key")},
+			Name: &ast.Identifier{Value: []byte("$key")},
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$val")},
+			Name: &ast.Identifier{Value: []byte("$val")},
 		},
 		ColonTkn: &token.Token{
 			Value: []byte(":"),
@@ -2867,7 +2867,7 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$d")},
+					Name: &ast.Identifier{Value: []byte("$d")},
 				}},
 			},
 		},
@@ -2888,16 +2888,16 @@ func TestPrinterPrintAltForeach_Reference(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtForeach{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 		Key: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$key")},
+			Name: &ast.Identifier{Value: []byte("$key")},
 		},
 		AmpersandTkn: &token.Token{
 			Value: []byte("&"),
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$val")},
+			Name: &ast.Identifier{Value: []byte("$val")},
 		},
 		ColonTkn: &token.Token{
 			Value: []byte(":"),
@@ -2905,7 +2905,7 @@ func TestPrinterPrintAltForeach_Reference(t *testing.T) {
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$d")},
+					Name: &ast.Identifier{Value: []byte("$d")},
 				}},
 			},
 		},
@@ -2926,7 +2926,7 @@ func TestPrinterPrintAltIf(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		ColonTkn: &token.Token{
 			Value: []byte(":"),
@@ -2934,14 +2934,14 @@ func TestPrinterPrintAltIf(t *testing.T) {
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$d")},
+					Name: &ast.Identifier{Value: []byte("$d")},
 				}},
 			},
 		},
 		ElseIf: []ast.Vertex{
 			&ast.StmtElseIf{
 				Cond: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 				ColonTkn: &token.Token{
 					Value: []byte(":"),
@@ -2949,14 +2949,14 @@ func TestPrinterPrintAltIf(t *testing.T) {
 				Stmt: &ast.StmtStmtList{
 					Stmts: []ast.Vertex{
 						&ast.StmtExpression{Expr: &ast.ExprVariable{
-							VarName: &ast.Identifier{Value: []byte("$b")},
+							Name: &ast.Identifier{Value: []byte("$b")},
 						}},
 					},
 				},
 			},
 			&ast.StmtElseIf{
 				Cond: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$c")},
+					Name: &ast.Identifier{Value: []byte("$c")},
 				},
 				ColonTkn: &token.Token{
 					Value: []byte(":"),
@@ -2971,7 +2971,7 @@ func TestPrinterPrintAltIf(t *testing.T) {
 			Stmt: &ast.StmtStmtList{
 				Stmts: []ast.Vertex{
 					&ast.StmtExpression{Expr: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$b")},
+						Name: &ast.Identifier{Value: []byte("$b")},
 					}},
 				},
 			},
@@ -2993,17 +2993,17 @@ func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtSwitch{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 		ColonTkn: &token.Token{
 			Value: []byte(":"),
 		},
-		CaseList: []ast.Vertex{
+		Cases: []ast.Vertex{
 			&ast.StmtCase{
 				Cond: &ast.ScalarString{Value: []byte("'a'")},
 				Stmts: []ast.Vertex{
 					&ast.StmtExpression{Expr: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$a")},
+						Name: &ast.Identifier{Value: []byte("$a")},
 					}},
 				},
 			},
@@ -3011,7 +3011,7 @@ func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 				Cond: &ast.ScalarString{Value: []byte("'b'")},
 				Stmts: []ast.Vertex{
 					&ast.StmtExpression{Expr: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$b")},
+						Name: &ast.Identifier{Value: []byte("$b")},
 					}},
 				},
 			},
@@ -3033,7 +3033,7 @@ func TestPrinterPrintAltWhile(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtWhile{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		ColonTkn: &token.Token{
 			Value: []byte(":"),
@@ -3041,7 +3041,7 @@ func TestPrinterPrintAltWhile(t *testing.T) {
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				}},
 			},
 		},
@@ -3081,11 +3081,11 @@ func TestPrinterPrintStmtCase(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtCase{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			}},
 		},
 	}
@@ -3105,7 +3105,7 @@ func TestPrinterPrintStmtCaseEmpty(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtCase{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Stmts: []ast.Vertex{},
 	}
@@ -3125,15 +3125,15 @@ func TestPrinterPrintStmtCatch(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtCatch{
 		Types: []ast.Vertex{
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Exception")}}},
-			&ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("RuntimeException")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Exception")}}},
+			&ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("RuntimeException")}}},
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$e")},
+			Name: &ast.Identifier{Value: []byte("$e")},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			}},
 		},
 	}
@@ -3156,34 +3156,34 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 		AmpersandTkn: &token.Token{
 			Value: []byte("&"),
 		},
-		MethodName: &ast.Identifier{Value: []byte("foo")},
+		Name: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				Type: &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
+				Type: &ast.Nullable{Expr: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("int")}}}},
 				AmpersandTkn: &token.Token{
 					Value: []byte("&"),
 				},
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
-				DefaultValue: &ast.ExprConstFetch{Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}}},
+				DefaultValue: &ast.ExprConstFetch{Const: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("null")}}}},
 			},
 			&ast.Parameter{
 				VariadicTkn: &token.Token{
 					Value: []byte("..."),
 				},
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 		},
-		ReturnType: &ast.NameName{
-			Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("void")}},
+		ReturnType: &ast.Name{
+			Parts: []ast.Vertex{&ast.NamePart{Value: []byte("void")}},
 		},
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				}},
 			},
 		},
@@ -3210,29 +3210,29 @@ func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 		AmpersandTkn: &token.Token{
 			Value: []byte("&"),
 		},
-		MethodName: &ast.Identifier{Value: []byte("foo")},
+		Name: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
-				Type: &ast.Nullable{Expr: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("int")}}}},
+				Type: &ast.Nullable{Expr: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("int")}}}},
 				AmpersandTkn: &token.Token{
 					Value: []byte("&"),
 				},
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
-				DefaultValue: &ast.ExprConstFetch{Const: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("null")}}}},
+				DefaultValue: &ast.ExprConstFetch{Const: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("null")}}}},
 			},
 			&ast.Parameter{
 				VariadicTkn: &token.Token{
 					Value: []byte("..."),
 				},
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 		},
-		ReturnType: &ast.NameName{
-			Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("void")}},
+		ReturnType: &ast.Name{
+			Parts: []ast.Vertex{&ast.NamePart{Value: []byte("void")}},
 		},
 		Stmt: &ast.StmtNop{},
 	}
@@ -3252,11 +3252,11 @@ func TestPrinterPrintStmtClass(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtClass{
 		Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("abstract")}},
-		ClassName: &ast.Identifier{Value: []byte("Foo")},
-		Extends:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+		Name:      &ast.Identifier{Value: []byte("Foo")},
+		Extends:   &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Bar")}}},
 		Implements: []ast.Vertex{
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Baz")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Quuz")}}},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtClassConstList{
@@ -3289,22 +3289,22 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtClass{
 		Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("abstract")}},
-		Arguments: []ast.Vertex{
+		Args: []ast.Vertex{
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 			},
 			&ast.Argument{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 		},
-		Extends: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+		Extends: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Bar")}}},
 		Implements: []ast.Vertex{
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Baz")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Quuz")}}},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtClassConstList{
@@ -3498,7 +3498,7 @@ func TestPrinterPrintStmtDefalut(t *testing.T) {
 	n := &ast.StmtDefault{
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			}},
 		},
 	}
@@ -3537,7 +3537,7 @@ func TestPrinterPrintStmtDo_Expression(t *testing.T) {
 		Cond: &ast.ScalarLnumber{Value: []byte("1")},
 		Stmt: &ast.StmtExpression{
 			Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			},
 		},
 	}
@@ -3560,7 +3560,7 @@ func TestPrinterPrintStmtDo_StmtList(t *testing.T) {
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				}},
 			},
 		},
@@ -3584,10 +3584,10 @@ func TestPrinterPrintStmtEchoHtmlState(t *testing.T) {
 			&ast.StmtEcho{
 				Exprs: []ast.Vertex{
 					&ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$a")},
+						Name: &ast.Identifier{Value: []byte("$a")},
 					},
 					&ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$b")},
+						Name: &ast.Identifier{Value: []byte("$b")},
 					},
 				},
 			},
@@ -3610,10 +3610,10 @@ func TestPrinterPrintStmtEchoPhpState(t *testing.T) {
 	n := &ast.StmtEcho{
 		Exprs: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$b")},
+				Name: &ast.Identifier{Value: []byte("$b")},
 			},
 		},
 	}
@@ -3633,7 +3633,7 @@ func TestPrinterPrintStmtElseIfStmts(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtElseIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
@@ -3657,7 +3657,7 @@ func TestPrinterPrintStmtElseIfExpr(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtElseIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Stmt: &ast.StmtExpression{Expr: &ast.ScalarString{Value: []byte("'bar'")}},
 	}
@@ -3677,7 +3677,7 @@ func TestPrinterPrintStmtElseIfNop(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtElseIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Stmt: &ast.StmtNop{},
 	}
@@ -3752,7 +3752,7 @@ func TestPrinterPrintExpression(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtExpression{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 	}
 	n.Accept(p)
@@ -3791,26 +3791,26 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 	n := &ast.StmtFor{
 		Init: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$b")},
+				Name: &ast.Identifier{Value: []byte("$b")},
 			},
 		},
 		Cond: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$c")},
+				Name: &ast.Identifier{Value: []byte("$c")},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$d")},
+				Name: &ast.Identifier{Value: []byte("$d")},
 			},
 		},
 		Loop: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$e")},
+				Name: &ast.Identifier{Value: []byte("$e")},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$f")},
+				Name: &ast.Identifier{Value: []byte("$f")},
 			},
 		},
 		Stmt: &ast.StmtStmtList{
@@ -3835,13 +3835,13 @@ func TestPrinterPrintStmtForeach(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtForeach{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Key: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$k")},
+			Name: &ast.Identifier{Value: []byte("$k")},
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$v")},
+			Name: &ast.Identifier{Value: []byte("$v")},
 		},
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
@@ -3865,16 +3865,16 @@ func TestPrinterPrintStmtForeach_Reference(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtForeach{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Key: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$k")},
+			Name: &ast.Identifier{Value: []byte("$k")},
 		},
 		AmpersandTkn: &token.Token{
 			Value: []byte("&"),
 		},
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$v")},
+			Name: &ast.Identifier{Value: []byte("$v")},
 		},
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
@@ -3900,19 +3900,19 @@ func TestPrinterPrintStmtFunction(t *testing.T) {
 		AmpersandTkn: &token.Token{
 			Value: []byte("&"),
 		},
-		FunctionName: &ast.Identifier{Value: []byte("foo")},
+		Name: &ast.Identifier{Value: []byte("foo")},
 		Params: []ast.Vertex{
 			&ast.Parameter{
 				AmpersandTkn: &token.Token{
 					Value: []byte("&"),
 				},
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$var")},
+					Name: &ast.Identifier{Value: []byte("$var")},
 				},
 			},
 		},
 		ReturnType: &ast.NameFullyQualified{
-			Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}},
+			Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtNop{},
@@ -3935,10 +3935,10 @@ func TestPrinterPrintStmtGlobal(t *testing.T) {
 	n := &ast.StmtGlobal{
 		Vars: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$b")},
+				Name: &ast.Identifier{Value: []byte("$b")},
 			},
 		},
 	}
@@ -3990,23 +3990,23 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Stmt: &ast.StmtExpression{
 			Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$b")},
+				Name: &ast.Identifier{Value: []byte("$b")},
 			},
 		},
 		ElseIf: []ast.Vertex{
 			&ast.StmtElseIf{
 				Cond: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$c")},
+					Name: &ast.Identifier{Value: []byte("$c")},
 				},
 				Stmt: &ast.StmtStmtList{
 					Stmts: []ast.Vertex{
 						&ast.StmtExpression{
 							Expr: &ast.ExprVariable{
-								VarName: &ast.Identifier{Value: []byte("$d")},
+								Name: &ast.Identifier{Value: []byte("$d")},
 							},
 						},
 					},
@@ -4014,7 +4014,7 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 			},
 			&ast.StmtElseIf{
 				Cond: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$e")},
+					Name: &ast.Identifier{Value: []byte("$e")},
 				},
 				Stmt: &ast.StmtNop{},
 			},
@@ -4022,7 +4022,7 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 		Else: &ast.StmtElse{
 			Stmt: &ast.StmtExpression{
 				Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$f")},
+					Name: &ast.Identifier{Value: []byte("$f")},
 				},
 			},
 		},
@@ -4043,13 +4043,13 @@ func TestPrinterPrintIfStmtList(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{
 					Expr: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$b")},
+						Name: &ast.Identifier{Value: []byte("$b")},
 					},
 				},
 			},
@@ -4071,7 +4071,7 @@ func TestPrinterPrintIfNop(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtIf{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Stmt: &ast.StmtNop{},
 	}
@@ -4111,20 +4111,20 @@ func TestPrinterPrintInterface(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtInterface{
-		InterfaceName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Name: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 		Extends: []ast.Vertex{
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Bar")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Baz")}}},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtClassMethod{
-				Modifiers:  []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
-				MethodName: &ast.Identifier{Value: []byte("foo")},
-				Params:     []ast.Vertex{},
+				Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
+				Name:      &ast.Identifier{Value: []byte("foo")},
+				Params:    []ast.Vertex{},
 				Stmt: &ast.StmtStmtList{
 					Stmts: []ast.Vertex{
 						&ast.StmtExpression{Expr: &ast.ExprVariable{
-							VarName: &ast.Identifier{Value: []byte("$a")},
+							Name: &ast.Identifier{Value: []byte("$a")},
 						}},
 					},
 				},
@@ -4146,7 +4146,7 @@ func TestPrinterPrintLabel(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtLabel{
-		LabelName: &ast.Identifier{Value: []byte("FOO")},
+		Name: &ast.Identifier{Value: []byte("FOO")},
 	}
 	n.Accept(p)
 
@@ -4163,7 +4163,7 @@ func TestPrinterPrintNamespace(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtNamespace{
-		Name: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Name: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 	}
 	n.Accept(p)
 
@@ -4180,10 +4180,10 @@ func TestPrinterPrintNamespaceWithStmts(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtNamespace{
-		Name: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Name: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			}},
 		},
 	}
@@ -4221,23 +4221,23 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 			&ast.Identifier{Value: []byte("public")},
 			&ast.Identifier{Value: []byte("static")},
 		},
-		Type: &ast.NameName{
+		Type: &ast.Name{
 			Parts: []ast.Vertex{
-				&ast.NameNamePart{
+				&ast.NamePart{
 					Value: []byte("Foo"),
 				},
 			},
 		},
-		Properties: []ast.Vertex{
+		Props: []ast.Vertex{
 			&ast.StmtProperty{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 				Expr: &ast.ScalarString{Value: []byte("'a'")},
 			},
 			&ast.StmtProperty{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 		},
@@ -4258,7 +4258,7 @@ func TestPrinterPrintProperty(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtProperty{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ScalarLnumber{Value: []byte("1")},
 	}
@@ -4295,7 +4295,7 @@ func TestPrinterPrintStaticVar(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtStaticVar{
 		Var: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Expr: &ast.ScalarLnumber{Value: []byte("1")},
 	}
@@ -4317,12 +4317,12 @@ func TestPrinterPrintStatic(t *testing.T) {
 		Vars: []ast.Vertex{
 			&ast.StmtStaticVar{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				},
 			},
 			&ast.StmtStaticVar{
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$b")},
+					Name: &ast.Identifier{Value: []byte("$b")},
 				},
 			},
 		},
@@ -4344,10 +4344,10 @@ func TestPrinterPrintStmtList(t *testing.T) {
 	n := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			}},
 			&ast.StmtExpression{Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$b")},
+				Name: &ast.Identifier{Value: []byte("$b")},
 			}},
 		},
 	}
@@ -4368,17 +4368,17 @@ func TestPrinterPrintStmtListNested(t *testing.T) {
 	n := &ast.StmtStmtList{
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			}},
 			&ast.StmtStmtList{
 				Stmts: []ast.Vertex{
 					&ast.StmtExpression{Expr: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$b")},
+						Name: &ast.Identifier{Value: []byte("$b")},
 					}},
 					&ast.StmtStmtList{
 						Stmts: []ast.Vertex{
 							&ast.StmtExpression{Expr: &ast.ExprVariable{
-								VarName: &ast.Identifier{Value: []byte("$c")},
+								Name: &ast.Identifier{Value: []byte("$c")},
 							}},
 						},
 					},
@@ -4402,14 +4402,14 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtSwitch{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
-		CaseList: []ast.Vertex{
+		Cases: []ast.Vertex{
 			&ast.StmtCase{
 				Cond: &ast.ScalarString{Value: []byte("'a'")},
 				Stmts: []ast.Vertex{
 					&ast.StmtExpression{Expr: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$a")},
+						Name: &ast.Identifier{Value: []byte("$a")},
 					}},
 				},
 			},
@@ -4417,7 +4417,7 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 				Cond: &ast.ScalarString{Value: []byte("'b'")},
 				Stmts: []ast.Vertex{
 					&ast.StmtExpression{Expr: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$b")},
+						Name: &ast.Identifier{Value: []byte("$b")},
 					}},
 				},
 			},
@@ -4439,7 +4439,7 @@ func TestPrinterPrintStmtThrow(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtThrow{
 		Expr: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$var")},
+			Name: &ast.Identifier{Value: []byte("$var")},
 		},
 	}
 	n.Accept(p)
@@ -4457,7 +4457,7 @@ func TestPrinterPrintStmtTraitUseAlias(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtTraitUseAlias{
-		Trait:    &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Trait:    &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 		Method:   &ast.Identifier{Value: []byte("a")},
 		Modifier: &ast.Identifier{Value: []byte("public")},
 		Alias:    &ast.Identifier{Value: []byte("b")},
@@ -4477,11 +4477,11 @@ func TestPrinterPrintStmtTraitUsePrecedence(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtTraitUsePrecedence{
-		Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Trait:  &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 		Method: &ast.Identifier{Value: []byte("a")},
 		Insteadof: []ast.Vertex{
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Bar")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Baz")}}},
 		},
 	}
 	n.Accept(p)
@@ -4500,8 +4500,8 @@ func TestPrinterPrintStmtTraitUse(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtTraitUse{
 		Traits: []ast.Vertex{
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Bar")}}},
 		},
 	}
 	n.Accept(p)
@@ -4520,12 +4520,12 @@ func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtTraitUse{
 		Traits: []ast.Vertex{
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
+			&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Bar")}}},
 		},
 		Adaptations: []ast.Vertex{
 			&ast.StmtTraitUseAlias{
-				Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+				Trait:  &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 				Method: &ast.Identifier{Value: []byte("a")},
 				Alias:  &ast.Identifier{Value: []byte("b")},
 			},
@@ -4546,16 +4546,16 @@ func TestPrinterPrintTrait(t *testing.T) {
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtTrait{
-		TraitName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Name: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 		Stmts: []ast.Vertex{
 			&ast.StmtClassMethod{
-				Modifiers:  []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
-				MethodName: &ast.Identifier{Value: []byte("foo")},
-				Params:     []ast.Vertex{},
+				Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("public")}},
+				Name:      &ast.Identifier{Value: []byte("foo")},
+				Params:    []ast.Vertex{},
 				Stmt: &ast.StmtStmtList{
 					Stmts: []ast.Vertex{
 						&ast.StmtExpression{Expr: &ast.ExprVariable{
-							VarName: &ast.Identifier{Value: []byte("$a")},
+							Name: &ast.Identifier{Value: []byte("$a")},
 						}},
 					},
 				},
@@ -4579,21 +4579,21 @@ func TestPrinterPrintStmtTry(t *testing.T) {
 	n := &ast.StmtTry{
 		Stmts: []ast.Vertex{
 			&ast.StmtExpression{Expr: &ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			}},
 		},
 		Catches: []ast.Vertex{
 			&ast.StmtCatch{
 				Types: []ast.Vertex{
-					&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Exception")}}},
-					&ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("RuntimeException")}}},
+					&ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Exception")}}},
+					&ast.NameFullyQualified{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("RuntimeException")}}},
 				},
 				Var: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$e")},
+					Name: &ast.Identifier{Value: []byte("$e")},
 				},
 				Stmts: []ast.Vertex{
 					&ast.StmtExpression{Expr: &ast.ExprVariable{
-						VarName: &ast.Identifier{Value: []byte("$b")},
+						Name: &ast.Identifier{Value: []byte("$b")},
 					}},
 				},
 			},
@@ -4621,10 +4621,10 @@ func TestPrinterPrintStmtUnset(t *testing.T) {
 	n := &ast.StmtUnset{
 		Vars: []ast.Vertex{
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$a")},
+				Name: &ast.Identifier{Value: []byte("$a")},
 			},
 			&ast.ExprVariable{
-				VarName: &ast.Identifier{Value: []byte("$b")},
+				Name: &ast.Identifier{Value: []byte("$b")},
 			},
 		},
 	}
@@ -4642,15 +4642,15 @@ func TestPrinterPrintUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
-	n := &ast.StmtUse{
+	n := &ast.StmtUseList{
 		Type: &ast.Identifier{Value: []byte("function")},
-		UseDeclarations: []ast.Vertex{
-			&ast.StmtUseDeclaration{
-				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Uses: []ast.Vertex{
+			&ast.StmtUse{
+				Use:   &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 				Alias: &ast.Identifier{Value: []byte("Bar")},
 			},
-			&ast.StmtUseDeclaration{
-				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+			&ast.StmtUse{
+				Use: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Baz")}}},
 			},
 		},
 	}
@@ -4668,16 +4668,16 @@ func TestPrinterPrintStmtGroupUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
-	n := &ast.StmtGroupUse{
+	n := &ast.StmtGroupUseList{
 		Type:   &ast.Identifier{Value: []byte("function")},
-		Prefix: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-		UseDeclarations: []ast.Vertex{
-			&ast.StmtUseDeclaration{
-				Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Prefix: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
+		Uses: []ast.Vertex{
+			&ast.StmtUse{
+				Use:   &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 				Alias: &ast.Identifier{Value: []byte("Bar")},
 			},
-			&ast.StmtUseDeclaration{
-				Use: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+			&ast.StmtUse{
+				Use: &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Baz")}}},
 			},
 		},
 	}
@@ -4695,9 +4695,9 @@ func TestPrinterPrintUseDeclaration(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
-	n := &ast.StmtUseDeclaration{
+	n := &ast.StmtUse{
 		Type:  &ast.Identifier{Value: []byte("function")},
-		Use:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Use:   &ast.Name{Parts: []ast.Vertex{&ast.NamePart{Value: []byte("Foo")}}},
 		Alias: &ast.Identifier{Value: []byte("Bar")},
 	}
 	n.Accept(p)
@@ -4716,12 +4716,12 @@ func TestPrinterPrintWhileStmtList(t *testing.T) {
 	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n := &ast.StmtWhile{
 		Cond: &ast.ExprVariable{
-			VarName: &ast.Identifier{Value: []byte("$a")},
+			Name: &ast.Identifier{Value: []byte("$a")},
 		},
 		Stmt: &ast.StmtStmtList{
 			Stmts: []ast.Vertex{
 				&ast.StmtExpression{Expr: &ast.ExprVariable{
-					VarName: &ast.Identifier{Value: []byte("$a")},
+					Name: &ast.Identifier{Value: []byte("$a")},
 				}},
 			},
 		},

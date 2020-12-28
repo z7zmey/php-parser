@@ -57,9 +57,9 @@ type Visitor interface {
 	StmtTraitUsePrecedence(n *StmtTraitUsePrecedence)
 	StmtTry(n *StmtTry)
 	StmtUnset(n *StmtUnset)
-	StmtUse(n *StmtUse)
-	StmtGroupUse(n *StmtGroupUse)
-	StmtUseDeclaration(n *StmtUseDeclaration)
+	StmtUse(n *StmtUseList)
+	StmtGroupUse(n *StmtGroupUseList)
+	StmtUseDeclaration(n *StmtUse)
 	StmtWhile(n *StmtWhile)
 
 	ExprArray(n *ExprArray)
@@ -166,8 +166,8 @@ type Visitor interface {
 	ScalarMagicConstant(n *ScalarMagicConstant)
 	ScalarString(n *ScalarString)
 
-	NameName(n *NameName)
+	NameName(n *Name)
 	NameFullyQualified(n *NameFullyQualified)
 	NameRelative(n *NameRelative)
-	NameNamePart(n *NameNamePart)
+	NameNamePart(n *NamePart)
 }
