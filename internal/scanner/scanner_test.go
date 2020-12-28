@@ -1628,3 +1628,45 @@ func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 	actual = string(tkn.Value)
 	assert.DeepEqual(t, expected, actual)
 }
+
+func TestDoubleDollar(t *testing.T) {
+	src := `<?php "$$a";`
+
+	lexer := NewLexer([]byte(src), "7.4", nil)
+
+	expected := "\""
+	tkn := lexer.Lex()
+	actual := string(tkn.Value)
+	assert.DeepEqual(t, expected, actual)
+
+	expected = "$"
+	tkn = lexer.Lex()
+	actual = string(tkn.Value)
+	assert.DeepEqual(t, expected, actual)
+
+	expected = "$a"
+	tkn = lexer.Lex()
+	actual = string(tkn.Value)
+	assert.DeepEqual(t, expected, actual)
+}
+
+func TestTripleDollar(t *testing.T) {
+	src := `<?php "$$$a";`
+
+	lexer := NewLexer([]byte(src), "7.4", nil)
+
+	expected := "\""
+	tkn := lexer.Lex()
+	actual := string(tkn.Value)
+	assert.DeepEqual(t, expected, actual)
+
+	expected = "$$"
+	tkn = lexer.Lex()
+	actual = string(tkn.Value)
+	assert.DeepEqual(t, expected, actual)
+
+	expected = "$a"
+	tkn = lexer.Lex()
+	actual = string(tkn.Value)
+	assert.DeepEqual(t, expected, actual)
+}

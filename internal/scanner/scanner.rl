@@ -115,11 +115,12 @@ func (lex *Lexer) Lex() *token.Token {
                 | '"'              -> final
             ),
             double_qoute_nonvarname: (
-                (any - [\\{"\r\n] - varname_first) -> double_qoute
-                | "\r" @new_line                   -> double_qoute
-                | "\n" @new_line                   -> double_qoute
-                | "\\"                             -> double_qoute_any
-                | '"'                              -> final
+                (any - [\\${"\r\n] - varname_first) -> double_qoute
+                | "\r" @new_line                    -> double_qoute
+                | "\n" @new_line                    -> double_qoute
+                | "\\"                              -> double_qoute_any
+                | '$'                               -> double_qoute_nonvarname
+                | '"'                               -> final
             );
 
         main := |*
