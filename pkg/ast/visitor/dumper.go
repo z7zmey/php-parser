@@ -286,8 +286,11 @@ func (v *Dumper) StmtClass(n *ast.StmtClass) {
 	v.dumpVertexList("Arguments", n.Arguments)
 	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
 	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+	v.dumpToken("ExtendsTkn", n.ExtendsTkn)
 	v.dumpVertex("Extends", n.Extends)
-	v.dumpVertex("Implements", n.Implements)
+	v.dumpToken("ImplementsTkn", n.ImplementsTkn)
+	v.dumpVertexList("Implements", n.Implements)
+	v.dumpTokenList("ImplementsSeparatorTkns", n.ImplementsSeparatorTkns)
 	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertexList("Stmts", n.Stmts)
 	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
@@ -306,31 +309,6 @@ func (v *Dumper) StmtClassConstList(n *ast.StmtClassConstList) {
 	v.dumpVertexList("Consts", n.Consts)
 	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
 	v.dumpToken("SemiColonTkn", n.SemiColonTkn)
-
-	v.indent--
-	v.print(v.indent, "},\n")
-}
-
-func (v *Dumper) StmtClassExtends(n *ast.StmtClassExtends) {
-	v.print(0, "&ast.StmtClassExtends{\n")
-	v.indent++
-
-	v.dumpPosition(n.Position)
-	v.dumpToken("ExtendTkn", n.ExtendTkn)
-	v.dumpVertex("ClassName", n.ClassName)
-
-	v.indent--
-	v.print(v.indent, "},\n")
-}
-
-func (v *Dumper) StmtClassImplements(n *ast.StmtClassImplements) {
-	v.print(0, "&ast.StmtClassImplements{\n")
-	v.indent++
-
-	v.dumpPosition(n.Position)
-	v.dumpToken("ImplementsTkn", n.ImplementsTkn)
-	v.dumpVertexList("InterfaceNames", n.InterfaceNames)
-	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -666,23 +644,12 @@ func (v *Dumper) StmtInterface(n *ast.StmtInterface) {
 	v.dumpPosition(n.Position)
 	v.dumpToken("InterfaceTkn", n.InterfaceTkn)
 	v.dumpVertex("InterfaceName", n.InterfaceName)
-	v.dumpVertex("Extends", n.Extends)
+	v.dumpToken("ExtendsTkn", n.ExtendsTkn)
+	v.dumpVertexList("Extends", n.Extends)
+	v.dumpTokenList("ExtendsSeparatorTkns", n.ExtendsSeparatorTkns)
 	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertexList("Stmts", n.Stmts)
 	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)
-
-	v.indent--
-	v.print(v.indent, "},\n")
-}
-
-func (v *Dumper) StmtInterfaceExtends(n *ast.StmtInterfaceExtends) {
-	v.print(0, "&ast.StmtInterfaceExtends{\n")
-	v.indent++
-
-	v.dumpPosition(n.Position)
-	v.dumpToken("ExtendsTkn", n.ExtendsTkn)
-	v.dumpVertexList("InterfaceNames", n.InterfaceNames)
-	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -849,8 +816,6 @@ func (v *Dumper) StmtTrait(n *ast.StmtTrait) {
 	v.dumpPosition(n.Position)
 	v.dumpToken("TraitTkn", n.TraitTkn)
 	v.dumpVertex("TraitName", n.TraitName)
-	v.dumpVertex("Extends", n.Extends)
-	v.dumpVertex("Implements", n.Implements)
 	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
 	v.dumpVertexList("Stmts", n.Stmts)
 	v.dumpToken("CloseCurlyBracketTkn", n.CloseCurlyBracketTkn)

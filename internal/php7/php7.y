@@ -1203,7 +1203,7 @@ is_variadic:
 class_declaration_statement:
     class_modifiers T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                $$ = &ast.StmtClass{
+                class := &ast.StmtClass{
                     Position: yylex.(*Parser).builder.NewOptionalListTokensPosition($1, $2, $9),
                     Modifiers: $1,
                     ClassTkn:  $2,
@@ -1212,16 +1212,27 @@ class_declaration_statement:
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
-                    Extends:              $4,
-                    Implements:           $5,
                     OpenCurlyBracketTkn:  $7,
                     Stmts:                $8,
                     CloseCurlyBracketTkn: $9,
                 }
+
+                if $4 != nil {
+                    class.ExtendsTkn = $4.(*ast.StmtClass).ExtendsTkn
+                    class.Extends    = $4.(*ast.StmtClass).Extends
+                }
+
+                if $5 != nil {
+                    class.ImplementsTkn           = $5.(*ast.StmtClass).ImplementsTkn
+                    class.Implements              = $5.(*ast.StmtClass).Implements
+                    class.ImplementsSeparatorTkns = $5.(*ast.StmtClass).ImplementsSeparatorTkns
+                }
+
+                $$ = class
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                $$ = &ast.StmtClass{
+                class := &ast.StmtClass{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $8),
                     ClassTkn: $1,
                     ClassName: &ast.Identifier{
@@ -1229,12 +1240,23 @@ class_declaration_statement:
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
-                    Extends:              $3,
-                    Implements:           $4,
                     OpenCurlyBracketTkn:  $6,
                     Stmts:                $7,
                     CloseCurlyBracketTkn: $8,
                 }
+
+                if $3 != nil {
+                    class.ExtendsTkn = $3.(*ast.StmtClass).ExtendsTkn
+                    class.Extends    = $3.(*ast.StmtClass).Extends
+                }
+
+                if $4 != nil {
+                    class.ImplementsTkn           = $4.(*ast.StmtClass).ImplementsTkn
+                    class.Implements              = $4.(*ast.StmtClass).Implements
+                    class.ImplementsSeparatorTkns = $4.(*ast.StmtClass).ImplementsSeparatorTkns
+                }
+
+                $$ = class
             }
 ;
 
@@ -1289,7 +1311,7 @@ trait_declaration_statement:
 interface_declaration_statement:
         T_INTERFACE T_STRING interface_extends_list backup_doc_comment '{' class_statement_list '}'
             {
-                $$ = &ast.StmtInterface{
+                iface := &ast.StmtInterface{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $7),
                     InterfaceTkn: $1,
                     InterfaceName: &ast.Identifier{
@@ -1297,11 +1319,18 @@ interface_declaration_statement:
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
-                    Extends:              $3,
                     OpenCurlyBracketTkn:  $5,
                     Stmts:                $6,
                     CloseCurlyBracketTkn: $7,
                 }
+
+                if $3 != nil {
+                    iface.ExtendsTkn           = $3.(*ast.StmtInterface).ExtendsTkn
+                    iface.Extends              = $3.(*ast.StmtInterface).Extends
+                    iface.ExtendsSeparatorTkns = $3.(*ast.StmtInterface).ExtendsSeparatorTkns
+                }
+
+                $$ = iface
             }
 ;
 
@@ -1312,10 +1341,10 @@ extends_from:
             }
     |   T_EXTENDS name
             {
-                $$ = &ast.StmtClassExtends{
-                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
-                    ExtendTkn: $1,
-                    ClassName: $2,
+                $$ = &ast.StmtClass{
+                    Position:   yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
+                    ExtendsTkn: $1,
+                    Extends:    $2,
                 }
             }
 ;
@@ -1327,11 +1356,11 @@ interface_extends_list:
             }
     |   T_EXTENDS name_list
             {
-                $$ = &ast.StmtInterfaceExtends{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    ExtendsTkn:     $1,
-                    InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                $$ = &ast.StmtInterface{
+                    Position:             yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    ExtendsTkn:           $1,
+                    Extends:              $2.(*ast.ParserSeparatedList).Items,
+                    ExtendsSeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                 };
             }
 ;
@@ -1343,11 +1372,11 @@ implements_list:
             }
     |   T_IMPLEMENTS name_list
             {
-                $$ = &ast.StmtClassImplements{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    ImplementsTkn:  $1,
-                    InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                $$ = &ast.StmtClass{
+                    Position:                yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    ImplementsTkn:           $1,
+                    Implements:              $2.(*ast.ParserSeparatedList).Items,
+                    ImplementsSeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                 };
             }
 ;
@@ -2458,19 +2487,30 @@ non_empty_for_exprs:
 anonymous_class:
         T_CLASS ctor_arguments extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                $$ = &ast.StmtClass{
+                class := &ast.StmtClass{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $8),
                     ClassTkn:             $1,
                     OpenParenthesisTkn:   $2.(*ast.ArgumentList).OpenParenthesisTkn,
                     Arguments:            $2.(*ast.ArgumentList).Arguments,
                     SeparatorTkns:        $2.(*ast.ArgumentList).SeparatorTkns,
                     CloseParenthesisTkn:  $2.(*ast.ArgumentList).CloseParenthesisTkn,
-                    Extends:              $3,
-                    Implements:           $4,
                     OpenCurlyBracketTkn:  $6,
                     Stmts:                $7,
                     CloseCurlyBracketTkn: $8,
                 }
+
+                if $3 != nil {
+                    class.ExtendsTkn = $3.(*ast.StmtClass).ExtendsTkn
+                    class.Extends    = $3.(*ast.StmtClass).Extends
+                }
+
+                if $4 != nil {
+                    class.ImplementsTkn           = $4.(*ast.StmtClass).ImplementsTkn
+                    class.Implements              = $4.(*ast.StmtClass).Implements
+                    class.ImplementsSeparatorTkns = $4.(*ast.StmtClass).ImplementsSeparatorTkns
+                }
+
+                $$ = class
             }
 ;
 

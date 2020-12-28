@@ -73,11 +73,11 @@ func (nsr *NamespaceResolver) StmtGroupUse(n *ast.StmtGroupUse) {
 
 func (nsr *NamespaceResolver) StmtClass(n *ast.StmtClass) {
 	if n.Extends != nil {
-		nsr.ResolveName(n.Extends.(*ast.StmtClassExtends).ClassName, "")
+		nsr.ResolveName(n.Extends, "")
 	}
 
 	if n.Implements != nil {
-		for _, interfaceName := range n.Implements.(*ast.StmtClassImplements).InterfaceNames {
+		for _, interfaceName := range n.Implements {
 			nsr.ResolveName(interfaceName, "")
 		}
 	}
@@ -89,7 +89,7 @@ func (nsr *NamespaceResolver) StmtClass(n *ast.StmtClass) {
 
 func (nsr *NamespaceResolver) StmtInterface(n *ast.StmtInterface) {
 	if n.Extends != nil {
-		for _, interfaceName := range n.Extends.(*ast.StmtInterfaceExtends).InterfaceNames {
+		for _, interfaceName := range n.Extends {
 			nsr.ResolveName(interfaceName, "")
 		}
 	}

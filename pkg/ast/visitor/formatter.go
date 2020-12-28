@@ -281,12 +281,14 @@ func (f *formatter) StmtClass(n *ast.StmtClass) {
 
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
 	if n.Extends != nil {
+		n.ExtendsTkn = f.newToken(token.T_EXTENDS, []byte("extends"))
 		n.Extends.Accept(f)
 		f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
 	}
 
 	if n.Implements != nil {
-		n.Implements.Accept(f)
+		n.ImplementsTkn = f.newToken(token.T_IMPLEMENTS, []byte("implements"))
+		n.ImplementsSeparatorTkns = f.formatList(n.Implements, ',')
 		f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
 	}
 
@@ -316,20 +318,6 @@ func (f *formatter) StmtClassConstList(n *ast.StmtClassConstList) {
 	n.SeparatorTkns = f.formatList(n.Consts, ',')
 
 	n.SemiColonTkn = f.newSemicolonTkn()
-}
-
-func (f *formatter) StmtClassExtends(n *ast.StmtClassExtends) {
-	n.ExtendTkn = f.newToken(token.T_EXTENDS, []byte("extends"))
-	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
-
-	n.ClassName.Accept(f)
-}
-
-func (f *formatter) StmtClassImplements(n *ast.StmtClassImplements) {
-	n.ImplementsTkn = f.newToken(token.T_IMPLEMENTS, []byte("implements"))
-	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
-
-	n.SeparatorTkns = f.formatList(n.InterfaceNames, ',')
 }
 
 func (f *formatter) StmtClassMethod(n *ast.StmtClassMethod) {
@@ -677,7 +665,8 @@ func (f *formatter) StmtInterface(n *ast.StmtInterface) {
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
 
 	if n.Extends != nil {
-		n.Extends.Accept(f)
+		n.ExtendsTkn = f.newToken(token.T_EXTENDS, []byte("extends"))
+		n.ExtendsSeparatorTkns = f.formatList(n.Extends, ',')
 		f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
 	}
 
@@ -693,16 +682,6 @@ func (f *formatter) StmtInterface(n *ast.StmtInterface) {
 	}
 
 	n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
-}
-
-func (f *formatter) StmtInterfaceExtends(n *ast.StmtInterfaceExtends) {
-	n.ExtendsTkn = f.newToken(token.T_EXTENDS, []byte("extends"))
-	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
-
-	n.SeparatorTkns = nil
-	if len(n.InterfaceNames) > 0 {
-		n.SeparatorTkns = f.formatList(n.InterfaceNames, ',')
-	}
 }
 
 func (f *formatter) StmtLabel(n *ast.StmtLabel) {
@@ -864,16 +843,6 @@ func (f *formatter) StmtTrait(n *ast.StmtTrait) {
 
 	n.TraitName.Accept(f)
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
-
-	if n.Extends != nil {
-		n.Extends.Accept(f)
-		f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
-	}
-
-	if n.Implements != nil {
-		n.Implements.Accept(f)
-		f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
-	}
 
 	n.OpenCurlyBracketTkn = f.newToken('{', []byte("{"))
 

@@ -401,13 +401,9 @@ func TestResolveClassName(t *testing.T) {
 
 	class := &ast.StmtClass{
 		ClassName: &ast.Identifier{Value: []byte("A")},
-		Extends: &ast.StmtClassExtends{
-			ClassName: nameAB,
-		},
-		Implements: &ast.StmtClassImplements{
-			InterfaceNames: []ast.Vertex{
-				nameBC,
-			},
+		Extends:   nameAB,
+		Implements: []ast.Vertex{
+			nameBC,
 		},
 	}
 
@@ -436,11 +432,9 @@ func TestResolveInterfaceName(t *testing.T) {
 
 	interfaceNode := &ast.StmtInterface{
 		InterfaceName: &ast.Identifier{Value: []byte("A")},
-		Extends: &ast.StmtInterfaceExtends{
-			InterfaceNames: []ast.Vertex{
-				nameAB,
-				nameBC,
-			},
+		Extends: []ast.Vertex{
+			nameAB,
+			nameBC,
 		},
 	}
 

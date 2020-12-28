@@ -170,9 +170,11 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.visitor.Leave("Extends", true)
 		}
 		if nn.Implements != nil {
-			t.visitor.Enter("Implements", true)
-			t.Traverse(nn.Implements)
-			t.visitor.Leave("Implements", true)
+			t.visitor.Enter("Implements", false)
+			for _, c := range nn.Implements {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Implements", false)
 		}
 		if nn.Stmts != nil {
 			t.visitor.Enter("Stmts", false)
@@ -201,32 +203,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 				t.Traverse(c)
 			}
 			t.visitor.Leave("Consts", false)
-		}
-	case *ast.StmtClassExtends:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.ClassName != nil {
-			t.visitor.Enter("ClassName", true)
-			t.Traverse(nn.ClassName)
-			t.visitor.Leave("ClassName", true)
-		}
-	case *ast.StmtClassImplements:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.InterfaceNames != nil {
-			t.visitor.Enter("InterfaceNames", false)
-			for _, c := range nn.InterfaceNames {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("InterfaceNames", false)
 		}
 	case *ast.StmtClassMethod:
 		if nn == nil {
@@ -599,9 +575,11 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			t.visitor.Leave("InterfaceName", true)
 		}
 		if nn.Extends != nil {
-			t.visitor.Enter("Extends", true)
-			t.Traverse(nn.Extends)
-			t.visitor.Leave("Extends", true)
+			t.visitor.Enter("Extends", false)
+			for _, c := range nn.Extends {
+				t.Traverse(c)
+			}
+			t.visitor.Leave("Extends", false)
 		}
 		if nn.Stmts != nil {
 			t.visitor.Enter("Stmts", false)
@@ -609,20 +587,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 				t.Traverse(c)
 			}
 			t.visitor.Leave("Stmts", false)
-		}
-	case *ast.StmtInterfaceExtends:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.InterfaceNames != nil {
-			t.visitor.Enter("InterfaceNames", false)
-			for _, c := range nn.InterfaceNames {
-				t.Traverse(c)
-			}
-			t.visitor.Leave("InterfaceNames", false)
 		}
 	case *ast.StmtLabel:
 		if nn == nil {

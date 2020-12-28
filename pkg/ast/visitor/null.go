@@ -62,14 +62,6 @@ func (v *Null) StmtClassConstList(_ *ast.StmtClassConstList) {
 	// do nothing
 }
 
-func (v *Null) StmtClassExtends(_ *ast.StmtClassExtends) {
-	// do nothing
-}
-
-func (v *Null) StmtClassImplements(_ *ast.StmtClassImplements) {
-	// do nothing
-}
-
 func (v *Null) StmtClassMethod(_ *ast.StmtClassMethod) {
 	// do nothing
 }
@@ -151,10 +143,6 @@ func (v *Null) StmtInlineHtml(_ *ast.StmtInlineHtml) {
 }
 
 func (v *Null) StmtInterface(_ *ast.StmtInterface) {
-	// do nothing
-}
-
-func (v *Null) StmtInterfaceExtends(_ *ast.StmtInterfaceExtends) {
 	// do nothing
 }
 

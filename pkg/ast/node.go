@@ -285,19 +285,22 @@ func (n *StmtCatch) GetPosition() *position.Position {
 
 // StmtClass node
 type StmtClass struct {
-	Position             *position.Position
-	Modifiers            []Vertex
-	ClassTkn             *token.Token
-	ClassName            Vertex
-	OpenParenthesisTkn   *token.Token
-	Arguments            []Vertex
-	SeparatorTkns        []*token.Token
-	CloseParenthesisTkn  *token.Token
-	Extends              Vertex
-	Implements           Vertex
-	OpenCurlyBracketTkn  *token.Token
-	Stmts                []Vertex
-	CloseCurlyBracketTkn *token.Token
+	Position                *position.Position
+	Modifiers               []Vertex
+	ClassTkn                *token.Token
+	ClassName               Vertex
+	OpenParenthesisTkn      *token.Token
+	Arguments               []Vertex
+	SeparatorTkns           []*token.Token
+	CloseParenthesisTkn     *token.Token
+	ExtendsTkn              *token.Token
+	Extends                 Vertex
+	ImplementsTkn           *token.Token
+	Implements              []Vertex
+	ImplementsSeparatorTkns []*token.Token
+	OpenCurlyBracketTkn     *token.Token
+	Stmts                   []Vertex
+	CloseCurlyBracketTkn    *token.Token
 }
 
 func (n *StmtClass) Accept(v NodeVisitor) {
@@ -323,37 +326,6 @@ func (n *StmtClassConstList) Accept(v NodeVisitor) {
 }
 
 func (n *StmtClassConstList) GetPosition() *position.Position {
-	return n.Position
-}
-
-// StmtClassExtends node
-type StmtClassExtends struct {
-	Position  *position.Position
-	ExtendTkn *token.Token
-	ClassName Vertex
-}
-
-func (n *StmtClassExtends) Accept(v NodeVisitor) {
-	v.StmtClassExtends(n)
-}
-
-func (n *StmtClassExtends) GetPosition() *position.Position {
-	return n.Position
-}
-
-// StmtClassImplements node
-type StmtClassImplements struct {
-	Position       *position.Position
-	ImplementsTkn  *token.Token
-	InterfaceNames []Vertex
-	SeparatorTkns  []*token.Token
-}
-
-func (n *StmtClassImplements) Accept(v NodeVisitor) {
-	v.StmtClassImplements(n)
-}
-
-func (n *StmtClassImplements) GetPosition() *position.Position {
 	return n.Position
 }
 
@@ -744,7 +716,9 @@ type StmtInterface struct {
 	Position             *position.Position
 	InterfaceTkn         *token.Token
 	InterfaceName        Vertex
-	Extends              Vertex
+	ExtendsTkn           *token.Token
+	Extends              []Vertex
+	ExtendsSeparatorTkns []*token.Token
 	OpenCurlyBracketTkn  *token.Token
 	Stmts                []Vertex
 	CloseCurlyBracketTkn *token.Token
@@ -755,22 +729,6 @@ func (n *StmtInterface) Accept(v NodeVisitor) {
 }
 
 func (n *StmtInterface) GetPosition() *position.Position {
-	return n.Position
-}
-
-// StmtInterfaceExtends node
-type StmtInterfaceExtends struct {
-	Position       *position.Position
-	ExtendsTkn     *token.Token
-	InterfaceNames []Vertex
-	SeparatorTkns  []*token.Token
-}
-
-func (n *StmtInterfaceExtends) Accept(v NodeVisitor) {
-	v.StmtInterfaceExtends(n)
-}
-
-func (n *StmtInterfaceExtends) GetPosition() *position.Position {
 	return n.Position
 }
 
@@ -966,8 +924,6 @@ type StmtTrait struct {
 	Position             *position.Position
 	TraitTkn             *token.Token
 	TraitName            Vertex
-	Extends              Vertex
-	Implements           Vertex
 	OpenCurlyBracketTkn  *token.Token
 	Stmts                []Vertex
 	CloseCurlyBracketTkn *token.Token

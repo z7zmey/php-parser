@@ -1280,36 +1280,55 @@ unticked_class_declaration_statement:
             {
                 switch n := $1.(type) {
                     case *ast.StmtClass :
-                        n.Position = yylex.(*Parser).builder.NewNodeTokenPosition($1, $7)
-                        n.ClassName = &ast.Identifier{
-                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
+                        className := &ast.Identifier{
+                            Position:      yylex.(*Parser).builder.NewTokenPosition($2),
                             IdentifierTkn: $2,
                             Value:         $2.Value,
                         }
-                        n.Extends = $3
-                        n.Implements = $4
-                        n.OpenCurlyBracketTkn = $5
-                        n.Stmts = $6
+
+                        n.Position             = yylex.(*Parser).builder.NewNodeTokenPosition($1, $7)
+                        n.ClassName            = className
+                        n.OpenCurlyBracketTkn  = $5
+                        n.Stmts                = $6
                         n.CloseCurlyBracketTkn = $7
+
+                        if $3 != nil {
+                            n.ExtendsTkn = $3.(*ast.StmtClass).ExtendsTkn
+                            n.Extends    = $3.(*ast.StmtClass).Extends
+                        }
+
+                        if $4 != nil {
+                            n.ImplementsTkn           = $4.(*ast.StmtClass).ImplementsTkn
+                            n.Implements              = $4.(*ast.StmtClass).Implements
+                            n.ImplementsSeparatorTkns = $4.(*ast.StmtClass).ImplementsSeparatorTkns
+                        }
                     case *ast.StmtTrait :
-                        n.Position = yylex.(*Parser).builder.NewNodeTokenPosition($1, $7)
-                        n.TraitName = &ast.Identifier{
-                            Position: yylex.(*Parser).builder.NewTokenPosition($2),
+                        traitName := &ast.Identifier{
+                            Position:      yylex.(*Parser).builder.NewTokenPosition($2),
                             IdentifierTkn: $2,
                             Value:         $2.Value,
                         }
-                        n.Extends = $3
-                        n.Implements = $4
-                        n.OpenCurlyBracketTkn = $5
-                        n.Stmts = $6
+
+                        n.Position             = yylex.(*Parser).builder.NewNodeTokenPosition($1, $7)
+                        n.TraitName            = traitName
+                        n.OpenCurlyBracketTkn  = $5
+                        n.Stmts                = $6
                         n.CloseCurlyBracketTkn = $7
+
+                        if $3 != nil {
+                            yylex.(*Parser).errHandlerFunc(errors.NewError("A trait cannot extend a class. Traits can only be composed from other traits with the 'use' keyword", $3.(*ast.StmtClass).Position))
+                        }
+
+                        if $4 != nil {
+                            yylex.(*Parser).errHandlerFunc(errors.NewError("A trait cannot implement an interface", $4.(*ast.StmtClass).Position))
+                        }
                 }
 
                 $$ = $1
             }
     |   interface_entry T_STRING interface_extends_list '{' class_statement_list '}'
             {
-                $$ = &ast.StmtInterface{
+                iface := &ast.StmtInterface{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $6),
                     InterfaceTkn: $1,
                     InterfaceName: &ast.Identifier{
@@ -1317,11 +1336,18 @@ unticked_class_declaration_statement:
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
-                    Extends:              $3,
                     OpenCurlyBracketTkn:  $4,
                     Stmts:                $5,
                     CloseCurlyBracketTkn: $6,
                 }
+
+                if $3 != nil {
+                    iface.ExtendsTkn           = $3.(*ast.StmtInterface).ExtendsTkn
+                    iface.Extends              = $3.(*ast.StmtInterface).Extends
+                    iface.ExtendsSeparatorTkns = $3.(*ast.StmtInterface).ExtendsSeparatorTkns
+                }
+
+                $$ = iface
             }
 ;
 
@@ -1378,10 +1404,10 @@ extends_from:
             }
     |   T_EXTENDS fully_qualified_class_name
             {
-                $$ = &ast.StmtClassExtends{
-                    Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
-                    ExtendTkn: $1,
-                    ClassName: $2,
+                $$ = &ast.StmtClass{
+                    Position:   yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
+                    ExtendsTkn: $1,
+                    Extends:    $2,
                 }
             }
 ;
@@ -1400,11 +1426,11 @@ interface_extends_list:
             }
     |   T_EXTENDS interface_list
             {
-                $$ = &ast.StmtInterfaceExtends{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    ExtendsTkn:     $1,
-                    InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                $$ = &ast.StmtInterface{
+                    Position:             yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    ExtendsTkn:           $1,
+                    Extends:              $2.(*ast.ParserSeparatedList).Items,
+                    ExtendsSeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                 };
             }
 ;
@@ -1416,11 +1442,11 @@ implements_list:
             }
     |   T_IMPLEMENTS interface_list
             {
-                $$ = &ast.StmtClassImplements{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
-                    ImplementsTkn:  $1,
-                    InterfaceNames: $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                $$ = &ast.StmtClass{
+                    Position:                yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    ImplementsTkn:           $1,
+                    Implements:              $2.(*ast.ParserSeparatedList).Items,
+                    ImplementsSeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
                 };
             }
 ;

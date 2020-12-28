@@ -519,12 +519,10 @@ func TestFormatter_Class_Extends(t *testing.T) {
 		ClassName: &ast.Identifier{
 			Value: []byte("foo"),
 		},
-		Extends: &ast.StmtClassExtends{
-			ClassName: &ast.NameName{
-				Parts: []ast.Vertex{
-					&ast.NameNamePart{
-						Value: []byte("bar"),
-					},
+		Extends: &ast.NameName{
+			Parts: []ast.Vertex{
+				&ast.NameNamePart{
+					Value: []byte("bar"),
 				},
 			},
 		},
@@ -556,13 +554,11 @@ func TestFormatter_Class_Implements(t *testing.T) {
 		ClassName: &ast.Identifier{
 			Value: []byte("foo"),
 		},
-		Implements: &ast.StmtClassImplements{
-			InterfaceNames: []ast.Vertex{
-				&ast.NameName{
-					Parts: []ast.Vertex{
-						&ast.NameNamePart{
-							Value: []byte("bar"),
-						},
+		Implements: []ast.Vertex{
+			&ast.NameName{
+				Parts: []ast.Vertex{
+					&ast.NameNamePart{
+						Value: []byte("bar"),
 					},
 				},
 			},
@@ -662,69 +658,6 @@ func TestFormatter_StmtClassConstList_Modifier(t *testing.T) {
 	n.Accept(p)
 
 	expected := `public const foo = 'foo', bar = 'bar';`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestFormatter_ClassExtends(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.StmtClassExtends{
-		ClassName: &ast.NameName{
-			Parts: []ast.Vertex{
-				&ast.NameNamePart{
-					Value: []byte("foo"),
-				},
-			},
-		},
-	}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `extends foo`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestFormatter_ClassImplements(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.StmtClassImplements{
-		InterfaceNames: []ast.Vertex{
-			&ast.NameName{
-				Parts: []ast.Vertex{
-					&ast.NameNamePart{
-						Value: []byte("foo"),
-					},
-				},
-			},
-			&ast.NameName{
-				Parts: []ast.Vertex{
-					&ast.NameNamePart{
-						Value: []byte("bar"),
-					},
-				},
-			},
-		},
-	}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `implements foo, bar`
 	actual := o.String()
 
 	if expected != actual {
@@ -1881,13 +1814,11 @@ func TestFormatter_StmtInterface_Extends(t *testing.T) {
 		InterfaceName: &ast.Identifier{
 			Value: []byte("foo"),
 		},
-		Extends: &ast.StmtInterfaceExtends{
-			InterfaceNames: []ast.Vertex{
-				&ast.NameName{
-					Parts: []ast.Vertex{
-						&ast.NameNamePart{
-							Value: []byte("bar"),
-						},
+		Extends: []ast.Vertex{
+			&ast.NameName{
+				Parts: []ast.Vertex{
+					&ast.NameNamePart{
+						Value: []byte("bar"),
 					},
 				},
 			},
@@ -1906,42 +1837,6 @@ func TestFormatter_StmtInterface_Extends(t *testing.T) {
 	expected := `interface foo extends bar {
         ;
     }`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestFormatter_StmtInterfaceExtends(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.StmtInterfaceExtends{
-		InterfaceNames: []ast.Vertex{
-			&ast.NameName{
-				Parts: []ast.Vertex{
-					&ast.NameNamePart{
-						Value: []byte("foo"),
-					},
-				},
-			},
-			&ast.NameName{
-				Parts: []ast.Vertex{
-					&ast.NameNamePart{
-						Value: []byte("bar"),
-					},
-				},
-			},
-		},
-	}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `extends foo, bar`
 	actual := o.String()
 
 	if expected != actual {
@@ -2456,82 +2351,6 @@ func TestFormatter_StmtTrait(t *testing.T) {
 	n.Accept(p)
 
 	expected := `trait foo {
-        ;
-    }`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestFormatter_StmtTrait_Extends(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.StmtTrait{
-		TraitName: &ast.Identifier{
-			Value: []byte("foo"),
-		},
-		Extends: &ast.StmtClassExtends{
-			ClassName: &ast.NameName{
-				Parts: []ast.Vertex{
-					&ast.NameNamePart{
-						Value: []byte("bar"),
-					},
-				},
-			},
-		},
-		Stmts: []ast.Vertex{
-			&ast.StmtNop{},
-		},
-	}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `trait foo extends bar {
-        ;
-    }`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestFormatter_StmtTrait_Implements(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.StmtTrait{
-		TraitName: &ast.Identifier{
-			Value: []byte("foo"),
-		},
-		Implements: &ast.StmtClassImplements{
-			InterfaceNames: []ast.Vertex{
-				&ast.NameName{
-					Parts: []ast.Vertex{
-						&ast.NameNamePart{
-							Value: []byte("bar"),
-						},
-					},
-				},
-			},
-		},
-		Stmts: []ast.Vertex{
-			&ast.StmtNop{},
-		},
-	}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `trait foo implements bar {
         ;
     }`
 	actual := o.String()

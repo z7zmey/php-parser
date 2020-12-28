@@ -29,11 +29,9 @@ func TestPrinterPrintFile(t *testing.T) {
 						&ast.NameNamePart{Value: []byte("Bar")},
 					},
 				},
-				Extends: &ast.StmtClassExtends{
-					ClassName: &ast.NameName{
-						Parts: []ast.Vertex{
-							&ast.NameNamePart{Value: []byte("Baz")},
-						},
+				Extends: &ast.NameName{
+					Parts: []ast.Vertex{
+						&ast.NameNamePart{Value: []byte("Baz")},
 					},
 				},
 				Stmts: []ast.Vertex{
@@ -3255,14 +3253,10 @@ func TestPrinterPrintStmtClass(t *testing.T) {
 	n := &ast.StmtClass{
 		Modifiers: []ast.Vertex{&ast.Identifier{Value: []byte("abstract")}},
 		ClassName: &ast.Identifier{Value: []byte("Foo")},
-		Extends: &ast.StmtClassExtends{
-			ClassName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
-		},
-		Implements: &ast.StmtClassImplements{
-			InterfaceNames: []ast.Vertex{
-				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
-				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
-			},
+		Extends:   &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+		Implements: []ast.Vertex{
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtClassConstList{
@@ -3307,14 +3301,10 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 				},
 			},
 		},
-		Extends: &ast.StmtClassExtends{
-			ClassName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
-		},
-		Implements: &ast.StmtClassImplements{
-			InterfaceNames: []ast.Vertex{
-				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
-				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
-			},
+		Extends: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+		Implements: []ast.Vertex{
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Quuz")}}},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtClassConstList{
@@ -4122,11 +4112,9 @@ func TestPrinterPrintInterface(t *testing.T) {
 	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
 	n := &ast.StmtInterface{
 		InterfaceName: &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-		Extends: &ast.StmtInterfaceExtends{
-			InterfaceNames: []ast.Vertex{
-				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
-				&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
-			},
+		Extends: []ast.Vertex{
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
+			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
 		},
 		Stmts: []ast.Vertex{
 			&ast.StmtClassMethod{

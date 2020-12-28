@@ -194,8 +194,10 @@ func (p *printer) StmtClass(n *ast.StmtClass) {
 	p.printToken(n.OpenParenthesisTkn, p.ifNodeList(n.Arguments, []byte("(")))
 	p.printSeparatedList(n.Arguments, n.SeparatorTkns, []byte(","))
 	p.printToken(n.CloseParenthesisTkn, p.ifNodeList(n.Arguments, []byte(")")))
+	p.printToken(n.ExtendsTkn, p.ifNode(n.Extends, []byte("extends")))
 	p.printNode(n.Extends)
-	p.printNode(n.Implements)
+	p.printToken(n.ImplementsTkn, p.ifNodeList(n.Implements, []byte("implements")))
+	p.printSeparatedList(n.Implements, n.ImplementsSeparatorTkns, []byte(","))
 	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
 	p.printList(n.Stmts)
 	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
@@ -206,16 +208,6 @@ func (p *printer) StmtClassConstList(n *ast.StmtClassConstList) {
 	p.printToken(n.ConstTkn, []byte("const"))
 	p.printSeparatedList(n.Consts, n.SeparatorTkns, []byte(","))
 	p.printToken(n.SemiColonTkn, []byte(";"))
-}
-
-func (p *printer) StmtClassExtends(n *ast.StmtClassExtends) {
-	p.printToken(n.ExtendTkn, []byte("extends"))
-	p.printNode(n.ClassName)
-}
-
-func (p *printer) StmtClassImplements(n *ast.StmtClassImplements) {
-	p.printToken(n.ImplementsTkn, []byte("implements"))
-	p.printSeparatedList(n.InterfaceNames, n.SeparatorTkns, []byte(","))
 }
 
 func (p *printer) StmtClassMethod(n *ast.StmtClassMethod) {
@@ -436,15 +428,11 @@ func (p *printer) StmtInlineHtml(n *ast.StmtInlineHtml) {
 func (p *printer) StmtInterface(n *ast.StmtInterface) {
 	p.printToken(n.InterfaceTkn, []byte("interface"))
 	p.printNode(n.InterfaceName)
-	p.printNode(n.Extends)
+	p.printToken(n.ExtendsTkn, p.ifNodeList(n.Extends, []byte("extends")))
+	p.printSeparatedList(n.Extends, n.ExtendsSeparatorTkns, []byte(","))
 	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
 	p.printList(n.Stmts)
 	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
-}
-
-func (p *printer) StmtInterfaceExtends(n *ast.StmtInterfaceExtends) {
-	p.printToken(n.ExtendsTkn, []byte("extends"))
-	p.printSeparatedList(n.InterfaceNames, n.SeparatorTkns, []byte(","))
 }
 
 func (p *printer) StmtLabel(n *ast.StmtLabel) {
@@ -525,8 +513,6 @@ func (p *printer) StmtThrow(n *ast.StmtThrow) {
 func (p *printer) StmtTrait(n *ast.StmtTrait) {
 	p.printToken(n.TraitTkn, []byte("trait"))
 	p.printNode(n.TraitName)
-	p.printNode(n.Extends)
-	p.printNode(n.Implements)
 	p.printToken(n.OpenCurlyBracketTkn, []byte("{"))
 	p.printList(n.Stmts)
 	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
