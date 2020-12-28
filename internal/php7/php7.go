@@ -2596,7 +2596,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:338
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{
 					&ast.NameNamePart{
 						Position:  yylex.(*Parser).builder.NewTokenPosition(yyDollar[1].token),
@@ -2616,8 +2616,8 @@ yydefault:
 				Value:     yyDollar[3].token.Value,
 			}
 
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, part)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, part)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -2626,9 +2626,9 @@ yydefault:
 		// line internal/php7/php7.y:366
 		{
 			yyVAL.node = &ast.NameName{
-				Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items),
-				Parts:         yyDollar[1].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns: yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ParserSeparatedList).Items),
+				Parts:         yyDollar[1].node.(*ParserSeparatedList).Items,
+				SeparatorTkns: yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns,
 			}
 		}
 	case 84:
@@ -2636,11 +2636,11 @@ yydefault:
 		// line internal/php7/php7.y:374
 		{
 			yyVAL.node = &ast.NameRelative{
-				Position:       yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].node.(*ast.ParserSeparatedList).Items),
+				Position:       yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].node.(*ParserSeparatedList).Items),
 				NsTkn:          yyDollar[1].token,
 				NsSeparatorTkn: yyDollar[2].token,
-				Parts:          yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:  yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Parts:          yyDollar[3].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:  yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 			}
 		}
 	case 85:
@@ -2648,10 +2648,10 @@ yydefault:
 		// line internal/php7/php7.y:384
 		{
 			yyVAL.node = &ast.NameFullyQualified{
-				Position:       yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].node.(*ast.ParserSeparatedList).Items),
+				Position:       yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].node.(*ParserSeparatedList).Items),
 				NsSeparatorTkn: yyDollar[1].token,
-				Parts:          yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:  yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Parts:          yyDollar[2].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:  yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 			}
 		}
 	case 86:
@@ -2711,9 +2711,9 @@ yydefault:
 				Position: yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 				NsTkn:    yyDollar[1].token,
 				Name: &ast.NameName{
-					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[2].node.(*ast.ParserSeparatedList).Items),
-					Parts:         yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns: yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[2].node.(*ParserSeparatedList).Items),
+					Parts:         yyDollar[2].node.(*ParserSeparatedList).Items,
+					SeparatorTkns: yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 				},
 				SemiColonTkn: yyDollar[3].token,
 			}
@@ -2726,9 +2726,9 @@ yydefault:
 				Position: yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
 				NsTkn:    yyDollar[1].token,
 				Name: &ast.NameName{
-					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[2].node.(*ast.ParserSeparatedList).Items),
-					Parts:         yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns: yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[2].node.(*ParserSeparatedList).Items),
+					Parts:         yyDollar[2].node.(*ParserSeparatedList).Items,
+					SeparatorTkns: yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 				},
 				OpenCurlyBracketTkn:  yyDollar[3].token,
 				Stmts:                yyDollar[4].list,
@@ -2779,8 +2779,8 @@ yydefault:
 			yyVAL.node = &ast.StmtUse{
 				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 				UseTkn:          yyDollar[1].token,
-				UseDeclarations: yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:   yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				UseDeclarations: yyDollar[2].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:   yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 				SemiColonTkn:    yyDollar[3].token,
 			}
 		}
@@ -2792,8 +2792,8 @@ yydefault:
 				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 				UseTkn:          yyDollar[1].token,
 				Type:            yyDollar[2].node,
-				UseDeclarations: yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:   yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				UseDeclarations: yyDollar[3].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:   yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 				SemiColonTkn:    yyDollar[4].token,
 			}
 		}
@@ -2804,8 +2804,8 @@ yydefault:
 			yyVAL.node = &ast.StmtConstList{
 				Position:      yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 				ConstTkn:      yyDollar[1].token,
-				Consts:        yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns: yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Consts:        yyDollar[2].node.(*ParserSeparatedList).Items,
+				SeparatorTkns: yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 				SemiColonTkn:  yyDollar[3].token,
 			}
 		}
@@ -2834,20 +2834,20 @@ yydefault:
 		// line internal/php7/php7.y:543
 		{
 			if yyDollar[5].token != nil {
-				yyDollar[4].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[4].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[5].token)
+				yyDollar[4].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[4].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[5].token)
 			}
 
 			yyVAL.node = &ast.StmtGroupUse{
-				Position: yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[6].token),
+				Position: yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[6].token),
 				Prefix: &ast.NameName{
-					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items),
-					Parts:         yyDollar[1].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns: yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ParserSeparatedList).Items),
+					Parts:         yyDollar[1].node.(*ParserSeparatedList).Items,
+					SeparatorTkns: yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns,
 				},
 				NsSeparatorTkn:       yyDollar[2].token,
 				OpenCurlyBracketTkn:  yyDollar[3].token,
-				UseDeclarations:      yyDollar[4].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:        yyDollar[4].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				UseDeclarations:      yyDollar[4].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:        yyDollar[4].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseCurlyBracketTkn: yyDollar[6].token,
 			}
 		}
@@ -2856,21 +2856,21 @@ yydefault:
 		// line internal/php7/php7.y:563
 		{
 			if yyDollar[6].token != nil {
-				yyDollar[5].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[5].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[6].token)
+				yyDollar[5].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[5].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[6].token)
 			}
 
 			yyVAL.node = &ast.StmtGroupUse{
 				Position:              yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 				LeadingNsSeparatorTkn: yyDollar[1].token,
 				Prefix: &ast.NameName{
-					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[2].node.(*ast.ParserSeparatedList).Items),
-					Parts:         yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns: yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[2].node.(*ParserSeparatedList).Items),
+					Parts:         yyDollar[2].node.(*ParserSeparatedList).Items,
+					SeparatorTkns: yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 				},
 				NsSeparatorTkn:       yyDollar[3].token,
 				OpenCurlyBracketTkn:  yyDollar[4].token,
-				UseDeclarations:      yyDollar[5].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:        yyDollar[5].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				UseDeclarations:      yyDollar[5].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:        yyDollar[5].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseCurlyBracketTkn: yyDollar[7].token,
 			}
 		}
@@ -2879,20 +2879,20 @@ yydefault:
 		// line internal/php7/php7.y:587
 		{
 			if yyDollar[5].token != nil {
-				yyDollar[4].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[4].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[5].token)
+				yyDollar[4].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[4].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[5].token)
 			}
 
 			yyVAL.node = &ast.StmtGroupUse{
-				Position: yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[6].token),
+				Position: yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[6].token),
 				Prefix: &ast.NameName{
-					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items),
-					Parts:         yyDollar[1].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns: yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ParserSeparatedList).Items),
+					Parts:         yyDollar[1].node.(*ParserSeparatedList).Items,
+					SeparatorTkns: yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns,
 				},
 				NsSeparatorTkn:       yyDollar[2].token,
 				OpenCurlyBracketTkn:  yyDollar[3].token,
-				UseDeclarations:      yyDollar[4].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:        yyDollar[4].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				UseDeclarations:      yyDollar[4].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:        yyDollar[4].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseCurlyBracketTkn: yyDollar[6].token,
 			}
 		}
@@ -2901,21 +2901,21 @@ yydefault:
 		// line internal/php7/php7.y:607
 		{
 			if yyDollar[6].token != nil {
-				yyDollar[5].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[5].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[6].token)
+				yyDollar[5].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[5].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[6].token)
 			}
 
 			yyVAL.node = &ast.StmtGroupUse{
 				Position:              yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 				LeadingNsSeparatorTkn: yyDollar[1].token,
 				Prefix: &ast.NameName{
-					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[2].node.(*ast.ParserSeparatedList).Items),
-					Parts:         yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns: yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[2].node.(*ParserSeparatedList).Items),
+					Parts:         yyDollar[2].node.(*ParserSeparatedList).Items,
+					SeparatorTkns: yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 				},
 				NsSeparatorTkn:       yyDollar[3].token,
 				OpenCurlyBracketTkn:  yyDollar[4].token,
-				UseDeclarations:      yyDollar[5].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:        yyDollar[5].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				UseDeclarations:      yyDollar[5].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:        yyDollar[5].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseCurlyBracketTkn: yyDollar[7].token,
 			}
 		}
@@ -2935,8 +2935,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:642
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -2944,7 +2944,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:649
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -2952,8 +2952,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:658
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -2961,7 +2961,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:665
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -2969,8 +2969,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:674
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -2978,7 +2978,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:681
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -3003,11 +3003,11 @@ yydefault:
 		// line internal/php7/php7.y:705
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
-				Position: yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items),
+				Position: yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ParserSeparatedList).Items),
 				Use: &ast.NameName{
-					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items),
-					Parts:         yyDollar[1].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns: yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ParserSeparatedList).Items),
+					Parts:         yyDollar[1].node.(*ParserSeparatedList).Items,
+					SeparatorTkns: yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns,
 				},
 			}
 		}
@@ -3016,11 +3016,11 @@ yydefault:
 		// line internal/php7/php7.y:716
 		{
 			yyVAL.node = &ast.StmtUseDeclaration{
-				Position: yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].token),
+				Position: yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].token),
 				Use: &ast.NameName{
-					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ast.ParserSeparatedList).Items),
-					Parts:         yyDollar[1].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns: yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Position:      yylex.(*Parser).builder.NewNodeListPosition(yyDollar[1].node.(*ParserSeparatedList).Items),
+					Parts:         yyDollar[1].node.(*ParserSeparatedList).Items,
+					SeparatorTkns: yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns,
 				},
 				AsTkn: yyDollar[2].token,
 				Alias: &ast.Identifier{
@@ -3050,8 +3050,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:751
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -3059,7 +3059,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:758
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -3182,14 +3182,14 @@ yydefault:
 		{
 			yyDollar[9].node.(*ast.StmtFor).ForTkn = yyDollar[1].token
 			yyDollar[9].node.(*ast.StmtFor).OpenParenthesisTkn = yyDollar[2].token
-			yyDollar[9].node.(*ast.StmtFor).Init = yyDollar[3].node.(*ast.ParserSeparatedList).Items
-			yyDollar[9].node.(*ast.StmtFor).InitSeparatorTkns = yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns
+			yyDollar[9].node.(*ast.StmtFor).Init = yyDollar[3].node.(*ParserSeparatedList).Items
+			yyDollar[9].node.(*ast.StmtFor).InitSeparatorTkns = yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns
 			yyDollar[9].node.(*ast.StmtFor).InitSemiColonTkn = yyDollar[4].token
-			yyDollar[9].node.(*ast.StmtFor).Cond = yyDollar[5].node.(*ast.ParserSeparatedList).Items
-			yyDollar[9].node.(*ast.StmtFor).CondSeparatorTkns = yyDollar[5].node.(*ast.ParserSeparatedList).SeparatorTkns
+			yyDollar[9].node.(*ast.StmtFor).Cond = yyDollar[5].node.(*ParserSeparatedList).Items
+			yyDollar[9].node.(*ast.StmtFor).CondSeparatorTkns = yyDollar[5].node.(*ParserSeparatedList).SeparatorTkns
 			yyDollar[9].node.(*ast.StmtFor).CondSemiColonTkn = yyDollar[6].token
-			yyDollar[9].node.(*ast.StmtFor).Loop = yyDollar[7].node.(*ast.ParserSeparatedList).Items
-			yyDollar[9].node.(*ast.StmtFor).LoopSeparatorTkns = yyDollar[7].node.(*ast.ParserSeparatedList).SeparatorTkns
+			yyDollar[9].node.(*ast.StmtFor).Loop = yyDollar[7].node.(*ParserSeparatedList).Items
+			yyDollar[9].node.(*ast.StmtFor).LoopSeparatorTkns = yyDollar[7].node.(*ParserSeparatedList).SeparatorTkns
 			yyDollar[9].node.(*ast.StmtFor).CloseParenthesisTkn = yyDollar[8].token
 			yyDollar[9].node.(*ast.StmtFor).Position = yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
 
@@ -3355,8 +3355,8 @@ yydefault:
 		{
 			yyDollar[5].node.(*ast.StmtDeclare).DeclareTkn = yyDollar[1].token
 			yyDollar[5].node.(*ast.StmtDeclare).OpenParenthesisTkn = yyDollar[2].token
-			yyDollar[5].node.(*ast.StmtDeclare).Consts = yyDollar[3].node.(*ast.ParserSeparatedList).Items
-			yyDollar[5].node.(*ast.StmtDeclare).SeparatorTkns = yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns
+			yyDollar[5].node.(*ast.StmtDeclare).Consts = yyDollar[3].node.(*ParserSeparatedList).Items
+			yyDollar[5].node.(*ast.StmtDeclare).SeparatorTkns = yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns
 			yyDollar[5].node.(*ast.StmtDeclare).CloseParenthesisTkn = yyDollar[4].token
 			yyDollar[5].node.(*ast.StmtDeclare).Position = yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 
@@ -3531,11 +3531,11 @@ yydefault:
 					Value:         yyDollar[3].token.Value,
 				},
 				OpenParenthesisTkn:   yyDollar[5].token,
-				Params:               yyDollar[6].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:        yyDollar[6].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Params:               yyDollar[6].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:        yyDollar[6].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseParenthesisTkn:  yyDollar[7].token,
-				ColonTkn:             yyDollar[8].node.(*ast.ReturnType).ColonTkn,
-				ReturnType:           yyDollar[8].node.(*ast.ReturnType).Type,
+				ColonTkn:             yyDollar[8].node.(*ReturnType).ColonTkn,
+				ReturnType:           yyDollar[8].node.(*ReturnType).Type,
 				OpenCurlyBracketTkn:  yyDollar[9].token,
 				Stmts:                yyDollar[10].list,
 				CloseCurlyBracketTkn: yyDollar[11].token,
@@ -3727,10 +3727,10 @@ yydefault:
 		// line internal/php7/php7.y:1358
 		{
 			yyVAL.node = &ast.StmtInterface{
-				Position:             yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].node.(*ast.ParserSeparatedList).Items),
+				Position:             yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].node.(*ParserSeparatedList).Items),
 				ExtendsTkn:           yyDollar[1].token,
-				Extends:              yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-				ExtendsSeparatorTkns: yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Extends:              yyDollar[2].node.(*ParserSeparatedList).Items,
+				ExtendsSeparatorTkns: yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 			}
 		}
 	case 182:
@@ -3744,10 +3744,10 @@ yydefault:
 		// line internal/php7/php7.y:1374
 		{
 			yyVAL.node = &ast.StmtClass{
-				Position:                yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].node.(*ast.ParserSeparatedList).Items),
+				Position:                yylex.(*Parser).builder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].node.(*ParserSeparatedList).Items),
 				ImplementsTkn:           yyDollar[1].token,
-				Implements:              yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-				ImplementsSeparatorTkns: yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Implements:              yyDollar[2].node.(*ParserSeparatedList).Items,
+				ImplementsSeparatorTkns: yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 			}
 		}
 	case 184:
@@ -3774,8 +3774,8 @@ yydefault:
 				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 				ListTkn:         yyDollar[1].token,
 				OpenBracketTkn:  yyDollar[2].token,
-				Items:           yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:   yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Items:           yyDollar[3].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:   yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseBracketTkn: yyDollar[4].token,
 			}
 		}
@@ -3786,8 +3786,8 @@ yydefault:
 			yyVAL.node = &ast.ExprList{
 				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 				OpenBracketTkn:  yyDollar[1].token,
-				Items:           yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:   yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Items:           yyDollar[2].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:   yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseBracketTkn: yyDollar[3].token,
 			}
 		}
@@ -4101,13 +4101,13 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		// line internal/php7/php7.y:1709
 		{
-			yyVAL.node = &ast.ParserSeparatedList{}
+			yyVAL.node = &ParserSeparatedList{}
 		}
 	case 215:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:1716
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -4115,8 +4115,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:1722
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -4236,13 +4236,13 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		// line internal/php7/php7.y:1838
 		{
-			yyVAL.node = &ast.ReturnType{}
+			yyVAL.node = &ReturnType{}
 		}
 	case 227:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		// line internal/php7/php7.y:1842
 		{
-			yyVAL.node = &ast.ReturnType{
+			yyVAL.node = &ReturnType{
 				ColonTkn: yyDollar[1].token,
 				Type:     yyDollar[2].node,
 			}
@@ -4251,7 +4251,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		// line internal/php7/php7.y:1852
 		{
-			yyVAL.node = &ast.ArgumentList{
+			yyVAL.node = &ArgumentList{
 				Position:            yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 				OpenParenthesisTkn:  yyDollar[1].token,
 				CloseParenthesisTkn: yyDollar[2].token,
@@ -4261,7 +4261,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		// line internal/php7/php7.y:1860
 		{
-			argumentList := yyDollar[2].node.(*ast.ArgumentList)
+			argumentList := yyDollar[2].node.(*ArgumentList)
 			argumentList.Position = yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 			argumentList.OpenParenthesisTkn = yyDollar[1].token
 			if yyDollar[3].token != nil {
@@ -4275,7 +4275,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:1875
 		{
-			yyVAL.node = &ast.ArgumentList{
+			yyVAL.node = &ArgumentList{
 				Arguments: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -4283,8 +4283,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:1881
 		{
-			yyDollar[1].node.(*ast.ArgumentList).SeparatorTkns = append(yyDollar[1].node.(*ast.ArgumentList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ArgumentList).Arguments = append(yyDollar[1].node.(*ast.ArgumentList).Arguments, yyDollar[3].node)
+			yyDollar[1].node.(*ArgumentList).SeparatorTkns = append(yyDollar[1].node.(*ArgumentList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ArgumentList).Arguments = append(yyDollar[1].node.(*ArgumentList).Arguments, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -4402,8 +4402,8 @@ yydefault:
 				Position:      yylex.(*Parser).builder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[4].token),
 				Modifiers:     yyDollar[1].list,
 				Type:          yyDollar[2].node,
-				Properties:    yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns: yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Properties:    yyDollar[3].node.(*ParserSeparatedList).Items,
+				SeparatorTkns: yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 				SemiColonTkn:  yyDollar[4].token,
 			}
 		}
@@ -4415,8 +4415,8 @@ yydefault:
 				Position:      yylex.(*Parser).builder.NewOptionalListTokensPosition(yyDollar[1].list, yyDollar[2].token, yyDollar[4].token),
 				Modifiers:     yyDollar[1].list,
 				ConstTkn:      yyDollar[2].token,
-				Consts:        yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns: yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Consts:        yyDollar[3].node.(*ParserSeparatedList).Items,
+				SeparatorTkns: yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 				SemiColonTkn:  yyDollar[4].token,
 			}
 		}
@@ -4427,12 +4427,12 @@ yydefault:
 			traitUse := &ast.StmtTraitUse{
 				Position:      yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 				UseTkn:        yyDollar[1].token,
-				Traits:        yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns: yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Traits:        yyDollar[2].node.(*ParserSeparatedList).Items,
+				SeparatorTkns: yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 			}
 
 			switch n := yyDollar[3].node.(type) {
-			case *ast.TraitAdaptationList:
+			case *TraitAdaptationList:
 				traitUse.OpenCurlyBracketTkn = n.OpenCurlyBracketTkn
 				traitUse.Adaptations = n.Adaptations
 				traitUse.CloseCurlyBracketTkn = n.CloseCurlyBracketTkn
@@ -4462,11 +4462,11 @@ yydefault:
 					Value:         yyDollar[4].token.Value,
 				},
 				OpenParenthesisTkn:  yyDollar[6].token,
-				Params:              yyDollar[7].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:       yyDollar[7].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Params:              yyDollar[7].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:       yyDollar[7].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseParenthesisTkn: yyDollar[8].token,
-				ColonTkn:            yyDollar[9].node.(*ast.ReturnType).ColonTkn,
-				ReturnType:          yyDollar[9].node.(*ast.ReturnType).Type,
+				ColonTkn:            yyDollar[9].node.(*ReturnType).ColonTkn,
+				ReturnType:          yyDollar[9].node.(*ReturnType).Type,
 				Stmt:                yyDollar[10].node,
 			}
 		}
@@ -4474,7 +4474,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:2064
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -4482,8 +4482,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:2070
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -4500,7 +4500,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		// line internal/php7/php7.y:2087
 		{
-			yyVAL.node = &ast.TraitAdaptationList{
+			yyVAL.node = &TraitAdaptationList{
 				Position:             yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 				OpenCurlyBracketTkn:  yyDollar[1].token,
 				CloseCurlyBracketTkn: yyDollar[2].token,
@@ -4510,7 +4510,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:2095
 		{
-			yyVAL.node = &ast.TraitAdaptationList{
+			yyVAL.node = &TraitAdaptationList{
 				Position:             yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 				OpenCurlyBracketTkn:  yyDollar[1].token,
 				Adaptations:          yyDollar[2].list,
@@ -4550,13 +4550,13 @@ yydefault:
 		// line internal/php7/php7.y:2133
 		{
 			yyVAL.node = &ast.StmtTraitUsePrecedence{
-				Position:       yylex.(*Parser).builder.NewNodeNodeListPosition(yyDollar[1].node, yyDollar[3].node.(*ast.ParserSeparatedList).Items),
-				Trait:          yyDollar[1].node.(*ast.TraitMethodRef).Trait,
-				DoubleColonTkn: yyDollar[1].node.(*ast.TraitMethodRef).DoubleColonTkn,
-				Method:         yyDollar[1].node.(*ast.TraitMethodRef).Method,
+				Position:       yylex.(*Parser).builder.NewNodeNodeListPosition(yyDollar[1].node, yyDollar[3].node.(*ParserSeparatedList).Items),
+				Trait:          yyDollar[1].node.(*TraitMethodRef).Trait,
+				DoubleColonTkn: yyDollar[1].node.(*TraitMethodRef).DoubleColonTkn,
+				Method:         yyDollar[1].node.(*TraitMethodRef).Method,
 				InsteadofTkn:   yyDollar[2].token,
-				Insteadof:      yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:  yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Insteadof:      yyDollar[3].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:  yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 			}
 		}
 	case 257:
@@ -4565,9 +4565,9 @@ yydefault:
 		{
 			yyVAL.node = &ast.StmtTraitUseAlias{
 				Position:       yylex.(*Parser).builder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
-				Trait:          yyDollar[1].node.(*ast.TraitMethodRef).Trait,
-				DoubleColonTkn: yyDollar[1].node.(*ast.TraitMethodRef).DoubleColonTkn,
-				Method:         yyDollar[1].node.(*ast.TraitMethodRef).Method,
+				Trait:          yyDollar[1].node.(*TraitMethodRef).Trait,
+				DoubleColonTkn: yyDollar[1].node.(*TraitMethodRef).DoubleColonTkn,
+				Method:         yyDollar[1].node.(*TraitMethodRef).Method,
 				AsTkn:          yyDollar[2].token,
 				Alias: &ast.Identifier{
 					Position:      yylex.(*Parser).builder.NewTokenPosition(yyDollar[3].token),
@@ -4582,9 +4582,9 @@ yydefault:
 		{
 			yyVAL.node = &ast.StmtTraitUseAlias{
 				Position:       yylex.(*Parser).builder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
-				Trait:          yyDollar[1].node.(*ast.TraitMethodRef).Trait,
-				DoubleColonTkn: yyDollar[1].node.(*ast.TraitMethodRef).DoubleColonTkn,
-				Method:         yyDollar[1].node.(*ast.TraitMethodRef).Method,
+				Trait:          yyDollar[1].node.(*TraitMethodRef).Trait,
+				DoubleColonTkn: yyDollar[1].node.(*TraitMethodRef).DoubleColonTkn,
+				Method:         yyDollar[1].node.(*TraitMethodRef).Method,
 				AsTkn:          yyDollar[2].token,
 				Alias: &ast.Identifier{
 					Position:      yylex.(*Parser).builder.NewTokenPosition(yyDollar[3].token),
@@ -4599,9 +4599,9 @@ yydefault:
 		{
 			yyVAL.node = &ast.StmtTraitUseAlias{
 				Position:       yylex.(*Parser).builder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
-				Trait:          yyDollar[1].node.(*ast.TraitMethodRef).Trait,
-				DoubleColonTkn: yyDollar[1].node.(*ast.TraitMethodRef).DoubleColonTkn,
-				Method:         yyDollar[1].node.(*ast.TraitMethodRef).Method,
+				Trait:          yyDollar[1].node.(*TraitMethodRef).Trait,
+				DoubleColonTkn: yyDollar[1].node.(*TraitMethodRef).DoubleColonTkn,
+				Method:         yyDollar[1].node.(*TraitMethodRef).Method,
 				AsTkn:          yyDollar[2].token,
 				Modifier:       yyDollar[3].node,
 				Alias: &ast.Identifier{
@@ -4617,9 +4617,9 @@ yydefault:
 		{
 			yyVAL.node = &ast.StmtTraitUseAlias{
 				Position:       yylex.(*Parser).builder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
-				Trait:          yyDollar[1].node.(*ast.TraitMethodRef).Trait,
-				DoubleColonTkn: yyDollar[1].node.(*ast.TraitMethodRef).DoubleColonTkn,
-				Method:         yyDollar[1].node.(*ast.TraitMethodRef).Method,
+				Trait:          yyDollar[1].node.(*TraitMethodRef).Trait,
+				DoubleColonTkn: yyDollar[1].node.(*TraitMethodRef).DoubleColonTkn,
+				Method:         yyDollar[1].node.(*TraitMethodRef).Method,
 				AsTkn:          yyDollar[2].token,
 				Modifier:       yyDollar[3].node,
 			}
@@ -4628,7 +4628,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:2208
 		{
-			yyVAL.node = &ast.TraitMethodRef{
+			yyVAL.node = &TraitMethodRef{
 				Position: yylex.(*Parser).builder.NewTokenPosition(yyDollar[1].token),
 				Method: &ast.Identifier{
 					Position:      yylex.(*Parser).builder.NewTokenPosition(yyDollar[1].token),
@@ -4647,7 +4647,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:2226
 		{
-			yyVAL.node = &ast.TraitMethodRef{
+			yyVAL.node = &TraitMethodRef{
 				Position:       yylex.(*Parser).builder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 				Trait:          yyDollar[1].node,
 				DoubleColonTkn: yyDollar[2].token,
@@ -4784,8 +4784,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:2351
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -4793,7 +4793,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:2358
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -4836,8 +4836,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:2401
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -4845,7 +4845,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:2408
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -4906,7 +4906,7 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		// line internal/php7/php7.y:2472
 		{
-			yyVAL.node = &ast.ParserSeparatedList{}
+			yyVAL.node = &ParserSeparatedList{}
 		}
 	case 290:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -4918,8 +4918,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:2483
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -4927,7 +4927,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:2490
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -4938,10 +4938,10 @@ yydefault:
 			class := &ast.StmtClass{
 				Position:             yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
 				ClassTkn:             yyDollar[1].token,
-				OpenParenthesisTkn:   yyDollar[2].node.(*ast.ArgumentList).OpenParenthesisTkn,
-				Arguments:            yyDollar[2].node.(*ast.ArgumentList).Arguments,
-				SeparatorTkns:        yyDollar[2].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn:  yyDollar[2].node.(*ast.ArgumentList).CloseParenthesisTkn,
+				OpenParenthesisTkn:   yyDollar[2].node.(*ArgumentList).OpenParenthesisTkn,
+				Arguments:            yyDollar[2].node.(*ArgumentList).Arguments,
+				SeparatorTkns:        yyDollar[2].node.(*ArgumentList).SeparatorTkns,
+				CloseParenthesisTkn:  yyDollar[2].node.(*ArgumentList).CloseParenthesisTkn,
 				OpenCurlyBracketTkn:  yyDollar[6].token,
 				Stmts:                yyDollar[7].list,
 				CloseCurlyBracketTkn: yyDollar[8].token,
@@ -4969,10 +4969,10 @@ yydefault:
 					Position:            yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 					NewTkn:              yyDollar[1].token,
 					Class:               yyDollar[2].node,
-					OpenParenthesisTkn:  yyDollar[3].node.(*ast.ArgumentList).OpenParenthesisTkn,
-					Arguments:           yyDollar[3].node.(*ast.ArgumentList).Arguments,
-					SeparatorTkns:       yyDollar[3].node.(*ast.ArgumentList).SeparatorTkns,
-					CloseParenthesisTkn: yyDollar[3].node.(*ast.ArgumentList).CloseParenthesisTkn,
+					OpenParenthesisTkn:  yyDollar[3].node.(*ArgumentList).OpenParenthesisTkn,
+					Arguments:           yyDollar[3].node.(*ArgumentList).Arguments,
+					SeparatorTkns:       yyDollar[3].node.(*ArgumentList).SeparatorTkns,
+					CloseParenthesisTkn: yyDollar[3].node.(*ArgumentList).CloseParenthesisTkn,
 				}
 			} else {
 				yyVAL.node = &ast.ExprNew{
@@ -5002,8 +5002,8 @@ yydefault:
 					Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 					ListTkn:         yyDollar[1].token,
 					OpenBracketTkn:  yyDollar[2].token,
-					Items:           yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns:   yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Items:           yyDollar[3].node.(*ParserSeparatedList).Items,
+					SeparatorTkns:   yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 					CloseBracketTkn: yyDollar[4].token,
 				},
 				EqualTkn: yyDollar[5].token,
@@ -5019,8 +5019,8 @@ yydefault:
 				Var: &ast.ExprList{
 					Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 					OpenBracketTkn:  yyDollar[1].token,
-					Items:           yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns:   yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Items:           yyDollar[2].node.(*ParserSeparatedList).Items,
+					SeparatorTkns:   yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 					CloseBracketTkn: yyDollar[3].token,
 				},
 				EqualTkn: yyDollar[4].token,
@@ -5837,11 +5837,11 @@ yydefault:
 			closure.FunctionTkn = yyDollar[1].token
 			closure.AmpersandTkn = yyDollar[2].token
 			closure.OpenParenthesisTkn = yyDollar[4].token
-			closure.Params = yyDollar[5].node.(*ast.ParserSeparatedList).Items
-			closure.SeparatorTkns = yyDollar[5].node.(*ast.ParserSeparatedList).SeparatorTkns
+			closure.Params = yyDollar[5].node.(*ParserSeparatedList).Items
+			closure.SeparatorTkns = yyDollar[5].node.(*ParserSeparatedList).SeparatorTkns
 			closure.CloseParenthesisTkn = yyDollar[6].token
-			closure.ColonTkn = yyDollar[8].node.(*ast.ReturnType).ColonTkn
-			closure.ReturnType = yyDollar[8].node.(*ast.ReturnType).Type
+			closure.ColonTkn = yyDollar[8].node.(*ReturnType).ColonTkn
+			closure.ReturnType = yyDollar[8].node.(*ReturnType).Type
 			closure.OpenCurlyBracketTkn = yyDollar[9].token
 			closure.Stmts = yyDollar[10].list
 			closure.CloseCurlyBracketTkn = yyDollar[11].token
@@ -5857,11 +5857,11 @@ yydefault:
 				FnTkn:               yyDollar[1].token,
 				AmpersandTkn:        yyDollar[2].token,
 				OpenParenthesisTkn:  yyDollar[3].token,
-				Params:              yyDollar[4].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:       yyDollar[4].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Params:              yyDollar[4].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:       yyDollar[4].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseParenthesisTkn: yyDollar[5].token,
-				ColonTkn:            yyDollar[6].node.(*ast.ReturnType).ColonTkn,
-				ReturnType:          yyDollar[6].node.(*ast.ReturnType).Type,
+				ColonTkn:            yyDollar[6].node.(*ReturnType).ColonTkn,
+				ReturnType:          yyDollar[6].node.(*ReturnType).Type,
 				DoubleArrowTkn:      yyDollar[8].token,
 				Expr:                yyDollar[9].node,
 			}
@@ -5891,8 +5891,8 @@ yydefault:
 			yyVAL.node = &ast.ExprClosure{
 				UseTkn:                 yyDollar[1].token,
 				UseOpenParenthesisTkn:  yyDollar[2].token,
-				Use:                    yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-				UseSeparatorTkns:       yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Use:                    yyDollar[3].node.(*ParserSeparatedList).Items,
+				UseSeparatorTkns:       yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 				UseCloseParenthesisTkn: yyDollar[4].token,
 			}
 		}
@@ -5900,8 +5900,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:3314
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -5909,7 +5909,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:3321
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -5953,10 +5953,10 @@ yydefault:
 			yyVAL.node = &ast.ExprFunctionCall{
 				Position:            yylex.(*Parser).builder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
 				Function:            yyDollar[1].node,
-				OpenParenthesisTkn:  yyDollar[2].node.(*ast.ArgumentList).OpenParenthesisTkn,
-				Arguments:           yyDollar[2].node.(*ast.ArgumentList).Arguments,
-				SeparatorTkns:       yyDollar[2].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[2].node.(*ast.ArgumentList).CloseParenthesisTkn,
+				OpenParenthesisTkn:  yyDollar[2].node.(*ArgumentList).OpenParenthesisTkn,
+				Arguments:           yyDollar[2].node.(*ArgumentList).Arguments,
+				SeparatorTkns:       yyDollar[2].node.(*ArgumentList).SeparatorTkns,
+				CloseParenthesisTkn: yyDollar[2].node.(*ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 385:
@@ -5968,13 +5968,13 @@ yydefault:
 				Class:               yyDollar[1].node,
 				DoubleColonTkn:      yyDollar[2].token,
 				Call:                yyDollar[3].node,
-				OpenParenthesisTkn:  yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
-				Arguments:           yyDollar[4].node.(*ast.ArgumentList).Arguments,
-				SeparatorTkns:       yyDollar[4].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).CloseParenthesisTkn,
+				OpenParenthesisTkn:  yyDollar[4].node.(*ArgumentList).OpenParenthesisTkn,
+				Arguments:           yyDollar[4].node.(*ArgumentList).Arguments,
+				SeparatorTkns:       yyDollar[4].node.(*ArgumentList).SeparatorTkns,
+				CloseParenthesisTkn: yyDollar[4].node.(*ArgumentList).CloseParenthesisTkn,
 			}
 
-			if brackets, ok := yyDollar[3].node.(*ast.ParserBrackets); ok {
+			if brackets, ok := yyDollar[3].node.(*ParserBrackets); ok {
 				staticCall.OpenCurlyBracketTkn = brackets.OpenBracketTkn
 				staticCall.Call = brackets.Child
 				staticCall.CloseCurlyBracketTkn = brackets.CloseBracketTkn
@@ -5991,13 +5991,13 @@ yydefault:
 				Class:               yyDollar[1].node,
 				DoubleColonTkn:      yyDollar[2].token,
 				Call:                yyDollar[3].node,
-				OpenParenthesisTkn:  yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
-				Arguments:           yyDollar[4].node.(*ast.ArgumentList).Arguments,
-				SeparatorTkns:       yyDollar[4].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).CloseParenthesisTkn,
+				OpenParenthesisTkn:  yyDollar[4].node.(*ArgumentList).OpenParenthesisTkn,
+				Arguments:           yyDollar[4].node.(*ArgumentList).Arguments,
+				SeparatorTkns:       yyDollar[4].node.(*ArgumentList).SeparatorTkns,
+				CloseParenthesisTkn: yyDollar[4].node.(*ArgumentList).CloseParenthesisTkn,
 			}
 
-			if brackets, ok := yyDollar[3].node.(*ast.ParserBrackets); ok {
+			if brackets, ok := yyDollar[3].node.(*ParserBrackets); ok {
 				staticCall.OpenCurlyBracketTkn = brackets.OpenBracketTkn
 				staticCall.Call = brackets.Child
 				staticCall.CloseCurlyBracketTkn = brackets.CloseBracketTkn
@@ -6012,10 +6012,10 @@ yydefault:
 			yyVAL.node = &ast.ExprFunctionCall{
 				Position:            yylex.(*Parser).builder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
 				Function:            yyDollar[1].node,
-				OpenParenthesisTkn:  yyDollar[2].node.(*ast.ArgumentList).OpenParenthesisTkn,
-				Arguments:           yyDollar[2].node.(*ast.ArgumentList).Arguments,
-				SeparatorTkns:       yyDollar[2].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[2].node.(*ast.ArgumentList).CloseParenthesisTkn,
+				OpenParenthesisTkn:  yyDollar[2].node.(*ArgumentList).OpenParenthesisTkn,
+				Arguments:           yyDollar[2].node.(*ArgumentList).Arguments,
+				SeparatorTkns:       yyDollar[2].node.(*ArgumentList).SeparatorTkns,
+				CloseParenthesisTkn: yyDollar[2].node.(*ArgumentList).CloseParenthesisTkn,
 			}
 		}
 	case 388:
@@ -6091,7 +6091,7 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		// line internal/php7/php7.y:3492
 		{
-			yyVAL.node = &ast.ArgumentList{}
+			yyVAL.node = &ArgumentList{}
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -6107,8 +6107,8 @@ yydefault:
 				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 				ArrayTkn:        yyDollar[1].token,
 				OpenBracketTkn:  yyDollar[2].token,
-				Items:           yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:   yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Items:           yyDollar[3].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:   yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseBracketTkn: yyDollar[4].token,
 			}
 		}
@@ -6119,8 +6119,8 @@ yydefault:
 			yyVAL.node = &ast.ExprArray{
 				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 				OpenBracketTkn:  yyDollar[1].token,
-				Items:           yyDollar[2].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:   yyDollar[2].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Items:           yyDollar[2].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:   yyDollar[2].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseBracketTkn: yyDollar[3].token,
 			}
 		}
@@ -6461,13 +6461,13 @@ yydefault:
 				Var:                 yyDollar[1].node,
 				ObjectOperatorTkn:   yyDollar[2].token,
 				Method:              yyDollar[3].node,
-				OpenParenthesisTkn:  yyDollar[4].node.(*ast.ArgumentList).OpenParenthesisTkn,
-				Arguments:           yyDollar[4].node.(*ast.ArgumentList).Arguments,
-				SeparatorTkns:       yyDollar[4].node.(*ast.ArgumentList).SeparatorTkns,
-				CloseParenthesisTkn: yyDollar[4].node.(*ast.ArgumentList).CloseParenthesisTkn,
+				OpenParenthesisTkn:  yyDollar[4].node.(*ArgumentList).OpenParenthesisTkn,
+				Arguments:           yyDollar[4].node.(*ArgumentList).Arguments,
+				SeparatorTkns:       yyDollar[4].node.(*ArgumentList).SeparatorTkns,
+				CloseParenthesisTkn: yyDollar[4].node.(*ArgumentList).CloseParenthesisTkn,
 			}
 
-			if brackets, ok := yyDollar[3].node.(*ast.ParserBrackets); ok {
+			if brackets, ok := yyDollar[3].node.(*ParserBrackets); ok {
 				methodCall.OpenCurlyBracketTkn = brackets.OpenBracketTkn
 				methodCall.Method = brackets.Child
 				methodCall.CloseCurlyBracketTkn = brackets.CloseBracketTkn
@@ -6504,7 +6504,7 @@ yydefault:
 				Property:          yyDollar[3].node,
 			}
 
-			if brackets, ok := yyDollar[3].node.(*ast.ParserBrackets); ok {
+			if brackets, ok := yyDollar[3].node.(*ParserBrackets); ok {
 				propertyFetch.OpenCurlyBracketTkn = brackets.OpenBracketTkn
 				propertyFetch.Property = brackets.Child
 				propertyFetch.CloseCurlyBracketTkn = brackets.CloseBracketTkn
@@ -6610,7 +6610,7 @@ yydefault:
 				Property:          yyDollar[3].node,
 			}
 
-			if brackets, ok := yyDollar[3].node.(*ast.ParserBrackets); ok {
+			if brackets, ok := yyDollar[3].node.(*ParserBrackets); ok {
 				propertyFetch.OpenCurlyBracketTkn = brackets.OpenBracketTkn
 				propertyFetch.Property = brackets.Child
 				propertyFetch.CloseCurlyBracketTkn = brackets.CloseBracketTkn
@@ -6654,7 +6654,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:3985
 		{
-			yyVAL.node = &ast.ParserBrackets{
+			yyVAL.node = &ParserBrackets{
 				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 				OpenBracketTkn:  yyDollar[1].token,
 				Child:           yyDollar[2].node,
@@ -6681,7 +6681,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:4009
 		{
-			yyVAL.node = &ast.ParserBrackets{
+			yyVAL.node = &ParserBrackets{
 				Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 				OpenBracketTkn:  yyDollar[1].token,
 				Child:           yyDollar[2].node,
@@ -6698,7 +6698,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:4025
 		{
-			pairList := yyDollar[1].node.(*ast.ParserSeparatedList)
+			pairList := yyDollar[1].node.(*ParserSeparatedList)
 			fistPair := pairList.Items[0].(*ast.ExprArrayItem)
 
 			if fistPair.Key == nil && fistPair.Val == nil && len(pairList.Items) == 1 {
@@ -6723,8 +6723,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:4050
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}
@@ -6732,7 +6732,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:4057
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -6800,8 +6800,8 @@ yydefault:
 					Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[3].token, yyDollar[6].token),
 					ListTkn:         yyDollar[3].token,
 					OpenBracketTkn:  yyDollar[4].token,
-					Items:           yyDollar[5].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns:   yyDollar[5].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Items:           yyDollar[5].node.(*ParserSeparatedList).Items,
+					SeparatorTkns:   yyDollar[5].node.(*ParserSeparatedList).SeparatorTkns,
 					CloseBracketTkn: yyDollar[6].token,
 				},
 			}
@@ -6816,8 +6816,8 @@ yydefault:
 					Position:        yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 					ListTkn:         yyDollar[1].token,
 					OpenBracketTkn:  yyDollar[2].token,
-					Items:           yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-					SeparatorTkns:   yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+					Items:           yyDollar[3].node.(*ParserSeparatedList).Items,
+					SeparatorTkns:   yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 					CloseBracketTkn: yyDollar[4].token,
 				},
 			}
@@ -7042,15 +7042,15 @@ yydefault:
 		// line internal/php7/php7.y:4335
 		{
 			if yyDollar[4].token != nil {
-				yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[4].token)
+				yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[4].token)
 			}
 
 			yyVAL.node = &ast.ExprIsset{
 				Position:            yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
 				IssetTkn:            yyDollar[1].token,
 				OpenParenthesisTkn:  yyDollar[2].token,
-				Vars:                yyDollar[3].node.(*ast.ParserSeparatedList).Items,
-				SeparatorTkns:       yyDollar[3].node.(*ast.ParserSeparatedList).SeparatorTkns,
+				Vars:                yyDollar[3].node.(*ParserSeparatedList).Items,
+				SeparatorTkns:       yyDollar[3].node.(*ParserSeparatedList).SeparatorTkns,
 				CloseParenthesisTkn: yyDollar[5].token,
 			}
 		}
@@ -7122,7 +7122,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		// line internal/php7/php7.y:4405
 		{
-			yyVAL.node = &ast.ParserSeparatedList{
+			yyVAL.node = &ParserSeparatedList{
 				Items: []ast.Vertex{yyDollar[1].node},
 			}
 		}
@@ -7130,8 +7130,8 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		// line internal/php7/php7.y:4411
 		{
-			yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ast.ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
-			yyDollar[1].node.(*ast.ParserSeparatedList).Items = append(yyDollar[1].node.(*ast.ParserSeparatedList).Items, yyDollar[3].node)
+			yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns = append(yyDollar[1].node.(*ParserSeparatedList).SeparatorTkns, yyDollar[2].token)
+			yyDollar[1].node.(*ParserSeparatedList).Items = append(yyDollar[1].node.(*ParserSeparatedList).Items, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[1].node
 		}

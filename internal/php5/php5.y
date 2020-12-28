@@ -291,7 +291,7 @@ top_statement_list:
 namespace_name:
         T_STRING
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.NameNamePart{
                             Position: yylex.(*Parser).builder.NewTokenPosition($1),
@@ -309,8 +309,8 @@ namespace_name:
                     Value:          $3.Value,
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, part)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, part)
 
                 $$ = $1
             }
@@ -350,9 +350,9 @@ top_statement:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     NsTkn: $1,
                     Name: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        Parts:         $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
+                        Parts:         $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                     SemiColonTkn: $3,
                 }
@@ -363,9 +363,9 @@ top_statement:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $5),
                     NsTkn: $1,
                     Name: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        Parts:         $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
+                        Parts:         $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                     OpenCurlyBracketTkn:  $3,
                     Stmts:                $4,
@@ -387,8 +387,8 @@ top_statement:
                 $$ = &ast.StmtUse{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     UseTkn:          $1,
-                    UseDeclarations: $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    UseDeclarations: $2.(*ParserSeparatedList).Items,
+                    SeparatorTkns:   $2.(*ParserSeparatedList).SeparatorTkns,
                     SemiColonTkn:    $3,
                 }
             }
@@ -402,8 +402,8 @@ top_statement:
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
-                    UseDeclarations: $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    UseDeclarations: $3.(*ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ParserSeparatedList).SeparatorTkns,
                     SemiColonTkn:    $4,
                 }
             }
@@ -417,8 +417,8 @@ top_statement:
                         IdentifierTkn: $2,
                         Value:         $2.Value,
                     },
-                    UseDeclarations: $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    UseDeclarations: $3.(*ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ParserSeparatedList).SeparatorTkns,
                     SemiColonTkn:    $4,
                 }
             }
@@ -433,14 +433,14 @@ top_statement:
 use_declarations:
         use_declarations ',' use_declaration
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
     |   use_declaration
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
@@ -450,22 +450,22 @@ use_declaration:
         namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        Parts:         $1.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                        Parts:         $1.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
     |   namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
+                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ParserSeparatedList).Items, $3),
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        Parts:         $1.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                        Parts:         $1.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
@@ -478,12 +478,12 @@ use_declaration:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        Parts:         $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
+                        Parts:         $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -493,9 +493,9 @@ use_declaration:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        Parts:         $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
+                        Parts:         $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $3,
                     Alias: &ast.Identifier{
@@ -510,14 +510,14 @@ use_declaration:
 use_function_declarations:
         use_function_declarations ',' use_function_declaration
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
     |   use_function_declaration
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
@@ -527,22 +527,22 @@ use_function_declaration:
         namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        Parts:         $1.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                        Parts:         $1.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
     |   namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
+                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ParserSeparatedList).Items, $3),
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        Parts:         $1.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                        Parts:         $1.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
@@ -555,12 +555,12 @@ use_function_declaration:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        Parts:         $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
+                        Parts:         $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -570,9 +570,9 @@ use_function_declaration:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        Parts:         $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
+                        Parts:         $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $3,
                     Alias: &ast.Identifier{
@@ -587,14 +587,14 @@ use_function_declaration:
 use_const_declarations:
         use_const_declarations ',' use_const_declaration
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
     |   use_const_declaration
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
@@ -604,22 +604,22 @@ use_const_declaration:
         namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        Parts:         $1.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                        Parts:         $1.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
     |   namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ast.ParserSeparatedList).Items, $3),
+                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ParserSeparatedList).Items, $3),
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        Parts:         $1.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                        Parts:         $1.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $2,
                     Alias: &ast.Identifier{
@@ -632,12 +632,12 @@ use_const_declaration:
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.StmtUseDeclaration{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        Parts:         $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
+                        Parts:         $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -647,9 +647,9 @@ use_const_declaration:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     NsSeparatorTkn: $1,
                     Use: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ast.ParserSeparatedList).Items),
-                        Parts:         $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
+                        Parts:         $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                     AsTkn: $3,
                     Alias: &ast.Identifier{
@@ -841,14 +841,14 @@ unticked_statement:
             {
                 $9.(*ast.StmtFor).ForTkn = $1
                 $9.(*ast.StmtFor).OpenParenthesisTkn = $2
-                $9.(*ast.StmtFor).Init = $3.(*ast.ParserSeparatedList).Items
-                $9.(*ast.StmtFor).InitSeparatorTkns = $3.(*ast.ParserSeparatedList).SeparatorTkns
+                $9.(*ast.StmtFor).Init = $3.(*ParserSeparatedList).Items
+                $9.(*ast.StmtFor).InitSeparatorTkns = $3.(*ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).InitSemiColonTkn = $4
-                $9.(*ast.StmtFor).Cond = $5.(*ast.ParserSeparatedList).Items
-                $9.(*ast.StmtFor).CondSeparatorTkns = $5.(*ast.ParserSeparatedList).SeparatorTkns
+                $9.(*ast.StmtFor).Cond = $5.(*ParserSeparatedList).Items
+                $9.(*ast.StmtFor).CondSeparatorTkns = $5.(*ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).CondSemiColonTkn = $6
-                $9.(*ast.StmtFor).Loop = $7.(*ast.ParserSeparatedList).Items
-                $9.(*ast.StmtFor).LoopSeparatorTkns = $7.(*ast.ParserSeparatedList).SeparatorTkns
+                $9.(*ast.StmtFor).Loop = $7.(*ParserSeparatedList).Items
+                $9.(*ast.StmtFor).LoopSeparatorTkns = $7.(*ParserSeparatedList).SeparatorTkns
                 $9.(*ast.StmtFor).CloseParenthesisTkn = $8
                 $9.(*ast.StmtFor).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $9)
 
@@ -1046,8 +1046,8 @@ unticked_statement:
             {
                 $5.(*ast.StmtDeclare).DeclareTkn = $1
                 $5.(*ast.StmtDeclare).OpenParenthesisTkn = $2
-                $5.(*ast.StmtDeclare).Consts = $3.(*ast.ParserSeparatedList).Items
-                $5.(*ast.StmtDeclare).SeparatorTkns = $3.(*ast.ParserSeparatedList).SeparatorTkns
+                $5.(*ast.StmtDeclare).Consts = $3.(*ParserSeparatedList).Items
+                $5.(*ast.StmtDeclare).SeparatorTkns = $3.(*ParserSeparatedList).SeparatorTkns
                 $5.(*ast.StmtDeclare).CloseParenthesisTkn = $4
                 $5.(*ast.StmtDeclare).Position = yylex.(*Parser).builder.NewTokenNodePosition($1, $5)
 
@@ -1265,8 +1265,8 @@ unticked_function_declaration_statement:
                         Value:         $3.Value,
                     },
                     OpenParenthesisTkn:   $4,
-                    Params:               $5.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:        $5.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Params:               $5.(*ParserSeparatedList).Items,
+                    SeparatorTkns:        $5.(*ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn:  $6,
                     OpenCurlyBracketTkn:  $7,
                     Stmts:                $8,
@@ -1427,10 +1427,10 @@ interface_extends_list:
     |   T_EXTENDS interface_list
             {
                 $$ = &ast.StmtInterface{
-                    Position:             yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position:             yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                     ExtendsTkn:           $1,
-                    Extends:              $2.(*ast.ParserSeparatedList).Items,
-                    ExtendsSeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Extends:              $2.(*ParserSeparatedList).Items,
+                    ExtendsSeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                 };
             }
 ;
@@ -1443,10 +1443,10 @@ implements_list:
     |   T_IMPLEMENTS interface_list
             {
                 $$ = &ast.StmtClass{
-                    Position:                yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position:                yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                     ImplementsTkn:           $1,
-                    Implements:              $2.(*ast.ParserSeparatedList).Items,
-                    ImplementsSeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Implements:              $2.(*ParserSeparatedList).Items,
+                    ImplementsSeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                 };
             }
 ;
@@ -1454,14 +1454,14 @@ implements_list:
 interface_list:
         fully_qualified_class_name
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
     |   interface_list ',' fully_qualified_class_name
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
@@ -1496,7 +1496,7 @@ foreach_variable:
             }
     |   T_LIST '(' assignment_list ')'
             {
-                pairList := $3.(*ast.ParserSeparatedList)
+                pairList := $3.(*ParserSeparatedList)
                 fistPair := pairList.Items[0].(*ast.ExprArrayItem)
 
                 if fistPair.Key == nil && fistPair.Val == nil && len(pairList.Items) == 1 {
@@ -1507,8 +1507,8 @@ foreach_variable:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     ListTkn:         $1,
                     OpenBracketTkn:  $2,
-                    Items:           $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Items:           $3.(*ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ParserSeparatedList).SeparatorTkns,
                     CloseBracketTkn: $4,
                 }
             }
@@ -1588,7 +1588,7 @@ declare_statement:
 declare_list:
         T_STRING '=' static_scalar
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.StmtConstant{
                             Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
@@ -1605,9 +1605,9 @@ declare_list:
             }
     |   declare_list ',' T_STRING '=' static_scalar
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append(
-                    $1.(*ast.ParserSeparatedList).Items,
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append(
+                    $1.(*ParserSeparatedList).Items,
                     &ast.StmtConstant{
                         Position: yylex.(*Parser).builder.NewTokenNodePosition($3, $5),
                         Name: &ast.Identifier{
@@ -1818,21 +1818,21 @@ parameter_list:
             }
     |   /* empty */
             {
-                $$ = &ast.ParserSeparatedList{}
+                $$ = &ParserSeparatedList{}
             }
 ;
 
 non_empty_parameter_list:
         parameter
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
     |   non_empty_parameter_list ',' parameter
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
@@ -1927,7 +1927,7 @@ optional_class_type:
 function_call_parameter_list:
         '(' ')'
             {
-                $$ = &ast.ArgumentList{
+                $$ = &ArgumentList{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $2),
                     OpenParenthesisTkn: $1,
                     CloseParenthesisTkn: $2,
@@ -1935,7 +1935,7 @@ function_call_parameter_list:
             }
     |   '(' non_empty_function_call_parameter_list ')'
             {
-                argumentList := $2.(*ast.ArgumentList)
+                argumentList := $2.(*ArgumentList)
                 argumentList.Position = yylex.(*Parser).builder.NewTokensPosition($1, $3)
                 argumentList.OpenParenthesisTkn = $1
                 argumentList.CloseParenthesisTkn = $3
@@ -1944,7 +1944,7 @@ function_call_parameter_list:
             }
     |   '(' yield_expr ')'
             {
-                $$ = &ast.ArgumentList{
+                $$ = &ArgumentList{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenParenthesisTkn: $1,
                     Arguments: []ast.Vertex{
@@ -1962,14 +1962,14 @@ function_call_parameter_list:
 non_empty_function_call_parameter_list:
         function_call_parameter
             {
-                $$ = &ast.ArgumentList{
+                $$ = &ArgumentList{
                     Arguments: []ast.Vertex{$1},
                 }
             }
     |   non_empty_function_call_parameter_list ',' function_call_parameter
             {
-                $1.(*ast.ArgumentList).SeparatorTkns = append($1.(*ast.ArgumentList).SeparatorTkns, $2)
-                $1.(*ast.ArgumentList).Arguments = append($1.(*ast.ArgumentList).Arguments, $3)
+                $1.(*ArgumentList).SeparatorTkns = append($1.(*ArgumentList).SeparatorTkns, $2)
+                $1.(*ArgumentList).Arguments = append($1.(*ArgumentList).Arguments, $3)
 
                 $$ = $1
             }
@@ -2154,8 +2154,8 @@ class_statement:
                 $$ = &ast.StmtPropertyList{
                     Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1, $3),
                     Modifiers:     $1,
-                    Properties:    $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Properties:    $2.(*ParserSeparatedList).Items,
+                    SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                     SemiColonTkn:  $3,
                 }
             }
@@ -2187,8 +2187,8 @@ class_statement:
                         Value:         $4.Value,
                     },
                     OpenParenthesisTkn:  $5,
-                    Params:              $6.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:       $6.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Params:              $6.(*ParserSeparatedList).Items,
+                    SeparatorTkns:       $6.(*ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn: $7,
                     Stmt:                $8,
                 }
@@ -2201,12 +2201,12 @@ trait_use_statement:
                 traitUse := &ast.StmtTraitUse{
                     Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                     UseTkn:        $1,
-                    Traits:        $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns: $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Traits:        $2.(*ParserSeparatedList).Items,
+                    SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
                 }
 
                 switch n := $3.(type) {
-                case *ast.TraitAdaptationList :
+                case *TraitAdaptationList :
                     traitUse.OpenCurlyBracketTkn = n.OpenCurlyBracketTkn
                     traitUse.Adaptations = n.Adaptations
                     traitUse.CloseCurlyBracketTkn = n.CloseCurlyBracketTkn
@@ -2221,14 +2221,14 @@ trait_use_statement:
 trait_list:
         fully_qualified_class_name
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
     |   trait_list ',' fully_qualified_class_name
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
@@ -2244,7 +2244,7 @@ trait_adaptations:
             }
     |   '{' trait_adaptation_list '}'
             {
-                $$ = &ast.TraitAdaptationList{
+                $$ = &TraitAdaptationList{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenCurlyBracketTkn:  $1,
                     Adaptations:          $2,
@@ -2294,13 +2294,13 @@ trait_precedence:
         trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list
             {
                 $$ = &ast.StmtTraitUsePrecedence{
-                    Position: yylex.(*Parser).builder.NewNodeNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                    Trait:          $1.(*ast.TraitMethodRef).Trait,
-                    DoubleColonTkn: $1.(*ast.TraitMethodRef).DoubleColonTkn,
-                    Method:         $1.(*ast.TraitMethodRef).Method,
+                    Position: yylex.(*Parser).builder.NewNodeNodeListPosition($1, $3.(*ParserSeparatedList).Items),
+                    Trait:          $1.(*TraitMethodRef).Trait,
+                    DoubleColonTkn: $1.(*TraitMethodRef).DoubleColonTkn,
+                    Method:         $1.(*TraitMethodRef).Method,
                     InsteadofTkn:   $2,
-                    Insteadof:      $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Insteadof:      $3.(*ParserSeparatedList).Items,
+                    SeparatorTkns:  $3.(*ParserSeparatedList).SeparatorTkns,
                 }
             }
 ;
@@ -2308,14 +2308,14 @@ trait_precedence:
 trait_reference_list:
         fully_qualified_class_name
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
     |   trait_reference_list ',' fully_qualified_class_name
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
@@ -2324,7 +2324,7 @@ trait_reference_list:
 trait_method_reference:
         T_STRING
             {
-                $$ = &ast.TraitMethodRef{
+                $$ = &TraitMethodRef{
                     Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     Method: &ast.Identifier{
                         Position: yylex.(*Parser).builder.NewTokenPosition($1),
@@ -2342,7 +2342,7 @@ trait_method_reference:
 trait_method_reference_fully_qualified:
         fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
-                $$ = &ast.TraitMethodRef{
+                $$ = &TraitMethodRef{
                     Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
                     Trait:          $1,
                     DoubleColonTkn: $2,
@@ -2360,9 +2360,9 @@ trait_alias:
             {
                 $$ = &ast.StmtTraitUseAlias{
                     Position:       yylex.(*Parser).builder.NewNodeTokenPosition($1, $4),
-                    Trait:          $1.(*ast.TraitMethodRef).Trait,
-                    DoubleColonTkn: $1.(*ast.TraitMethodRef).DoubleColonTkn,
-                    Method:         $1.(*ast.TraitMethodRef).Method,
+                    Trait:          $1.(*TraitMethodRef).Trait,
+                    DoubleColonTkn: $1.(*TraitMethodRef).DoubleColonTkn,
+                    Method:         $1.(*TraitMethodRef).Method,
                     AsTkn:          $2,
                     Modifier:       $3,
                     Alias: &ast.Identifier{
@@ -2376,9 +2376,9 @@ trait_alias:
             {
                 $$ = &ast.StmtTraitUseAlias{
                     Position:       yylex.(*Parser).builder.NewNodesPosition($1, $3),
-                    Trait:          $1.(*ast.TraitMethodRef).Trait,
-                    DoubleColonTkn: $1.(*ast.TraitMethodRef).DoubleColonTkn,
-                    Method:         $1.(*ast.TraitMethodRef).Method,
+                    Trait:          $1.(*TraitMethodRef).Trait,
+                    DoubleColonTkn: $1.(*TraitMethodRef).DoubleColonTkn,
+                    Method:         $1.(*TraitMethodRef).Method,
                     AsTkn:          $2,
                     Modifier:       $3,
                 }
@@ -2520,8 +2520,8 @@ class_variable_declaration:
                     },
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, item)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, item)
 
                 $$ = $1
             }
@@ -2541,14 +2541,14 @@ class_variable_declaration:
                     Expr:     $5,
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, item)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, item)
 
                 $$ = $1
             }
     |   T_VARIABLE
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.StmtProperty{
                             Position: yylex.(*Parser).builder.NewTokenPosition($1),
@@ -2567,7 +2567,7 @@ class_variable_declaration:
             }
     |   T_VARIABLE '=' static_scalar
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.StmtProperty{
                             Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
@@ -2647,7 +2647,7 @@ echo_expr_list:
 for_expr:
         /* empty */
             {
-                $$ = &ast.ParserSeparatedList{}
+                $$ = &ParserSeparatedList{}
             }
     |   non_empty_for_expr
             {
@@ -2658,14 +2658,14 @@ for_expr:
 non_empty_for_expr:
         non_empty_for_expr ',' expr
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
     |   expr
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
@@ -2743,10 +2743,10 @@ new_expr:
                         Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                         NewTkn:              $1,
                         Class:               $2,
-                        OpenParenthesisTkn:  $3.(*ast.ArgumentList).OpenParenthesisTkn,
-                        Arguments:           $3.(*ast.ArgumentList).Arguments,
-                        SeparatorTkns:       $3.(*ast.ArgumentList).SeparatorTkns,
-                        CloseParenthesisTkn: $3.(*ast.ArgumentList).CloseParenthesisTkn,
+                        OpenParenthesisTkn:  $3.(*ArgumentList).OpenParenthesisTkn,
+                        Arguments:           $3.(*ArgumentList).Arguments,
+                        SeparatorTkns:       $3.(*ArgumentList).SeparatorTkns,
+                        CloseParenthesisTkn: $3.(*ArgumentList).CloseParenthesisTkn,
                     }
                 } else {
                     $$ = &ast.ExprNew{
@@ -2766,8 +2766,8 @@ expr_without_variable:
                         Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                         ListTkn:         $1,
                         OpenBracketTkn:  $2,
-                        Items:           $3.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Items:           $3.(*ParserSeparatedList).Items,
+                        SeparatorTkns:   $3.(*ParserSeparatedList).SeparatorTkns,
                         CloseBracketTkn: $4,
                     },
                     EqualTkn: $5,
@@ -2801,10 +2801,10 @@ expr_without_variable:
                         Position: yylex.(*Parser).builder.NewTokenNodePosition($4, $6),
                         NewTkn:              $4,
                         Class:               $5,
-                        OpenParenthesisTkn:  $6.(*ast.ArgumentList).OpenParenthesisTkn,
-                        Arguments:           $6.(*ast.ArgumentList).Arguments,
-                        SeparatorTkns:       $6.(*ast.ArgumentList).SeparatorTkns,
-                        CloseParenthesisTkn: $6.(*ast.ArgumentList).CloseParenthesisTkn,
+                        OpenParenthesisTkn:  $6.(*ArgumentList).OpenParenthesisTkn,
+                        Arguments:           $6.(*ArgumentList).Arguments,
+                        SeparatorTkns:       $6.(*ArgumentList).SeparatorTkns,
+                        CloseParenthesisTkn: $6.(*ArgumentList).CloseParenthesisTkn,
                     }
                 } else {
                     _new = &ast.ExprNew{
@@ -3427,8 +3427,8 @@ expr_without_variable:
                 closure.FunctionTkn          = $1
                 closure.AmpersandTkn         = $2
                 closure.OpenParenthesisTkn   = $3
-                closure.Params               = $4.(*ast.ParserSeparatedList).Items
-                closure.SeparatorTkns        = $4.(*ast.ParserSeparatedList).SeparatorTkns
+                closure.Params               = $4.(*ParserSeparatedList).Items
+                closure.SeparatorTkns        = $4.(*ParserSeparatedList).SeparatorTkns
                 closure.CloseParenthesisTkn  = $5
                 closure.OpenCurlyBracketTkn  = $7
                 closure.Stmts                = $8
@@ -3445,8 +3445,8 @@ expr_without_variable:
                 closure.FunctionTkn          = $2
                 closure.AmpersandTkn         = $3
                 closure.OpenParenthesisTkn   = $4
-                closure.Params               = $5.(*ast.ParserSeparatedList).Items
-                closure.SeparatorTkns        = $5.(*ast.ParserSeparatedList).SeparatorTkns
+                closure.Params               = $5.(*ParserSeparatedList).Items
+                closure.SeparatorTkns        = $5.(*ParserSeparatedList).SeparatorTkns
                 closure.CloseParenthesisTkn  = $6
                 closure.OpenCurlyBracketTkn  = $8
                 closure.Stmts                = $9
@@ -3549,8 +3549,8 @@ combined_scalar:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     ArrayTkn:        $1,
                     OpenBracketTkn:  $2,
-                    Items:           $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Items:           $3.(*ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ParserSeparatedList).SeparatorTkns,
                     CloseBracketTkn: $4,
                 }
             }
@@ -3559,8 +3559,8 @@ combined_scalar:
                 $$ = &ast.ExprArray{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
-                    Items:           $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Items:           $2.(*ParserSeparatedList).Items,
+                    SeparatorTkns:   $2.(*ParserSeparatedList).SeparatorTkns,
                     CloseBracketTkn: $3,
                 }
             }
@@ -3583,8 +3583,8 @@ lexical_vars:
                 $$ = &ast.ExprClosure{
                     UseTkn:                 $1,
                     UseOpenParenthesisTkn:  $2,
-                    Use:                    $3.(*ast.ParserSeparatedList).Items,
-                    UseSeparatorTkns:       $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Use:                    $3.(*ParserSeparatedList).Items,
+                    UseSeparatorTkns:       $3.(*ParserSeparatedList).SeparatorTkns,
                     UseCloseParenthesisTkn: $4,
                 }
             }
@@ -3605,8 +3605,8 @@ lexical_var_list:
                     },
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, variable)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, variable)
 
                 $$ = $1
             }
@@ -3625,8 +3625,8 @@ lexical_var_list:
                     },
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, variable)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, variable)
 
                 $$ = $1
             }
@@ -3644,7 +3644,7 @@ lexical_var_list:
                     },
                 }
 
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{ variable },
                 }
             }
@@ -3663,7 +3663,7 @@ lexical_var_list:
                     },
                 }
 
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{ variable },
                 }
             }
@@ -3673,16 +3673,16 @@ function_call:
         namespace_name function_call_parameter_list
             {
                 $$ = &ast.ExprFunctionCall{
-                    Position: yylex.(*Parser).builder.NewNodeListNodePosition($1.(*ast.ParserSeparatedList).Items, $2),
+                    Position: yylex.(*Parser).builder.NewNodeListNodePosition($1.(*ParserSeparatedList).Items, $2),
                     Function: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        Parts:         $1.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                        Parts:         $1.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                     },
-                    OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $2.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $2.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $2.(*ast.ArgumentList).CloseParenthesisTkn,
+                    OpenParenthesisTkn:  $2.(*ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $2.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $2.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $2.(*ArgumentList).CloseParenthesisTkn,
                 }
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name function_call_parameter_list
@@ -3690,16 +3690,16 @@ function_call:
                 $$ = &ast.ExprFunctionCall{
                     Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $4),
                     Function: &ast.NameRelative{
-                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ParserSeparatedList).Items),
                         NsTkn:          $1,
                         NsSeparatorTkn: $2,
-                        Parts:          $3.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Parts:          $3.(*ParserSeparatedList).Items,
+                        SeparatorTkns:  $3.(*ParserSeparatedList).SeparatorTkns,
                     },
-                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $4.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
+                    OpenParenthesisTkn:  $4.(*ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $4.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $4.(*ArgumentList).CloseParenthesisTkn,
                 }
             }
     |   T_NS_SEPARATOR namespace_name function_call_parameter_list
@@ -3707,15 +3707,15 @@ function_call:
                 $$ = &ast.ExprFunctionCall{
                     Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $3),
                     Function: &ast.NameFullyQualified{
-                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                         NsSeparatorTkn: $1,
-                        Parts:          $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Parts:          $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns:  $2.(*ParserSeparatedList).SeparatorTkns,
                     },
-                    OpenParenthesisTkn:  $3.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $3.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $3.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $3.(*ast.ArgumentList).CloseParenthesisTkn,
+                    OpenParenthesisTkn:  $3.(*ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $3.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $3.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $3.(*ArgumentList).CloseParenthesisTkn,
                 }
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
@@ -3725,13 +3725,13 @@ function_call:
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
-                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $4.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
+                    OpenParenthesisTkn:  $4.(*ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $4.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $4.(*ArgumentList).CloseParenthesisTkn,
                 }
 
-                if brackets, ok := $3.(*ast.ParserBrackets); ok {
+                if brackets, ok := $3.(*ParserBrackets); ok {
                     staticCall.OpenCurlyBracketTkn  = brackets.OpenBracketTkn
                     staticCall.Call                 = brackets.Child
                     staticCall.CloseCurlyBracketTkn = brackets.CloseBracketTkn
@@ -3746,10 +3746,10 @@ function_call:
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
-                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $4.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
+                    OpenParenthesisTkn:  $4.(*ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $4.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $4.(*ArgumentList).CloseParenthesisTkn,
                 }
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
@@ -3759,13 +3759,13 @@ function_call:
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
-                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $4.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
+                    OpenParenthesisTkn:  $4.(*ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $4.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $4.(*ArgumentList).CloseParenthesisTkn,
                 }
 
-                if brackets, ok := $3.(*ast.ParserBrackets); ok {
+                if brackets, ok := $3.(*ParserBrackets); ok {
                     staticCall.OpenCurlyBracketTkn  = brackets.OpenBracketTkn
                     staticCall.Call                 = brackets.Child
                     staticCall.CloseCurlyBracketTkn = brackets.CloseBracketTkn
@@ -3780,10 +3780,10 @@ function_call:
                     Class:               $1,
                     DoubleColonTkn:      $2,
                     Call:                $3,
-                    OpenParenthesisTkn:  $4.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $4.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $4.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $4.(*ast.ArgumentList).CloseParenthesisTkn,
+                    OpenParenthesisTkn:  $4.(*ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $4.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $4.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $4.(*ArgumentList).CloseParenthesisTkn,
                 }
             }
     |   variable_without_objects function_call_parameter_list
@@ -3791,10 +3791,10 @@ function_call:
                 $$ = &ast.ExprFunctionCall{
                     Position: yylex.(*Parser).builder.NewNodesPosition($1, $2),
                     Function:            $1,
-                    OpenParenthesisTkn:  $2.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $2.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $2.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $2.(*ast.ArgumentList).CloseParenthesisTkn,
+                    OpenParenthesisTkn:  $2.(*ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $2.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $2.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $2.(*ArgumentList).CloseParenthesisTkn,
                 }
             }
 ;
@@ -3811,28 +3811,28 @@ class_name:
     |   namespace_name
             {
                 $$ = &ast.NameName{
-                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                    Parts:         $1.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                    Parts:         $1.(*ParserSeparatedList).Items,
+                    SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                 }
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameRelative{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ParserSeparatedList).Items),
                     NsTkn:          $1,
                     NsSeparatorTkn: $2,
-                    Parts:          $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Parts:          $3.(*ParserSeparatedList).Items,
+                    SeparatorTkns:  $3.(*ParserSeparatedList).SeparatorTkns,
                 }
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameFullyQualified{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
-                    Parts:          $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Parts:          $2.(*ParserSeparatedList).Items,
+                    SeparatorTkns:  $2.(*ParserSeparatedList).SeparatorTkns,
                 }
             }
 ;
@@ -3841,28 +3841,28 @@ fully_qualified_class_name:
         namespace_name
             {
                 $$ = &ast.NameName{
-                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                    Parts:         $1.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                    Parts:         $1.(*ParserSeparatedList).Items,
+                    SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                 }
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameRelative{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ParserSeparatedList).Items),
                     NsTkn:          $1,
                     NsSeparatorTkn: $2,
-                    Parts:          $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Parts:          $3.(*ParserSeparatedList).Items,
+                    SeparatorTkns:  $3.(*ParserSeparatedList).SeparatorTkns,
                 }
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.NameFullyQualified{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                     NsSeparatorTkn: $1,
-                    Parts:          $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Parts:          $2.(*ParserSeparatedList).Items,
+                    SeparatorTkns:  $2.(*ParserSeparatedList).SeparatorTkns,
                 }
             }
 ;
@@ -3984,7 +3984,7 @@ backticks_expr:
 ctor_arguments:
         /* empty */
             {
-                $$ = &ast.ArgumentList{}
+                $$ = &ArgumentList{}
             }
     |   function_call_parameter_list
             {
@@ -4133,36 +4133,36 @@ static_scalar_value:
     |   namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
                     Const: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        Parts:         $1.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                        Parts:         $1.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ParserSeparatedList).Items),
                     Const: &ast.NameRelative{
-                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ParserSeparatedList).Items),
                         NsTkn:          $1,
                         NsSeparatorTkn: $2,
-                        Parts:          $3.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Parts:          $3.(*ParserSeparatedList).Items,
+                        SeparatorTkns:  $3.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                     Const: &ast.NameFullyQualified{
-                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                         NsSeparatorTkn: $1,
-                        Parts:          $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Parts:          $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns:  $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -4172,8 +4172,8 @@ static_scalar_value:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     ArrayTkn:        $1,
                     OpenBracketTkn:  $2,
-                    Items:           $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Items:           $3.(*ParserSeparatedList).Items,
+                    SeparatorTkns:   $3.(*ParserSeparatedList).SeparatorTkns,
                     CloseBracketTkn: $4,
                 }
             }
@@ -4182,8 +4182,8 @@ static_scalar_value:
                 $$ = &ast.ExprArray{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
-                    Items:           $2.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:   $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Items:           $2.(*ParserSeparatedList).Items,
+                    SeparatorTkns:   $2.(*ParserSeparatedList).SeparatorTkns,
                     CloseBracketTkn: $3,
                 }
             }
@@ -4513,36 +4513,36 @@ general_constant:
     |   namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
                     Const: &ast.NameName{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ast.ParserSeparatedList).Items),
-                        Parts:         $1.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
+                        Parts:         $1.(*ParserSeparatedList).Items,
+                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ParserSeparatedList).Items),
                     Const: &ast.NameRelative{
-                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $3.(*ParserSeparatedList).Items),
                         NsTkn:          $1,
                         NsSeparatorTkn: $2,
-                        Parts:          $3.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Parts:          $3.(*ParserSeparatedList).Items,
+                        SeparatorTkns:  $3.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = &ast.ExprConstFetch{
-                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                    Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                     Const: &ast.NameFullyQualified{
-                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ast.ParserSeparatedList).Items),
+                        Position: yylex.(*Parser).builder.NewTokenNodeListPosition($1, $2.(*ParserSeparatedList).Items),
                         NsSeparatorTkn: $1,
-                        Parts:          $2.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns:  $2.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Parts:          $2.(*ParserSeparatedList).Items,
+                        SeparatorTkns:  $2.(*ParserSeparatedList).SeparatorTkns,
                     },
                 }
             }
@@ -4603,13 +4603,13 @@ scalar:
 static_array_pair_list:
         /* empty */
             {
-                $$ = &ast.ParserSeparatedList{}
+                $$ = &ParserSeparatedList{}
             }
     |   non_empty_static_array_pair_list possible_comma
             {
                 if $2 != nil {
-                    $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                    $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, &ast.ExprArrayItem{})
+                    $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                    $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, &ast.ExprArrayItem{})
                 }
 
                 $$ = $1
@@ -4637,8 +4637,8 @@ non_empty_static_array_pair_list:
                     Val:            $5,
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, arrayItem)
 
                 $$ = $1
             }
@@ -4649,14 +4649,14 @@ non_empty_static_array_pair_list:
                     Val: $3,
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, arrayItem)
 
                 $$ = $1
             }
     |   static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
                             Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
@@ -4669,7 +4669,7 @@ non_empty_static_array_pair_list:
             }
     |   static_scalar_value
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
                             Position: yylex.(*Parser).builder.NewNodePosition($1),
@@ -4895,10 +4895,10 @@ method:
             {
                 $$ = &ast.ExprMethodCall{
                     Position: yylex.(*Parser).builder.NewNodePosition($1),
-                    OpenParenthesisTkn:  $1.(*ast.ArgumentList).OpenParenthesisTkn,
-                    Arguments:           $1.(*ast.ArgumentList).Arguments,
-                    SeparatorTkns:       $1.(*ast.ArgumentList).SeparatorTkns,
-                    CloseParenthesisTkn: $1.(*ast.ArgumentList).CloseParenthesisTkn,
+                    OpenParenthesisTkn:  $1.(*ArgumentList).OpenParenthesisTkn,
+                    Arguments:           $1.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $1.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $1.(*ArgumentList).CloseParenthesisTkn,
                 }
             }
 ;
@@ -5135,7 +5135,7 @@ object_dim_list:
                     Property: $1,
                 }
 
-                if brackets, ok := $1.(*ast.ParserBrackets); ok {
+                if brackets, ok := $1.(*ParserBrackets); ok {
                     property.OpenCurlyBracketTkn  = brackets.OpenBracketTkn
                     property.Property             = brackets.Child
                     property.CloseCurlyBracketTkn = brackets.CloseBracketTkn
@@ -5156,7 +5156,7 @@ variable_name:
             }
     |   '{' expr '}'
             {
-                $$ = &ast.ParserBrackets{
+                $$ = &ParserBrackets{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
                     OpenBracketTkn:  $1,
                     Child:           $2,
@@ -5187,14 +5187,14 @@ simple_indirect_reference:
 assignment_list:
         assignment_list ',' assignment_list_element
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
     |   assignment_list_element
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
@@ -5211,7 +5211,7 @@ assignment_list_element:
             }
     |   T_LIST '(' assignment_list ')'
             {
-                pairList := $3.(*ast.ParserSeparatedList)
+                pairList := $3.(*ParserSeparatedList)
                 fistPair := pairList.Items[0].(*ast.ExprArrayItem)
 
                 if fistPair.Key == nil && fistPair.Val == nil && len(pairList.Items) == 1 {
@@ -5224,8 +5224,8 @@ assignment_list_element:
                         Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                         ListTkn:         $1,
                         OpenBracketTkn:  $2,
-                        Items:           $3.(*ast.ParserSeparatedList).Items,
-                        SeparatorTkns:   $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                        Items:           $3.(*ParserSeparatedList).Items,
+                        SeparatorTkns:   $3.(*ParserSeparatedList).SeparatorTkns,
                         CloseBracketTkn: $4,
                     },
                 }
@@ -5240,13 +5240,13 @@ assignment_list_element:
 array_pair_list:
         /* empty */
             {
-                $$ = &ast.ParserSeparatedList{}
+                $$ = &ParserSeparatedList{}
             }
     |   non_empty_array_pair_list possible_comma
             {
                 if $2 != nil {
-                    $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                    $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, &ast.ExprArrayItem{})
+                    $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                    $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, &ast.ExprArrayItem{})
                 }
 
                 $$ = $1
@@ -5263,8 +5263,8 @@ non_empty_array_pair_list:
                     Val:            $5,
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, arrayItem)
 
                 $$ = $1
             }
@@ -5275,14 +5275,14 @@ non_empty_array_pair_list:
                     Val:            $3,
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, arrayItem)
 
                 $$ = $1
             }
     |   expr T_DOUBLE_ARROW expr
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
                             Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
@@ -5295,7 +5295,7 @@ non_empty_array_pair_list:
             }
     |   expr
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
                             Position: yylex.(*Parser).builder.NewNodePosition($1),
@@ -5314,8 +5314,8 @@ non_empty_array_pair_list:
                     Val:            $6,
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, arrayItem)
 
                 $$ = $1
             }
@@ -5327,14 +5327,14 @@ non_empty_array_pair_list:
                     Val:          $4,
                 }
 
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, arrayItem)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, arrayItem)
 
                 $$ = $1
             }
     |   expr T_DOUBLE_ARROW '&' w_variable
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
                             Position:       yylex.(*Parser).builder.NewNodesPosition($1, $4),
@@ -5348,7 +5348,7 @@ non_empty_array_pair_list:
             }
     |   '&' w_variable
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{
                         &ast.ExprArrayItem{
                             Position:     yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
@@ -5537,8 +5537,8 @@ internal_functions_in_yacc:
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $4),
                     IssetTkn:            $1,
                     OpenParenthesisTkn:  $2,
-                    Vars:                $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns:       $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Vars:                $3.(*ParserSeparatedList).Items,
+                    SeparatorTkns:       $3.(*ParserSeparatedList).SeparatorTkns,
                     CloseParenthesisTkn: $4,
                 }
             }
@@ -5609,14 +5609,14 @@ internal_functions_in_yacc:
 isset_variables:
         isset_variable
             {
-                $$ = &ast.ParserSeparatedList{
+                $$ = &ParserSeparatedList{
                     Items: []ast.Vertex{$1},
                 }
             }
     |   isset_variables ',' isset_variable
             {
-                $1.(*ast.ParserSeparatedList).SeparatorTkns = append($1.(*ast.ParserSeparatedList).SeparatorTkns, $2)
-                $1.(*ast.ParserSeparatedList).Items = append($1.(*ast.ParserSeparatedList).Items, $3)
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
 
                 $$ = $1
             }
