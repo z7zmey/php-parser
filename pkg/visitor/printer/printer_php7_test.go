@@ -1,14 +1,14 @@
-package visitor_test
+package printer_test
 
 import (
 	"bytes"
+	printer2 "github.com/z7zmey/php-parser/pkg/visitor/printer"
 	"os"
 	"testing"
 
 	"github.com/z7zmey/php-parser/internal/php7"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/ast/visitor"
 )
 
 func ExamplePrinter() {
@@ -41,7 +41,7 @@ abstract class Bar extends Baz
 
 	// print
 
-	printer := visitor.NewPrinter(os.Stdout)
+	printer := printer2.NewPrinter(os.Stdout)
 	rootNode.Accept(printer)
 
 	// Output:
@@ -70,7 +70,7 @@ func parse(src string) ast.Vertex {
 func print(n ast.Vertex) string {
 	o := bytes.NewBufferString("")
 
-	printer := visitor.NewPrinter(o)
+	printer := printer2.NewPrinter(o)
 	n.Accept(printer)
 
 	return o.String()

@@ -3,6 +3,10 @@ package main
 import (
 	"bytes"
 	"flag"
+	"github.com/z7zmey/php-parser/pkg/visitor/dumper"
+	"github.com/z7zmey/php-parser/pkg/visitor/nsresolver"
+	"github.com/z7zmey/php-parser/pkg/visitor/printer"
+	"github.com/z7zmey/php-parser/pkg/visitor/traverser"
 	"io"
 	"io/ioutil"
 	"log"
@@ -17,8 +21,6 @@ import (
 	"github.com/yookoala/realpath"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/ast/traverser"
-	"github.com/z7zmey/php-parser/pkg/ast/visitor"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/parser"
 )
@@ -165,7 +167,7 @@ func printerWorker(r <-chan result) {
 
 		if *printBack {
 			o := bytes.NewBuffer([]byte{})
-			p := visitor.NewPrinter(o)
+			p := printer.NewPrinter(o)
 			res.rootNode.Accept(p)
 
 			err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
@@ -173,16 +175,15 @@ func printerWorker(r <-chan result) {
 		}
 
 		if *showResolvedNs {
-			v := visitor.NewNamespaceResolver()
-			t := traverser.NewDFS(v)
-			t.Traverse(res.rootNode)
+			v := nsresolver.NewNamespaceResolver()
+			traverser.NewTraverser(v).Traverse(res.rootNode)
 			for _, n := range v.ResolvedNames {
 				_, _ = io.WriteString(os.Stderr, "===> "+n+"\n")
 			}
 		}
 
 		if *dump == true {
-			visitor.NewDumper(os.Stdout).WithPositions().WithTokens().Dump(res.rootNode)
+			dumper.NewDumper(os.Stdout).WithPositions().WithTokens().Dump(res.rootNode)
 		}
 
 		wg.Done()

@@ -1,8 +1,8 @@
-package visitor_test
+package printer_test
 
 import (
 	"bytes"
-	"github.com/z7zmey/php-parser/pkg/ast/visitor"
+	printer2 "github.com/z7zmey/php-parser/pkg/visitor/printer"
 	"testing"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
@@ -22,7 +22,7 @@ func parsePhp5(src string) ast.Vertex {
 func printPhp5(n ast.Vertex) string {
 	o := bytes.NewBufferString("")
 
-	printer := visitor.NewPrinter(o)
+	printer := printer2.NewPrinter(o)
 	n.Accept(printer)
 
 	return o.String()

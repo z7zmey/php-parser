@@ -3,23 +3,11 @@ package ast
 import "github.com/z7zmey/php-parser/pkg/position"
 
 type Vertex interface {
-	Accept(v NodeVisitor)
+	Accept(v Visitor)
 	GetPosition() *position.Position
 }
 
-type Traverser interface {
-	Traverse(n Vertex)
-}
-
 type Visitor interface {
-	Enter(key string, singleNode bool)
-	Leave(key string, singleNode bool)
-
-	EnterNode(n Vertex) bool
-	LeaveNode(n Vertex)
-}
-
-type NodeVisitor interface {
 	Root(n *Root)
 	Nullable(n *Nullable)
 	Parameter(n *Parameter)

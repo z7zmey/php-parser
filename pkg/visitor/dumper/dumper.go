@@ -1,4 +1,4 @@
-package visitor
+package dumper
 
 import (
 	"github.com/z7zmey/php-parser/pkg/position"

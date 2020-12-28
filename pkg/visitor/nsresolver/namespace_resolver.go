@@ -1,15 +1,16 @@
 // Package visitor contains walker.visitor implementations
-package visitor
+package nsresolver
 
 import (
 	"errors"
 	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/visitor"
 	"strings"
 )
 
 // NamespaceResolver visitor
 type NamespaceResolver struct {
-	Null
+	visitor.Null
 	Namespace     *Namespace
 	ResolvedNames map[ast.Vertex]string
 

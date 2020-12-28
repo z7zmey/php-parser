@@ -12,7 +12,7 @@ type Root struct {
 	EndTkn   *token.Token
 }
 
-func (n *Root) Accept(v NodeVisitor) {
+func (n *Root) Accept(v Visitor) {
 	v.Root(n)
 }
 
@@ -27,7 +27,7 @@ type Nullable struct {
 	Expr        Vertex
 }
 
-func (n *Nullable) Accept(v NodeVisitor) {
+func (n *Nullable) Accept(v Visitor) {
 	v.Nullable(n)
 }
 
@@ -46,7 +46,7 @@ type Parameter struct {
 	DefaultValue Vertex
 }
 
-func (n *Parameter) Accept(v NodeVisitor) {
+func (n *Parameter) Accept(v Visitor) {
 	v.Parameter(n)
 }
 
@@ -61,7 +61,7 @@ type Identifier struct {
 	Value         []byte
 }
 
-func (n *Identifier) Accept(v NodeVisitor) {
+func (n *Identifier) Accept(v Visitor) {
 	v.Identifier(n)
 }
 
@@ -77,7 +77,7 @@ type Argument struct {
 	Expr         Vertex
 }
 
-func (n *Argument) Accept(v NodeVisitor) {
+func (n *Argument) Accept(v Visitor) {
 	v.Argument(n)
 }
 
@@ -92,7 +92,7 @@ type ScalarDnumber struct {
 	Value     []byte
 }
 
-func (n *ScalarDnumber) Accept(v NodeVisitor) {
+func (n *ScalarDnumber) Accept(v Visitor) {
 	v.ScalarDnumber(n)
 }
 
@@ -108,7 +108,7 @@ type ScalarEncapsed struct {
 	CloseQuoteTkn *token.Token
 }
 
-func (n *ScalarEncapsed) Accept(v NodeVisitor) {
+func (n *ScalarEncapsed) Accept(v Visitor) {
 	v.ScalarEncapsed(n)
 }
 
@@ -123,7 +123,7 @@ type ScalarEncapsedStringPart struct {
 	Value          []byte
 }
 
-func (n *ScalarEncapsedStringPart) Accept(v NodeVisitor) {
+func (n *ScalarEncapsedStringPart) Accept(v Visitor) {
 	v.ScalarEncapsedStringPart(n)
 }
 
@@ -142,7 +142,7 @@ type ScalarEncapsedStringVar struct {
 	CloseCurlyBracketTkn      *token.Token
 }
 
-func (n *ScalarEncapsedStringVar) Accept(v NodeVisitor) {
+func (n *ScalarEncapsedStringVar) Accept(v Visitor) {
 	v.ScalarEncapsedStringVar(n)
 }
 
@@ -158,7 +158,7 @@ type ScalarEncapsedStringBrackets struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *ScalarEncapsedStringBrackets) Accept(v NodeVisitor) {
+func (n *ScalarEncapsedStringBrackets) Accept(v Visitor) {
 	v.ScalarEncapsedStringBrackets(n)
 }
 
@@ -174,7 +174,7 @@ type ScalarHeredoc struct {
 	CloseHeredocTkn *token.Token
 }
 
-func (n *ScalarHeredoc) Accept(v NodeVisitor) {
+func (n *ScalarHeredoc) Accept(v Visitor) {
 	v.ScalarHeredoc(n)
 }
 
@@ -189,7 +189,7 @@ type ScalarLnumber struct {
 	Value     []byte
 }
 
-func (n *ScalarLnumber) Accept(v NodeVisitor) {
+func (n *ScalarLnumber) Accept(v Visitor) {
 	v.ScalarLnumber(n)
 }
 
@@ -204,7 +204,7 @@ type ScalarMagicConstant struct {
 	Value         []byte
 }
 
-func (n *ScalarMagicConstant) Accept(v NodeVisitor) {
+func (n *ScalarMagicConstant) Accept(v Visitor) {
 	v.ScalarMagicConstant(n)
 }
 
@@ -220,7 +220,7 @@ type ScalarString struct {
 	Value     []byte
 }
 
-func (n *ScalarString) Accept(v NodeVisitor) {
+func (n *ScalarString) Accept(v Visitor) {
 	v.ScalarString(n)
 }
 
@@ -236,7 +236,7 @@ type StmtBreak struct {
 	SemiColonTkn *token.Token
 }
 
-func (n *StmtBreak) Accept(v NodeVisitor) {
+func (n *StmtBreak) Accept(v Visitor) {
 	v.StmtBreak(n)
 }
 
@@ -253,7 +253,7 @@ type StmtCase struct {
 	Stmts            []Vertex
 }
 
-func (n *StmtCase) Accept(v NodeVisitor) {
+func (n *StmtCase) Accept(v Visitor) {
 	v.StmtCase(n)
 }
 
@@ -275,7 +275,7 @@ type StmtCatch struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *StmtCatch) Accept(v NodeVisitor) {
+func (n *StmtCatch) Accept(v Visitor) {
 	v.StmtCatch(n)
 }
 
@@ -303,7 +303,7 @@ type StmtClass struct {
 	CloseCurlyBracketTkn    *token.Token
 }
 
-func (n *StmtClass) Accept(v NodeVisitor) {
+func (n *StmtClass) Accept(v Visitor) {
 	v.StmtClass(n)
 }
 
@@ -321,7 +321,7 @@ type StmtClassConstList struct {
 	SemiColonTkn  *token.Token
 }
 
-func (n *StmtClassConstList) Accept(v NodeVisitor) {
+func (n *StmtClassConstList) Accept(v Visitor) {
 	v.StmtClassConstList(n)
 }
 
@@ -345,7 +345,7 @@ type StmtClassMethod struct {
 	Stmt                Vertex
 }
 
-func (n *StmtClassMethod) Accept(v NodeVisitor) {
+func (n *StmtClassMethod) Accept(v Visitor) {
 	v.StmtClassMethod(n)
 }
 
@@ -362,7 +362,7 @@ type StmtConstList struct {
 	SemiColonTkn  *token.Token
 }
 
-func (n *StmtConstList) Accept(v NodeVisitor) {
+func (n *StmtConstList) Accept(v Visitor) {
 	v.StmtConstList(n)
 }
 
@@ -378,7 +378,7 @@ type StmtConstant struct {
 	Expr     Vertex
 }
 
-func (n *StmtConstant) Accept(v NodeVisitor) {
+func (n *StmtConstant) Accept(v Visitor) {
 	v.StmtConstant(n)
 }
 
@@ -394,7 +394,7 @@ type StmtContinue struct {
 	SemiColonTkn *token.Token
 }
 
-func (n *StmtContinue) Accept(v NodeVisitor) {
+func (n *StmtContinue) Accept(v Visitor) {
 	v.StmtContinue(n)
 }
 
@@ -416,7 +416,7 @@ type StmtDeclare struct {
 	SemiColonTkn        *token.Token
 }
 
-func (n *StmtDeclare) Accept(v NodeVisitor) {
+func (n *StmtDeclare) Accept(v Visitor) {
 	v.StmtDeclare(n)
 }
 
@@ -432,7 +432,7 @@ type StmtDefault struct {
 	Stmts            []Vertex
 }
 
-func (n *StmtDefault) Accept(v NodeVisitor) {
+func (n *StmtDefault) Accept(v Visitor) {
 	v.StmtDefault(n)
 }
 
@@ -452,7 +452,7 @@ type StmtDo struct {
 	SemiColonTkn        *token.Token
 }
 
-func (n *StmtDo) Accept(v NodeVisitor) {
+func (n *StmtDo) Accept(v Visitor) {
 	v.StmtDo(n)
 }
 
@@ -469,7 +469,7 @@ type StmtEcho struct {
 	SemiColonTkn  *token.Token
 }
 
-func (n *StmtEcho) Accept(v NodeVisitor) {
+func (n *StmtEcho) Accept(v Visitor) {
 	v.StmtEcho(n)
 }
 
@@ -485,7 +485,7 @@ type StmtElse struct {
 	Stmt     Vertex
 }
 
-func (n *StmtElse) Accept(v NodeVisitor) {
+func (n *StmtElse) Accept(v Visitor) {
 	v.StmtElse(n)
 }
 
@@ -504,7 +504,7 @@ type StmtElseIf struct {
 	Stmt                Vertex
 }
 
-func (n *StmtElseIf) Accept(v NodeVisitor) {
+func (n *StmtElseIf) Accept(v Visitor) {
 	v.StmtElseIf(n)
 }
 
@@ -519,7 +519,7 @@ type StmtExpression struct {
 	SemiColonTkn *token.Token
 }
 
-func (n *StmtExpression) Accept(v NodeVisitor) {
+func (n *StmtExpression) Accept(v Visitor) {
 	v.StmtExpression(n)
 }
 
@@ -536,7 +536,7 @@ type StmtFinally struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *StmtFinally) Accept(v NodeVisitor) {
+func (n *StmtFinally) Accept(v Visitor) {
 	v.StmtFinally(n)
 }
 
@@ -564,7 +564,7 @@ type StmtFor struct {
 	SemiColonTkn        *token.Token
 }
 
-func (n *StmtFor) Accept(v NodeVisitor) {
+func (n *StmtFor) Accept(v Visitor) {
 	v.StmtFor(n)
 }
 
@@ -590,7 +590,7 @@ type StmtForeach struct {
 	SemiColonTkn        *token.Token
 }
 
-func (n *StmtForeach) Accept(v NodeVisitor) {
+func (n *StmtForeach) Accept(v Visitor) {
 	v.StmtForeach(n)
 }
 
@@ -615,7 +615,7 @@ type StmtFunction struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *StmtFunction) Accept(v NodeVisitor) {
+func (n *StmtFunction) Accept(v Visitor) {
 	v.StmtFunction(n)
 }
 
@@ -632,7 +632,7 @@ type StmtGlobal struct {
 	SemiColonTkn  *token.Token
 }
 
-func (n *StmtGlobal) Accept(v NodeVisitor) {
+func (n *StmtGlobal) Accept(v Visitor) {
 	v.StmtGlobal(n)
 }
 
@@ -648,7 +648,7 @@ type StmtGoto struct {
 	SemiColonTkn *token.Token
 }
 
-func (n *StmtGoto) Accept(v NodeVisitor) {
+func (n *StmtGoto) Accept(v Visitor) {
 	v.StmtGoto(n)
 }
 
@@ -665,7 +665,7 @@ type StmtHaltCompiler struct {
 	SemiColonTkn        *token.Token
 }
 
-func (n *StmtHaltCompiler) Accept(v NodeVisitor) {
+func (n *StmtHaltCompiler) Accept(v Visitor) {
 	v.StmtHaltCompiler(n)
 }
 
@@ -688,7 +688,7 @@ type StmtIf struct {
 	SemiColonTkn        *token.Token
 }
 
-func (n *StmtIf) Accept(v NodeVisitor) {
+func (n *StmtIf) Accept(v Visitor) {
 	v.StmtIf(n)
 }
 
@@ -703,7 +703,7 @@ type StmtInlineHtml struct {
 	Value         []byte
 }
 
-func (n *StmtInlineHtml) Accept(v NodeVisitor) {
+func (n *StmtInlineHtml) Accept(v Visitor) {
 	v.StmtInlineHtml(n)
 }
 
@@ -724,7 +724,7 @@ type StmtInterface struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *StmtInterface) Accept(v NodeVisitor) {
+func (n *StmtInterface) Accept(v Visitor) {
 	v.StmtInterface(n)
 }
 
@@ -739,7 +739,7 @@ type StmtLabel struct {
 	ColonTkn  *token.Token
 }
 
-func (n *StmtLabel) Accept(v NodeVisitor) {
+func (n *StmtLabel) Accept(v Visitor) {
 	v.StmtLabel(n)
 }
 
@@ -758,7 +758,7 @@ type StmtNamespace struct {
 	SemiColonTkn         *token.Token
 }
 
-func (n *StmtNamespace) Accept(v NodeVisitor) {
+func (n *StmtNamespace) Accept(v Visitor) {
 	v.StmtNamespace(n)
 }
 
@@ -772,7 +772,7 @@ type StmtNop struct {
 	SemiColonTkn *token.Token
 }
 
-func (n *StmtNop) Accept(v NodeVisitor) {
+func (n *StmtNop) Accept(v Visitor) {
 	v.StmtNop(n)
 }
 
@@ -788,7 +788,7 @@ type StmtProperty struct {
 	Expr     Vertex
 }
 
-func (n *StmtProperty) Accept(v NodeVisitor) {
+func (n *StmtProperty) Accept(v Visitor) {
 	v.StmtProperty(n)
 }
 
@@ -806,7 +806,7 @@ type StmtPropertyList struct {
 	SemiColonTkn  *token.Token
 }
 
-func (n *StmtPropertyList) Accept(v NodeVisitor) {
+func (n *StmtPropertyList) Accept(v Visitor) {
 	v.StmtPropertyList(n)
 }
 
@@ -822,7 +822,7 @@ type StmtReturn struct {
 	SemiColonTkn *token.Token
 }
 
-func (n *StmtReturn) Accept(v NodeVisitor) {
+func (n *StmtReturn) Accept(v Visitor) {
 	v.StmtReturn(n)
 }
 
@@ -839,7 +839,7 @@ type StmtStatic struct {
 	SemiColonTkn  *token.Token
 }
 
-func (n *StmtStatic) Accept(v NodeVisitor) {
+func (n *StmtStatic) Accept(v Visitor) {
 	v.StmtStatic(n)
 }
 
@@ -855,7 +855,7 @@ type StmtStaticVar struct {
 	Expr     Vertex
 }
 
-func (n *StmtStaticVar) Accept(v NodeVisitor) {
+func (n *StmtStaticVar) Accept(v Visitor) {
 	v.StmtStaticVar(n)
 }
 
@@ -871,7 +871,7 @@ type StmtStmtList struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *StmtStmtList) Accept(v NodeVisitor) {
+func (n *StmtStmtList) Accept(v Visitor) {
 	v.StmtStmtList(n)
 }
 
@@ -895,7 +895,7 @@ type StmtSwitch struct {
 	SemiColonTkn         *token.Token
 }
 
-func (n *StmtSwitch) Accept(v NodeVisitor) {
+func (n *StmtSwitch) Accept(v Visitor) {
 	v.StmtSwitch(n)
 }
 
@@ -911,7 +911,7 @@ type StmtThrow struct {
 	SemiColonTkn *token.Token
 }
 
-func (n *StmtThrow) Accept(v NodeVisitor) {
+func (n *StmtThrow) Accept(v Visitor) {
 	v.StmtThrow(n)
 }
 
@@ -929,7 +929,7 @@ type StmtTrait struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *StmtTrait) Accept(v NodeVisitor) {
+func (n *StmtTrait) Accept(v Visitor) {
 	v.StmtTrait(n)
 }
 
@@ -949,7 +949,7 @@ type StmtTraitUse struct {
 	SemiColonTkn         *token.Token
 }
 
-func (n *StmtTraitUse) Accept(v NodeVisitor) {
+func (n *StmtTraitUse) Accept(v Visitor) {
 	v.StmtTraitUse(n)
 }
 
@@ -969,7 +969,7 @@ type StmtTraitUseAlias struct {
 	SemiColonTkn   *token.Token
 }
 
-func (n *StmtTraitUseAlias) Accept(v NodeVisitor) {
+func (n *StmtTraitUseAlias) Accept(v Visitor) {
 	v.StmtTraitUseAlias(n)
 }
 
@@ -989,7 +989,7 @@ type StmtTraitUsePrecedence struct {
 	SemiColonTkn   *token.Token
 }
 
-func (n *StmtTraitUsePrecedence) Accept(v NodeVisitor) {
+func (n *StmtTraitUsePrecedence) Accept(v Visitor) {
 	v.StmtTraitUsePrecedence(n)
 }
 
@@ -1008,7 +1008,7 @@ type StmtTry struct {
 	Finally              Vertex
 }
 
-func (n *StmtTry) Accept(v NodeVisitor) {
+func (n *StmtTry) Accept(v Visitor) {
 	v.StmtTry(n)
 }
 
@@ -1027,7 +1027,7 @@ type StmtUnset struct {
 	SemiColonTkn        *token.Token
 }
 
-func (n *StmtUnset) Accept(v NodeVisitor) {
+func (n *StmtUnset) Accept(v Visitor) {
 	v.StmtUnset(n)
 }
 
@@ -1045,7 +1045,7 @@ type StmtUse struct {
 	SemiColonTkn    *token.Token
 }
 
-func (n *StmtUse) Accept(v NodeVisitor) {
+func (n *StmtUse) Accept(v Visitor) {
 	v.StmtUse(n)
 }
 
@@ -1068,7 +1068,7 @@ type StmtGroupUse struct {
 	SemiColonTkn          *token.Token
 }
 
-func (n *StmtGroupUse) Accept(v NodeVisitor) {
+func (n *StmtGroupUse) Accept(v Visitor) {
 	v.StmtGroupUse(n)
 }
 
@@ -1086,7 +1086,7 @@ type StmtUseDeclaration struct {
 	Alias          Vertex
 }
 
-func (n *StmtUseDeclaration) Accept(v NodeVisitor) {
+func (n *StmtUseDeclaration) Accept(v Visitor) {
 	v.StmtUseDeclaration(n)
 }
 
@@ -1107,7 +1107,7 @@ type StmtWhile struct {
 	SemiColonTkn        *token.Token
 }
 
-func (n *StmtWhile) Accept(v NodeVisitor) {
+func (n *StmtWhile) Accept(v Visitor) {
 	v.StmtWhile(n)
 }
 
@@ -1125,7 +1125,7 @@ type ExprArray struct {
 	CloseBracketTkn *token.Token
 }
 
-func (n *ExprArray) Accept(v NodeVisitor) {
+func (n *ExprArray) Accept(v Visitor) {
 	v.ExprArray(n)
 }
 
@@ -1142,7 +1142,7 @@ type ExprArrayDimFetch struct {
 	CloseBracketTkn *token.Token
 }
 
-func (n *ExprArrayDimFetch) Accept(v NodeVisitor) {
+func (n *ExprArrayDimFetch) Accept(v Visitor) {
 	v.ExprArrayDimFetch(n)
 }
 
@@ -1160,7 +1160,7 @@ type ExprArrayItem struct {
 	Val            Vertex
 }
 
-func (n *ExprArrayItem) Accept(v NodeVisitor) {
+func (n *ExprArrayItem) Accept(v Visitor) {
 	v.ExprArrayItem(n)
 }
 
@@ -1184,7 +1184,7 @@ type ExprArrowFunction struct {
 	Expr                Vertex
 }
 
-func (n *ExprArrowFunction) Accept(v NodeVisitor) {
+func (n *ExprArrowFunction) Accept(v Visitor) {
 	v.ExprArrowFunction(n)
 }
 
@@ -1199,7 +1199,7 @@ type ExprBitwiseNot struct {
 	Expr     Vertex
 }
 
-func (n *ExprBitwiseNot) Accept(v NodeVisitor) {
+func (n *ExprBitwiseNot) Accept(v Visitor) {
 	v.ExprBitwiseNot(n)
 }
 
@@ -1214,7 +1214,7 @@ type ExprBooleanNot struct {
 	Expr           Vertex
 }
 
-func (n *ExprBooleanNot) Accept(v NodeVisitor) {
+func (n *ExprBooleanNot) Accept(v Visitor) {
 	v.ExprBooleanNot(n)
 }
 
@@ -1229,7 +1229,7 @@ type ExprBrackets struct {
 	CloseParenthesisTkn *token.Token
 }
 
-func (n *ExprBrackets) Accept(v NodeVisitor) {
+func (n *ExprBrackets) Accept(v Visitor) {
 	v.ExprBrackets(n)
 }
 
@@ -1245,7 +1245,7 @@ type ExprClassConstFetch struct {
 	ConstantName   Vertex
 }
 
-func (n *ExprClassConstFetch) Accept(v NodeVisitor) {
+func (n *ExprClassConstFetch) Accept(v Visitor) {
 	v.ExprClassConstFetch(n)
 }
 
@@ -1260,7 +1260,7 @@ type ExprClone struct {
 	Expr     Vertex
 }
 
-func (n *ExprClone) Accept(v NodeVisitor) {
+func (n *ExprClone) Accept(v Visitor) {
 	v.ExprClone(n)
 }
 
@@ -1290,7 +1290,7 @@ type ExprClosure struct {
 	CloseCurlyBracketTkn   *token.Token
 }
 
-func (n *ExprClosure) Accept(v NodeVisitor) {
+func (n *ExprClosure) Accept(v Visitor) {
 	v.ExprClosure(n)
 }
 
@@ -1305,7 +1305,7 @@ type ExprClosureUse struct {
 	Var          Vertex
 }
 
-func (n *ExprClosureUse) Accept(v NodeVisitor) {
+func (n *ExprClosureUse) Accept(v Visitor) {
 	v.ExprClosureUse(n)
 }
 
@@ -1319,7 +1319,7 @@ type ExprConstFetch struct {
 	Const    Vertex
 }
 
-func (n *ExprConstFetch) Accept(v NodeVisitor) {
+func (n *ExprConstFetch) Accept(v Visitor) {
 	v.ExprConstFetch(n)
 }
 
@@ -1336,7 +1336,7 @@ type ExprEmpty struct {
 	CloseParenthesisTkn *token.Token
 }
 
-func (n *ExprEmpty) Accept(v NodeVisitor) {
+func (n *ExprEmpty) Accept(v Visitor) {
 	v.ExprEmpty(n)
 }
 
@@ -1351,7 +1351,7 @@ type ExprErrorSuppress struct {
 	Expr     Vertex
 }
 
-func (n *ExprErrorSuppress) Accept(v NodeVisitor) {
+func (n *ExprErrorSuppress) Accept(v Visitor) {
 	v.ExprErrorSuppress(n)
 }
 
@@ -1368,7 +1368,7 @@ type ExprEval struct {
 	CloseParenthesisTkn *token.Token
 }
 
-func (n *ExprEval) Accept(v NodeVisitor) {
+func (n *ExprEval) Accept(v Visitor) {
 	v.ExprEval(n)
 }
 
@@ -1385,7 +1385,7 @@ type ExprExit struct {
 	CloseParenthesisTkn *token.Token
 }
 
-func (n *ExprExit) Accept(v NodeVisitor) {
+func (n *ExprExit) Accept(v Visitor) {
 	v.ExprExit(n)
 }
 
@@ -1403,7 +1403,7 @@ type ExprFunctionCall struct {
 	CloseParenthesisTkn *token.Token
 }
 
-func (n *ExprFunctionCall) Accept(v NodeVisitor) {
+func (n *ExprFunctionCall) Accept(v Visitor) {
 	v.ExprFunctionCall(n)
 }
 
@@ -1418,7 +1418,7 @@ type ExprInclude struct {
 	Expr       Vertex
 }
 
-func (n *ExprInclude) Accept(v NodeVisitor) {
+func (n *ExprInclude) Accept(v Visitor) {
 	v.ExprInclude(n)
 }
 
@@ -1433,7 +1433,7 @@ type ExprIncludeOnce struct {
 	Expr           Vertex
 }
 
-func (n *ExprIncludeOnce) Accept(v NodeVisitor) {
+func (n *ExprIncludeOnce) Accept(v Visitor) {
 	v.ExprIncludeOnce(n)
 }
 
@@ -1449,7 +1449,7 @@ type ExprInstanceOf struct {
 	Class         Vertex
 }
 
-func (n *ExprInstanceOf) Accept(v NodeVisitor) {
+func (n *ExprInstanceOf) Accept(v Visitor) {
 	v.ExprInstanceOf(n)
 }
 
@@ -1467,7 +1467,7 @@ type ExprIsset struct {
 	CloseParenthesisTkn *token.Token
 }
 
-func (n *ExprIsset) Accept(v NodeVisitor) {
+func (n *ExprIsset) Accept(v Visitor) {
 	v.ExprIsset(n)
 }
 
@@ -1485,7 +1485,7 @@ type ExprList struct {
 	CloseBracketTkn *token.Token
 }
 
-func (n *ExprList) Accept(v NodeVisitor) {
+func (n *ExprList) Accept(v Visitor) {
 	v.ExprList(n)
 }
 
@@ -1507,7 +1507,7 @@ type ExprMethodCall struct {
 	CloseParenthesisTkn  *token.Token
 }
 
-func (n *ExprMethodCall) Accept(v NodeVisitor) {
+func (n *ExprMethodCall) Accept(v Visitor) {
 	v.ExprMethodCall(n)
 }
 
@@ -1526,7 +1526,7 @@ type ExprNew struct {
 	CloseParenthesisTkn *token.Token
 }
 
-func (n *ExprNew) Accept(v NodeVisitor) {
+func (n *ExprNew) Accept(v Visitor) {
 	v.ExprNew(n)
 }
 
@@ -1541,7 +1541,7 @@ type ExprPostDec struct {
 	DecTkn   *token.Token
 }
 
-func (n *ExprPostDec) Accept(v NodeVisitor) {
+func (n *ExprPostDec) Accept(v Visitor) {
 	v.ExprPostDec(n)
 }
 
@@ -1556,7 +1556,7 @@ type ExprPostInc struct {
 	IncTkn   *token.Token
 }
 
-func (n *ExprPostInc) Accept(v NodeVisitor) {
+func (n *ExprPostInc) Accept(v Visitor) {
 	v.ExprPostInc(n)
 }
 
@@ -1571,7 +1571,7 @@ type ExprPreDec struct {
 	Var      Vertex
 }
 
-func (n *ExprPreDec) Accept(v NodeVisitor) {
+func (n *ExprPreDec) Accept(v Visitor) {
 	v.ExprPreDec(n)
 }
 
@@ -1586,7 +1586,7 @@ type ExprPreInc struct {
 	Var      Vertex
 }
 
-func (n *ExprPreInc) Accept(v NodeVisitor) {
+func (n *ExprPreInc) Accept(v Visitor) {
 	v.ExprPreInc(n)
 }
 
@@ -1601,7 +1601,7 @@ type ExprPrint struct {
 	Expr     Vertex
 }
 
-func (n *ExprPrint) Accept(v NodeVisitor) {
+func (n *ExprPrint) Accept(v Visitor) {
 	v.ExprPrint(n)
 }
 
@@ -1619,7 +1619,7 @@ type ExprPropertyFetch struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *ExprPropertyFetch) Accept(v NodeVisitor) {
+func (n *ExprPropertyFetch) Accept(v Visitor) {
 	v.ExprPropertyFetch(n)
 }
 
@@ -1634,7 +1634,7 @@ type ExprRequire struct {
 	Expr       Vertex
 }
 
-func (n *ExprRequire) Accept(v NodeVisitor) {
+func (n *ExprRequire) Accept(v Visitor) {
 	v.ExprRequire(n)
 }
 
@@ -1649,7 +1649,7 @@ type ExprRequireOnce struct {
 	Expr           Vertex
 }
 
-func (n *ExprRequireOnce) Accept(v NodeVisitor) {
+func (n *ExprRequireOnce) Accept(v Visitor) {
 	v.ExprRequireOnce(n)
 }
 
@@ -1665,7 +1665,7 @@ type ExprShellExec struct {
 	CloseBacktickTkn *token.Token
 }
 
-func (n *ExprShellExec) Accept(v NodeVisitor) {
+func (n *ExprShellExec) Accept(v Visitor) {
 	v.ExprShellExec(n)
 }
 
@@ -1687,7 +1687,7 @@ type ExprStaticCall struct {
 	CloseParenthesisTkn  *token.Token
 }
 
-func (n *ExprStaticCall) Accept(v NodeVisitor) {
+func (n *ExprStaticCall) Accept(v Visitor) {
 	v.ExprStaticCall(n)
 }
 
@@ -1703,7 +1703,7 @@ type ExprStaticPropertyFetch struct {
 	Property       Vertex
 }
 
-func (n *ExprStaticPropertyFetch) Accept(v NodeVisitor) {
+func (n *ExprStaticPropertyFetch) Accept(v Visitor) {
 	v.ExprStaticPropertyFetch(n)
 }
 
@@ -1721,7 +1721,7 @@ type ExprTernary struct {
 	IfFalse     Vertex
 }
 
-func (n *ExprTernary) Accept(v NodeVisitor) {
+func (n *ExprTernary) Accept(v Visitor) {
 	v.ExprTernary(n)
 }
 
@@ -1736,7 +1736,7 @@ type ExprUnaryMinus struct {
 	Expr     Vertex
 }
 
-func (n *ExprUnaryMinus) Accept(v NodeVisitor) {
+func (n *ExprUnaryMinus) Accept(v Visitor) {
 	v.ExprUnaryMinus(n)
 }
 
@@ -1751,7 +1751,7 @@ type ExprUnaryPlus struct {
 	Expr     Vertex
 }
 
-func (n *ExprUnaryPlus) Accept(v NodeVisitor) {
+func (n *ExprUnaryPlus) Accept(v Visitor) {
 	v.ExprUnaryPlus(n)
 }
 
@@ -1768,7 +1768,7 @@ type ExprVariable struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *ExprVariable) Accept(v NodeVisitor) {
+func (n *ExprVariable) Accept(v Visitor) {
 	v.ExprVariable(n)
 }
 
@@ -1785,7 +1785,7 @@ type ExprYield struct {
 	Value          Vertex
 }
 
-func (n *ExprYield) Accept(v NodeVisitor) {
+func (n *ExprYield) Accept(v Visitor) {
 	v.ExprYield(n)
 }
 
@@ -1800,7 +1800,7 @@ type ExprYieldFrom struct {
 	Expr         Vertex
 }
 
-func (n *ExprYieldFrom) Accept(v NodeVisitor) {
+func (n *ExprYieldFrom) Accept(v Visitor) {
 	v.ExprYieldFrom(n)
 }
 
@@ -1815,7 +1815,7 @@ type ExprCastArray struct {
 	Expr     Vertex
 }
 
-func (n *ExprCastArray) Accept(v NodeVisitor) {
+func (n *ExprCastArray) Accept(v Visitor) {
 	v.ExprCastArray(n)
 }
 
@@ -1830,7 +1830,7 @@ type ExprCastBool struct {
 	Expr     Vertex
 }
 
-func (n *ExprCastBool) Accept(v NodeVisitor) {
+func (n *ExprCastBool) Accept(v Visitor) {
 	v.ExprCastBool(n)
 }
 
@@ -1845,7 +1845,7 @@ type ExprCastDouble struct {
 	Expr     Vertex
 }
 
-func (n *ExprCastDouble) Accept(v NodeVisitor) {
+func (n *ExprCastDouble) Accept(v Visitor) {
 	v.ExprCastDouble(n)
 }
 
@@ -1860,7 +1860,7 @@ type ExprCastInt struct {
 	Expr     Vertex
 }
 
-func (n *ExprCastInt) Accept(v NodeVisitor) {
+func (n *ExprCastInt) Accept(v Visitor) {
 	v.ExprCastInt(n)
 }
 
@@ -1875,7 +1875,7 @@ type ExprCastObject struct {
 	Expr     Vertex
 }
 
-func (n *ExprCastObject) Accept(v NodeVisitor) {
+func (n *ExprCastObject) Accept(v Visitor) {
 	v.ExprCastObject(n)
 }
 
@@ -1890,7 +1890,7 @@ type ExprCastString struct {
 	Expr     Vertex
 }
 
-func (n *ExprCastString) Accept(v NodeVisitor) {
+func (n *ExprCastString) Accept(v Visitor) {
 	v.ExprCastString(n)
 }
 
@@ -1905,7 +1905,7 @@ type ExprCastUnset struct {
 	Expr     Vertex
 }
 
-func (n *ExprCastUnset) Accept(v NodeVisitor) {
+func (n *ExprCastUnset) Accept(v Visitor) {
 	v.ExprCastUnset(n)
 }
 
@@ -1921,7 +1921,7 @@ type ExprAssign struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssign) Accept(v NodeVisitor) {
+func (n *ExprAssign) Accept(v Visitor) {
 	v.ExprAssign(n)
 }
 
@@ -1938,7 +1938,7 @@ type ExprAssignReference struct {
 	Expr         Vertex
 }
 
-func (n *ExprAssignReference) Accept(v NodeVisitor) {
+func (n *ExprAssignReference) Accept(v Visitor) {
 	v.ExprAssignReference(n)
 }
 
@@ -1954,7 +1954,7 @@ type ExprAssignBitwiseAnd struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignBitwiseAnd) Accept(v NodeVisitor) {
+func (n *ExprAssignBitwiseAnd) Accept(v Visitor) {
 	v.ExprAssignBitwiseAnd(n)
 }
 
@@ -1970,7 +1970,7 @@ type ExprAssignBitwiseOr struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignBitwiseOr) Accept(v NodeVisitor) {
+func (n *ExprAssignBitwiseOr) Accept(v Visitor) {
 	v.ExprAssignBitwiseOr(n)
 }
 
@@ -1986,7 +1986,7 @@ type ExprAssignBitwiseXor struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignBitwiseXor) Accept(v NodeVisitor) {
+func (n *ExprAssignBitwiseXor) Accept(v Visitor) {
 	v.ExprAssignBitwiseXor(n)
 }
 
@@ -2002,7 +2002,7 @@ type ExprAssignCoalesce struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignCoalesce) Accept(v NodeVisitor) {
+func (n *ExprAssignCoalesce) Accept(v Visitor) {
 	v.ExprAssignCoalesce(n)
 }
 
@@ -2018,7 +2018,7 @@ type ExprAssignConcat struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignConcat) Accept(v NodeVisitor) {
+func (n *ExprAssignConcat) Accept(v Visitor) {
 	v.ExprAssignConcat(n)
 }
 
@@ -2034,7 +2034,7 @@ type ExprAssignDiv struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignDiv) Accept(v NodeVisitor) {
+func (n *ExprAssignDiv) Accept(v Visitor) {
 	v.ExprAssignDiv(n)
 }
 
@@ -2050,7 +2050,7 @@ type ExprAssignMinus struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignMinus) Accept(v NodeVisitor) {
+func (n *ExprAssignMinus) Accept(v Visitor) {
 	v.ExprAssignMinus(n)
 }
 
@@ -2066,7 +2066,7 @@ type ExprAssignMod struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignMod) Accept(v NodeVisitor) {
+func (n *ExprAssignMod) Accept(v Visitor) {
 	v.ExprAssignMod(n)
 }
 
@@ -2082,7 +2082,7 @@ type ExprAssignMul struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignMul) Accept(v NodeVisitor) {
+func (n *ExprAssignMul) Accept(v Visitor) {
 	v.ExprAssignMul(n)
 }
 
@@ -2098,7 +2098,7 @@ type ExprAssignPlus struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignPlus) Accept(v NodeVisitor) {
+func (n *ExprAssignPlus) Accept(v Visitor) {
 	v.ExprAssignPlus(n)
 }
 
@@ -2114,7 +2114,7 @@ type ExprAssignPow struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignPow) Accept(v NodeVisitor) {
+func (n *ExprAssignPow) Accept(v Visitor) {
 	v.ExprAssignPow(n)
 }
 
@@ -2130,7 +2130,7 @@ type ExprAssignShiftLeft struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignShiftLeft) Accept(v NodeVisitor) {
+func (n *ExprAssignShiftLeft) Accept(v Visitor) {
 	v.ExprAssignShiftLeft(n)
 }
 
@@ -2146,7 +2146,7 @@ type ExprAssignShiftRight struct {
 	Expr     Vertex
 }
 
-func (n *ExprAssignShiftRight) Accept(v NodeVisitor) {
+func (n *ExprAssignShiftRight) Accept(v Visitor) {
 	v.ExprAssignShiftRight(n)
 }
 
@@ -2162,7 +2162,7 @@ type ExprBinaryBitwiseAnd struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryBitwiseAnd) Accept(v NodeVisitor) {
+func (n *ExprBinaryBitwiseAnd) Accept(v Visitor) {
 	v.ExprBinaryBitwiseAnd(n)
 }
 
@@ -2178,7 +2178,7 @@ type ExprBinaryBitwiseOr struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryBitwiseOr) Accept(v NodeVisitor) {
+func (n *ExprBinaryBitwiseOr) Accept(v Visitor) {
 	v.ExprBinaryBitwiseOr(n)
 }
 
@@ -2194,7 +2194,7 @@ type ExprBinaryBitwiseXor struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryBitwiseXor) Accept(v NodeVisitor) {
+func (n *ExprBinaryBitwiseXor) Accept(v Visitor) {
 	v.ExprBinaryBitwiseXor(n)
 }
 
@@ -2210,7 +2210,7 @@ type ExprBinaryBooleanAnd struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryBooleanAnd) Accept(v NodeVisitor) {
+func (n *ExprBinaryBooleanAnd) Accept(v Visitor) {
 	v.ExprBinaryBooleanAnd(n)
 }
 
@@ -2226,7 +2226,7 @@ type ExprBinaryBooleanOr struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryBooleanOr) Accept(v NodeVisitor) {
+func (n *ExprBinaryBooleanOr) Accept(v Visitor) {
 	v.ExprBinaryBooleanOr(n)
 }
 
@@ -2242,7 +2242,7 @@ type ExprBinaryCoalesce struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryCoalesce) Accept(v NodeVisitor) {
+func (n *ExprBinaryCoalesce) Accept(v Visitor) {
 	v.ExprBinaryCoalesce(n)
 }
 
@@ -2258,7 +2258,7 @@ type ExprBinaryConcat struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryConcat) Accept(v NodeVisitor) {
+func (n *ExprBinaryConcat) Accept(v Visitor) {
 	v.ExprBinaryConcat(n)
 }
 
@@ -2274,7 +2274,7 @@ type ExprBinaryDiv struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryDiv) Accept(v NodeVisitor) {
+func (n *ExprBinaryDiv) Accept(v Visitor) {
 	v.ExprBinaryDiv(n)
 }
 
@@ -2290,7 +2290,7 @@ type ExprBinaryEqual struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryEqual) Accept(v NodeVisitor) {
+func (n *ExprBinaryEqual) Accept(v Visitor) {
 	v.ExprBinaryEqual(n)
 }
 
@@ -2306,7 +2306,7 @@ type ExprBinaryGreater struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryGreater) Accept(v NodeVisitor) {
+func (n *ExprBinaryGreater) Accept(v Visitor) {
 	v.ExprBinaryGreater(n)
 }
 
@@ -2322,7 +2322,7 @@ type ExprBinaryGreaterOrEqual struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryGreaterOrEqual) Accept(v NodeVisitor) {
+func (n *ExprBinaryGreaterOrEqual) Accept(v Visitor) {
 	v.ExprBinaryGreaterOrEqual(n)
 }
 
@@ -2338,7 +2338,7 @@ type ExprBinaryIdentical struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryIdentical) Accept(v NodeVisitor) {
+func (n *ExprBinaryIdentical) Accept(v Visitor) {
 	v.ExprBinaryIdentical(n)
 }
 
@@ -2354,7 +2354,7 @@ type ExprBinaryLogicalAnd struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryLogicalAnd) Accept(v NodeVisitor) {
+func (n *ExprBinaryLogicalAnd) Accept(v Visitor) {
 	v.ExprBinaryLogicalAnd(n)
 }
 
@@ -2370,7 +2370,7 @@ type ExprBinaryLogicalOr struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryLogicalOr) Accept(v NodeVisitor) {
+func (n *ExprBinaryLogicalOr) Accept(v Visitor) {
 	v.ExprBinaryLogicalOr(n)
 }
 
@@ -2386,7 +2386,7 @@ type ExprBinaryLogicalXor struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryLogicalXor) Accept(v NodeVisitor) {
+func (n *ExprBinaryLogicalXor) Accept(v Visitor) {
 	v.ExprBinaryLogicalXor(n)
 }
 
@@ -2402,7 +2402,7 @@ type ExprBinaryMinus struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryMinus) Accept(v NodeVisitor) {
+func (n *ExprBinaryMinus) Accept(v Visitor) {
 	v.ExprBinaryMinus(n)
 }
 
@@ -2418,7 +2418,7 @@ type ExprBinaryMod struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryMod) Accept(v NodeVisitor) {
+func (n *ExprBinaryMod) Accept(v Visitor) {
 	v.ExprBinaryMod(n)
 }
 
@@ -2434,7 +2434,7 @@ type ExprBinaryMul struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryMul) Accept(v NodeVisitor) {
+func (n *ExprBinaryMul) Accept(v Visitor) {
 	v.ExprBinaryMul(n)
 }
 
@@ -2450,7 +2450,7 @@ type ExprBinaryNotEqual struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryNotEqual) Accept(v NodeVisitor) {
+func (n *ExprBinaryNotEqual) Accept(v Visitor) {
 	v.ExprBinaryNotEqual(n)
 }
 
@@ -2466,7 +2466,7 @@ type ExprBinaryNotIdentical struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryNotIdentical) Accept(v NodeVisitor) {
+func (n *ExprBinaryNotIdentical) Accept(v Visitor) {
 	v.ExprBinaryNotIdentical(n)
 }
 
@@ -2482,7 +2482,7 @@ type ExprBinaryPlus struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryPlus) Accept(v NodeVisitor) {
+func (n *ExprBinaryPlus) Accept(v Visitor) {
 	v.ExprBinaryPlus(n)
 }
 
@@ -2498,7 +2498,7 @@ type ExprBinaryPow struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryPow) Accept(v NodeVisitor) {
+func (n *ExprBinaryPow) Accept(v Visitor) {
 	v.ExprBinaryPow(n)
 }
 
@@ -2514,7 +2514,7 @@ type ExprBinaryShiftLeft struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryShiftLeft) Accept(v NodeVisitor) {
+func (n *ExprBinaryShiftLeft) Accept(v Visitor) {
 	v.ExprBinaryShiftLeft(n)
 }
 
@@ -2530,7 +2530,7 @@ type ExprBinaryShiftRight struct {
 	Right    Vertex
 }
 
-func (n *ExprBinaryShiftRight) Accept(v NodeVisitor) {
+func (n *ExprBinaryShiftRight) Accept(v Visitor) {
 	v.ExprBinaryShiftRight(n)
 }
 
@@ -2546,7 +2546,7 @@ type ExprBinarySmaller struct {
 	Right    Vertex
 }
 
-func (n *ExprBinarySmaller) Accept(v NodeVisitor) {
+func (n *ExprBinarySmaller) Accept(v Visitor) {
 	v.ExprBinarySmaller(n)
 }
 
@@ -2562,7 +2562,7 @@ type ExprBinarySmallerOrEqual struct {
 	Right    Vertex
 }
 
-func (n *ExprBinarySmallerOrEqual) Accept(v NodeVisitor) {
+func (n *ExprBinarySmallerOrEqual) Accept(v Visitor) {
 	v.ExprBinarySmallerOrEqual(n)
 }
 
@@ -2578,7 +2578,7 @@ type ExprBinarySpaceship struct {
 	Right    Vertex
 }
 
-func (n *ExprBinarySpaceship) Accept(v NodeVisitor) {
+func (n *ExprBinarySpaceship) Accept(v Visitor) {
 	v.ExprBinarySpaceship(n)
 }
 
@@ -2592,7 +2592,7 @@ type NameName struct {
 	SeparatorTkns []*token.Token
 }
 
-func (n *NameName) Accept(v NodeVisitor) {
+func (n *NameName) Accept(v Visitor) {
 	v.NameName(n)
 }
 
@@ -2607,7 +2607,7 @@ type NameFullyQualified struct {
 	SeparatorTkns  []*token.Token
 }
 
-func (n *NameFullyQualified) Accept(v NodeVisitor) {
+func (n *NameFullyQualified) Accept(v Visitor) {
 	v.NameFullyQualified(n)
 }
 
@@ -2623,7 +2623,7 @@ type NameRelative struct {
 	SeparatorTkns  []*token.Token
 }
 
-func (n *NameRelative) Accept(v NodeVisitor) {
+func (n *NameRelative) Accept(v Visitor) {
 	v.NameRelative(n)
 }
 
@@ -2637,7 +2637,7 @@ type NameNamePart struct {
 	Value     []byte
 }
 
-func (n *NameNamePart) Accept(v NodeVisitor) {
+func (n *NameNamePart) Accept(v Visitor) {
 	v.NameNamePart(n)
 }
 
@@ -2654,7 +2654,7 @@ type ParserBrackets struct {
 	CloseBracketTkn *token.Token
 }
 
-func (n *ParserBrackets) Accept(v NodeVisitor) {
+func (n *ParserBrackets) Accept(v Visitor) {
 	// do nothing
 }
 
@@ -2668,7 +2668,7 @@ type ParserSeparatedList struct {
 	SeparatorTkns []*token.Token
 }
 
-func (n *ParserSeparatedList) Accept(v NodeVisitor) {
+func (n *ParserSeparatedList) Accept(v Visitor) {
 	// do nothing
 }
 
@@ -2684,7 +2684,7 @@ type TraitAdaptationList struct {
 	CloseCurlyBracketTkn *token.Token
 }
 
-func (n *TraitAdaptationList) Accept(v NodeVisitor) {
+func (n *TraitAdaptationList) Accept(v Visitor) {
 	// do nothing
 }
 
@@ -2701,7 +2701,7 @@ type ArgumentList struct {
 	CloseParenthesisTkn *token.Token
 }
 
-func (n *ArgumentList) Accept(v NodeVisitor) {
+func (n *ArgumentList) Accept(v Visitor) {
 	// do nothing
 }
 
@@ -2715,7 +2715,7 @@ type ReturnType struct {
 	Type     Vertex
 }
 
-func (n *ReturnType) Accept(v NodeVisitor) {
+func (n *ReturnType) Accept(v Visitor) {
 	// do nothing
 }
 
@@ -2731,7 +2731,7 @@ type TraitMethodRef struct {
 	Method         Vertex
 }
 
-func (n *TraitMethodRef) Accept(v NodeVisitor) {
+func (n *TraitMethodRef) Accept(v Visitor) {
 	// do nothing
 }
 

@@ -1,12 +1,13 @@
-package visitor_test
+package formatter_test
 
 import (
 	"bytes"
 	"github.com/z7zmey/php-parser/pkg/token"
+	"github.com/z7zmey/php-parser/pkg/visitor/formatter"
+	"github.com/z7zmey/php-parser/pkg/visitor/printer"
 	"testing"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/ast/visitor"
 )
 
 func TestFormatter_Root(t *testing.T) {
@@ -18,10 +19,10 @@ func TestFormatter_Root(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter()
+	f := formatter.NewFormatter()
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o)
+	p := printer.NewPrinter(o)
 	n.Accept(p)
 
 	expected := `<?php 
@@ -43,10 +44,10 @@ func TestFormatter_Nullable(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `?array`
@@ -68,10 +69,10 @@ func TestFormatter_Parameter(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$var`
@@ -94,10 +95,10 @@ func TestFormatter_Parameter_Ref(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `&$var`
@@ -120,10 +121,10 @@ func TestFormatter_Parameter_Variadic(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `...$var`
@@ -148,10 +149,10 @@ func TestFormatter_Parameter_Type(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `array $var`
@@ -176,10 +177,10 @@ func TestFormatter_Parameter_Default(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$var = 'default'`
@@ -197,10 +198,10 @@ func TestFormatter_Identifier(t *testing.T) {
 		Value: []byte("foo"),
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo`
@@ -222,10 +223,10 @@ func TestFormatter_Argument(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$var`
@@ -248,10 +249,10 @@ func TestFormatter_Argument_Ref(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `&$var`
@@ -274,10 +275,10 @@ func TestFormatter_Argument_Variadic(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `...$var`
@@ -293,10 +294,10 @@ func TestFormatter_StmtBreak(t *testing.T) {
 
 	n := &ast.StmtBreak{}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `break;`
@@ -318,10 +319,10 @@ func TestFormatter_StmtBreak_Expr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `break $var;`
@@ -346,10 +347,10 @@ func TestFormatter_Case(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `case $var:
@@ -391,10 +392,10 @@ func TestFormatter_Catch(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `catch (foo | bar $baz) {
@@ -419,10 +420,10 @@ func TestFormatter_Class(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `class foo {
@@ -452,10 +453,10 @@ func TestFormatter_Class_Modifier(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `final class foo {
@@ -496,10 +497,10 @@ func TestFormatter_Class_Anonymous(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `class foo($a, $b) {
@@ -531,10 +532,10 @@ func TestFormatter_Class_Extends(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `class foo extends bar {
@@ -568,10 +569,10 @@ func TestFormatter_Class_Implements(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `class foo implements bar {
@@ -608,10 +609,10 @@ func TestFormatter_StmtClassConstList(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `const foo = 'foo', bar = 'bar';`
@@ -651,10 +652,10 @@ func TestFormatter_StmtClassConstList_Modifier(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `public const foo = 'foo', bar = 'bar';`
@@ -675,10 +676,10 @@ func TestFormatter_ClassMethod(t *testing.T) {
 		Stmt: &ast.StmtNop{},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function foo() ;`
@@ -708,10 +709,10 @@ func TestFormatter_ClassMethod_Modifier(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `public function foo() {
@@ -739,10 +740,10 @@ func TestFormatter_ClassMethod_Ref(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function &foo() {
@@ -785,10 +786,10 @@ func TestFormatter_ClassMethod_Params(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function foo($a, $b) {
@@ -822,10 +823,10 @@ func TestFormatter_ClassMethod_ReturnType(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function foo(): bar {
@@ -862,10 +863,10 @@ func TestFormatter_StmtConstList(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `const foo = 'foo', bar = 'bar';`
@@ -888,10 +889,10 @@ func TestFormatter_StmtConstant(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo = 'bar'`
@@ -907,10 +908,10 @@ func TestFormatter_StmtContinue(t *testing.T) {
 
 	n := &ast.StmtContinue{}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `continue;`
@@ -932,10 +933,10 @@ func TestFormatter_StmtContinue_Expr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `continue $var;`
@@ -953,10 +954,10 @@ func TestFormatter_StmtDeclare(t *testing.T) {
 		Stmt: &ast.StmtNop{},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `declare() ;`
@@ -996,10 +997,10 @@ func TestFormatter_StmtDeclare_Consts(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `declare(foo = 'foo', bar = 'bar') {
@@ -1021,10 +1022,10 @@ func TestFormatter_StmtDefault(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `default:
@@ -1052,10 +1053,10 @@ func TestFormatter_StmtDo(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `do {
@@ -1082,10 +1083,10 @@ func TestFormatter_StmtEcho(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `echo 'foo', 'bar';`
@@ -1107,10 +1108,10 @@ func TestFormatter_StmtElse(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `else {
@@ -1139,10 +1140,10 @@ func TestFormatter_StmtElseIf(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `elseif($var) {
@@ -1166,10 +1167,10 @@ func TestFormatter_StmtExpression(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$var;`
@@ -1189,10 +1190,10 @@ func TestFormatter_StmtFinally(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `finally {
@@ -1252,10 +1253,10 @@ func TestFormatter_StmtFor(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `for($foo, $bar; $foo, $bar; $foo, $bar) {
@@ -1289,10 +1290,10 @@ func TestFormatter_StmtForeach(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foreach($foo as $val) {
@@ -1327,10 +1328,10 @@ func TestFormatter_StmtForeach_Reference(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foreach($foo as &$val) {
@@ -1369,10 +1370,10 @@ func TestFormatter_StmtForeach_Key(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foreach($foo as $key => $val) {
@@ -1397,10 +1398,10 @@ func TestFormatter_StmtFunction(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function foo() {
@@ -1426,10 +1427,10 @@ func TestFormatter_StmtFunction_Ref(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function &foo() {
@@ -1470,10 +1471,10 @@ func TestFormatter_StmtFunction_Params(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function foo($a, $b) {
@@ -1505,10 +1506,10 @@ func TestFormatter_StmtFunction_ReturnType(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function foo(): bar {
@@ -1539,10 +1540,10 @@ func TestFormatter_StmtGlobal(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `global $a, $b;`
@@ -1562,10 +1563,10 @@ func TestFormatter_StmtGoto(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `goto FOO;`
@@ -1581,10 +1582,10 @@ func TestFormatter_StmtHaltCompiler(t *testing.T) {
 
 	n := &ast.StmtHaltCompiler{}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `__halt_compiler();`
@@ -1611,10 +1612,10 @@ func TestFormatter_StmtIf(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `if ($foo) {
@@ -1669,10 +1670,10 @@ func TestFormatter_StmtIf_ElseIf(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `if ($foo) {
@@ -1712,10 +1713,10 @@ func TestFormatter_StmtIf_Else(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `if ($foo) {
@@ -1759,10 +1760,10 @@ func TestFormatter_StmtInlineHtml(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter()
+	f := formatter.NewFormatter()
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o)
+	p := printer.NewPrinter(o)
 	n.Accept(p)
 
 	expected := `<?php 
@@ -1791,10 +1792,10 @@ func TestFormatter_StmtInterface(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `interface foo {
@@ -1828,10 +1829,10 @@ func TestFormatter_StmtInterface_Extends(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `interface foo extends bar {
@@ -1853,10 +1854,10 @@ func TestFormatter_StmtLabel(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `FOO:`
@@ -1880,10 +1881,10 @@ func TestFormatter_StmtNamespace_Name(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `namespace foo;`
@@ -1903,10 +1904,10 @@ func TestFormatter_StmtNamespace_Stmts(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `namespace {
@@ -1924,10 +1925,10 @@ func TestFormatter_StmtNop(t *testing.T) {
 
 	n := &ast.StmtNop{}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `;`
@@ -1947,10 +1948,10 @@ func TestFormatter_StmtProperty(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo`
@@ -1973,10 +1974,10 @@ func TestFormatter_StmtProperty_Expr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo = $bar`
@@ -2005,10 +2006,10 @@ func TestFormatter_StmtPropertyList(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo, $bar;`
@@ -2045,10 +2046,10 @@ func TestFormatter_StmtPropertyList_Modifiers(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `public static $foo, $bar;`
@@ -2080,10 +2081,10 @@ func TestFormatter_StmtPropertyList_Type(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `array $foo, $bar;`
@@ -2099,10 +2100,10 @@ func TestFormatter_StmtReturn(t *testing.T) {
 
 	n := &ast.StmtReturn{}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `return;`
@@ -2122,10 +2123,10 @@ func TestFormatter_StmtReturn_Expr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `return $foo;`
@@ -2158,10 +2159,10 @@ func TestFormatter_StmtStatic(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `static $a, $b;`
@@ -2183,10 +2184,10 @@ func TestFormatter_StmtStaticVar(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo`
@@ -2211,10 +2212,10 @@ func TestFormatter_StmtStaticVar_Expr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo = $bar`
@@ -2242,10 +2243,10 @@ func TestFormatter_StmtStmtList(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter()
+	f := formatter.NewFormatter()
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o)
+	p := printer.NewPrinter(o)
 	n.Accept(p)
 
 	expected := `<?php 
@@ -2288,10 +2289,10 @@ func TestFormatter_StmtSwitch(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `switch($foo) {
@@ -2318,10 +2319,10 @@ func TestFormatter_StmtThrow(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `throw $foo;`
@@ -2344,10 +2345,10 @@ func TestFormatter_StmtTrait(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `trait foo {
@@ -2382,10 +2383,10 @@ func TestFormatter_StmtTraitUse(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `use foo, bar;`
@@ -2428,10 +2429,10 @@ func TestFormatter_StmtTraitUse_Adaptations(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `use foo, bar {
@@ -2459,10 +2460,10 @@ func TestFormatter_StmtTraitUseAlias(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo as public bar;`
@@ -2495,10 +2496,10 @@ func TestFormatter_StmtTraitUseAlias_Trait(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo::bar as public baz;`
@@ -2521,10 +2522,10 @@ func TestFormatter_StmtTraitUseAlias_Alias(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo as bar;`
@@ -2547,10 +2548,10 @@ func TestFormatter_StmtTraitUseAlias_Modifier(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo as public;`
@@ -2586,10 +2587,10 @@ func TestFormatter_StmtTraitUsePrecedence(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo insteadof bar, baz;`
@@ -2625,10 +2626,10 @@ func TestFormatter_StmtTraitUsePrecedence_Trait(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo::bar insteadof baz;`
@@ -2648,10 +2649,10 @@ func TestFormatter_StmtTry(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `try {
@@ -2713,10 +2714,10 @@ func TestFormatter_StmtTry_Catch(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `try {
@@ -2747,10 +2748,10 @@ func TestFormatter_StmtTry_Finally(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `try {
@@ -2783,10 +2784,10 @@ func TestFormatter_StmtUnset(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `unset($a, $b);`
@@ -2823,10 +2824,10 @@ func TestFormatter_StmtUse(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `use foo, bar;`
@@ -2857,10 +2858,10 @@ func TestFormatter_StmtUse_Type(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `use function foo;`
@@ -2904,10 +2905,10 @@ func TestFormatter_StmtGroupUse(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `use foo\{bar, baz};`
@@ -2954,10 +2955,10 @@ func TestFormatter_StmtGroupUse_Type(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `use function foo\{bar, baz};`
@@ -2981,10 +2982,10 @@ func TestFormatter_StmtUseDeclaration(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo`
@@ -3011,10 +3012,10 @@ func TestFormatter_StmtUseDeclaration_Type(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function foo`
@@ -3041,10 +3042,10 @@ func TestFormatter_StmtUseDeclaration_Alias(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo as bar`
@@ -3067,10 +3068,10 @@ func TestFormatter_StmtWhile(t *testing.T) {
 		Stmt: &ast.StmtNop{},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `while($foo) ;`
@@ -3103,10 +3104,10 @@ func TestFormatter_ExprArray(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `array($a, $b)`
@@ -3133,10 +3134,10 @@ func TestFormatter_ExprArrayDimFetch(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo[$bar]`
@@ -3158,10 +3159,10 @@ func TestFormatter_ExprArrayItem(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo`
@@ -3188,10 +3189,10 @@ func TestFormatter_ExprArrayItem_Key(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo => $bar`
@@ -3214,10 +3215,10 @@ func TestFormatter_ExprArrayItem_Variadic(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `...$foo`
@@ -3239,10 +3240,10 @@ func TestFormatter_ExprArrowFunction(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `fn() => $foo`
@@ -3265,10 +3266,10 @@ func TestFormatter_ExprArrowFunction_Ref(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `fn&() => $foo`
@@ -3306,10 +3307,10 @@ func TestFormatter_ExprArrowFunction_Params(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `fn($a, $b) => $foo`
@@ -3338,10 +3339,10 @@ func TestFormatter_ExprArrowFunction_ReturnType(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `fn(): foo => $bar`
@@ -3363,10 +3364,10 @@ func TestFormatter_ExprBitwiseNot(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `~$foo`
@@ -3388,10 +3389,10 @@ func TestFormatter_ExprBooleanNot(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `!$foo`
@@ -3413,10 +3414,10 @@ func TestFormatter_ExprBrackets(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `($foo)`
@@ -3441,10 +3442,10 @@ func TestFormatter_ExprClassConstFetch(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo::bar`
@@ -3466,10 +3467,10 @@ func TestFormatter_ExprClone(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `clone $foo`
@@ -3489,10 +3490,10 @@ func TestFormatter_ExprClosure(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function() {
@@ -3515,10 +3516,10 @@ func TestFormatter_ExprClosure_Ref(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function&() {
@@ -3556,10 +3557,10 @@ func TestFormatter_ExprClosure_Params(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function($a, $b) {
@@ -3588,10 +3589,10 @@ func TestFormatter_ExprClosure_ReturnType(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function(): foo {
@@ -3622,10 +3623,10 @@ func TestFormatter_ExprClosure_Use(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `function() use($foo) {
@@ -3649,10 +3650,10 @@ func TestFormatter_ExprClosureUse(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$a`
@@ -3675,10 +3676,10 @@ func TestFormatter_ExprClosureUse_Reference(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `&$a`
@@ -3702,10 +3703,10 @@ func TestFormatter_ExprConstFetch(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `FOO`
@@ -3727,10 +3728,10 @@ func TestFormatter_ExprEmpty(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `empty($foo)`
@@ -3752,10 +3753,10 @@ func TestFormatter_ExprErrorSuppress(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `@$foo`
@@ -3777,10 +3778,10 @@ func TestFormatter_ExprEval(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `eval($foo)`
@@ -3796,10 +3797,10 @@ func TestFormatter_ExprExit(t *testing.T) {
 
 	n := &ast.ExprExit{}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `exit`
@@ -3821,10 +3822,10 @@ func TestFormatter_ExprExit_Expr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `exit($foo)`
@@ -3848,10 +3849,10 @@ func TestFormatter_ExprFunctionCall(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo()`
@@ -3884,10 +3885,10 @@ func TestFormatter_ExprFunctionCall_Arguments(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo($bar)`
@@ -3907,10 +3908,10 @@ func TestFormatter_ExprInclude(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `include 'foo.php'`
@@ -3930,10 +3931,10 @@ func TestFormatter_ExprIncludeOnce(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `include_once 'foo.php'`
@@ -3962,10 +3963,10 @@ func TestFormatter_ExprInstanceOf(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo instanceof bar`
@@ -3994,10 +3995,10 @@ func TestFormatter_ExprIsset(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `isset($a, $b)`
@@ -4030,10 +4031,10 @@ func TestFormatter_ExprList(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `list($a, $b)`
@@ -4058,10 +4059,10 @@ func TestFormatter_ExprMethodCall(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo->bar()`
@@ -4086,10 +4087,10 @@ func TestFormatter_ExprMethodCall_Expr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo->{'bar'}()`
@@ -4130,10 +4131,10 @@ func TestFormatter_ExprMethodCall_Arguments(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo->bar($a, $b)`
@@ -4157,10 +4158,10 @@ func TestFormatter_ExprNew(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `new foo`
@@ -4200,10 +4201,10 @@ func TestFormatter_ExprNew_Arguments(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `new foo($a, $b)`
@@ -4225,10 +4226,10 @@ func TestFormatter_ExprPreDec(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `--$foo`
@@ -4250,10 +4251,10 @@ func TestFormatter_ExprPreInc(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `++$foo`
@@ -4275,10 +4276,10 @@ func TestFormatter_ExprPostDec(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo--`
@@ -4300,10 +4301,10 @@ func TestFormatter_ExprPostInc(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo++`
@@ -4325,10 +4326,10 @@ func TestFormatter_ExprPrint(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `print $foo`
@@ -4353,10 +4354,10 @@ func TestFormatter_ExprPropertyFetch(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo->bar`
@@ -4381,10 +4382,10 @@ func TestFormatter_ExprPropertyFetch_Expr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo->{'bar'}`
@@ -4404,10 +4405,10 @@ func TestFormatter_ExprRequire(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `require 'foo.php'`
@@ -4427,10 +4428,10 @@ func TestFormatter_ExprRequireOnce(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `require_once 'foo.php'`
@@ -4446,10 +4447,10 @@ func TestFormatter_ExprShellExec(t *testing.T) {
 
 	n := &ast.ExprShellExec{}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := "``"
@@ -4471,10 +4472,10 @@ func TestFormatter_ExprShellExec_Part(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := "`foo`"
@@ -4504,10 +4505,10 @@ func TestFormatter_ExprShellExec_Parts(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := "`foo $bar baz`"
@@ -4534,10 +4535,10 @@ func TestFormatter_ExprStaticCall(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo::bar()`
@@ -4564,10 +4565,10 @@ func TestFormatter_ExprStaticCall_Expr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo::{'bar'}()`
@@ -4610,10 +4611,10 @@ func TestFormatter_ExprStaticCall_Arguments(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo::bar($a, $b)`
@@ -4642,10 +4643,10 @@ func TestFormatter_ExprStaticPropertyFetch(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo::$bar`
@@ -4677,10 +4678,10 @@ func TestFormatter_ExprTernary(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo ? $bar : $baz`
@@ -4707,10 +4708,10 @@ func TestFormatter_ExprTernary_short(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo ?: $bar`
@@ -4732,10 +4733,10 @@ func TestFormatter_ExprUnaryMinus(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `-$foo`
@@ -4757,10 +4758,10 @@ func TestFormatter_ExprUnaryPlus(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `+$foo`
@@ -4780,10 +4781,10 @@ func TestFormatter_ExprVariable(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo`
@@ -4805,10 +4806,10 @@ func TestFormatter_ExprVariable_Variable(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$$foo`
@@ -4828,10 +4829,10 @@ func TestFormatter_ExprVariable_Expression(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `${'foo'}`
@@ -4853,10 +4854,10 @@ func TestFormatter_ExprYield(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `yield $foo`
@@ -4883,10 +4884,10 @@ func TestFormatter_ExprYield_Key(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `yield $foo => $bar`
@@ -4908,10 +4909,10 @@ func TestFormatter_ExprYieldFrom(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `yield from $foo`
@@ -4938,10 +4939,10 @@ func TestFormatter_ExprAssign(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo = $bar`
@@ -4968,10 +4969,10 @@ func TestFormatter_ExprAssignReference(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo =& $bar`
@@ -4998,10 +4999,10 @@ func TestFormatter_ExprAssignBitwiseAnd(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo &= $bar`
@@ -5028,10 +5029,10 @@ func TestFormatter_ExprAssignBitwiseOr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo |= $bar`
@@ -5058,10 +5059,10 @@ func TestFormatter_ExprAssignBitwiseXor(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo ^= $bar`
@@ -5088,10 +5089,10 @@ func TestFormatter_ExprAssignCoalesce(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo ??= $bar`
@@ -5118,10 +5119,10 @@ func TestFormatter_ExprAssignConcat(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo .= $bar`
@@ -5148,10 +5149,10 @@ func TestFormatter_ExprAssignDiv(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo /= $bar`
@@ -5178,10 +5179,10 @@ func TestFormatter_ExprAssignMinus(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo -= $bar`
@@ -5208,10 +5209,10 @@ func TestFormatter_ExprAssignMod(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo %= $bar`
@@ -5238,10 +5239,10 @@ func TestFormatter_ExprAssignMul(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo *= $bar`
@@ -5268,10 +5269,10 @@ func TestFormatter_ExprAssignPlus(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo += $bar`
@@ -5298,10 +5299,10 @@ func TestFormatter_ExprAssignPow(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo **= $bar`
@@ -5328,10 +5329,10 @@ func TestFormatter_ExprAssignShiftLeft(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo <<= $bar`
@@ -5358,10 +5359,10 @@ func TestFormatter_ExprAssignShiftRight(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo >>= $bar`
@@ -5388,10 +5389,10 @@ func TestFormatter_ExprBinaryBitwiseAnd(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo & $bar`
@@ -5418,10 +5419,10 @@ func TestFormatter_ExprBinaryBitwiseOr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo | $bar`
@@ -5448,10 +5449,10 @@ func TestFormatter_ExprBinaryBitwiseXor(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo ^ $bar`
@@ -5478,10 +5479,10 @@ func TestFormatter_ExprBinaryBooleanAnd(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo && $bar`
@@ -5508,10 +5509,10 @@ func TestFormatter_ExprBinaryBooleanOr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo || $bar`
@@ -5538,10 +5539,10 @@ func TestFormatter_ExprBinaryCoalesce(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo ?? $bar`
@@ -5568,10 +5569,10 @@ func TestFormatter_ExprBinaryConcat(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo . $bar`
@@ -5598,10 +5599,10 @@ func TestFormatter_ExprBinaryDiv(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo / $bar`
@@ -5628,10 +5629,10 @@ func TestFormatter_ExprBinaryEqual(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo == $bar`
@@ -5658,10 +5659,10 @@ func TestFormatter_ExprBinaryGreater(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo > $bar`
@@ -5688,10 +5689,10 @@ func TestFormatter_ExprBinaryGreaterOrEqual(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo >= $bar`
@@ -5718,10 +5719,10 @@ func TestFormatter_ExprBinaryIdentical(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo === $bar`
@@ -5748,10 +5749,10 @@ func TestFormatter_ExprBinaryLogicalAnd(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo and $bar`
@@ -5778,10 +5779,10 @@ func TestFormatter_ExprBinaryLogicalOr(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo or $bar`
@@ -5808,10 +5809,10 @@ func TestFormatter_ExprBinaryLogicalXor(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo xor $bar`
@@ -5838,10 +5839,10 @@ func TestFormatter_ExprBinaryMinus(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo - $bar`
@@ -5868,10 +5869,10 @@ func TestFormatter_ExprBinaryMod(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo % $bar`
@@ -5898,10 +5899,10 @@ func TestFormatter_ExprBinaryMul(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo * $bar`
@@ -5928,10 +5929,10 @@ func TestFormatter_ExprBinaryNotEqual(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo != $bar`
@@ -5958,10 +5959,10 @@ func TestFormatter_ExprBinaryNotIdentical(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo !== $bar`
@@ -5988,10 +5989,10 @@ func TestFormatter_ExprBinaryPlus(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo + $bar`
@@ -6018,10 +6019,10 @@ func TestFormatter_ExprBinaryPow(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo ** $bar`
@@ -6048,10 +6049,10 @@ func TestFormatter_ExprBinaryShiftLeft(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo << $bar`
@@ -6078,10 +6079,10 @@ func TestFormatter_ExprBinaryShiftRight(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo >> $bar`
@@ -6108,10 +6109,10 @@ func TestFormatter_ExprBinarySmaller(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo < $bar`
@@ -6138,10 +6139,10 @@ func TestFormatter_ExprBinarySmallerOrEqual(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo <= $bar`
@@ -6168,10 +6169,10 @@ func TestFormatter_ExprBinarySpaceship(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `$foo <=> $bar`
@@ -6193,10 +6194,10 @@ func TestFormatter_ExprCastArray(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `(array)$foo`
@@ -6218,10 +6219,10 @@ func TestFormatter_ExprCastBool(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `(bool)$foo`
@@ -6243,10 +6244,10 @@ func TestFormatter_ExprCastDouble(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `(float)$foo`
@@ -6268,10 +6269,10 @@ func TestFormatter_ExprCastInt(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `(int)$foo`
@@ -6293,10 +6294,10 @@ func TestFormatter_ExprCastObject(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `(object)$foo`
@@ -6318,10 +6319,10 @@ func TestFormatter_ExprCastString(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `(string)$foo`
@@ -6343,10 +6344,10 @@ func TestFormatter_ExprCastUnset(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `(unset)$foo`
@@ -6364,10 +6365,10 @@ func TestFormatter_ScalarDnumber(t *testing.T) {
 		Value: []byte("1234"),
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `1234`
@@ -6383,10 +6384,10 @@ func TestFormatter_ScalarEncapsed(t *testing.T) {
 
 	n := &ast.ScalarEncapsed{}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `""`
@@ -6408,10 +6409,10 @@ func TestFormatter_ScalarEncapsed_Part(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `"foo"`
@@ -6441,10 +6442,10 @@ func TestFormatter_ScalarEncapsed_Parts(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `"foo $bar baz"`
@@ -6462,10 +6463,10 @@ func TestFormatter_ScalarEncapsedStringPart(t *testing.T) {
 		Value: []byte("foo"),
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo`
@@ -6485,10 +6486,10 @@ func TestFormatter_ScalarEncapsedStringVar(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `${foo}`
@@ -6511,10 +6512,10 @@ func TestFormatter_ScalarEncapsedStringVar_Dim(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `${foo['bar']}`
@@ -6536,10 +6537,10 @@ func TestFormatter_ScalarEncapsedStringBrackets(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `{$foo}`
@@ -6555,10 +6556,10 @@ func TestFormatter_ScalarHeredoc(t *testing.T) {
 
 	n := &ast.ScalarHeredoc{}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `<<<EOT
@@ -6581,10 +6582,10 @@ func TestFormatter_ScalarHeredoc_Part(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `<<<EOT
@@ -6616,10 +6617,10 @@ func TestFormatter_ScalarHeredoc_Parts(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `<<<EOT
@@ -6639,10 +6640,10 @@ func TestFormatter_ScalarLnumber(t *testing.T) {
 		Value: []byte("1234"),
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `1234`
@@ -6660,10 +6661,10 @@ func TestFormatter_ScalarMagicConstant(t *testing.T) {
 		Value: []byte("__DIR__"),
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `__DIR__`
@@ -6681,10 +6682,10 @@ func TestFormatter_ScalarString(t *testing.T) {
 		Value: []byte("'foo'"),
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `'foo'`
@@ -6709,10 +6710,10 @@ func TestFormatter_NameName(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo\bar`
@@ -6737,10 +6738,10 @@ func TestFormatter_NameFullyQualified(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `\foo\bar`
@@ -6765,10 +6766,10 @@ func TestFormatter_NameRelative(t *testing.T) {
 		},
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `namespace\foo\bar`
@@ -6786,10 +6787,10 @@ func TestFormatter_NameNamePart(t *testing.T) {
 		Value: []byte("foo"),
 	}
 
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	f := formatter.NewFormatter().WithState(formatter.FormatterStatePHP).WithIndent(1)
 	n.Accept(f)
 
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
 	n.Accept(p)
 
 	expected := `foo`

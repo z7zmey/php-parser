@@ -1,13 +1,13 @@
-package visitor_test
+package nsresolver_test
 
 import (
+	"github.com/z7zmey/php-parser/pkg/visitor/nsresolver"
+	"github.com/z7zmey/php-parser/pkg/visitor/traverser"
 	"testing"
 
 	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/ast/traverser"
-	"github.com/z7zmey/php-parser/pkg/ast/visitor"
 )
 
 func TestResolveStaticCall(t *testing.T) {
@@ -34,9 +34,8 @@ func TestResolveStaticCall(t *testing.T) {
 		nameBC: "A\\B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -65,9 +64,8 @@ func TestResolveStaticPropertyFetch(t *testing.T) {
 		nameBC: "A\\B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -96,9 +94,8 @@ func TestResolveClassConstFetch(t *testing.T) {
 		nameBC: "A\\B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -126,9 +123,8 @@ func TestResolveNew(t *testing.T) {
 		nameBC: "A\\B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -157,9 +153,8 @@ func TestResolveInstanceOf(t *testing.T) {
 		nameBC: "A\\B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -205,9 +200,8 @@ func TestResolveInstanceCatch(t *testing.T) {
 		nameF:  "D\\E",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -236,9 +230,8 @@ func TestResolveFunctionCall(t *testing.T) {
 		nameB: "A\\B",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -267,9 +260,8 @@ func TestResolveConstFetch(t *testing.T) {
 		nameB: "A\\B",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -323,9 +315,8 @@ func TestResolveGroupUse(t *testing.T) {
 		nameE: "B\\D\\E",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -384,9 +375,8 @@ func TestResolveTraitUse(t *testing.T) {
 		relativeNameBC:       "B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -415,9 +405,8 @@ func TestResolveClassName(t *testing.T) {
 		nameBC: "B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -446,9 +435,8 @@ func TestResolveInterfaceName(t *testing.T) {
 		nameBC:        "B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -469,9 +457,8 @@ func TestResolveTraitName(t *testing.T) {
 		traitNode: "A",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -504,9 +491,8 @@ func TestResolveFunctionName(t *testing.T) {
 		nameBC:       "B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -534,9 +520,8 @@ func TestResolveMethodName(t *testing.T) {
 		nameBC: "B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(methodNode)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(methodNode)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -561,9 +546,8 @@ func TestResolveClosureName(t *testing.T) {
 		nameBC: "B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(closureNode)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(closureNode)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -599,9 +583,8 @@ func TestResolveConstantsName(t *testing.T) {
 		constantC: "A\\B\\C",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -673,9 +656,8 @@ func TestResolveNamespaces(t *testing.T) {
 		nameCF:         "A\\C\\F",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -692,9 +674,8 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 
 	expected := map[ast.Vertex]string{}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -749,9 +730,8 @@ func TestDoNotResolveReservedConstants(t *testing.T) {
 		constantNull:  "null",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -872,9 +852,8 @@ func TestDoNotResolveReservedNames(t *testing.T) {
 		nameObject:   "object",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -943,9 +922,8 @@ func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 		nameParent: "parent",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stxTree)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stxTree)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
@@ -995,9 +973,8 @@ func TestResolvePropertyTypeName(t *testing.T) {
 		classNode:          "Foo\\Bar",
 	}
 
-	nsResolver := visitor.NewNamespaceResolver()
-	dfsTraverser := traverser.NewDFS(nsResolver)
-	dfsTraverser.Traverse(stmts)
+	nsResolver := nsresolver.NewNamespaceResolver()
+	traverser.NewTraverser(nsResolver).Traverse(stmts)
 
 	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }

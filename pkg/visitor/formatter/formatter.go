@@ -1,4 +1,4 @@
-package visitor
+package formatter
 
 import (
 	"bytes"

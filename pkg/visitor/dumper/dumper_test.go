@@ -1,19 +1,19 @@
-package visitor_test
+package dumper_test
 
 import (
 	"bytes"
 	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
+	"github.com/z7zmey/php-parser/pkg/visitor/dumper"
 	"testing"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/ast/visitor"
 )
 
 func TestDumper_root(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := visitor.NewDumper(o).WithTokens().WithPositions()
+	p := dumper.NewDumper(o).WithTokens().WithPositions()
 	n := &ast.Root{
 		Position: &position.Position{
 			StartLine: 1,
