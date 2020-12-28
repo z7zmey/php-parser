@@ -2132,11 +2132,13 @@ trait_precedence:
         absolute_trait_method_reference T_INSTEADOF name_list
             {
                 $$ = &ast.StmtTraitUsePrecedence{
-                    Position: yylex.(*Parser).builder.NewNodeNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
-                    Ref:           $1,
-                    InsteadofTkn:  $2,
-                    Insteadof:     $3.(*ast.ParserSeparatedList).Items,
-                    SeparatorTkns: $3.(*ast.ParserSeparatedList).SeparatorTkns,
+                    Position:       yylex.(*Parser).builder.NewNodeNodeListPosition($1, $3.(*ast.ParserSeparatedList).Items),
+                    Trait:          $1.(*ast.TraitMethodRef).Trait,
+                    DoubleColonTkn: $1.(*ast.TraitMethodRef).DoubleColonTkn,
+                    Method:         $1.(*ast.TraitMethodRef).Method,
+                    InsteadofTkn:   $2,
+                    Insteadof:      $3.(*ast.ParserSeparatedList).Items,
+                    SeparatorTkns:  $3.(*ast.ParserSeparatedList).SeparatorTkns,
                 }
             }
 ;
@@ -2145,9 +2147,11 @@ trait_alias:
         trait_method_reference T_AS T_STRING
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
-                    Ref:   $1,
-                    AsTkn: $2,
+                    Position:       yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
+                    Trait:          $1.(*ast.TraitMethodRef).Trait,
+                    DoubleColonTkn: $1.(*ast.TraitMethodRef).DoubleColonTkn,
+                    Method:         $1.(*ast.TraitMethodRef).Method,
+                    AsTkn:          $2,
                     Alias: &ast.Identifier{
                         Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
@@ -2158,9 +2162,11 @@ trait_alias:
     |   trait_method_reference T_AS reserved_non_modifiers
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
-                    Ref:   $1,
-                    AsTkn: $2,
+                    Position:       yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
+                    Trait:          $1.(*ast.TraitMethodRef).Trait,
+                    DoubleColonTkn: $1.(*ast.TraitMethodRef).DoubleColonTkn,
+                    Method:         $1.(*ast.TraitMethodRef).Method,
+                    AsTkn:          $2,
                     Alias: &ast.Identifier{
                         Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
@@ -2171,10 +2177,12 @@ trait_alias:
     |   trait_method_reference T_AS member_modifier identifier
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $4),
-                    Ref:      $1,
-                    AsTkn:    $2,
-                    Modifier: $3,
+                    Position:       yylex.(*Parser).builder.NewNodeTokenPosition($1, $4),
+                    Trait:          $1.(*ast.TraitMethodRef).Trait,
+                    DoubleColonTkn: $1.(*ast.TraitMethodRef).DoubleColonTkn,
+                    Method:         $1.(*ast.TraitMethodRef).Method,
+                    AsTkn:          $2,
+                    Modifier:       $3,
                     Alias: &ast.Identifier{
                         Position: yylex.(*Parser).builder.NewTokenPosition($4),
                         IdentifierTkn: $4,
@@ -2185,10 +2193,12 @@ trait_alias:
     |   trait_method_reference T_AS member_modifier
             {
                 $$ = &ast.StmtTraitUseAlias{
-                    Position: yylex.(*Parser).builder.NewNodesPosition($1, $3),
-                    Ref:      $1,
-                    AsTkn:    $2,
-                    Modifier: $3,
+                    Position:       yylex.(*Parser).builder.NewNodesPosition($1, $3),
+                    Trait:          $1.(*ast.TraitMethodRef).Trait,
+                    DoubleColonTkn: $1.(*ast.TraitMethodRef).DoubleColonTkn,
+                    Method:         $1.(*ast.TraitMethodRef).Method,
+                    AsTkn:          $2,
+                    Modifier:       $3,
                 }
             }
 ;
@@ -2196,7 +2206,7 @@ trait_alias:
 trait_method_reference:
         identifier
             {
-                $$ = &ast.StmtTraitMethodRef{
+                $$ = &ast.TraitMethodRef{
                     Position: yylex.(*Parser).builder.NewTokenPosition($1),
                     Method: &ast.Identifier{
                         Position: yylex.(*Parser).builder.NewTokenPosition($1),
@@ -2214,7 +2224,7 @@ trait_method_reference:
 absolute_trait_method_reference:
         name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                $$ = &ast.StmtTraitMethodRef{
+                $$ = &ast.TraitMethodRef{
                     Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
                     Trait:          $1,
                     DoubleColonTkn: $2,

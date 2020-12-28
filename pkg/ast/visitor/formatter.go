@@ -858,15 +858,6 @@ func (f *formatter) StmtTrait(n *ast.StmtTrait) {
 	n.CloseCurlyBracketTkn = f.newToken('}', []byte("}"))
 }
 
-func (f *formatter) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
-	if n.Trait != nil {
-		n.Trait.Accept(f)
-		n.DoubleColonTkn = f.newToken(token.T_PAAMAYIM_NEKUDOTAYIM, []byte("::"))
-	}
-
-	n.Method.Accept(f)
-}
-
 func (f *formatter) StmtTraitUse(n *ast.StmtTraitUse) {
 	n.UseTkn = f.newToken(token.T_USE, []byte("use"))
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
@@ -897,7 +888,12 @@ func (f *formatter) StmtTraitUse(n *ast.StmtTraitUse) {
 }
 
 func (f *formatter) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {
-	n.Ref.Accept(f)
+	if n.Trait != nil {
+		n.Trait.Accept(f)
+		n.DoubleColonTkn = f.newToken(token.T_PAAMAYIM_NEKUDOTAYIM, []byte("::"))
+	}
+
+	n.Method.Accept(f)
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
 	n.AsTkn = f.newToken(token.T_AS, []byte("as"))
 
@@ -915,7 +911,12 @@ func (f *formatter) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {
 }
 
 func (f *formatter) StmtTraitUsePrecedence(n *ast.StmtTraitUsePrecedence) {
-	n.Ref.Accept(f)
+	if n.Trait != nil {
+		n.Trait.Accept(f)
+		n.DoubleColonTkn = f.newToken(token.T_PAAMAYIM_NEKUDOTAYIM, []byte("::"))
+	}
+
+	n.Method.Accept(f)
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))
 	n.InsteadofTkn = f.newToken(token.T_INSTEADOF, []byte("insteadof"))
 	f.addFreeFloating(token.T_WHITESPACE, []byte(" "))

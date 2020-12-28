@@ -937,22 +937,6 @@ func (n *StmtTrait) GetPosition() *position.Position {
 	return n.Position
 }
 
-// StmtTraitMethodRef node
-type StmtTraitMethodRef struct {
-	Position       *position.Position
-	Trait          Vertex
-	DoubleColonTkn *token.Token
-	Method         Vertex
-}
-
-func (n *StmtTraitMethodRef) Accept(v NodeVisitor) {
-	v.StmtTraitMethodRef(n)
-}
-
-func (n *StmtTraitMethodRef) GetPosition() *position.Position {
-	return n.Position
-}
-
 // StmtTraitUse node
 type StmtTraitUse struct {
 	Position             *position.Position
@@ -975,12 +959,14 @@ func (n *StmtTraitUse) GetPosition() *position.Position {
 
 // StmtTraitUseAlias node
 type StmtTraitUseAlias struct {
-	Position     *position.Position
-	Ref          Vertex
-	AsTkn        *token.Token
-	Modifier     Vertex
-	Alias        Vertex
-	SemiColonTkn *token.Token
+	Position       *position.Position
+	Trait          Vertex
+	DoubleColonTkn *token.Token
+	Method         Vertex
+	AsTkn          *token.Token
+	Modifier       Vertex
+	Alias          Vertex
+	SemiColonTkn   *token.Token
 }
 
 func (n *StmtTraitUseAlias) Accept(v NodeVisitor) {
@@ -993,12 +979,14 @@ func (n *StmtTraitUseAlias) GetPosition() *position.Position {
 
 // StmtTraitUsePrecedence node
 type StmtTraitUsePrecedence struct {
-	Position      *position.Position
-	Ref           Vertex
-	InsteadofTkn  *token.Token
-	Insteadof     []Vertex
-	SeparatorTkns []*token.Token
-	SemiColonTkn  *token.Token
+	Position       *position.Position
+	Trait          Vertex
+	DoubleColonTkn *token.Token
+	Method         Vertex
+	InsteadofTkn   *token.Token
+	Insteadof      []Vertex
+	SeparatorTkns  []*token.Token
+	SemiColonTkn   *token.Token
 }
 
 func (n *StmtTraitUsePrecedence) Accept(v NodeVisitor) {
@@ -2732,5 +2720,21 @@ func (n *ReturnType) Accept(v NodeVisitor) {
 }
 
 func (n *ReturnType) GetPosition() *position.Position {
+	return n.Position
+}
+
+// TraitMethodRef node
+type TraitMethodRef struct {
+	Position       *position.Position
+	Trait          Vertex
+	DoubleColonTkn *token.Token
+	Method         Vertex
+}
+
+func (n *TraitMethodRef) Accept(v NodeVisitor) {
+	// do nothing
+}
+
+func (n *TraitMethodRef) GetPosition() *position.Position {
 	return n.Position
 }

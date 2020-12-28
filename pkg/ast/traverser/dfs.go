@@ -776,23 +776,6 @@ func (t *DFS) Traverse(n ast.Vertex) {
 			}
 			t.visitor.Leave("Stmts", false)
 		}
-	case *ast.StmtTraitMethodRef:
-		if nn == nil {
-			return
-		}
-		if !t.visitor.EnterNode(nn) {
-			return
-		}
-		if nn.Trait != nil {
-			t.visitor.Enter("Trait", true)
-			t.Traverse(nn.Trait)
-			t.visitor.Leave("Trait", true)
-		}
-		if nn.Method != nil {
-			t.visitor.Enter("Method", true)
-			t.Traverse(nn.Method)
-			t.visitor.Leave("Method", true)
-		}
 	case *ast.StmtTraitUse:
 		if nn == nil {
 			return
@@ -821,10 +804,15 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
-		if nn.Ref != nil {
-			t.visitor.Enter("Ref", true)
-			t.Traverse(nn.Ref)
-			t.visitor.Leave("Ref", true)
+		if nn.Trait != nil {
+			t.visitor.Enter("Trait", true)
+			t.Traverse(nn.Trait)
+			t.visitor.Leave("Trait", true)
+		}
+		if nn.Method != nil {
+			t.visitor.Enter("Method", true)
+			t.Traverse(nn.Method)
+			t.visitor.Leave("Method", true)
 		}
 		if nn.Modifier != nil {
 			t.visitor.Enter("Modifier", true)
@@ -843,10 +831,15 @@ func (t *DFS) Traverse(n ast.Vertex) {
 		if !t.visitor.EnterNode(nn) {
 			return
 		}
-		if nn.Ref != nil {
-			t.visitor.Enter("Ref", true)
-			t.Traverse(nn.Ref)
-			t.visitor.Leave("Ref", true)
+		if nn.Trait != nil {
+			t.visitor.Enter("Trait", true)
+			t.Traverse(nn.Trait)
+			t.visitor.Leave("Trait", true)
+		}
+		if nn.Method != nil {
+			t.visitor.Enter("Method", true)
+			t.Traverse(nn.Method)
+			t.visitor.Leave("Method", true)
 		}
 		if nn.Insteadof != nil {
 			t.visitor.Enter("Insteadof", false)

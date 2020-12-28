@@ -26000,44 +26000,36 @@ func TestStmtTraitUse_Modifier(t *testing.T) {
 									StartPos:  30,
 									EndPos:    43,
 								},
-								Ref: &ast.StmtTraitMethodRef{
+								Method: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  30,
 										EndPos:    33,
 									},
-									Method: &ast.Identifier{
+									IdentifierTkn: &token.Token{
+										ID:    token.T_STRING,
+										Value: []byte("one"),
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
 											StartPos:  30,
 											EndPos:    33,
 										},
-										IdentifierTkn: &token.Token{
-											ID:    token.T_STRING,
-											Value: []byte("one"),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  30,
-												EndPos:    33,
-											},
-											FreeFloating: []*token.Token{
-												{
-													ID:    token.T_WHITESPACE,
-													Value: []byte(" "),
-													Position: &position.Position{
-														StartLine: 1,
-														EndLine:   1,
-														StartPos:  29,
-														EndPos:    30,
-													},
+										FreeFloating: []*token.Token{
+											{
+												ID:    token.T_WHITESPACE,
+												Value: []byte(" "),
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  29,
+													EndPos:    30,
 												},
 											},
 										},
-										Value: []byte("one"),
 									},
+									Value: []byte("one"),
 								},
 								AsTkn: &token.Token{
 									ID:    token.T_AS,
@@ -26421,44 +26413,36 @@ func TestStmtTraitUse_AliasModifier(t *testing.T) {
 									StartPos:  30,
 									EndPos:    47,
 								},
-								Ref: &ast.StmtTraitMethodRef{
+								Method: &ast.Identifier{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  30,
 										EndPos:    33,
 									},
-									Method: &ast.Identifier{
+									IdentifierTkn: &token.Token{
+										ID:    token.T_STRING,
+										Value: []byte("one"),
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
 											StartPos:  30,
 											EndPos:    33,
 										},
-										IdentifierTkn: &token.Token{
-											ID:    token.T_STRING,
-											Value: []byte("one"),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  30,
-												EndPos:    33,
-											},
-											FreeFloating: []*token.Token{
-												{
-													ID:    token.T_WHITESPACE,
-													Value: []byte(" "),
-													Position: &position.Position{
-														StartLine: 1,
-														EndLine:   1,
-														StartPos:  29,
-														EndPos:    30,
-													},
+										FreeFloating: []*token.Token{
+											{
+												ID:    token.T_WHITESPACE,
+												Value: []byte(" "),
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  29,
+													EndPos:    30,
 												},
 											},
 										},
-										Value: []byte("one"),
 									},
+									Value: []byte("one"),
 								},
 								AsTkn: &token.Token{
 									ID:    token.T_AS,
@@ -26873,83 +26857,75 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 									StartPos:  30,
 									EndPos:    58,
 								},
-								Ref: &ast.StmtTraitMethodRef{
+								Trait: &ast.NameName{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  30,
-										EndPos:    38,
+										EndPos:    33,
 									},
-									Trait: &ast.NameName{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  30,
-											EndPos:    33,
-										},
-										Parts: []ast.Vertex{
-											&ast.NameNamePart{
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  30,
+												EndPos:    33,
+											},
+											StringTkn: &token.Token{
+												ID:    token.T_STRING,
+												Value: []byte("Bar"),
 												Position: &position.Position{
 													StartLine: 1,
 													EndLine:   1,
 													StartPos:  30,
 													EndPos:    33,
 												},
-												StringTkn: &token.Token{
-													ID:    token.T_STRING,
-													Value: []byte("Bar"),
-													Position: &position.Position{
-														StartLine: 1,
-														EndLine:   1,
-														StartPos:  30,
-														EndPos:    33,
-													},
-													FreeFloating: []*token.Token{
-														{
-															ID:    token.T_WHITESPACE,
-															Value: []byte(" "),
-															Position: &position.Position{
-																StartLine: 1,
-																EndLine:   1,
-																StartPos:  29,
-																EndPos:    30,
-															},
+												FreeFloating: []*token.Token{
+													{
+														ID:    token.T_WHITESPACE,
+														Value: []byte(" "),
+														Position: &position.Position{
+															StartLine: 1,
+															EndLine:   1,
+															StartPos:  29,
+															EndPos:    30,
 														},
 													},
 												},
-												Value: []byte("Bar"),
 											},
+											Value: []byte("Bar"),
 										},
 									},
-									DoubleColonTkn: &token.Token{
-										ID:    token.T_PAAMAYIM_NEKUDOTAYIM,
-										Value: []byte("::"),
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  33,
-											EndPos:    35,
-										},
+								},
+								DoubleColonTkn: &token.Token{
+									ID:    token.T_PAAMAYIM_NEKUDOTAYIM,
+									Value: []byte("::"),
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  33,
+										EndPos:    35,
 									},
-									Method: &ast.Identifier{
+								},
+								Method: &ast.Identifier{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  35,
+										EndPos:    38,
+									},
+									IdentifierTkn: &token.Token{
+										ID:    token.T_STRING,
+										Value: []byte("one"),
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
 											StartPos:  35,
 											EndPos:    38,
 										},
-										IdentifierTkn: &token.Token{
-											ID:    token.T_STRING,
-											Value: []byte("one"),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  35,
-												EndPos:    38,
-											},
-										},
-										Value: []byte("one"),
 									},
+									Value: []byte("one"),
 								},
 								InsteadofTkn: &token.Token{
 									ID:    token.T_INSTEADOF,
@@ -27087,83 +27063,75 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 									StartPos:  60,
 									EndPos:    75,
 								},
-								Ref: &ast.StmtTraitMethodRef{
+								Trait: &ast.NameName{
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
 										StartPos:  60,
-										EndPos:    68,
+										EndPos:    63,
 									},
-									Trait: &ast.NameName{
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  60,
-											EndPos:    63,
-										},
-										Parts: []ast.Vertex{
-											&ast.NameNamePart{
+									Parts: []ast.Vertex{
+										&ast.NameNamePart{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  60,
+												EndPos:    63,
+											},
+											StringTkn: &token.Token{
+												ID:    token.T_STRING,
+												Value: []byte("Baz"),
 												Position: &position.Position{
 													StartLine: 1,
 													EndLine:   1,
 													StartPos:  60,
 													EndPos:    63,
 												},
-												StringTkn: &token.Token{
-													ID:    token.T_STRING,
-													Value: []byte("Baz"),
-													Position: &position.Position{
-														StartLine: 1,
-														EndLine:   1,
-														StartPos:  60,
-														EndPos:    63,
-													},
-													FreeFloating: []*token.Token{
-														{
-															ID:    token.T_WHITESPACE,
-															Value: []byte(" "),
-															Position: &position.Position{
-																StartLine: 1,
-																EndLine:   1,
-																StartPos:  59,
-																EndPos:    60,
-															},
+												FreeFloating: []*token.Token{
+													{
+														ID:    token.T_WHITESPACE,
+														Value: []byte(" "),
+														Position: &position.Position{
+															StartLine: 1,
+															EndLine:   1,
+															StartPos:  59,
+															EndPos:    60,
 														},
 													},
 												},
-												Value: []byte("Baz"),
 											},
+											Value: []byte("Baz"),
 										},
 									},
-									DoubleColonTkn: &token.Token{
-										ID:    token.T_PAAMAYIM_NEKUDOTAYIM,
-										Value: []byte("::"),
-										Position: &position.Position{
-											StartLine: 1,
-											EndLine:   1,
-											StartPos:  63,
-											EndPos:    65,
-										},
+								},
+								DoubleColonTkn: &token.Token{
+									ID:    token.T_PAAMAYIM_NEKUDOTAYIM,
+									Value: []byte("::"),
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  63,
+										EndPos:    65,
 									},
-									Method: &ast.Identifier{
+								},
+								Method: &ast.Identifier{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  65,
+										EndPos:    68,
+									},
+									IdentifierTkn: &token.Token{
+										ID:    token.T_STRING,
+										Value: []byte("one"),
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
 											StartPos:  65,
 											EndPos:    68,
 										},
-										IdentifierTkn: &token.Token{
-											ID:    token.T_STRING,
-											Value: []byte("one"),
-											Position: &position.Position{
-												StartLine: 1,
-												EndLine:   1,
-												StartPos:  65,
-												EndPos:    68,
-											},
-										},
-										Value: []byte("one"),
 									},
+									Value: []byte("one"),
 								},
 								AsTkn: &token.Token{
 									ID:    token.T_AS,

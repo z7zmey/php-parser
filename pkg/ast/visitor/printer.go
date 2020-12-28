@@ -518,12 +518,6 @@ func (p *printer) StmtTrait(n *ast.StmtTrait) {
 	p.printToken(n.CloseCurlyBracketTkn, []byte("}"))
 }
 
-func (p *printer) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
-	p.printNode(n.Trait)
-	p.printToken(n.DoubleColonTkn, p.ifNode(n.Trait, []byte("::")))
-	p.printNode(n.Method)
-}
-
 func (p *printer) StmtTraitUse(n *ast.StmtTraitUse) {
 	p.printToken(n.UseTkn, []byte("use"))
 	p.printSeparatedList(n.Traits, n.SeparatorTkns, []byte(","))
@@ -534,7 +528,9 @@ func (p *printer) StmtTraitUse(n *ast.StmtTraitUse) {
 }
 
 func (p *printer) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {
-	p.printNode(n.Ref)
+	p.printNode(n.Trait)
+	p.printToken(n.DoubleColonTkn, p.ifNode(n.Trait, []byte("::")))
+	p.printNode(n.Method)
 	p.printToken(n.AsTkn, []byte("as"))
 	p.printNode(n.Modifier)
 	p.printNode(n.Alias)
@@ -542,7 +538,9 @@ func (p *printer) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {
 }
 
 func (p *printer) StmtTraitUsePrecedence(n *ast.StmtTraitUsePrecedence) {
-	p.printNode(n.Ref)
+	p.printNode(n.Trait)
+	p.printToken(n.DoubleColonTkn, p.ifNode(n.Trait, []byte("::")))
+	p.printNode(n.Method)
 	p.printToken(n.InsteadofTkn, []byte("insteadof"))
 	p.printSeparatedList(n.Insteadof, n.SeparatorTkns, []byte(","))
 	p.printToken(n.SemiColonTkn, []byte(";"))

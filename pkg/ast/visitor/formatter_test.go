@@ -2360,59 +2360,6 @@ func TestFormatter_StmtTrait(t *testing.T) {
 	}
 }
 
-func TestFormatter_StmtTraitMethodRef(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.StmtTraitMethodRef{
-		Method: &ast.Identifier{
-			Value: []byte("foo"),
-		},
-	}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `foo`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestFormatter_StmtTraitMethodRef_Trait(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	n := &ast.StmtTraitMethodRef{
-		Trait: &ast.NameName{
-			Parts: []ast.Vertex{
-				&ast.NameNamePart{
-					Value: []byte("foo"),
-				},
-			},
-		},
-		Method: &ast.Identifier{
-			Value: []byte("bar"),
-		},
-	}
-
-	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
-	n.Accept(f)
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n.Accept(p)
-
-	expected := `foo::bar`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestFormatter_StmtTraitUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -2471,10 +2418,8 @@ func TestFormatter_StmtTraitUse_Adaptations(t *testing.T) {
 		},
 		Adaptations: []ast.Vertex{
 			&ast.StmtTraitUseAlias{
-				Ref: &ast.StmtTraitMethodRef{
-					Method: &ast.Identifier{
-						Value: []byte("foo"),
-					},
+				Method: &ast.Identifier{
+					Value: []byte("foo"),
 				},
 				Alias: &ast.Identifier{
 					Value: []byte("baz"),
@@ -2503,10 +2448,8 @@ func TestFormatter_StmtTraitUseAlias(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtTraitUseAlias{
-		Ref: &ast.StmtTraitMethodRef{
-			Method: &ast.Identifier{
-				Value: []byte("foo"),
-			},
+		Method: &ast.Identifier{
+			Value: []byte("foo"),
 		},
 		Modifier: &ast.Identifier{
 			Value: []byte("public"),
@@ -2530,14 +2473,48 @@ func TestFormatter_StmtTraitUseAlias(t *testing.T) {
 	}
 }
 
+func TestFormatter_StmtTraitUseAlias_Trait(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	n := &ast.StmtTraitUseAlias{
+		Trait: &ast.NameName{
+			Parts: []ast.Vertex{
+				&ast.NameNamePart{
+					Value: []byte("foo"),
+				},
+			},
+		},
+		Method: &ast.Identifier{
+			Value: []byte("bar"),
+		},
+		Modifier: &ast.Identifier{
+			Value: []byte("public"),
+		},
+		Alias: &ast.Identifier{
+			Value: []byte("baz"),
+		},
+	}
+
+	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	n.Accept(f)
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n.Accept(p)
+
+	expected := `foo::bar as public baz;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestFormatter_StmtTraitUseAlias_Alias(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtTraitUseAlias{
-		Ref: &ast.StmtTraitMethodRef{
-			Method: &ast.Identifier{
-				Value: []byte("foo"),
-			},
+		Method: &ast.Identifier{
+			Value: []byte("foo"),
 		},
 		Alias: &ast.Identifier{
 			Value: []byte("bar"),
@@ -2562,10 +2539,8 @@ func TestFormatter_StmtTraitUseAlias_Modifier(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtTraitUseAlias{
-		Ref: &ast.StmtTraitMethodRef{
-			Method: &ast.Identifier{
-				Value: []byte("foo"),
-			},
+		Method: &ast.Identifier{
+			Value: []byte("foo"),
 		},
 		Modifier: &ast.Identifier{
 			Value: []byte("public"),
@@ -2590,10 +2565,8 @@ func TestFormatter_StmtTraitUsePrecedence(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	n := &ast.StmtTraitUsePrecedence{
-		Ref: &ast.StmtTraitMethodRef{
-			Method: &ast.Identifier{
-				Value: []byte("foo"),
-			},
+		Method: &ast.Identifier{
+			Value: []byte("foo"),
 		},
 		Insteadof: []ast.Vertex{
 			&ast.NameName{
@@ -2620,6 +2593,45 @@ func TestFormatter_StmtTraitUsePrecedence(t *testing.T) {
 	n.Accept(p)
 
 	expected := `foo insteadof bar, baz;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestFormatter_StmtTraitUsePrecedence_Trait(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	n := &ast.StmtTraitUsePrecedence{
+		Trait: &ast.NameName{
+			Parts: []ast.Vertex{
+				&ast.NameNamePart{
+					Value: []byte("foo"),
+				},
+			},
+		},
+		Method: &ast.Identifier{
+			Value: []byte("bar"),
+		},
+		Insteadof: []ast.Vertex{
+			&ast.NameName{
+				Parts: []ast.Vertex{
+					&ast.NameNamePart{
+						Value: []byte("baz"),
+					},
+				},
+			},
+		},
+	}
+
+	f := visitor.NewFormatter().WithState(visitor.FormatterStatePHP).WithIndent(1)
+	n.Accept(f)
+
+	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
+	n.Accept(p)
+
+	expected := `foo::bar insteadof baz;`
 	actual := o.String()
 
 	if expected != actual {

@@ -824,19 +824,6 @@ func (v *Dumper) StmtTrait(n *ast.StmtTrait) {
 	v.print(v.indent, "},\n")
 }
 
-func (v *Dumper) StmtTraitMethodRef(n *ast.StmtTraitMethodRef) {
-	v.print(0, "&ast.StmtTraitMethodRef{\n")
-	v.indent++
-
-	v.dumpPosition(n.Position)
-	v.dumpVertex("Trait", n.Trait)
-	v.dumpToken("DoubleColonTkn", n.DoubleColonTkn)
-	v.dumpVertex("Method", n.Method)
-
-	v.indent--
-	v.print(v.indent, "},\n")
-}
-
 func (v *Dumper) StmtTraitUse(n *ast.StmtTraitUse) {
 	v.print(0, "&ast.StmtTraitUse{\n")
 	v.indent++
@@ -859,7 +846,9 @@ func (v *Dumper) StmtTraitUseAlias(n *ast.StmtTraitUseAlias) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
-	v.dumpVertex("Ref", n.Ref)
+	v.dumpVertex("Trait", n.Trait)
+	v.dumpToken("DoubleColonTkn", n.DoubleColonTkn)
+	v.dumpVertex("Method", n.Method)
 	v.dumpToken("AsTkn", n.AsTkn)
 	v.dumpVertex("Modifier", n.Modifier)
 	v.dumpVertex("Alias", n.Alias)
@@ -874,7 +863,9 @@ func (v *Dumper) StmtTraitUsePrecedence(n *ast.StmtTraitUsePrecedence) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
-	v.dumpVertex("Ref", n.Ref)
+	v.dumpVertex("Trait", n.Trait)
+	v.dumpToken("DoubleColonTkn", n.DoubleColonTkn)
+	v.dumpVertex("Method", n.Method)
 	v.dumpToken("InsteadofTkn", n.InsteadofTkn)
 	v.dumpVertexList("Insteadof", n.Insteadof)
 	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)

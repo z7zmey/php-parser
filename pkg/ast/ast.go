@@ -64,7 +64,6 @@ type NodeVisitor interface {
 	StmtSwitch(n *StmtSwitch)
 	StmtThrow(n *StmtThrow)
 	StmtTrait(n *StmtTrait)
-	StmtTraitMethodRef(n *StmtTraitMethodRef)
 	StmtTraitUse(n *StmtTraitUse)
 	StmtTraitUseAlias(n *StmtTraitUseAlias)
 	StmtTraitUsePrecedence(n *StmtTraitUsePrecedence)

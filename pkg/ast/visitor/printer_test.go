@@ -4452,50 +4452,13 @@ func TestPrinterPrintStmtThrow(t *testing.T) {
 	}
 }
 
-func TestPrinterPrintStmtTraitMethodRef(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n := &ast.StmtTraitMethodRef{
-		Method: &ast.Identifier{Value: []byte("a")},
-	}
-	n.Accept(p)
-
-	expected := `a`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrinterPrintStmtTraitMethodRefFull(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
-	n := &ast.StmtTraitMethodRef{
-		Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-		Method: &ast.Identifier{Value: []byte("a")},
-	}
-	n.Accept(p)
-
-	expected := `Foo::a`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestPrinterPrintStmtTraitUseAlias(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
 	n := &ast.StmtTraitUseAlias{
-		Ref: &ast.StmtTraitMethodRef{
-			Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-			Method: &ast.Identifier{Value: []byte("a")},
-		},
+		Trait:    &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Method:   &ast.Identifier{Value: []byte("a")},
 		Modifier: &ast.Identifier{Value: []byte("public")},
 		Alias:    &ast.Identifier{Value: []byte("b")},
 	}
@@ -4514,10 +4477,8 @@ func TestPrinterPrintStmtTraitUsePrecedence(t *testing.T) {
 
 	p := visitor.NewPrinter(o).WithState(visitor.PrinterStatePHP)
 	n := &ast.StmtTraitUsePrecedence{
-		Ref: &ast.StmtTraitMethodRef{
-			Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-			Method: &ast.Identifier{Value: []byte("a")},
-		},
+		Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+		Method: &ast.Identifier{Value: []byte("a")},
 		Insteadof: []ast.Vertex{
 			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Bar")}}},
 			&ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Baz")}}},
@@ -4564,11 +4525,9 @@ func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 		},
 		Adaptations: []ast.Vertex{
 			&ast.StmtTraitUseAlias{
-				Ref: &ast.StmtTraitMethodRef{
-					Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
-					Method: &ast.Identifier{Value: []byte("a")},
-				},
-				Alias: &ast.Identifier{Value: []byte("b")},
+				Trait:  &ast.NameName{Parts: []ast.Vertex{&ast.NameNamePart{Value: []byte("Foo")}}},
+				Method: &ast.Identifier{Value: []byte("a")},
+				Alias:  &ast.Identifier{Value: []byte("b")},
 			},
 		},
 	}

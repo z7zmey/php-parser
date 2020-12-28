@@ -187,7 +187,7 @@ func (nsr *NamespaceResolver) StmtTraitUse(n *ast.StmtTraitUse) {
 	for _, a := range n.Adaptations {
 		switch aa := a.(type) {
 		case *ast.StmtTraitUsePrecedence:
-			refTrait := aa.Ref.(*ast.StmtTraitMethodRef).Trait
+			refTrait := aa.Trait
 			if refTrait != nil {
 				nsr.ResolveName(refTrait, "")
 			}
@@ -196,7 +196,7 @@ func (nsr *NamespaceResolver) StmtTraitUse(n *ast.StmtTraitUse) {
 			}
 
 		case *ast.StmtTraitUseAlias:
-			refTrait := aa.Ref.(*ast.StmtTraitMethodRef).Trait
+			refTrait := aa.Trait
 			if refTrait != nil {
 				nsr.ResolveName(refTrait, "")
 			}

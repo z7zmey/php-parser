@@ -194,10 +194,6 @@ func (v *Null) StmtTrait(_ *ast.StmtTrait) {
 	// do nothing
 }
 
-func (v *Null) StmtTraitMethodRef(_ *ast.StmtTraitMethodRef) {
-	// do nothing
-}
-
 func (v *Null) StmtTraitUse(_ *ast.StmtTraitUse) {
 	// do nothing
 }
