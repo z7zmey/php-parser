@@ -2,13 +2,15 @@ package printer_test
 
 import (
 	"bytes"
-	printer2 "github.com/z7zmey/php-parser/pkg/visitor/printer"
 	"os"
 	"testing"
 
 	"github.com/z7zmey/php-parser/internal/php7"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/version"
+	"github.com/z7zmey/php-parser/pkg/visitor/printer"
 )
 
 func ExamplePrinter() {
@@ -28,8 +30,14 @@ abstract class Bar extends Baz
 
 	// parse
 
-	lexer := scanner.NewLexer([]byte(src), "7.4", nil)
-	php7parser := php7.NewParser(lexer, nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := scanner.NewLexer([]byte(src), config)
+	php7parser := php7.NewParser(lexer, config)
 	php7parser.Parse()
 
 	rootNode := php7parser.GetRootNode()
@@ -41,8 +49,8 @@ abstract class Bar extends Baz
 
 	// print
 
-	printer := printer2.NewPrinter(os.Stdout)
-	rootNode.Accept(printer)
+	p := printer.NewPrinter(os.Stdout)
+	rootNode.Accept(p)
 
 	// Output:
 	//<?php
@@ -60,8 +68,14 @@ abstract class Bar extends Baz
 }
 
 func parse(src string) ast.Vertex {
-	lexer := scanner.NewLexer([]byte(src), "7.4", nil)
-	php7parser := php7.NewParser(lexer, nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := scanner.NewLexer([]byte(src), config)
+	php7parser := php7.NewParser(lexer, config)
 	php7parser.Parse()
 
 	return php7parser.GetRootNode()
@@ -70,8 +84,8 @@ func parse(src string) ast.Vertex {
 func print(n ast.Vertex) string {
 	o := bytes.NewBufferString("")
 
-	printer := printer2.NewPrinter(o)
-	n.Accept(printer)
+	p := printer.NewPrinter(o)
+	n.Accept(p)
 
 	return o.String()
 }

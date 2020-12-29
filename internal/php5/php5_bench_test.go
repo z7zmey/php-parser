@@ -6,6 +6,8 @@ import (
 
 	"github.com/z7zmey/php-parser/internal/php5"
 	"github.com/z7zmey/php-parser/internal/scanner"
+	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/version"
 )
 
 func BenchmarkPhp5(b *testing.B) {
@@ -15,8 +17,14 @@ func BenchmarkPhp5(b *testing.B) {
 	}
 
 	for n := 0; n < b.N; n++ {
-		lexer := scanner.NewLexer([]byte(src), "5.6", nil)
-		php5parser := php5.NewParser(lexer, nil)
+		config := cfg.Config{
+			Version: &version.Version{
+				Major: 5,
+				Minor: 6,
+			},
+		}
+		lexer := scanner.NewLexer(src, config)
+		php5parser := php5.NewParser(lexer, config)
 		php5parser.Parse()
 	}
 }

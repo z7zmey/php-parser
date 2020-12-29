@@ -3,10 +3,7 @@ package main
 import (
 	"bytes"
 	"flag"
-	"github.com/z7zmey/php-parser/pkg/visitor/dumper"
-	"github.com/z7zmey/php-parser/pkg/visitor/nsresolver"
-	"github.com/z7zmey/php-parser/pkg/visitor/printer"
-	"github.com/z7zmey/php-parser/pkg/visitor/traverser"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -21,15 +18,20 @@ import (
 	"github.com/yookoala/realpath"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/cfg"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/parser"
+	"github.com/z7zmey/php-parser/pkg/version"
+	"github.com/z7zmey/php-parser/pkg/visitor/dumper"
+	"github.com/z7zmey/php-parser/pkg/visitor/nsresolver"
+	"github.com/z7zmey/php-parser/pkg/visitor/printer"
+	"github.com/z7zmey/php-parser/pkg/visitor/traverser"
 )
 
 var wg sync.WaitGroup
-var phpVersion string
+var phpVersion *version.Version
 var profiler string
 var dump *bool
-var withFreeFloating *bool
 var showResolvedNs *bool
 var printBack *bool
 var printPath *bool
@@ -49,18 +51,25 @@ type result struct {
 
 func main() {
 	start := time.Now()
+	var phpVer string
 
 	printExecTime = flag.Bool("time", false, "print execution time")
-	withFreeFloating = flag.Bool("ff", false, "parse and show free floating strings")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
 	printPath = flag.Bool("p", false, "print filepath")
 	printErrors = flag.Bool("e", false, "print errors")
 	dump = flag.Bool("d", false, "dump")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
-	flag.StringVar(&phpVersion, "phpver", "7.4", "php version")
+	flag.StringVar(&phpVer, "phpver", "7.4", "php version")
 
 	flag.Parse()
+
+	var err error
+	phpVersion, err = version.New(phpVer)
+	if err != nil {
+		fmt.Println("Error: " + err.Error())
+		os.Exit(1)
+	}
 
 	if len(flag.Args()) == 0 {
 		flag.Usage()
@@ -128,16 +137,16 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 			return
 		}
 
-		parserErrors := []*errors.Error{}
-		cfg := parser.Config{
-			WithTokens: *withFreeFloating,
+		var parserErrors []*errors.Error
+		rootNode, err := parser.Parse(f.content, cfg.Config{
+			Version: phpVersion,
 			ErrorHandlerFunc: func(e *errors.Error) {
 				parserErrors = append(parserErrors, e)
 			},
-		}
-		rootNode, err := parser.Parse(f.content, phpVersion, cfg)
+		})
 		if err != nil {
-			panic(err.Error())
+			fmt.Println("Error:" + err.Error())
+			os.Exit(1)
 		}
 
 		r <- result{path: f.path, rootNode: rootNode, errors: parserErrors}

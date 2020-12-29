@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/z7zmey/php-parser/internal/version"
+	"github.com/z7zmey/php-parser/pkg/cfg"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
+	"github.com/z7zmey/php-parser/pkg/version"
 )
 
 type Lexer struct {
 	data           []byte
-	phpVersion     string
+	phpVersion     *version.Version
 	errHandlerFunc func(*errors.Error)
 
 	p, pe, cs   int
@@ -26,11 +27,11 @@ type Lexer struct {
 	newLines     NewLines
 }
 
-func NewLexer(data []byte, phpVersion string, errHandlerFunc func(*errors.Error)) *Lexer {
+func NewLexer(data []byte, config cfg.Config) *Lexer {
 	lex := &Lexer{
 		data:           data,
-		phpVersion:     phpVersion,
-		errHandlerFunc: errHandlerFunc,
+		phpVersion:     config.Version,
+		errHandlerFunc: config.ErrorHandlerFunc,
 
 		pe:    len(data),
 		stack: make([]int, 0),
@@ -101,16 +102,16 @@ func (lex *Lexer) isNotStringEnd(s byte) bool {
 }
 
 func (lex *Lexer) isHeredocEnd(p int) bool {
-	r, err := version.Compare(lex.phpVersion, "7.3")
+	o, err := version.New("7.3")
 	if err != nil {
+		panic(err)
+	}
+
+	if lex.phpVersion.GreaterOrEqual(o) {
 		return lex.isHeredocEndSince73(p)
 	}
 
-	if r == -1 {
-		return lex.isHeredocEndBefore73(p)
-	}
-
-	return lex.isHeredocEndSince73(p)
+	return lex.isHeredocEndBefore73(p)
 }
 
 func (lex *Lexer) isHeredocEndBefore73(p int) bool {

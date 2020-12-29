@@ -4,9 +4,11 @@ import (
 	"gotest.tools/assert"
 	"testing"
 
+	"github.com/z7zmey/php-parser/pkg/cfg"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
+	"github.com/z7zmey/php-parser/pkg/version"
 )
 
 func TestTokens(t *testing.T) {
@@ -353,7 +355,13 @@ func TestTokens(t *testing.T) {
 		token.T_UNSET_CAST.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -380,7 +388,13 @@ func TestShebang(t *testing.T) {
 		"\n",
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	tkn := lexer.Lex()
@@ -399,7 +413,13 @@ func TestShebangHtml(t *testing.T) {
 0.1
 `
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 	assert.Equal(t, tkn.ID, token.T_INLINE_HTML)
@@ -448,7 +468,13 @@ func TestNumberTokens(t *testing.T) {
 		token.T_DNUMBER.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -504,7 +530,13 @@ func TestConstantStrings(t *testing.T) {
 		token.T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -550,7 +582,13 @@ func TestSingleQuoteStringTokens(t *testing.T) {
 		token.T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -644,7 +682,13 @@ func TestTeplateStringTokens(t *testing.T) {
 		token.ID(int('"')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -734,7 +778,13 @@ func TestBackquoteStringTokens(t *testing.T) {
 		token.ID(int('`')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -827,7 +877,13 @@ CAT;
 		token.ID(int(';')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -899,7 +955,13 @@ CAT
 		token.T_END_HEREDOC.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -937,7 +999,13 @@ CAT;
 		token.ID(int(';')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -967,7 +1035,13 @@ func TestHereDocTokens73(t *testing.T) {
 		token.T_VARIABLE.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -996,8 +1070,13 @@ CAT;`
 		token.ID(int(';')).String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
-	lexer.phpVersion = "7.2"
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 2,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -1028,7 +1107,13 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 		token.T_INLINE_HTML.String(),
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 
 	for {
@@ -1062,7 +1147,13 @@ func TestStringTokensAfterVariable(t *testing.T) {
 		"\"",
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 	actualTokens := []string{}
 
@@ -1095,7 +1186,13 @@ func TestSlashAfterVariable(t *testing.T) {
 		"3",
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 	actual := []string{}
 	actualTokens := []string{}
 
@@ -1132,7 +1229,13 @@ func TestCommentEnd(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 
@@ -1163,7 +1266,13 @@ func TestCommentNewLine(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 
@@ -1194,7 +1303,13 @@ func TestCommentNewLine1(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 
@@ -1225,7 +1340,13 @@ func TestCommentNewLine2(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 
@@ -1257,7 +1378,13 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 
@@ -1289,7 +1416,13 @@ func TestInlineComment(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 
@@ -1321,7 +1454,13 @@ func TestInlineComment2(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 
@@ -1357,7 +1496,13 @@ func TestEmptyInlineComment(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 
@@ -1389,7 +1534,13 @@ func TestEmptyInlineComment2(t *testing.T) {
 		},
 	}
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 
@@ -1405,7 +1556,13 @@ func TestMethodCallTokens(t *testing.T) {
 	src := `<?php
 	$a -> bar ( '' ) ;`
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	expected := []*token.Token{
 		{
@@ -1507,7 +1664,13 @@ func TestYieldFromTokens(t *testing.T) {
 	src := `<?php
 	yield from $a`
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	expected := []*token.Token{
 		{
@@ -1543,7 +1706,13 @@ func TestYieldFromTokens(t *testing.T) {
 func TestVarNameByteChars(t *testing.T) {
 	src := "<?php $\x80 $\xff"
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 	assert.Equal(t, "$\x80", string(tkn.Value))
@@ -1555,7 +1724,13 @@ func TestVarNameByteChars(t *testing.T) {
 func TestStringVarNameByteChars(t *testing.T) {
 	src := "<?php \"$\x80 $\xff\""
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	tkn := lexer.Lex()
 	assert.Equal(t, "\"", string(tkn.Value))
@@ -1577,9 +1752,16 @@ func TestIgnoreControllCharacters(t *testing.T) {
 	src := "<?php \004 echo $b;"
 
 	var actualErr *errors.Error
-	lexer := NewLexer([]byte(src), "7.4", func(e *errors.Error) {
-		actualErr = e
-	})
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+		ErrorHandlerFunc: func(e *errors.Error) {
+			actualErr = e
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	expected := "echo"
 	tkn := lexer.Lex()
@@ -1601,7 +1783,13 @@ func TestIgnoreControllCharacters(t *testing.T) {
 func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 	src := "<?php \"$a[test\004]\";"
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	expected := "\""
 	tkn := lexer.Lex()
@@ -1632,7 +1820,13 @@ func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 func TestDoubleDollar(t *testing.T) {
 	src := `<?php "$$a";`
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	expected := "\""
 	tkn := lexer.Lex()
@@ -1653,7 +1847,13 @@ func TestDoubleDollar(t *testing.T) {
 func TestTripleDollar(t *testing.T) {
 	src := `<?php "$$$a";`
 
-	lexer := NewLexer([]byte(src), "7.4", nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
 
 	expected := "\""
 	tkn := lexer.Lex()

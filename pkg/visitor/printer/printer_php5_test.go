@@ -2,18 +2,25 @@ package printer_test
 
 import (
 	"bytes"
-	printer2 "github.com/z7zmey/php-parser/pkg/visitor/printer"
 	"testing"
-
-	"github.com/z7zmey/php-parser/pkg/ast"
 
 	"github.com/z7zmey/php-parser/internal/php5"
 	"github.com/z7zmey/php-parser/internal/scanner"
+	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/version"
+	"github.com/z7zmey/php-parser/pkg/visitor/printer"
 )
 
 func parsePhp5(src string) ast.Vertex {
-	lexer := scanner.NewLexer([]byte(src), "5.6", nil)
-	php5parser := php5.NewParser(lexer, nil)
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 5,
+			Minor: 6,
+		},
+	}
+	lexer := scanner.NewLexer([]byte(src), config)
+	php5parser := php5.NewParser(lexer, config)
 	php5parser.Parse()
 
 	return php5parser.GetRootNode()
@@ -22,8 +29,8 @@ func parsePhp5(src string) ast.Vertex {
 func printPhp5(n ast.Vertex) string {
 	o := bytes.NewBufferString("")
 
-	printer := printer2.NewPrinter(o)
-	n.Accept(printer)
+	p := printer.NewPrinter(o)
+	n.Accept(p)
 
 	return o.String()
 }
