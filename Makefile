@@ -1,16 +1,13 @@
 PHPFILE=example.php
 
-all: compile fmt build run
+all: compile fmt build
 
 fmt:
 	find . -type f -iregex '.*\.go' -exec gofmt -l -s -w '{}' +
 
 build:
 	go generate ./...
-	go build
-
-run:
-	./php-parser -d go $(PHPFILE)
+	go build ./cmd/...
 
 test:
 	go test ./...
@@ -19,38 +16,38 @@ cover:
 	go test ./... --cover
 
 bench:
-	go test -benchmem -bench=. ./php5
-	go test -benchmem -bench=. ./php7
+	go test -benchmem -bench=. ./internal/php5
+	go test -benchmem -bench=. ./internal/php7
 
-compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go fmt
-	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./php7/php7.go
-	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./php5/php5.go
-	sed -i '' -e 's/\/\/line/\/\/ line/g' ./php5/php5.go
-	sed -i '' -e 's/\/\/line/\/\/ line/g' ./php7/php7.go
-	sed -i '' -e 's/\/\/line/\/\/ line/g' ./scanner/scanner.go
+compile: ./internal/php5/php5.go ./internal/php7/php7.go ./internal/scanner/scanner.go
+	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/php7/php7.go
+	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/php5/php5.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/php5/php5.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/php7/php7.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/scanner/scanner.go
 	rm -f y.output
 
-./scanner/scanner.go: ./scanner/scanner.rl
+./internal/scanner/scanner.go: ./internal/scanner/scanner.rl
 	ragel -Z -G2 -o $@ $<
 
-./php5/php5.go: ./php5/php5.y
+./internal/php5/php5.go: ./internal/php5/php5.y
 	goyacc -o $@ $<
 
-./php7/php7.go: ./php7/php7.y
+./internal/php7/php7.go: ./internal/php7/php7.y
 	goyacc -o $@ $<
 
 cpu_pprof:
-	go test -cpuprofile cpu.pprof -bench=. -benchtime=20s ./php7
+	go test -cpuprofile cpu.pprof -bench=. -benchtime=20s ./internal/php7
 	go tool pprof ./php7.test cpu.pprof
 
 mem_pprof:
-	go test -memprofile mem.pprof -bench=. -benchtime=20s -benchmem ./php7
+	go test -memprofile mem.pprof -bench=. -benchtime=20s -benchmem ./internal/php7
 	go tool pprof -alloc_objects ./php7.test mem.pprof
 
 cpu_pprof_php5:
-	go test -cpuprofile cpu.prof -bench=. -benchtime=20s ./php5
+	go test -cpuprofile cpu.prof -bench=. -benchtime=20s ./internal/php5
 	go tool pprof ./php5.test cpu.prof
 
 mem_pprof_php5:
-	go test -memprofile mem.prof -bench=. -benchtime=20s -benchmem ./php5
+	go test -memprofile mem.prof -bench=. -benchtime=20s -benchmem ./internal/php5
 	go tool pprof -alloc_objects ./php5.test mem.prof
