@@ -4981,6 +4981,7 @@ yydefault:
 			} else {
 				yyVAL.node = &ast.ExprNew{
 					Position: yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+					NewTkn:   yyDollar[1].token,
 					Class:    yyDollar[2].node,
 				}
 			}
@@ -5031,7 +5032,7 @@ yydefault:
 		// line internal/php5/php5.y:2797
 		{
 			var _new *ast.ExprNew
-			if yyDollar[3].token != nil {
+			if yyDollar[6].token != nil {
 				_new = &ast.ExprNew{
 					Position:            yylex.(*Parser).builder.NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node),
 					NewTkn:              yyDollar[4].token,
@@ -6401,7 +6402,7 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		// line internal/php5/php5.y:3986
 		{
-			yyVAL.node = &ArgumentList{}
+			yyVAL.node = nil
 		}
 	case 352:
 		yyDollar = yyS[yypt-1 : yypt+1]

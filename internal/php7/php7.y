@@ -3490,7 +3490,7 @@ backticks_expr:
 ctor_arguments:
         /* empty */
             {
-                $$ = &ArgumentList{}
+                $$ = nil
             }
     |   argument_list
             {

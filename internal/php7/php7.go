@@ -6091,7 +6091,7 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		// line internal/php7/php7.y:3492
 		{
-			yyVAL.node = &ArgumentList{}
+			yyVAL.node = nil
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
