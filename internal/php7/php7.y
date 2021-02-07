@@ -2497,6 +2497,10 @@ non_empty_for_exprs:
 anonymous_class:
         T_CLASS ctor_arguments extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
+            	if $2 == nil {
+            	    $2 = &ArgumentList{}
+            	}
+
                 class := &ast.StmtClass{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $8),
                     ClassTkn:             $1,

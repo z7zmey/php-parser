@@ -4935,6 +4935,10 @@ yydefault:
 		yyDollar = yyS[yypt-8 : yypt+1]
 		// line internal/php7/php7.y:2499
 		{
+			if yyDollar[2].node == nil {
+				yyDollar[2].node = &ArgumentList{}
+			}
+
 			class := &ast.StmtClass{
 				Position:             yylex.(*Parser).builder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
 				ClassTkn:             yyDollar[1].token,
