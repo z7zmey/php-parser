@@ -1091,6 +1091,34 @@ CAT;`
 	assert.DeepEqual(t, expected, actual)
 }
 
+func TestHereDocUnclosed(t *testing.T) {
+	src := "<?<<<'S'\n"
+
+	expected := []string{
+		token.T_START_HEREDOC.String(),
+	}
+
+	config := cfg.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
+	actual := []string{}
+
+	for {
+		tkn := lexer.Lex()
+		if tkn.ID == 0 {
+			break
+		}
+
+		actual = append(actual, tkn.ID.String())
+	}
+
+	assert.DeepEqual(t, expected, actual)
+}
+
 func TestInlineHtmlNopTokens(t *testing.T) {
 	src := `<?php
 		$a; ?> test <?php
