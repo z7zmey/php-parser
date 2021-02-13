@@ -8,7 +8,7 @@ import (
 	"github.com/z7zmey/php-parser/internal/php7"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/conf"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
@@ -97,7 +97,7 @@ func TestIdentifier(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1673,7 +1673,7 @@ func TestPhp7ArgumentNode(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -3357,7 +3357,7 @@ func TestPhp7ParameterNode(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -3417,7 +3417,7 @@ func TestCommentEndFile(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -3544,7 +3544,7 @@ func TestName(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -3679,7 +3679,7 @@ func TestFullyQualified(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -3824,7 +3824,7 @@ func TestRelative(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -3970,7 +3970,7 @@ func TestScalarEncapsed_SimpleVar(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -4114,7 +4114,7 @@ func TestScalarEncapsed_SimpleVarOneChar(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -4277,7 +4277,7 @@ func TestScalarEncapsed_SimpleVarEndsEcapsed(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -4476,7 +4476,7 @@ func TestScalarEncapsed_StringVarCurveOpen(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -4676,7 +4676,7 @@ func TestScalarEncapsed_SimpleVarPropertyFetch(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -4840,7 +4840,7 @@ func TestScalarEncapsed_DollarOpenCurlyBraces(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -5043,7 +5043,7 @@ func TestScalarEncapsed_DollarOpenCurlyBracesDimNumber(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -5272,7 +5272,7 @@ func TestScalarEncapsed_CurlyOpenMethodCall(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -5451,7 +5451,7 @@ LBL;
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -5630,7 +5630,7 @@ LBL;
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -5763,7 +5763,7 @@ LBL;
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -5874,7 +5874,7 @@ CAD;
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6007,7 +6007,7 @@ CAD;
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6095,7 +6095,7 @@ func TestScalarMagicConstant(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6182,7 +6182,7 @@ func TestScalarNumber_LNumber(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6269,7 +6269,7 @@ func TestScalarNumber_DNumber(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6356,7 +6356,7 @@ func TestScalarNumber_Float(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6443,7 +6443,7 @@ func TestScalarNumber_BinaryLNumber(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6530,7 +6530,7 @@ func TestScalarNumber_BinaryDNumber(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6617,7 +6617,7 @@ func TestScalarNumber_HLNumber(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6704,7 +6704,7 @@ func TestScalarNumber_HDNumber(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6791,7 +6791,7 @@ func TestScalarString_DoubleQuotedScalarString(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6878,7 +6878,7 @@ func TestScalarString_DoubleQuotedScalarStringWithEscapedVar(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -6967,7 +6967,7 @@ func TestScalarString_MultilineDoubleQuotedScalarString(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -7054,7 +7054,7 @@ func TestScalarString_SingleQuotedScalarString(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -7143,7 +7143,7 @@ func TestScalarString_MultilineSingleQuotedScalarString(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -7351,7 +7351,7 @@ func TestStmtAltIf_AltIf(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -7668,7 +7668,7 @@ func TestStmtAltIf_AltElseIf(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -7924,7 +7924,7 @@ func TestStmtAltIf_AltElse(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -8400,7 +8400,7 @@ func TestStmtAltIf_AltElseElseIf(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -8804,7 +8804,7 @@ func TestStmtClassConstList(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -9175,7 +9175,7 @@ func TestStmtClassConstList_WithoutModifiers(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -9430,7 +9430,7 @@ func TestStmtClassMethod_SimpleClassMethod(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -9904,7 +9904,7 @@ func TestStmtClassMethod_PrivateProtectedClassMethod(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -10284,7 +10284,7 @@ func TestStmtClassMethod_Php7ClassMethod(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -10613,7 +10613,7 @@ func TestStmtClassMethod_AbstractClassMethod(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -10962,7 +10962,7 @@ func TestStmtClassMethod_Php7AbstractClassMethod(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -11094,7 +11094,7 @@ func TestStmtClass_SimpleClass(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -11259,7 +11259,7 @@ func TestStmtClass_AbstractClass(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -11499,7 +11499,7 @@ func TestStmtClass_ClassExtends(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -11741,7 +11741,7 @@ func TestStmtClass_ClassImplement(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -12036,7 +12036,7 @@ func TestStmtClass_ClassImplements(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -12398,7 +12398,7 @@ func TestStmtClass_AnonimousClass(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -12674,7 +12674,7 @@ func TestStmtConstList(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -12887,7 +12887,7 @@ func TestStmtContinue_Empty(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -13131,7 +13131,7 @@ func TestStmtContinue_Light(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -13391,7 +13391,7 @@ func TestStmtContinue(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -13555,7 +13555,7 @@ func TestStmtDeclare(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -13822,7 +13822,7 @@ func TestStmtDeclare_Stmts(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -14019,7 +14019,7 @@ func TestStmtDeclare_Alt(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -14199,7 +14199,7 @@ func TestStmtDo(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -14361,7 +14361,7 @@ func TestStmtEcho(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -14496,7 +14496,7 @@ func TestStmtEcho_Parenthesis(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -14583,7 +14583,7 @@ func TestStmtExpression(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -15052,7 +15052,7 @@ func TestStmtFor(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -15384,7 +15384,7 @@ func TestStmtFor_Alt(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -15613,7 +15613,7 @@ func TestStmtForeach(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -15843,7 +15843,7 @@ func TestStmtForeach_Expr(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -16094,7 +16094,7 @@ func TestStmtForeach_Alt(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -16384,7 +16384,7 @@ func TestStmtForeach_WithKey(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -16675,7 +16675,7 @@ func TestStmtForeach_ExprWithKey(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -16975,7 +16975,7 @@ func TestStmtForeach_WithRef(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -17313,7 +17313,7 @@ func TestStmtForeach_WithList(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -17465,7 +17465,7 @@ func TestStmtFunction(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -17646,7 +17646,7 @@ func TestStmtFunction_Return(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -18024,7 +18024,7 @@ func TestStmtFunction_ReturnVar(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -18246,7 +18246,7 @@ func TestStmtFunction_Ref(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -18459,7 +18459,7 @@ func TestStmtFunction_ReturnType(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -18578,7 +18578,7 @@ func TestStmtGlobal(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -18932,7 +18932,7 @@ func TestStmtGlobal_Vars(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -19090,7 +19090,7 @@ func TestStmtGotoLabel(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -19188,7 +19188,7 @@ func TestStmtHaltCompiler(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -19356,7 +19356,7 @@ func TestStmtIf(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -19656,7 +19656,7 @@ func TestStmtIf_ElseIf(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -19895,7 +19895,7 @@ func TestStmtIf_Else(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -20396,7 +20396,7 @@ func TestStmtIf_ElseElseIf(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -20927,7 +20927,7 @@ func TestStmtIf_ElseIfElseIfElse(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -21014,7 +21014,7 @@ func TestStmtInlineHtml(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -21146,7 +21146,7 @@ func TestStmtInterface(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -21343,7 +21343,7 @@ func TestStmtInterface_Extend(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -21593,7 +21593,7 @@ func TestStmtInterface_Extends(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -21712,7 +21712,7 @@ func TestStmtNamespace(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -21854,7 +21854,7 @@ func TestStmtNamespace_Stmts(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -21955,7 +21955,7 @@ func TestStmtNamespace_Anonymous(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -22176,7 +22176,7 @@ func TestStmtProperty(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -22540,7 +22540,7 @@ func TestStmtProperty_Properties(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -22904,7 +22904,7 @@ func TestStmtProperty_Properties2(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -23166,7 +23166,7 @@ func TestStmtProperty_PropertyType(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -23293,7 +23293,7 @@ func TestStmtStaticVar(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -23532,7 +23532,7 @@ func TestStmtStaticVar_Vars(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -23771,7 +23771,7 @@ func TestStmtStaticVar_Vars2(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -24180,7 +24180,7 @@ func TestStmtSwitch(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -24599,7 +24599,7 @@ func TestStmtSwitch_Semicolon(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -24978,7 +24978,7 @@ func TestStmtSwitch_Alt(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -25311,7 +25311,7 @@ func TestStmtSwitch_AltSemicolon(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -25428,7 +25428,7 @@ func TestStmtThrow(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -25560,7 +25560,7 @@ func TestStmtTrait(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -25788,7 +25788,7 @@ func TestStmtTraitUse(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -26069,7 +26069,7 @@ func TestStmtTraitUse_Uses(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -26372,7 +26372,7 @@ func TestStmtTraitUse_EmptyAdaptations(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -26791,7 +26791,7 @@ func TestStmtTraitUse_Modifier(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -27241,7 +27241,7 @@ func TestStmtTraitUse_AliasModifier(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -27905,7 +27905,7 @@ func TestStmtTraitUse_Adaptions(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -28022,7 +28022,7 @@ func TestStmtTry_Try(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -28305,7 +28305,7 @@ func TestStmtTry_TryCatch(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -28629,7 +28629,7 @@ func TestStmtTry_Php7TryCatch(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -29077,7 +29077,7 @@ func TestStmtTry_TryCatchCatch(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -29423,7 +29423,7 @@ func TestStmtTry_TryCatchFinally(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -30051,7 +30051,7 @@ func TestStmtTry_TryCatchCatchCatch(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -30178,7 +30178,7 @@ func TestStmtUnset(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -30356,7 +30356,7 @@ func TestStmtUnset_Vars(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -30544,7 +30544,7 @@ func TestStmtUnset_TrailingComma(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -30673,7 +30673,7 @@ func TestStmtUse(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -30812,7 +30812,7 @@ func TestStmtUse_FullyQualified(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -31004,7 +31004,7 @@ func TestStmtUse_FullyQualifiedAlias(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -31194,7 +31194,7 @@ func TestStmtUse_List(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -31437,7 +31437,7 @@ func TestStmtUse_ListAlias(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -31668,7 +31668,7 @@ func TestStmtUse_ListFunctionType(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -32005,7 +32005,7 @@ func TestStmtUse_ListFunctionTypeAliases(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -32236,7 +32236,7 @@ func TestStmtUse_ListConstType(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -32573,7 +32573,7 @@ func TestStmtUse_ListConstTypeAliases(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -32822,7 +32822,7 @@ func TestStmtUse_GroupUse(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -33124,7 +33124,7 @@ func TestStmtUse_GroupUseAlias(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -33404,7 +33404,7 @@ func TestStmtUse_FunctionGroupUse(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -33684,7 +33684,7 @@ func TestStmtUse_ConstGroupUse(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -33995,7 +33995,7 @@ func TestStmtUse_MixedGroupUse(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -34208,7 +34208,7 @@ func TestStmtBreak_Empty(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -34452,7 +34452,7 @@ func TestStmtBreak_Light(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -34722,7 +34722,7 @@ func TestStmtBreak(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -34866,7 +34866,7 @@ func TestExprArrayDimFetch(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -35055,7 +35055,7 @@ func TestExprArrayDimFetch_Nested(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -35161,7 +35161,7 @@ func TestExprArray(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -35296,7 +35296,7 @@ func TestExprArray_Item(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -35540,7 +35540,7 @@ func TestExprArray_Items(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -35693,7 +35693,7 @@ func TestExprArray_ItemUnpack(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -35860,7 +35860,7 @@ func TestExprArrowFunction(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -36124,7 +36124,7 @@ func TestExprArrowFunction_ReturnType(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -36237,7 +36237,7 @@ func TestExprBitwiseNot(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -36350,7 +36350,7 @@ func TestExprBooleanNot(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -36484,7 +36484,7 @@ func TestExprClassConstFetch(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -36608,7 +36608,7 @@ func TestExprClassConstFetch_Static(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -36749,7 +36749,7 @@ func TestExprClone_Brackets(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -36874,7 +36874,7 @@ func TestExprClone(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -37001,7 +37001,7 @@ func TestExprClosure(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -37396,7 +37396,7 @@ func TestExprClosure_Use(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -37791,7 +37791,7 @@ func TestExprClosure_Use2(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -37981,7 +37981,7 @@ func TestExprClosure_ReturnType(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -38086,7 +38086,7 @@ func TestExprConstFetch(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -38211,7 +38211,7 @@ func TestExprConstFetch_Relative(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -38326,7 +38326,7 @@ func TestExprConstFetch_FullyQualified(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -38459,7 +38459,7 @@ func TestExprEmpty(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -38572,7 +38572,7 @@ func TestExprErrorSuppress(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -38705,7 +38705,7 @@ func TestExprEval(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -38791,7 +38791,7 @@ func TestExprExit(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -38897,7 +38897,7 @@ func TestExprExit_Empty(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -39030,7 +39030,7 @@ func TestExprExit_Expr(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -39116,7 +39116,7 @@ func TestExprDie(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -39222,7 +39222,7 @@ func TestExprDie_Empty(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -39355,7 +39355,7 @@ func TestExprDie_Expr(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -39480,7 +39480,7 @@ func TestExprFunctionCall(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -39625,7 +39625,7 @@ func TestExprFunctionCall_Relative(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -39798,7 +39798,7 @@ func TestExprFunctionCall_FullyQualified(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -39988,7 +39988,7 @@ func TestExprFunctionCall_Var(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -40187,7 +40187,7 @@ func TestExprFunctionCall_ExprArg(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -40300,7 +40300,7 @@ func TestExprPostDec(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -40413,7 +40413,7 @@ func TestExprPostInc(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -40526,7 +40526,7 @@ func TestExprPreDec(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -40639,7 +40639,7 @@ func TestExprPreInc(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -40764,7 +40764,7 @@ func TestExprInclude(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -40889,7 +40889,7 @@ func TestExprInclude_Once(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -41014,7 +41014,7 @@ func TestExprRequire(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -41139,7 +41139,7 @@ func TestExprRequire_Once(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -41305,7 +41305,7 @@ func TestExprInstanceOf(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -41491,7 +41491,7 @@ func TestExprInstanceOf_Relative(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -41667,7 +41667,7 @@ func TestExprInstanceOf_FullyQualified(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -41802,7 +41802,7 @@ func TestExprIsset(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -41988,7 +41988,7 @@ func TestExprIsset_Variables(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -42163,7 +42163,7 @@ func TestExprList_Empty(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -42375,7 +42375,7 @@ func TestExprList(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -42615,7 +42615,7 @@ func TestExprList_ArrayIndex(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -42875,7 +42875,7 @@ func TestExprList_List(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -43112,7 +43112,7 @@ func TestExprList_EmptyItem(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -43395,7 +43395,7 @@ func TestExprList_EmptyItems(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -43547,7 +43547,7 @@ func TestExprMethodCall(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -43674,7 +43674,7 @@ func TestExprNew(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -43841,7 +43841,7 @@ func TestExprNew_Relative(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -43998,7 +43998,7 @@ func TestExprNew_FullyQualified(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -44285,7 +44285,7 @@ func TestExprNew_Anonymous(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -44426,7 +44426,7 @@ func TestExprPrint(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -44558,7 +44558,7 @@ func TestExprPropertyFetch(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -44702,7 +44702,7 @@ func TestExprShellExec(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -44798,7 +44798,7 @@ func TestExprShortArray(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -44923,7 +44923,7 @@ func TestExprShortArray_Item(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -45157,7 +45157,7 @@ func TestExprShortArray_Items(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -45359,7 +45359,7 @@ func TestExprShortList(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -45589,7 +45589,7 @@ func TestExprShortList_ArrayIndex(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -45839,7 +45839,7 @@ func TestExprShortList_List(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -45993,7 +45993,7 @@ func TestExprStaticCall(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -46167,7 +46167,7 @@ func TestExprStaticCall_Relative(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -46331,7 +46331,7 @@ func TestExprStaticCall_FullyQualified(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -46493,7 +46493,7 @@ func TestExprStaticCall_Var(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -46653,7 +46653,7 @@ func TestExprStaticCall_VarVar(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -46795,7 +46795,7 @@ func TestExprStaticPropertyFetch(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -46957,7 +46957,7 @@ func TestExprStaticPropertyFetch_Relative(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -47109,7 +47109,7 @@ func TestExprStaticPropertyFetch_FullyQualified(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -47334,7 +47334,7 @@ func TestExprTernary(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -47520,7 +47520,7 @@ func TestExprTernary_Simple(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -47875,7 +47875,7 @@ func TestExprTernary_NestedTrue(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -48230,7 +48230,7 @@ func TestExprTernary_NestedCond(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -48343,7 +48343,7 @@ func TestExprUnaryMinus(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -48456,7 +48456,7 @@ func TestExprUnaryPlus(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -48551,7 +48551,7 @@ func TestExprVariable(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -48664,7 +48664,7 @@ func TestExprVariable_Variable(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -48750,7 +48750,7 @@ func TestExprYield(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -48875,7 +48875,7 @@ func TestExprYield_Val(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -49061,7 +49061,7 @@ func TestExprYield_KeyVal(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -49178,7 +49178,7 @@ func TestExprYield_Expr(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -49356,7 +49356,7 @@ func TestExprYield_KeyExpr(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -49481,7 +49481,7 @@ func TestExprYieldFrom(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -51831,7 +51831,7 @@ func TestExprAssign_Assign(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -55300,7 +55300,7 @@ func TestExprBinary_BitwiseAnd(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -56176,7 +56176,7 @@ func TestExprCast_Array(t *testing.T) {
 		EndTkn: &token.Token{},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -56482,7 +56482,7 @@ func TestStrings(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -56968,7 +56968,7 @@ CAD;
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -56997,7 +56997,7 @@ func TestControlCharsErrors(t *testing.T) {
 
 	parserErrors := []*errors.Error{}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,

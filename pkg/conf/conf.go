@@ -1,4 +1,4 @@
-package cfg
+package conf
 
 import (
 	"github.com/z7zmey/php-parser/pkg/errors"

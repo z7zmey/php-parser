@@ -4,7 +4,7 @@ import (
 	"gotest.tools/assert"
 	"testing"
 
-	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/conf"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
@@ -355,7 +355,7 @@ func TestTokens(t *testing.T) {
 		token.T_UNSET_CAST.String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -388,7 +388,7 @@ func TestShebang(t *testing.T) {
 		"\n",
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -413,7 +413,7 @@ func TestShebangHtml(t *testing.T) {
 0.1
 `
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -468,7 +468,7 @@ func TestNumberTokens(t *testing.T) {
 		token.T_DNUMBER.String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -530,7 +530,7 @@ func TestConstantStrings(t *testing.T) {
 		token.T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -582,7 +582,7 @@ func TestSingleQuoteStringTokens(t *testing.T) {
 		token.T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -682,7 +682,7 @@ func TestTeplateStringTokens(t *testing.T) {
 		token.ID(int('"')).String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -778,7 +778,7 @@ func TestBackquoteStringTokens(t *testing.T) {
 		token.ID(int('`')).String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -877,7 +877,7 @@ CAT;
 		token.ID(int(';')).String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -955,7 +955,7 @@ CAT
 		token.T_END_HEREDOC.String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -999,7 +999,7 @@ CAT;
 		token.ID(int(';')).String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1035,7 +1035,7 @@ func TestHereDocTokens73(t *testing.T) {
 		token.T_VARIABLE.String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1070,7 +1070,7 @@ CAT;`
 		token.ID(int(';')).String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 2,
@@ -1098,7 +1098,7 @@ func TestHereDocUnclosed(t *testing.T) {
 		token.T_START_HEREDOC.String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1135,7 +1135,7 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 		token.T_INLINE_HTML.String(),
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1175,7 +1175,7 @@ func TestStringTokensAfterVariable(t *testing.T) {
 		"\"",
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1214,7 +1214,7 @@ func TestSlashAfterVariable(t *testing.T) {
 		"3",
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1257,7 +1257,7 @@ func TestCommentEnd(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1294,7 +1294,7 @@ func TestCommentNewLine(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1331,7 +1331,7 @@ func TestCommentNewLine1(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1368,7 +1368,7 @@ func TestCommentNewLine2(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1406,7 +1406,7 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1444,7 +1444,7 @@ func TestInlineComment(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1482,7 +1482,7 @@ func TestInlineComment2(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1524,7 +1524,7 @@ func TestEmptyInlineComment(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1562,7 +1562,7 @@ func TestEmptyInlineComment2(t *testing.T) {
 		},
 	}
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1584,7 +1584,7 @@ func TestMethodCallTokens(t *testing.T) {
 	src := `<?php
 	$a -> bar ( '' ) ;`
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1692,7 +1692,7 @@ func TestYieldFromTokens(t *testing.T) {
 	src := `<?php
 	yield from $a`
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1734,7 +1734,7 @@ func TestYieldFromTokens(t *testing.T) {
 func TestVarNameByteChars(t *testing.T) {
 	src := "<?php $\x80 $\xff"
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1752,7 +1752,7 @@ func TestVarNameByteChars(t *testing.T) {
 func TestStringVarNameByteChars(t *testing.T) {
 	src := "<?php \"$\x80 $\xff\""
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1780,7 +1780,7 @@ func TestIgnoreControllCharacters(t *testing.T) {
 	src := "<?php \004 echo $b;"
 
 	var actualErr *errors.Error
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1811,7 +1811,7 @@ func TestIgnoreControllCharacters(t *testing.T) {
 func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 	src := "<?php \"$a[test\004]\";"
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1848,7 +1848,7 @@ func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 func TestDoubleDollar(t *testing.T) {
 	src := `<?php "$$a";`
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -1875,7 +1875,7 @@ func TestDoubleDollar(t *testing.T) {
 func TestTripleDollar(t *testing.T) {
 	src := `<?php "$$$a";`
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,

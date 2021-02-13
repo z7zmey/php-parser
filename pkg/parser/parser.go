@@ -7,7 +7,7 @@ import (
 	"github.com/z7zmey/php-parser/internal/php7"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/conf"
 	"github.com/z7zmey/php-parser/pkg/version"
 )
 
@@ -28,7 +28,7 @@ type Parser interface {
 	GetRootNode() ast.Vertex
 }
 
-func Parse(src []byte, config cfg.Config) (ast.Vertex, error) {
+func Parse(src []byte, config conf.Config) (ast.Vertex, error) {
 	var parser Parser
 
 	if config.Version == nil {

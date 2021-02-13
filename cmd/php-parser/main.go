@@ -18,7 +18,7 @@ import (
 	"github.com/yookoala/realpath"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/conf"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/parser"
 	"github.com/z7zmey/php-parser/pkg/version"
@@ -138,7 +138,7 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 		}
 
 		var parserErrors []*errors.Error
-		rootNode, err := parser.Parse(f.content, cfg.Config{
+		rootNode, err := parser.Parse(f.content, conf.Config{
 			Version: phpVersion,
 			ErrorHandlerFunc: func(e *errors.Error) {
 				parserErrors = append(parserErrors, e)

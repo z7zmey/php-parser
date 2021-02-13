@@ -10,7 +10,7 @@ Package usage example:
 		"log"
 		"os"
 
-		"github.com/z7zmey/php-parser/pkg/cfg"
+		"github.com/z7zmey/php-parser/pkg/conf"
 		"github.com/z7zmey/php-parser/pkg/errors"
 		"github.com/z7zmey/php-parser/pkg/parser"
 		"github.com/z7zmey/php-parser/pkg/version"
@@ -24,12 +24,12 @@ Package usage example:
 
 		var parserErrors []*errors.Error
 		errorHandler := func(e *errors.Error) {
-			parserErrors = append(parserErrors, e)
+			parsmakeerErrors = append(parserErrors, e)
 		}
 
 		// Parse
 
-		rootNode, err := parser.Parse(src, cfg.Config{
+		rootNode, err := parser.Parse(src, conf.Config{
 			Version:          &version.Version{Major: 5, Minor: 6},
 			ErrorHandlerFunc: errorHandler,
 		})

@@ -8,7 +8,7 @@ import (
 	"github.com/z7zmey/php-parser/internal/php7"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/conf"
 	"github.com/z7zmey/php-parser/pkg/version"
 	"github.com/z7zmey/php-parser/pkg/visitor/printer"
 )
@@ -30,7 +30,7 @@ abstract class Bar extends Baz
 
 	// parse
 
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,
@@ -68,7 +68,7 @@ abstract class Bar extends Baz
 }
 
 func parse(src string) ast.Vertex {
-	config := cfg.Config{
+	config := conf.Config{
 		Version: &version.Version{
 			Major: 7,
 			Minor: 4,

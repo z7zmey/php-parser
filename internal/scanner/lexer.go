@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/conf"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/position"
 	"github.com/z7zmey/php-parser/pkg/token"
@@ -27,7 +27,7 @@ type Lexer struct {
 	newLines     NewLines
 }
 
-func NewLexer(data []byte, config cfg.Config) *Lexer {
+func NewLexer(data []byte, config conf.Config) *Lexer {
 	lex := &Lexer{
 		data:           data,
 		phpVersion:     config.Version,

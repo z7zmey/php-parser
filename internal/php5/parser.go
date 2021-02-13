@@ -4,7 +4,7 @@ import (
 	"github.com/z7zmey/php-parser/internal/position"
 	"github.com/z7zmey/php-parser/internal/scanner"
 	"github.com/z7zmey/php-parser/pkg/ast"
-	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/conf"
 	"github.com/z7zmey/php-parser/pkg/errors"
 	"github.com/z7zmey/php-parser/pkg/token"
 )
@@ -19,7 +19,7 @@ type Parser struct {
 }
 
 // NewParser creates and returns new Parser
-func NewParser(lexer *scanner.Lexer, config cfg.Config) *Parser {
+func NewParser(lexer *scanner.Lexer, config conf.Config) *Parser {
 	return &Parser{
 		Lexer:          lexer,
 		errHandlerFunc: config.ErrorHandlerFunc,
