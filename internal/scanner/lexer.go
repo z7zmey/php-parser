@@ -140,6 +140,10 @@ func (lex *Lexer) isHeredocEndSince73(p int) bool {
 		return false
 	}
 
+	if p == len(lex.data) {
+		return false
+	}
+
 	for lex.data[p] == ' ' || lex.data[p] == '\t' {
 		p++
 	}
