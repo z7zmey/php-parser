@@ -28,7 +28,7 @@ Package usage example:
 		}
 
 		// Parse
-	
+
 		rootNode, err := parser.Parse(src, cfg.Config{
 			Version:          &version.Version{Major: 5, Minor: 6},
 			ErrorHandlerFunc: errorHandler,
