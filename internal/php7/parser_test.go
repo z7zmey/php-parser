@@ -43581,9 +43581,9 @@ func TestExprNew(t *testing.T) {
 				Expr: &ast.ExprNew{
 					Position: &position.Position{
 						StartLine: 1,
-						EndLine:   -1,
+						EndLine:   1,
 						StartPos:  3,
-						EndPos:    -1,
+						EndPos:    10,
 					},
 					NewTkn: &token.Token{
 						ID:    token.T_NEW,
@@ -49806,9 +49806,9 @@ func TestExprAssign_Assign(t *testing.T) {
 				Expr: &ast.ExprAssignReference{
 					Position: &position.Position{
 						StartLine: 4,
-						EndLine:   -1,
+						EndLine:   4,
 						StartPos:  28,
-						EndPos:    -1,
+						EndPos:    41,
 					},
 					Var: &ast.ExprVariable{
 						Position: &position.Position{
@@ -49884,9 +49884,9 @@ func TestExprAssign_Assign(t *testing.T) {
 					Expr: &ast.ExprNew{
 						Position: &position.Position{
 							StartLine: 4,
-							EndLine:   -1,
+							EndLine:   4,
 							StartPos:  34,
-							EndPos:    -1,
+							EndPos:    41,
 						},
 						NewTkn: &token.Token{
 							ID:    token.T_NEW,

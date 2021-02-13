@@ -2751,6 +2751,7 @@ new_expr:
                 } else {
                     $$ = &ast.ExprNew{
                         Position: yylex.(*Parser).builder.NewTokenNodePosition($1, $2),
+                        NewTkn: $1,
                         Class: $2,
                     }
                 }
@@ -2796,7 +2797,7 @@ expr_without_variable:
     |   variable '=' '&' T_NEW class_name_reference ctor_arguments
             {
                 var _new *ast.ExprNew
-                if $3 != nil {
+                if $6 != nil {
                     _new = &ast.ExprNew{
                         Position: yylex.(*Parser).builder.NewTokenNodePosition($4, $6),
                         NewTkn:              $4,
@@ -3984,7 +3985,7 @@ backticks_expr:
 ctor_arguments:
         /* empty */
             {
-                $$ = &ArgumentList{}
+                $$ = nil
             }
     |   function_call_parameter_list
             {
