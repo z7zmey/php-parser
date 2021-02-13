@@ -37,30 +37,44 @@ Usage example
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
-	"github.com/z7zmey/php-parser/php7"
-	"github.com/z7zmey/php-parser/visitor"
+	"github.com/z7zmey/php-parser/pkg/cfg"
+	"github.com/z7zmey/php-parser/pkg/errors"
+	"github.com/z7zmey/php-parser/pkg/parser"
+	"github.com/z7zmey/php-parser/pkg/version"
+	"github.com/z7zmey/php-parser/pkg/visitor/dumper"
 )
 
 func main() {
 	src := []byte(`<? echo "Hello world";`)
 
-	parser := php7.NewParser(src, "7.4")
-	parser.Parse()
+	// Error handler
 
-	for _, e := range parser.GetErrors() {
-		fmt.Println(e)
+	var parserErrors []*errors.Error
+	errorHandler := func(e *errors.Error) {
+		parserErrors = append(parserErrors, e)
 	}
 
-	visitor := visitor.Dumper{
-		Writer:    os.Stdout,
-		Indent:    "",
+	// Parse
+
+	rootNode, err := parser.Parse(src, cfg.Config{
+		Version:          &version.Version{Major: 5, Minor: 6},
+		ErrorHandlerFunc: errorHandler,
+	})
+
+	if err != nil {
+		log.Fatal("Error:" + err.Error())
 	}
 
-	rootNode := parser.GetRootNode()
-	rootNode.Walk(&visitor)
+	// Dump
+
+	goDumper := dumper.NewDumper(os.Stdout).
+		WithTokens().
+		WithPositions()
+
+	rootNode.Accept(goDumper)
 }
 ```
 
@@ -68,14 +82,13 @@ Roadmap
 -------
 
 - Control Flow Graph (CFG)
-- PhpDocComment parser
-- Stabilize api
+- PHP8
 
 Install
 -------
 
 ```
-go get github.com/z7zmey/php-parser
+go get github.com/z7zmey/php-parser/cmd/php-parser
 ```
 
 CLI
@@ -85,16 +98,14 @@ CLI
 php-parser [flags] <path> ...
 ```
 
-| flag  | type |                description                   |
-|-------|------|----------------------------------------------|
-| -p    | bool | print filepath                               |
-| -d    |string| dump format: [custom, go, json, pretty-json] |
-| -r    | bool | resolve names                                |
-| -ff   | bool | parse and show free floating strings         |
-| -prof |string| start profiler: [cpu, mem, trace]            |
-| -php5 | bool | parse as PHP5                                |
-
-Dump AST to stdout.
+| flag    | type   | description                       |
+| ------- | ------ | --------------------------------- |
+| -p      | bool   | print filepath                    |
+| -e      | bool   | print errors                      |
+| -d      | bool   | dump in golang format             |
+| -r      | bool   | resolve names                     |
+| -prof   | string | start profiler: [cpu, mem, trace] |
+| -phpver | string | php version (default: 7.4)        |
 
 Namespace resolver
 ------------------
