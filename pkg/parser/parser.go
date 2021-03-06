@@ -2,6 +2,7 @@ package parser
 
 import (
 	"errors"
+	"github.com/z7zmey/php-parser/internal/php8"
 
 	"github.com/z7zmey/php-parser/internal/php5"
 	"github.com/z7zmey/php-parser/internal/php7"
@@ -20,6 +21,9 @@ var (
 
 	php7RangeStart = &version.Version{Major: 7}
 	php7RangeEnd   = &version.Version{Major: 7, Minor: 4}
+
+	php8RangeStart = &version.Version{Major: 8}
+	php8RangeEnd   = &version.Version{Major: 8}
 )
 
 // Parser interface
@@ -45,6 +49,13 @@ func Parse(src []byte, config conf.Config) (ast.Vertex, error) {
 	if config.Version.InRange(php7RangeStart, php7RangeEnd) {
 		lexer := scanner.NewLexer(src, config)
 		parser = php7.NewParser(lexer, config)
+		parser.Parse()
+		return parser.GetRootNode(), nil
+	}
+
+	if config.Version.InRange(php8RangeStart, php8RangeEnd) {
+		lexer := php8.NewLexer(src, config)
+		parser = php8.NewParser(lexer, config)
 		parser.Parse()
 		return parser.GetRootNode(), nil
 	}
