@@ -1273,6 +1273,118 @@ func TestCommentEnd(t *testing.T) {
 	assert.DeepEqual(t, expected, actual)
 }
 
+func TestCommentEnd2(t *testing.T) {
+	src := `<?php //`
+
+	expected := []*token.Token{
+		{
+			ID:    token.T_OPEN_TAG,
+			Value: []byte("<?php"),
+		},
+
+		{
+			ID:    token.T_WHITESPACE,
+			Value: []byte(" "),
+		},
+		{
+			ID:    token.T_COMMENT,
+			Value: []byte("//"),
+		},
+	}
+
+	config := conf.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
+
+	tkn := lexer.Lex()
+
+	actual := tkn.FreeFloating
+	for _, v := range actual {
+		v.Position = nil
+	}
+
+	assert.DeepEqual(t, expected, actual)
+}
+
+func TestCommentEnd3(t *testing.T) {
+	src := `<?php #`
+
+	expected := []*token.Token{
+		{
+			ID:    token.T_OPEN_TAG,
+			Value: []byte("<?php"),
+		},
+
+		{
+			ID:    token.T_WHITESPACE,
+			Value: []byte(" "),
+		},
+		{
+			ID:    token.T_COMMENT,
+			Value: []byte("#"),
+		},
+	}
+
+	config := conf.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
+
+	tkn := lexer.Lex()
+
+	actual := tkn.FreeFloating
+	for _, v := range actual {
+		v.Position = nil
+	}
+
+	assert.DeepEqual(t, expected, actual)
+}
+
+func TestAttribute(t *testing.T) {
+	src := `<?php #[ FooAttribute]`
+
+	expected := []*token.Token{
+		{
+			ID:    token.T_OPEN_TAG,
+			Value: []byte("<?php"),
+		},
+		{
+			ID:    token.T_WHITESPACE,
+			Value: []byte(" "),
+		},
+	}
+
+	config := conf.Config{
+		Version: &version.Version{
+			Major: 7,
+			Minor: 4,
+		},
+		ErrorHandlerFunc: func(e *errors.Error) {
+			println(e.Msg)
+		},
+	}
+	lexer := NewLexer([]byte(src), config)
+
+	tkn := lexer.Lex()
+
+	actual := tkn.FreeFloating
+	for _, v := range actual {
+		v.Position = nil
+	}
+
+	assert.DeepEqual(t, expected, actual)
+
+	assert.DeepEqual(t, token.T_ATTRIBUTE, tkn.ID)
+	assert.DeepEqual(t, "#[", string(tkn.Value))
+}
+
 func TestCommentNewLine(t *testing.T) {
 	src := "<?php //test\n$a"
 

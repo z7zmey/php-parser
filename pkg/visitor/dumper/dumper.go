@@ -99,7 +99,7 @@ func (v *Dumper) dumpToken(key string, tok *token.Token) {
 		v.print(v.indent, "ID: token."+tok.ID.String()+",\n")
 	}
 	if tok.Value != nil {
-		v.print(v.indent, "Val: []byte("+strconv.Quote(string(tok.Value))+"),\n")
+		v.print(v.indent, "Value: []byte("+strconv.Quote(string(tok.Value))+"),\n")
 	}
 	v.dumpPosition(tok.Position)
 	v.dumpTokenList("FreeFloating", tok.FreeFloating)
@@ -209,7 +209,7 @@ func (v *Dumper) Identifier(n *ast.Identifier) {
 
 	v.dumpPosition(n.Position)
 	v.dumpToken("IdentifierTkn", n.IdentifierTkn)
-	v.dumpValue("Val", n.Value)
+	v.dumpValue("Value", n.Value)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -223,6 +223,35 @@ func (v *Dumper) Argument(n *ast.Argument) {
 	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
 	v.dumpToken("VariadicTkn", n.VariadicTkn)
 	v.dumpVertex("Expr", n.Expr)
+
+	v.indent--
+	v.print(v.indent, "},\n")
+}
+
+func (v *Dumper) Attribute(n *ast.Attribute) {
+	v.print(0, "&ast.Attribute{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpVertex("Name", n.Name)
+	v.dumpToken("OpenParenthesisTkn", n.OpenParenthesisTkn)
+	v.dumpVertexList("Args", n.Args)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseParenthesisTkn", n.CloseParenthesisTkn)
+
+	v.indent--
+	v.print(v.indent, "},\n")
+}
+
+func (v *Dumper) AttributeGroup(n *ast.AttributeGroup) {
+	v.print(0, "&ast.AttributeGroup{\n")
+	v.indent++
+
+	v.dumpPosition(n.Position)
+	v.dumpToken("OpenAttributeTkn", n.OpenAttributeTkn)
+	v.dumpVertexList("Attrs", n.Attrs)
+	v.dumpTokenList("SeparatorTkns", n.SeparatorTkns)
+	v.dumpToken("CloseAttributeTkn", n.CloseAttributeTkn)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -279,6 +308,7 @@ func (v *Dumper) StmtClass(n *ast.StmtClass) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
+	v.dumpVertexList("AttrGroups", n.AttrGroups)
 	v.dumpVertexList("Modifiers", n.Modifiers)
 	v.dumpToken("ClassTkn", n.ClassTkn)
 	v.dumpVertex("Name", n.Name)
@@ -547,6 +577,7 @@ func (v *Dumper) StmtFunction(n *ast.StmtFunction) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
+	v.dumpVertexList("AttrGroups", n.AttrGroups)
 	v.dumpToken("FunctionTkn", n.FunctionTkn)
 	v.dumpToken("AmpersandTkn", n.AmpersandTkn)
 	v.dumpVertex("Name", n.Name)
@@ -631,7 +662,7 @@ func (v *Dumper) StmtInlineHtml(n *ast.StmtInlineHtml) {
 
 	v.dumpPosition(n.Position)
 	v.dumpToken("InlineHtmlTkn", n.InlineHtmlTkn)
-	v.dumpValue("Val", n.Value)
+	v.dumpValue("Value", n.Value)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -642,6 +673,7 @@ func (v *Dumper) StmtInterface(n *ast.StmtInterface) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
+	v.dumpVertexList("AttrGroups", n.AttrGroups)
 	v.dumpToken("InterfaceTkn", n.InterfaceTkn)
 	v.dumpVertex("Name", n.Name)
 	v.dumpToken("ExtendsTkn", n.ExtendsTkn)
@@ -814,6 +846,7 @@ func (v *Dumper) StmtTrait(n *ast.StmtTrait) {
 	v.indent++
 
 	v.dumpPosition(n.Position)
+	v.dumpVertexList("AttrGroups", n.AttrGroups)
 	v.dumpToken("TraitTkn", n.TraitTkn)
 	v.dumpVertex("Name", n.Name)
 	v.dumpToken("OpenCurlyBracketTkn", n.OpenCurlyBracketTkn)
@@ -2183,7 +2216,7 @@ func (v *Dumper) ScalarDnumber(n *ast.ScalarDnumber) {
 
 	v.dumpPosition(n.Position)
 	v.dumpToken("NumberTkn", n.NumberTkn)
-	v.dumpValue("Val", n.Value)
+	v.dumpValue("Value", n.Value)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -2208,7 +2241,7 @@ func (v *Dumper) ScalarEncapsedStringPart(n *ast.ScalarEncapsedStringPart) {
 
 	v.dumpPosition(n.Position)
 	v.dumpToken("EncapsedStrTkn", n.EncapsedStrTkn)
-	v.dumpValue("Val", n.Value)
+	v.dumpValue("Value", n.Value)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -2262,7 +2295,7 @@ func (v *Dumper) ScalarLnumber(n *ast.ScalarLnumber) {
 
 	v.dumpPosition(n.Position)
 	v.dumpToken("NumberTkn", n.NumberTkn)
-	v.dumpValue("Val", n.Value)
+	v.dumpValue("Value", n.Value)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -2274,7 +2307,7 @@ func (v *Dumper) ScalarMagicConstant(n *ast.ScalarMagicConstant) {
 
 	v.dumpPosition(n.Position)
 	v.dumpToken("MagicConstTkn", n.MagicConstTkn)
-	v.dumpValue("Val", n.Value)
+	v.dumpValue("Value", n.Value)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -2287,7 +2320,7 @@ func (v *Dumper) ScalarString(n *ast.ScalarString) {
 	v.dumpPosition(n.Position)
 	v.dumpToken("MinusTkn", n.MinusTkn)
 	v.dumpToken("StringTkn", n.StringTkn)
-	v.dumpValue("Val", n.Value)
+	v.dumpValue("Value", n.Value)
 
 	v.indent--
 	v.print(v.indent, "},\n")
@@ -2338,7 +2371,7 @@ func (v *Dumper) NameNamePart(n *ast.NamePart) {
 
 	v.dumpPosition(n.Position)
 	v.dumpToken("StringTkn", n.StringTkn)
-	v.dumpValue("Val", n.Value)
+	v.dumpValue("Value", n.Value)
 
 	v.indent--
 	v.print(v.indent, "},\n")

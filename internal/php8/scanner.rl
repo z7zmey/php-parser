@@ -322,8 +322,11 @@ func (lex *Lexer) Lex() *token.Token {
             '(' whitespace* ('string'i|'binary'i) whitespace* ')' => {lex.setTokenPosition(tkn); tok = token.T_STRING_CAST; fbreak;};
             '(' whitespace* 'unset'i whitespace* ')'              => {lex.setTokenPosition(tkn); tok = token.T_UNSET_CAST; fbreak;};
 
-            ('#' | '//') any_line* when is_not_comment_end => {
+            (('#' ^'[') | '//') any_line* when is_not_comment_end => {
                 lex.ungetStr("?>")
+                lex.addFreeFloatingToken(tkn, token.T_COMMENT, lex.ts, lex.te)
+            };
+            '#' => {
                 lex.addFreeFloatingToken(tkn, token.T_COMMENT, lex.ts, lex.te)
             };
             '/*' any_line* :>> '*/' {

@@ -52,6 +52,23 @@ func (t *Traverser) Argument(n *ast.Argument) {
 	t.Traverse(n.Expr)
 }
 
+func (t *Traverser) Attribute(n *ast.Attribute) {
+	n.Accept(t.v)
+
+	t.Traverse(n.Name)
+	for _, nn := range n.Args {
+		nn.Accept(t)
+	}
+}
+
+func (t *Traverser) AttributeGroup(n *ast.AttributeGroup) {
+	n.Accept(t.v)
+
+	for _, nn := range n.Attrs {
+		nn.Accept(t)
+	}
+}
+
 func (t *Traverser) StmtBreak(n *ast.StmtBreak) {
 	n.Accept(t.v)
 
@@ -82,6 +99,9 @@ func (t *Traverser) StmtCatch(n *ast.StmtCatch) {
 func (t *Traverser) StmtClass(n *ast.StmtClass) {
 	n.Accept(t.v)
 
+	for _, nn := range n.AttrGroups {
+		nn.Accept(t)
+	}
 	for _, nn := range n.Modifiers {
 		nn.Accept(t)
 	}
@@ -230,6 +250,9 @@ func (t *Traverser) StmtForeach(n *ast.StmtForeach) {
 func (t *Traverser) StmtFunction(n *ast.StmtFunction) {
 	n.Accept(t.v)
 
+	for _, nn := range n.AttrGroups {
+		nn.Accept(t)
+	}
 	t.Traverse(n.Name)
 	for _, nn := range n.Params {
 		nn.Accept(t)
@@ -276,6 +299,9 @@ func (t *Traverser) StmtInlineHtml(n *ast.StmtInlineHtml) {
 func (t *Traverser) StmtInterface(n *ast.StmtInterface) {
 	n.Accept(t.v)
 
+	for _, nn := range n.AttrGroups {
+		nn.Accept(t)
+	}
 	t.Traverse(n.Name)
 	for _, nn := range n.Extends {
 		nn.Accept(t)
@@ -370,6 +396,9 @@ func (t *Traverser) StmtThrow(n *ast.StmtThrow) {
 func (t *Traverser) StmtTrait(n *ast.StmtTrait) {
 	n.Accept(t.v)
 
+	for _, nn := range n.AttrGroups {
+		nn.Accept(t)
+	}
 	t.Traverse(n.Name)
 	for _, nn := range n.Stmts {
 		nn.Accept(t)

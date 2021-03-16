@@ -56,7 +56,7 @@ func TestDumper_root(t *testing.T) {
 		FreeFloating: []*token.Token{
 			{
 				ID: token.T_WHITESPACE,
-				Val: []byte(" "),
+				Value: []byte(" "),
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   2,

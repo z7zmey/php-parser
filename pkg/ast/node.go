@@ -85,6 +85,41 @@ func (n *Argument) GetPosition() *position.Position {
 	return n.Position
 }
 
+// Attribute node
+type Attribute struct {
+	Position            *position.Position
+	Name                Vertex
+	OpenParenthesisTkn  *token.Token
+	Args                []Vertex
+	SeparatorTkns       []*token.Token
+	CloseParenthesisTkn *token.Token
+}
+
+func (n *Attribute) Accept(v Visitor) {
+	v.Attribute(n)
+}
+
+func (n *Attribute) GetPosition() *position.Position {
+	return n.Position
+}
+
+// AttributeGroup node
+type AttributeGroup struct {
+	Position          *position.Position
+	OpenAttributeTkn  *token.Token
+	Attrs             []Vertex
+	SeparatorTkns     []*token.Token
+	CloseAttributeTkn *token.Token
+}
+
+func (n *AttributeGroup) Accept(v Visitor) {
+	v.AttributeGroup(n)
+}
+
+func (n *AttributeGroup) GetPosition() *position.Position {
+	return n.Position
+}
+
 // ScalarDnumber node
 type ScalarDnumber struct {
 	Position  *position.Position
@@ -286,6 +321,7 @@ func (n *StmtCatch) GetPosition() *position.Position {
 // StmtClass node
 type StmtClass struct {
 	Position                *position.Position
+	AttrGroups              []Vertex
 	Modifiers               []Vertex
 	ClassTkn                *token.Token
 	Name                    Vertex
@@ -601,6 +637,7 @@ func (n *StmtForeach) GetPosition() *position.Position {
 // StmtFunction node
 type StmtFunction struct {
 	Position             *position.Position
+	AttrGroups           []Vertex
 	FunctionTkn          *token.Token
 	AmpersandTkn         *token.Token
 	Name                 Vertex
@@ -714,6 +751,7 @@ func (n *StmtInlineHtml) GetPosition() *position.Position {
 // StmtInterface node
 type StmtInterface struct {
 	Position             *position.Position
+	AttrGroups           []Vertex
 	InterfaceTkn         *token.Token
 	Name                 Vertex
 	ExtendsTkn           *token.Token
@@ -922,6 +960,7 @@ func (n *StmtThrow) GetPosition() *position.Position {
 // StmtTrait node
 type StmtTrait struct {
 	Position             *position.Position
+	AttrGroups           []Vertex
 	TraitTkn             *token.Token
 	Name                 Vertex
 	OpenCurlyBracketTkn  *token.Token

@@ -252,7 +252,7 @@ import (
 %type <node> if_stmt const_list non_empty_argument_list property_list
 %type <node> alt_if_stmt lexical_var_list isset_variables class_const_list
 %type <node> if_stmt_without_else unprefixed_use_declarations inline_use_declarations use_declarations
-%type <node> class_const_decl namespace_name namespace_declaration_name
+%type <node> class_const_decl namespace_name legacy_namespace_name namespace_declaration_name
 %type <node> alt_if_stmt_without_else
 %type <node> array_pair possible_array_pair
 %type <node> isset_variable type return_type type_expr
@@ -268,6 +268,7 @@ import (
 %type <node> implements_list
 %type <node> interface_extends_list
 %type <node> lexical_vars
+%type <node> attribute_decl attribute_group attribute attributed_statement
 
 %type <node> member_modifier
 %type <node> use_type
@@ -280,6 +281,7 @@ import (
 %type <list> inner_statement_list class_statement_list
 %type <list> method_modifiers variable_modifiers
 %type <list> non_empty_member_modifiers class_modifiers
+%type <list> attributes
 
 %%
 
@@ -388,6 +390,22 @@ namespace_name:
             }
 ;
 
+legacy_namespace_name:
+        namespace_name
+            {
+                $$ = $1
+            }
+    |   T_NAME_FULLY_QUALIFIED
+            {
+                name := yylex.(*Parser).parseNameToken($1)
+
+                $$ = &ParserSeparatedList{
+                    Items:         name.Parts,
+                    SeparatorTkns: name.SeparatorTkns,
+                }
+            }
+;
+
 name:
         T_STRING
             {
@@ -429,17 +447,73 @@ name:
             }
 ;
 
-top_statement:
-        error
+attribute_decl:
+        class_name
             {
-                // error
-                $$ = nil
+                $$ = &ast.Attribute{
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
+                    Name:     $1,
+                }
             }
-    |   statement
+    |   class_name argument_list
             {
+                $$ = &ast.Attribute{
+                    Position:            yylex.(*Parser).builder.NewNodesPosition($1, $2),
+                    Name:                $1,
+                    OpenParenthesisTkn:  $2.(*ArgumentList).OpenParenthesisTkn,
+                    Args:                $2.(*ArgumentList).Arguments,
+                    SeparatorTkns:       $2.(*ArgumentList).SeparatorTkns,
+                    CloseParenthesisTkn: $2.(*ArgumentList).CloseParenthesisTkn,
+                }
+            }
+;
+
+attribute_group:
+        attribute_decl
+            {
+                $$ = &ParserSeparatedList{
+                    Items: []ast.Vertex{$1},
+                }
+            }
+    |   attribute_group ',' attribute_decl
+            {
+                $1.(*ParserSeparatedList).SeparatorTkns = append($1.(*ParserSeparatedList).SeparatorTkns, $2)
+                $1.(*ParserSeparatedList).Items = append($1.(*ParserSeparatedList).Items, $3)
+
                 $$ = $1
             }
-    |   function_declaration_statement
+;
+
+attribute:
+        T_ATTRIBUTE attribute_group possible_comma ']'
+            {
+                if $3 != nil {
+                    $2.(*ParserSeparatedList).SeparatorTkns = append($2.(*ParserSeparatedList).SeparatorTkns, $3)
+                }
+
+                $$ = &ast.AttributeGroup{
+                    Position:          yylex.(*Parser).builder.NewTokensPosition($1, $4),
+                    OpenAttributeTkn:  $1,
+                    Attrs:             $2.(*ParserSeparatedList).Items,
+                    SeparatorTkns:     $2.(*ParserSeparatedList).SeparatorTkns,
+                    CloseAttributeTkn: $4,
+                }
+            }
+;
+
+attributes:
+        attribute
+            {
+                $$ = []ast.Vertex{$1}
+            }
+    |   attributes attribute
+            {
+                $$ = append($1, $2)
+            }
+;
+
+attributed_statement:
+        function_declaration_statement
             {
                 $$ = $1
             }
@@ -454,6 +528,33 @@ top_statement:
     |   interface_declaration_statement
             {
                 $$ = $1
+            }
+;
+
+top_statement:
+        error
+            {
+                // error
+                $$ = nil
+            }
+    |   statement
+            {
+                $$ = $1
+            }
+    |   attributed_statement
+            {
+                $$ = $1
+            }
+    |   attributes attributed_statement
+            {
+                switch n := $2.(type) {
+                case *ast.StmtFunction: n.AttrGroups = $1
+                case *ast.StmtClass: n.AttrGroups = $1
+                case *ast.StmtTrait: n.AttrGroups = $1
+                case *ast.StmtInterface: n.AttrGroups = $1
+                };
+
+                $$ = $2
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
@@ -823,21 +924,20 @@ inner_statement:
             {
                 $$ = $1
             }
-    |   function_declaration_statement
+    |   attributed_statement
             {
                 $$ = $1
             }
-    |   class_declaration_statement
+    |   attributes attributed_statement
             {
-                $$ = $1
-            }
-    |   trait_declaration_statement
-            {
-                $$ = $1
-            }
-    |   interface_declaration_statement
-            {
-                $$ = $1
+                switch n := $2.(type) {
+                case *ast.StmtFunction: n.AttrGroups = $1
+                case *ast.StmtClass: n.AttrGroups = $1
+                case *ast.StmtTrait: n.AttrGroups = $1
+                case *ast.StmtInterface: n.AttrGroups = $1
+                };
+
+                $$ = $2
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {

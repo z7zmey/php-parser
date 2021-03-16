@@ -13,6 +13,8 @@ type Visitor interface {
 	Parameter(n *Parameter)
 	Identifier(n *Identifier)
 	Argument(n *Argument)
+	Attribute(n *Attribute)
+	AttributeGroup(n *AttributeGroup)
 
 	StmtBreak(n *StmtBreak)
 	StmtCase(n *StmtCase)

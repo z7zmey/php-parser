@@ -42,6 +42,14 @@ func (v *Null) Argument(_ *ast.Argument) {
 	// do nothing
 }
 
+func (v *Null) Attribute(_ *ast.Attribute) {
+	// do nothing
+}
+
+func (v *Null) AttributeGroup(_ *ast.AttributeGroup) {
+	// do nothing
+}
+
 func (v *Null) StmtBreak(_ *ast.StmtBreak) {
 	// do nothing
 }

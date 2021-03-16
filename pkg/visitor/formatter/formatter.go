@@ -196,6 +196,25 @@ func (f *formatter) Argument(n *ast.Argument) {
 	n.Expr.Accept(f)
 }
 
+func (f *formatter) Attribute(n *ast.Attribute) {
+	n.Name.Accept(f)
+	n.OpenParenthesisTkn = f.newToken('(', []byte("("))
+	n.SeparatorTkns = nil
+	if len(n.Args) > 0 {
+		n.SeparatorTkns = f.formatList(n.Args, ',')
+	}
+	n.CloseParenthesisTkn = f.newToken(')', []byte(")"))
+}
+
+func (f *formatter) AttributeGroup(n *ast.AttributeGroup) {
+	n.OpenAttributeTkn = f.newToken(token.T_ATTRIBUTE, []byte("#["))
+	n.SeparatorTkns = nil
+	if len(n.Attrs) > 0 {
+		n.SeparatorTkns = f.formatList(n.Attrs, ',')
+	}
+	n.CloseAttributeTkn = f.newToken(']', []byte("]"))
+}
+
 func (f *formatter) StmtBreak(n *ast.StmtBreak) {
 	n.BreakTkn = f.newToken(token.T_BREAK, []byte("break"))
 

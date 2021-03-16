@@ -2,11 +2,11 @@ package printer_test
 
 import (
 	"bytes"
-	"github.com/z7zmey/php-parser/pkg/token"
-	"github.com/z7zmey/php-parser/pkg/visitor/printer"
 	"testing"
 
 	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/token"
+	"github.com/z7zmey/php-parser/pkg/visitor/printer"
 )
 
 func TestPrinterPrintFile(t *testing.T) {
@@ -217,6 +217,51 @@ func TestPrinterPrintArgumentByRef(t *testing.T) {
 	n.Accept(p)
 
 	expected := "&$var"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintAttributeGroup(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o).WithState(printer.PrinterStatePHP)
+	n := &ast.AttributeGroup{
+		Attrs: []ast.Vertex{
+			&ast.Attribute{
+				Name: &ast.Name{
+					Parts: []ast.Vertex{
+						&ast.NamePart{
+							Value: []byte("FooAttribute"),
+						},
+					},
+				},
+			},
+			&ast.Attribute{
+				Name: &ast.Name{
+					Parts: []ast.Vertex{
+						&ast.NamePart{
+							Value: []byte("BarAttribute"),
+						},
+					},
+				},
+				Args: []ast.Vertex{
+					&ast.Argument{
+						Expr: &ast.ExprVariable{
+							Name: &ast.Identifier{
+								Value: []byte("$arg"),
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	n.Accept(p)
+
+	expected := "#[FooAttribute,BarAttribute($arg)]"
 	actual := o.String()
 
 	if expected != actual {
