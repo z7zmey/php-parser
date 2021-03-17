@@ -381,12 +381,7 @@ namespace_name:
             }
     |   T_NAME_QUALIFIED
             {
-                name := yylex.(*Parser).parseNameToken($1)
-
-                $$ = &ParserSeparatedList{
-                    Items:         name.Parts,
-                    SeparatorTkns: name.SeparatorTkns,
-                }
+                $$ = yylex.(*Parser).parseNameRelativeToken($1)
             }
 ;
 
@@ -397,12 +392,7 @@ legacy_namespace_name:
             }
     |   T_NAME_FULLY_QUALIFIED
             {
-                name := yylex.(*Parser).parseNameToken($1)
-
-                $$ = &ParserSeparatedList{
-                    Items:         name.Parts,
-                    SeparatorTkns: name.SeparatorTkns,
-                }
+                $$ = yylex.(*Parser).parseNameFullyQualifiedToken($1)
             }
 ;
 
@@ -422,28 +412,15 @@ name:
             }
     |   T_NAME_QUALIFIED
             {
-                name := yylex.(*Parser).parseNameToken($1)
-
-                $$ = &ast.Name{
-                    Position:      name.Position,
-                    Parts:         name.Parts,
-                    SeparatorTkns: name.SeparatorTkns,
-                }
+                $$ = yylex.(*Parser).parseNameToken($1)
             }
     |   T_NAME_FULLY_QUALIFIED
             {
-                name := yylex.(*Parser).parseNameToken($1)
-
-                $$ = &ast.NameFullyQualified{
-                    Position:       name.Position,
-                    NsSeparatorTkn: name.NsSeparatorTkn,
-                    Parts:          name.Parts,
-                    SeparatorTkns:  name.SeparatorTkns,
-                }
+                $$ = yylex.(*Parser).parseNameFullyQualifiedToken($1)
             }
     |   T_NAME_RELATIVE
             {
-                $$ = yylex.(*Parser).parseNameToken($1)
+                $$ = yylex.(*Parser).parseNameRelativeToken($1)
             }
 ;
 
@@ -566,7 +543,7 @@ top_statement:
                     SemiColonTkn:        $4,
                 }
             }
-    |   T_NAMESPACE namespace_name ';'
+    |   T_NAMESPACE namespace_declaration_name ';'
             {
                 $$ = &ast.StmtNamespace{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $3),
@@ -579,7 +556,7 @@ top_statement:
                     SemiColonTkn: $3,
                 }
             }
-    |   T_NAMESPACE namespace_name '{' top_statement_list '}'
+    |   T_NAMESPACE namespace_declaration_name '{' top_statement_list '}'
             {
                 $$ = &ast.StmtNamespace{
                     Position: yylex.(*Parser).builder.NewTokensPosition($1, $5),
@@ -678,90 +655,70 @@ use_type:
 ;
 
 group_use_declaration:
-        namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
+        legacy_namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
                 if $5 != nil {
                     $4.(*ParserSeparatedList).SeparatorTkns = append($4.(*ParserSeparatedList).SeparatorTkns, $5)
                 }
 
-                $$ = &ast.StmtGroupUseList{
-                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ParserSeparatedList).Items, $6),
-                    Prefix: &ast.Name{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
-                        Parts:         $1.(*ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
-                    },
+                groupUseList := &ast.StmtGroupUseList{
+                    Position:             yylex.(*Parser).builder.NewNodeTokenPosition($1, $6),
+                    Prefix:               $1,
                     NsSeparatorTkn:       $2,
                     OpenCurlyBracketTkn:  $3,
                     Uses:                 $4.(*ParserSeparatedList).Items,
                     SeparatorTkns:        $4.(*ParserSeparatedList).SeparatorTkns,
                     CloseCurlyBracketTkn: $6,
                 }
-            }
-    |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
-            {
-                if $6 != nil {
-                    $5.(*ParserSeparatedList).SeparatorTkns = append($5.(*ParserSeparatedList).SeparatorTkns, $6)
+
+                if n, ok := groupUseList.Prefix.(*ast.NameFullyQualified); ok {
+                    groupUseList.LeadingNsSeparatorTkn = n.NsSeparatorTkn
+                
+                    prefix := &ast.Name{
+                        Position:      n.Position,
+                        Parts:         n.Parts,
+                        SeparatorTkns: n.SeparatorTkns,
+                    }
+                    prefix.Position.StartPos++
+                
+                    groupUseList.Prefix = prefix
                 }
 
-                $$ = &ast.StmtGroupUseList{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $7),
-                    LeadingNsSeparatorTkn: $1,
-                    Prefix: &ast.Name{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
-                        Parts:         $2.(*ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
-                    },
-                    NsSeparatorTkn:       $3,
-                    OpenCurlyBracketTkn:  $4,
-                    Uses:                 $5.(*ParserSeparatedList).Items,
-                    SeparatorTkns:        $5.(*ParserSeparatedList).SeparatorTkns,
-                    CloseCurlyBracketTkn: $7,
-                }
+                $$ = groupUseList
             }
 ;
 
 mixed_group_use_declaration:
-        namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
+        legacy_namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
                 if $5 != nil {
                     $4.(*ParserSeparatedList).SeparatorTkns = append($4.(*ParserSeparatedList).SeparatorTkns, $5)
                 }
 
-                $$ = &ast.StmtGroupUseList{
-                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ParserSeparatedList).Items, $6),
-                    Prefix: &ast.Name{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
-                        Parts:         $1.(*ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
-                    },
+                groupUseList := &ast.StmtGroupUseList{
+                    Position:             yylex.(*Parser).builder.NewNodeTokenPosition($1, $6),
+                    Prefix:               $1,
                     NsSeparatorTkn:       $2,
                     OpenCurlyBracketTkn:  $3,
                     Uses:                 $4.(*ParserSeparatedList).Items,
                     SeparatorTkns:        $4.(*ParserSeparatedList).SeparatorTkns,
                     CloseCurlyBracketTkn: $6,
                 }
-            }
-    |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
-            {
-                if $6 != nil {
-                    $5.(*ParserSeparatedList).SeparatorTkns = append($5.(*ParserSeparatedList).SeparatorTkns, $6)
+
+                if n, ok := groupUseList.Prefix.(*ast.NameFullyQualified); ok {
+                    groupUseList.LeadingNsSeparatorTkn = n.NsSeparatorTkn
+
+                    prefix := &ast.Name{
+                        Position:      n.Position,
+                        Parts:         n.Parts,
+                        SeparatorTkns: n.SeparatorTkns,
+                    }
+                    prefix.Position.StartPos++
+
+                    groupUseList.Prefix = prefix
                 }
 
-                $$ = &ast.StmtGroupUseList{
-                    Position: yylex.(*Parser).builder.NewTokensPosition($1, $7),
-                    LeadingNsSeparatorTkn: $1,
-                    Prefix: &ast.Name{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($2.(*ParserSeparatedList).Items),
-                        Parts:         $2.(*ParserSeparatedList).Items,
-                        SeparatorTkns: $2.(*ParserSeparatedList).SeparatorTkns,
-                    },
-                    NsSeparatorTkn:       $3,
-                    OpenCurlyBracketTkn:  $4,
-                    Uses:                 $5.(*ParserSeparatedList).Items,
-                    SeparatorTkns:        $5.(*ParserSeparatedList).SeparatorTkns,
-                    CloseCurlyBracketTkn: $7,
-                }
+                $$ = groupUseList
             }
 ;
 
@@ -843,30 +800,75 @@ unprefixed_use_declaration:
         namespace_name
             {
                 $$ = &ast.StmtUse{
-                    Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
-                    Use: &ast.Name{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
-                        Parts:         $1.(*ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
-                    },
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
+                    Use:      $1,
                 }
             }
     |   namespace_name T_AS T_STRING
             {
                 $$ = &ast.StmtUse{
-                    Position: yylex.(*Parser).builder.NewNodeListTokenPosition($1.(*ParserSeparatedList).Items, $3),
-                    Use: &ast.Name{
-                        Position: yylex.(*Parser).builder.NewNodeListPosition($1.(*ParserSeparatedList).Items),
-                        Parts:         $1.(*ParserSeparatedList).Items,
-                        SeparatorTkns: $1.(*ParserSeparatedList).SeparatorTkns,
-                    },
-                    AsTkn: $2,
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
+                    Use:      $1,
+                    AsTkn:    $2,
                     Alias: &ast.Identifier{
                         Position: yylex.(*Parser).builder.NewTokenPosition($3),
                         IdentifierTkn: $3,
                         Value:         $3.Value,
                     },
                 }
+            }
+;
+
+use_declaration:
+        legacy_namespace_name
+            {
+                use := &ast.StmtUse{
+                    Position: yylex.(*Parser).builder.NewNodePosition($1),
+                    Use:      $1,
+                }
+
+                if n, ok := use.Use.(*ast.NameFullyQualified); ok {
+                    use.NsSeparatorTkn = n.NsSeparatorTkn
+
+                    name := &ast.Name{
+                        Position:      n.Position,
+                        Parts:         n.Parts,
+                        SeparatorTkns: n.SeparatorTkns,
+                    }
+                    name.Position.StartPos++
+
+                    use.Use = name
+                }
+
+                $$ = use
+            }
+    |   legacy_namespace_name T_AS T_STRING
+            {
+                use := &ast.StmtUse{
+                    Position: yylex.(*Parser).builder.NewNodeTokenPosition($1, $3),
+                    Use:      $1,
+                    AsTkn:    $2,
+                    Alias: &ast.Identifier{
+                        Position: yylex.(*Parser).builder.NewTokenPosition($3),
+                        IdentifierTkn: $3,
+                        Value:         $3.Value,
+                    },
+                }
+
+                if n, ok := use.Use.(*ast.NameFullyQualified); ok {
+                    use.NsSeparatorTkn = n.NsSeparatorTkn
+
+                    name := &ast.Name{
+                        Position:      n.Position,
+                        Parts:         n.Parts,
+                        SeparatorTkns: n.SeparatorTkns,
+                    }
+                    name.Position.StartPos++
+
+                    use.Use = name
+                }
+
+                $$ = use
             }
 ;
 
