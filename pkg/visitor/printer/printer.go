@@ -18,6 +18,8 @@ type printer struct {
 	output io.Writer
 	state  printerState
 	last   []byte
+	// it will does not print the FreeFloating tokens when it's true
+	withoutFreeFloating bool
 }
 
 func NewPrinter(output io.Writer) *printer {
@@ -28,6 +30,11 @@ func NewPrinter(output io.Writer) *printer {
 
 func (p *printer) WithState(state printerState) *printer {
 	p.state = state
+	return p
+}
+
+func (p *printer) WithoutFreeFloating() *printer {
+	p.withoutFreeFloating = true
 	return p
 }
 
@@ -88,8 +95,10 @@ func (p *printer) printToken(t *token.Token, def []byte) {
 		return
 	}
 
-	for _, ff := range t.FreeFloating {
-		p.write(ff.Value)
+	if !p.withoutFreeFloating {
+		for _, ff := range t.FreeFloating {
+			p.write(ff.Value)
+		}
 	}
 	p.write(t.Value)
 }
